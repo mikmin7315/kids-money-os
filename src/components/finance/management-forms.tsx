@@ -92,7 +92,7 @@ export function BehaviorRuleCreateForm() {
 // Interest policy (P-I-01)
 // ────────────────────────────────────────────────────────────
 
-export function InterestPolicyForm({ children }: { children: ChildProfile[] }) {
+export function InterestPolicyForm({ childOptions }: { childOptions: ChildProfile[] }) {
   const [state, action, pending] = useActionState(upsertInterestPolicyForm, initialState);
 
   return (
@@ -100,8 +100,8 @@ export function InterestPolicyForm({ children }: { children: ChildProfile[] }) {
       <p className="text-lg font-semibold">이자 정책 설정</p>
       <div>
         <label className="mb-1 block text-xs text-[var(--color-muted)]">아이 선택</label>
-        <select name="childId" className={fieldClass} defaultValue={children[0]?.id}>
-          {children.map((child) => (
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
+          {childOptions.map((child) => (
             <option key={child.id} value={child.id}>{child.name}</option>
           ))}
         </select>
@@ -137,7 +137,7 @@ export function InterestPolicyForm({ children }: { children: ChildProfile[] }) {
 // Allowance rule (P-13)
 // ────────────────────────────────────────────────────────────
 
-export function AllowanceRuleForm({ children }: { children: ChildProfile[] }) {
+export function AllowanceRuleForm({ childOptions }: { childOptions: ChildProfile[] }) {
   const [state, action, pending] = useActionState(createAllowanceRuleForm, initialState);
 
   return (
@@ -145,8 +145,8 @@ export function AllowanceRuleForm({ children }: { children: ChildProfile[] }) {
       <p className="text-lg font-semibold">정기 용돈 설정</p>
       <div>
         <label className="mb-1 block text-xs text-[var(--color-muted)]">아이 선택</label>
-        <select name="childId" className={fieldClass} defaultValue={children[0]?.id}>
-          {children.map((child) => (
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
+          {childOptions.map((child) => (
             <option key={child.id} value={child.id}>{child.name}</option>
           ))}
         </select>
@@ -186,7 +186,7 @@ export function AllowanceRuleForm({ children }: { children: ChildProfile[] }) {
 // Borrow conditions (P-L-01)
 // ────────────────────────────────────────────────────────────
 
-export function BorrowConditionsForm({ children }: { children: ChildProfile[] }) {
+export function BorrowConditionsForm({ childOptions }: { childOptions: ChildProfile[] }) {
   const [state, action, pending] = useActionState(upsertBorrowConditionsForm, initialState);
 
   return (
@@ -194,8 +194,8 @@ export function BorrowConditionsForm({ children }: { children: ChildProfile[] })
       <p className="text-lg font-semibold">미리쓰기 조건 설정</p>
       <div>
         <label className="mb-1 block text-xs text-[var(--color-muted)]">아이 선택</label>
-        <select name="childId" className={fieldClass} defaultValue={children[0]?.id}>
-          {children.map((child) => (
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
+          {childOptions.map((child) => (
             <option key={child.id} value={child.id}>{child.name}</option>
           ))}
         </select>

@@ -88,7 +88,7 @@ export default async function SettingsPage() {
               );
             })}
           </div>
-          <InterestPolicyForm children={bundle.children} />
+          <InterestPolicyForm childOptions={bundle.children} />
         </Section>
 
         {/* P-13: Allowance rules */}
@@ -106,12 +106,12 @@ export default async function SettingsPage() {
               );
             })}
           </div>
-          <AllowanceRuleForm children={bundle.children} />
+          <AllowanceRuleForm childOptions={bundle.children} />
         </Section>
 
         {/* P-L-01: Borrow conditions */}
         <Section title="미리쓰기 조건 설정 (P-L-01)" description="아이별 미리쓰기 한도와 자동 승인 기준을 설정합니다.">
-          <BorrowConditionsForm children={bundle.children} />
+          <BorrowConditionsForm childOptions={bundle.children} />
         </Section>
 
         {/* Transaction test */}
