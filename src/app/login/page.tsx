@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { SignInForm, SignUpForm } from "@/components/auth/auth-forms";
+import { AuthTabs } from "@/components/auth/auth-forms";
 import { getAuthContext } from "@/lib/auth";
 
 export default async function LoginPage() {
@@ -9,7 +9,6 @@ export default async function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-5 py-12">
       <div className="w-full max-w-sm">
-
         {/* 로고 */}
         <div className="mb-10 flex flex-col items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-accent)]">
@@ -19,15 +18,7 @@ export default async function LoginPage() {
           <p className="text-sm text-[var(--color-muted)]">어린이 금융교육 앱</p>
         </div>
 
-        <div className="space-y-4">
-          <SignInForm />
-          <div className="relative flex items-center gap-3">
-            <div className="h-px flex-1 bg-[var(--color-border)]" />
-            <span className="text-xs text-[var(--color-soft)]">처음이세요?</span>
-            <div className="h-px flex-1 bg-[var(--color-border)]" />
-          </div>
-          <SignUpForm />
-        </div>
+        <AuthTabs />
       </div>
     </main>
   );
