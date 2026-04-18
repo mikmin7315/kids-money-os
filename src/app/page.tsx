@@ -11,7 +11,7 @@ export default async function HomePage() {
   const [dashboard, bundle, auth] = await Promise.all([getDashboardView(), getAppDataBundle(), getAuthContext()]);
   const primaryChild = dashboard.children[0];
   const todayItems = bundle.behaviorLogs
-    .filter((item) => item.childId === primaryChild.child.id && item.date === today)
+    .filter((item) => item.childId === primaryChild?.child.id && item.date === today)
     .map((log) => {
       const rule = bundle.behaviorRules.find((item) => item.id === log.behaviorRuleId);
       return {
@@ -49,18 +49,31 @@ export default async function HomePage() {
           </Surface>
         </section>
 
-        <Section title="핵심 지표" description="모바일 첫 화면에서 바로 보이는 4가지 숫자.">
-          <PortfolioGrid
-            balance={primaryChild.wallet.balance}
-            savings={primaryChild.wallet.savingsBalance}
-            borrowed={primaryChild.wallet.borrowedBalance}
-            interestRate={primaryChild.wallet.currentInterestRate}
-          />
-        </Section>
+        {primaryChild ? (
+          <>
+            <Section title="핵심 지표" description="모바일 첫 화면에서 바로 보이는 4가지 숫자.">
+              <PortfolioGrid
+                balance={primaryChild.wallet.balance}
+                savings={primaryChild.wallet.savingsBalance}
+                borrowed={primaryChild.wallet.borrowedBalance}
+                interestRate={primaryChild.wallet.currentInterestRate}
+              />
+            </Section>
 
-        <Section title="오늘 약속" description="아이의 행동 약속이 바로 금융 결과와 연결됩니다.">
-          <TodaysBehaviorPanel items={todayItems} />
-        </Section>
+            <Section title="오늘 약속" description="아이의 행동 약속이 바로 금융 결과와 연결됩니다.">
+              <TodaysBehaviorPanel items={todayItems} />
+            </Section>
+          </>
+        ) : (
+          <Section title="시작하기" description="아이를 등록하면 대시보드가 활성화됩니다.">
+            <Surface>
+              <p className="text-sm text-[var(--color-muted)]">아직 등록된 아이가 없어요.</p>
+              <a href="/settings" className="mt-3 inline-flex h-11 items-center rounded-full bg-[var(--color-accent)] px-5 text-sm font-bold text-white">
+                아이 등록하러 가기 →
+              </a>
+            </Surface>
+          </Section>
+        )}
 
         <Section title="아이 현황" description="연결된 모든 아이의 요약.">
           <div className="mb-3">
@@ -69,16 +82,18 @@ export default async function HomePage() {
           <ChildSummaryList summaries={dashboard.children} />
         </Section>
 
-        <Section title="이번달 요약" description="리포트 화면으로 가기 전 상위 요약.">
-          <Surface>
-            <div className="grid grid-cols-2 gap-3">
-              <SummaryBox label="용돈" value={formatWon(primaryChild.monthReport.totalAllowance)} />
-              <SummaryBox label="지출" value={formatWon(primaryChild.monthReport.totalSpend)} />
-              <SummaryBox label="저축" value={formatWon(primaryChild.monthReport.totalSave)} />
-              <SummaryBox label="약속 달성률" value={`${primaryChild.monthReport.behaviorSuccessRate.toFixed(0)}%`} />
-            </div>
-          </Surface>
-        </Section>
+        {primaryChild && (
+          <Section title="이번달 요약" description="리포트 화면으로 가기 전 상위 요약.">
+            <Surface>
+              <div className="grid grid-cols-2 gap-3">
+                <SummaryBox label="용돈" value={formatWon(primaryChild.monthReport.totalAllowance)} />
+                <SummaryBox label="지출" value={formatWon(primaryChild.monthReport.totalSpend)} />
+                <SummaryBox label="저축" value={formatWon(primaryChild.monthReport.totalSave)} />
+                <SummaryBox label="약속 달성률" value={`${primaryChild.monthReport.behaviorSuccessRate.toFixed(0)}%`} />
+              </div>
+            </Surface>
+          </Section>
+        )}
 
         <Section title="최근 활동" description="행동과 금전 이벤트를 한 타임라인으로.">
           <ActivityFeed items={dashboard.activityFeed} />
