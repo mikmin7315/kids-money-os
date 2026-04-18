@@ -13,15 +13,15 @@ export function SignInForm() {
 
   return (
     <form action={action} className="space-y-3 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">Sign in</p>
-      <input className={fieldClass} name="email" type="email" placeholder="parent@email.com" />
-      <input className={fieldClass} name="password" type="password" placeholder="Password" />
+      <p className="text-lg font-semibold">로그인</p>
+      <input className={fieldClass} name="email" type="email" placeholder="이메일" />
+      <input className={fieldClass} name="password" type="password" placeholder="비밀번호" />
       <button
         type="submit"
         disabled={pending}
         className="w-full rounded-full bg-[var(--color-text)] px-4 py-3 text-sm font-semibold text-[var(--color-bg)] disabled:opacity-60"
       >
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? "로그인 중..." : "로그인"}
       </button>
       <StatusText state={state} />
     </form>
@@ -33,16 +33,16 @@ export function SignUpForm() {
 
   return (
     <form action={action} className="space-y-3 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">Create parent account</p>
-      <input className={fieldClass} name="name" type="text" placeholder="Parent name" />
-      <input className={fieldClass} name="email" type="email" placeholder="parent@email.com" />
-      <input className={fieldClass} name="password" type="password" placeholder="Password" />
+      <p className="text-lg font-semibold">부모 계정 만들기</p>
+      <input className={fieldClass} name="name" type="text" placeholder="이름" />
+      <input className={fieldClass} name="email" type="email" placeholder="이메일" />
+      <input className={fieldClass} name="password" type="password" placeholder="비밀번호" />
       <button
         type="submit"
         disabled={pending}
         className="w-full rounded-full bg-[var(--color-card)] px-4 py-3 text-sm font-semibold text-[var(--color-text)] disabled:opacity-60"
       >
-        {pending ? "Creating..." : "Create account"}
+        {pending ? "계정 생성 중..." : "계정 만들기"}
       </button>
       <StatusText state={state} />
     </form>

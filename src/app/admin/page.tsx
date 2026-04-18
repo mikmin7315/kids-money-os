@@ -56,7 +56,7 @@ export default async function AdminDashboardPage() {
               href="/"
               title="부모 대시보드 보기"
               description="일반 사용자 화면으로 이동합니다."
-              badge="Parent"
+              badge="부모"
             />
           </div>
         </Section>

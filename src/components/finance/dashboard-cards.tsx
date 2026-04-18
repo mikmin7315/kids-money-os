@@ -12,10 +12,10 @@ export function PortfolioGrid(props: {
 }) {
   return (
     <div className="grid grid-cols-2 gap-3">
-      <StatCard label="Cash balance" value={formatWon(props.balance)} hint="Spendable now" />
-      <StatCard label="Savings" value={formatWon(props.savings)} hint="Money growing with interest" />
-      <StatCard label="Borrowed" value={formatWon(props.borrowed)} hint="Needs to be repaid later" />
-      <StatCard label="Interest rate" value={formatPercent(props.interestRate)} hint="Current cycle" />
+      <StatCard label="현금 잔액" value={formatWon(props.balance)} hint="지금 쓸 수 있는 돈" />
+      <StatCard label="저축" value={formatWon(props.savings)} hint="이자가 붙는 돈" />
+      <StatCard label="빌린 돈" value={formatWon(props.borrowed)} hint="나중에 갚아야 할 돈" />
+      <StatCard label="이자율" value={formatPercent(props.interestRate)} hint="현재 이자율" />
     </div>
   );
 }
@@ -30,17 +30,17 @@ export function ChildSummaryList({ summaries }: { summaries: ChildSummary[] }) {
               <div>
                 <p className="text-lg font-semibold">{item.child.name}</p>
                 <p className="mt-1 text-sm text-[var(--color-muted)]">
-                  Today tasks {item.todaysBehaviorCount} · Pending {item.pendingApprovals}
+                  오늘 행동 {item.todaysBehaviorCount} · 대기 {item.pendingApprovals}
                 </p>
               </div>
               <Badge tone={item.pendingApprovals ? "amber" : "emerald"}>
-                {item.pendingApprovals ? "Needs review" : "Stable"}
+                {item.pendingApprovals ? "검토 필요" : "안정"}
               </Badge>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <QuickStat label="Balance" value={formatWon(item.wallet.balance)} />
-              <QuickStat label="Saved this month" value={formatWon(item.monthReport.totalSave)} />
+              <QuickStat label="잔액" value={formatWon(item.wallet.balance)} />
+              <QuickStat label="이번달 저축" value={formatWon(item.monthReport.totalSave)} />
             </div>
           </Surface>
         </Link>
@@ -58,8 +58,8 @@ export function TodaysBehaviorPanel({
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-lg font-semibold">Today tasks</p>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">This block should be the first thing a child sees.</p>
+          <p className="text-lg font-semibold">오늘의 행동 약속</p>
+          <p className="mt-1 text-sm text-[var(--color-muted)]">아이가 가장 먼저 확인하는 화면입니다.</p>
         </div>
         <TrendingUp className="h-5 w-5 text-[var(--color-accent)]" />
       </div>
@@ -70,9 +70,9 @@ export function TodaysBehaviorPanel({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium">{item.title}</p>
-                <p className="mt-1 text-sm text-[var(--color-muted)]">Reward {formatWon(item.reward)}</p>
+                <p className="mt-1 text-sm text-[var(--color-muted)]">보상 {formatWon(item.reward)}</p>
               </div>
-              <Badge tone={item.needsApproval ? "amber" : "sky"}>{item.status}</Badge>
+              <Badge tone={item.needsApproval ? "amber" : "sky"}>{statusLabel(item.status)}</Badge>
             </div>
           </div>
         ))}
@@ -86,11 +86,11 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-lg font-semibold">Recent activity</p>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">Behavior and money events share one feed.</p>
+          <p className="text-lg font-semibold">최근 활동</p>
+          <p className="mt-1 text-sm text-[var(--color-muted)]">행동과 금융 이벤트를 함께 확인합니다.</p>
         </div>
         <Link href="/records" className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-text)]">
-          View all
+          전체 보기
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -121,6 +121,14 @@ function QuickStat({ label, value }: { label: string; value: string }) {
       <p className="mt-2 text-lg font-semibold">{value}</p>
     </div>
   );
+}
+
+function statusLabel(status: string) {
+  if (status === "pending") return "대기";
+  if (status === "approved") return "승인";
+  if (status === "completed") return "완료";
+  if (status === "rejected") return "반려";
+  return status;
 }
 
 function accentClass(accent: ActivityItem["accent"]) {

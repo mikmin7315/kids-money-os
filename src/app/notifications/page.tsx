@@ -22,7 +22,7 @@ export default async function NotificationsPage() {
     notifications = result.data ?? [];
   }
 
-  const eyebrow = isChildMode ? "Child" : "Parent";
+  const eyebrow = isChildMode ? "아이" : "부모";
 
   return (
     <PageContainer>

@@ -15,11 +15,11 @@ export function ReportBarGroup({
 
   return (
     <div className="space-y-4 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">Visual breakdown</p>
-      <MetricBar label="Allowance" value={allowance} max={max} tone="sky" />
-      <MetricBar label="Spend" value={spend} max={max} tone="rose" />
-      <MetricBar label="Save" value={save} max={max} tone="emerald" />
-      <MetricBar label="Borrowed" value={borrowed} max={max} tone="amber" />
+      <p className="text-lg font-semibold">항목별 비교</p>
+      <MetricBar label="용돈" value={allowance} max={max} tone="sky" />
+      <MetricBar label="지출" value={spend} max={max} tone="rose" />
+      <MetricBar label="저축" value={save} max={max} tone="emerald" />
+      <MetricBar label="빌린 돈" value={borrowed} max={max} tone="amber" />
     </div>
   );
 }
@@ -31,7 +31,7 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
 
   return (
     <div className="space-y-3 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">Spend vs save</p>
+      <p className="text-lg font-semibold">지출 vs 저축</p>
       <div className="overflow-hidden rounded-full bg-[var(--color-card)]">
         <div className="flex h-4">
           <div className="bg-rose-400" style={{ width: `${spendWidth}%` }} />
@@ -39,8 +39,8 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <LegendBox label="Spend" value={formatWon(spend)} tone="rose" />
-        <LegendBox label="Save" value={formatWon(save)} tone="emerald" />
+        <LegendBox label="지출" value={formatWon(spend)} tone="rose" />
+        <LegendBox label="저축" value={formatWon(save)} tone="emerald" />
       </div>
     </div>
   );

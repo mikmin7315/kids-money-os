@@ -93,7 +93,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
                         보상 {formatWon(rule?.rewardAmount ?? 0)} | {rule?.requiresParentApproval ? "부모 확인 필요" : "자동 적용"}
                       </p>
                     </div>
-                    <Badge tone={log.status === "pending" ? "amber" : "emerald"}>{log.status}</Badge>
+                    <Badge tone={log.status === "pending" ? "amber" : "emerald"}>{statusLabel(log.status)}</Badge>
                   </div>
                 );
               })}
@@ -113,7 +113,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
                       <p className="font-semibold">{rule?.title}</p>
                       <p className="mt-1 text-sm text-[var(--color-muted)]">{log.date}</p>
                     </div>
-                    <Badge tone={toneForStatus(log.status)}>{log.status}</Badge>
+                    <Badge tone={toneForStatus(log.status)}>{statusLabel(log.status)}</Badge>
                   </div>
                 </Surface>
               );
@@ -132,7 +132,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
                     <p className="font-semibold">{borrow.purpose}</p>
                     <p className="mt-1 text-sm text-[var(--color-muted)]">{formatWon(borrow.requestedAmount)}</p>
                   </div>
-                  <Badge tone={borrow.status === "pending" ? "amber" : "sky"}>{borrow.status}</Badge>
+                  <Badge tone={borrow.status === "pending" ? "amber" : "sky"}>{statusLabel(borrow.status)}</Badge>
                 </div>
               </Surface>
             ))}
@@ -162,4 +162,14 @@ function toneForStatus(status: string) {
   if (status === "approved" || status === "completed") return "emerald" as const;
   if (status === "pending") return "amber" as const;
   return "rose" as const;
+}
+
+function statusLabel(status: string) {
+  if (status === "pending") return "대기";
+  if (status === "approved") return "승인";
+  if (status === "completed") return "완료";
+  if (status === "rejected") return "반려";
+  if (status === "partial") return "부분상환";
+  if (status === "repaid") return "상환완료";
+  return status;
 }
