@@ -7,7 +7,7 @@ export function PageContainer({ children }: { children: ReactNode }) {
 }
 
 export function MobileShell({ children }: { children: ReactNode }) {
-  return <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-24">{children}</div>;
+  return <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-28">{children}</div>;
 }
 
 export function Section(props: {
@@ -17,11 +17,13 @@ export function Section(props: {
   children: ReactNode;
 }) {
   return (
-    <section className="mt-6">
-      <div className="mb-3 flex items-end justify-between gap-3">
+    <section className="mt-8">
+      <div className="mb-4 flex items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">{props.title}</h2>
-          {props.description ? <p className="mt-1 text-sm text-[var(--color-muted)]">{props.description}</p> : null}
+          <h2 className="text-base font-semibold tracking-tight text-[var(--color-text)]">{props.title}</h2>
+          {props.description ? (
+            <p className="mt-0.5 text-sm text-[var(--color-muted)]">{props.description}</p>
+          ) : null}
         </div>
         {props.action}
       </div>
@@ -34,7 +36,7 @@ export function Surface({ className, children }: { className?: string; children:
   return (
     <div
       className={clsx(
-        "rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5 shadow-[0_18px_48px_rgba(48,36,24,0.10)]",
+        "rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5",
         className,
       )}
     >
@@ -49,7 +51,9 @@ export function NavLink({ href, label, active }: { href: string; label: string; 
       href={href}
       className={clsx(
         "rounded-full px-4 py-2 text-sm font-medium transition",
-        active ? "bg-[var(--color-text)] text-[var(--color-bg)]" : "bg-white/70 text-[var(--color-text)] hover:bg-white",
+        active
+          ? "bg-[var(--color-accent)] text-white"
+          : "bg-[var(--color-card)] text-[var(--color-text)] hover:bg-[var(--color-accent)] hover:text-white",
       )}
     >
       {label}
@@ -59,11 +63,11 @@ export function NavLink({ href, label, active }: { href: string; label: string; 
 
 export function StatCard({ label, value, hint }: { label: string; value: string; hint: string }) {
   return (
-    <Surface className="p-4">
-      <p className="text-sm text-[var(--color-muted)]">{label}</p>
-      <p className="mt-3 text-2xl font-semibold tracking-tight">{value}</p>
-      <p className="mt-2 text-xs text-[var(--color-soft)]">{hint}</p>
-    </Surface>
+    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4">
+      <p className="text-xs font-medium text-[var(--color-muted)]">{label}</p>
+      <p className="mt-2 text-2xl font-bold tracking-tight text-[var(--color-text)]">{value}</p>
+      <p className="mt-1.5 text-xs text-[var(--color-soft)]">{hint}</p>
+    </div>
   );
 }
 
@@ -77,12 +81,12 @@ export function Badge({
   return (
     <span
       className={clsx(
-        "inline-flex rounded-full px-3 py-1 text-xs font-semibold",
-        tone === "neutral" && "bg-stone-200 text-stone-700",
-        tone === "sky" && "bg-sky-100 text-sky-700",
-        tone === "emerald" && "bg-emerald-100 text-emerald-700",
-        tone === "amber" && "bg-amber-100 text-amber-700",
-        tone === "rose" && "bg-rose-100 text-rose-700",
+        "inline-flex rounded-full px-3 py-1 text-xs font-semibold tracking-wide",
+        tone === "neutral" && "bg-zinc-100 text-zinc-600",
+        tone === "sky" && "bg-indigo-50 text-indigo-700",
+        tone === "emerald" && "bg-emerald-50 text-emerald-700",
+        tone === "amber" && "bg-amber-50 text-amber-700",
+        tone === "rose" && "bg-rose-50 text-rose-700",
       )}
     >
       {children}

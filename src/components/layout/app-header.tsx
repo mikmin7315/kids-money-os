@@ -13,11 +13,11 @@ export function AppHeader({
   right?: ReactNode;
 }) {
   return (
-    <header className="sticky top-0 z-20 -mx-4 border-b border-[var(--color-border)] bg-[color:rgba(248,244,238,0.88)] px-4 py-4 backdrop-blur">
-      <div className="mx-auto flex max-w-md items-start justify-between gap-4">
+    <header className="sticky top-0 z-20 -mx-4 border-b border-[var(--color-border)] bg-white/90 px-4 py-4 backdrop-blur">
+      <div className="mx-auto flex max-w-md items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-soft)]">{eyebrow}</p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight">{title}</h1>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">{eyebrow}</p>
+          <h1 className="mt-1 text-xl font-bold tracking-tight text-[var(--color-text)]">{title}</h1>
         </div>
         {right}
       </div>
@@ -60,7 +60,7 @@ function HeaderIconLink({
     <Link
       aria-label={label}
       href={href}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text)] transition hover:bg-[var(--color-card)]"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-panel)] text-[var(--color-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
     >
       {children}
     </Link>

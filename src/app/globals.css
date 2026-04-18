@@ -1,23 +1,26 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --color-bg: #f8f4ee;
-  --color-panel: rgba(255, 252, 247, 0.88);
-  --color-card: #f1e7d8;
-  --color-text: #2c241d;
-  --color-muted: #6d6359;
-  --color-soft: #94887b;
-  --color-border: rgba(132, 115, 92, 0.18);
-  --color-accent: #d97706;
+  --color-bg: #ffffff;
+  --color-panel: #fafafa;
+  --color-card: #f4f3ff;
+  --color-text: #1a1523;
+  --color-muted: #6b7280;
+  --color-soft: #9ca3af;
+  --color-border: rgba(99, 102, 241, 0.14);
+  --color-accent: #4f46e5;
+  --color-accent-fg: #ffffff;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(250, 204, 21, 0.22), transparent 28%),
-    radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 22%),
-    linear-gradient(180deg, #fbf7f2 0%, #f5efe6 100%);
+  background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  font-family: "Pretendard Variable", "SUIT Variable", "Inter", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -34,5 +37,5 @@ button {
 }
 
 ::selection {
-  background: rgba(217, 119, 6, 0.18);
+  background: rgba(79, 70, 229, 0.15);
 }
