@@ -35,19 +35,18 @@ export function ChildBehaviorCheckForm({
   const [state, action] = useActionState(submitBehaviorLogForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="font-medium">오늘 약속 체크</p>
+    <form action={action} className="space-y-3">
       <input type="hidden" name="childId" value={childId} />
       <input type="hidden" name="date" value={today()} />
-      <select name="behaviorRuleId" className={fieldClass}>
+      <select name="behaviorRuleId" className={childFieldClass}>
         {behaviorRules.map((rule) => (
           <option key={rule.id} value={rule.id}>
             {rule.title}
           </option>
         ))}
       </select>
-      <input className={fieldClass} name="memo" type="text" placeholder="한 마디 남기기 (선택)" />
-      <SubmitButton label="체크 완료" />
+      <input className={childFieldClass} name="memo" type="text" placeholder="한 마디 남기기 (선택)" />
+      <PlayButton label="체크 완료 ✅" />
       <FormMessage state={state} />
     </form>
   );
@@ -57,17 +56,16 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
   const [state, action] = useActionState(submitBorrowRequestForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="font-medium">미리쓰기 요청</p>
+    <form action={action} className="space-y-3">
       <input type="hidden" name="childId" value={childId} />
-      <input className={fieldClass} name="purpose" type="text" placeholder="무엇을 사고 싶나요?" />
-      <input className={fieldClass} name="requestedAmount" type="number" min="1" defaultValue="3000" />
-      <select className={fieldClass} name="repaymentMode" defaultValue="next_allowance">
+      <input className={childFieldClass} name="purpose" type="text" placeholder="무엇을 사고 싶나요?" />
+      <input className={childFieldClass} name="requestedAmount" type="number" min="1" defaultValue="3000" />
+      <select className={childFieldClass} name="repaymentMode" defaultValue="next_allowance">
         <option value="next_allowance">다음 용돈에서 상환</option>
         <option value="installment">분할 상환</option>
       </select>
-      <input className={fieldClass} name="installmentCount" type="number" min="1" defaultValue="2" placeholder="분할 횟수" />
-      <SubmitButton label="요청 보내기" />
+      <input className={childFieldClass} name="installmentCount" type="number" min="1" defaultValue="2" placeholder="분할 횟수" />
+      <PlayButton label="요청 보내기 💳" />
       <FormMessage state={state} />
     </form>
   );
@@ -82,15 +80,15 @@ export function InlineBehaviorDecisionForm({ behaviorLogId }: { behaviorLogId: s
   const [rejectState, rejectAction] = useActionState(submitBehaviorRejectForm, initialState);
 
   return (
-    <div className="space-y-3">
-      <form action={approveAction} className="space-y-3">
+    <div className="space-y-2.5">
+      <form action={approveAction} className="space-y-2.5">
         <input type="hidden" name="behaviorLogId" value={behaviorLogId} />
         <input className={fieldClass} name="approvedDate" type="date" defaultValue={today()} />
-        <SubmitButton label="승인" />
+        <SubmitButton label="약속 확인해줄게요 ✓" />
       </form>
-      <form action={rejectAction} className="space-y-3">
+      <form action={rejectAction}>
         <input type="hidden" name="behaviorLogId" value={behaviorLogId} />
-        <SecondarySubmitButton label="반려" />
+        <SecondarySubmitButton label="다시 이야기해봐요" />
       </form>
       <FormMessage state={approveState.message ? approveState : rejectState} />
     </div>
@@ -102,15 +100,15 @@ export function InlineBorrowDecisionForm({ borrowRequestId }: { borrowRequestId:
   const [rejectState, rejectAction] = useActionState(submitBorrowRejectForm, initialState);
 
   return (
-    <div className="space-y-3">
-      <form action={approveAction} className="space-y-3">
+    <div className="space-y-2.5">
+      <form action={approveAction} className="space-y-2.5">
         <input type="hidden" name="borrowRequestId" value={borrowRequestId} />
         <input className={fieldClass} name="approvalDate" type="date" defaultValue={today()} />
-        <SubmitButton label="승인" />
+        <SubmitButton label="이 조건으로 허락할게요 ✓" />
       </form>
-      <form action={rejectAction} className="space-y-3">
+      <form action={rejectAction}>
         <input type="hidden" name="borrowRequestId" value={borrowRequestId} />
-        <SecondarySubmitButton label="반려" />
+        <SecondarySubmitButton label="조금 더 이야기해봐요" />
       </form>
       <FormMessage state={approveState.message ? approveState : rejectState} />
     </div>
@@ -131,8 +129,8 @@ export function BehaviorLogQuickForm({
   const [state, action] = useActionState(submitBehaviorLogForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="font-medium">행동 기록 테스트</p>
+    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
+      <p className="font-display text-xl font-semibold">행동 기록 테스트</p>
       <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
         {childOptions.map((child) => (
           <option key={child.id} value={child.id}>
@@ -159,8 +157,8 @@ export function TransactionQuickForm({ childOptions }: { childOptions: ChildProf
   const [state, action] = useActionState(submitTransactionForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="font-medium">거래 테스트</p>
+    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
+      <p className="font-display text-xl font-semibold">거래 테스트</p>
       <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
         {childOptions.map((child) => (
           <option key={child.id} value={child.id}>
@@ -192,8 +190,8 @@ export function MonthlyReportQuickForm({ childOptions }: { childOptions: ChildPr
   const now = new Date();
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="font-medium">월별 리포트 생성</p>
+    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
+      <p className="font-display text-xl font-semibold">월별 리포트 생성</p>
       <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
         {childOptions.map((child) => (
           <option key={child.id} value={child.id}>
@@ -213,6 +211,20 @@ export function MonthlyReportQuickForm({ childOptions }: { childOptions: ChildPr
 // Shared primitives
 // ────────────────────────────────────────────────────────────
 
+function PlayButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full rounded-full bg-[var(--color-accent)] px-4 py-3.5 text-sm font-bold text-[var(--color-accent-fg)] shadow-[0_4px_0_var(--color-accent-strong)] transition-all active:translate-y-[2px] active:shadow-[0_2px_0_var(--color-accent-strong)] disabled:opacity-60"
+    >
+      {pending ? "처리 중..." : label}
+    </button>
+  );
+}
+
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
 
@@ -220,7 +232,7 @@ function SubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-full bg-[var(--color-text)] px-4 py-3 text-sm font-semibold text-[var(--color-bg)] disabled:opacity-60"
+      className="w-full rounded-full bg-[var(--color-text)] px-4 py-3 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-95 disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>
@@ -234,7 +246,7 @@ function SecondarySubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-full border border-[var(--color-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--color-text)] disabled:opacity-60"
+      className="w-full rounded-full border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>
@@ -252,4 +264,7 @@ function FormMessage({ state }: { state: FormState }) {
 }
 
 const fieldClass =
-  "w-full rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-text)]";
+  "w-full rounded-[20px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-text)] outline-none transition focus:border-[var(--color-accent)]";
+
+const childFieldClass =
+  "w-full rounded-[20px] border border-[var(--color-chip-border,var(--color-border))] bg-[var(--color-surface-soft,var(--color-card))] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition focus:border-[var(--color-accent)]";

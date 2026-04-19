@@ -22,14 +22,17 @@ export function RecordList(props: {
   return (
     <div className="space-y-4">
       {groups.map((group) => (
-        <Surface key={group.date}>
+        <Surface key={group.date} className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))]">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold">{formatDateLabel(group.date)}</h3>
+            <h3 className="font-display text-xl font-semibold">{formatDateLabel(group.date)}</h3>
             <Badge>{group.items.length} items</Badge>
           </div>
           <div className="mt-4 space-y-3">
             {group.items.map((item) => (
-              <div key={item.id} className="rounded-3xl bg-[var(--color-card)] p-4">
+              <div
+                key={item.id}
+                className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(239,228,210,0.9))] p-4"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-medium">{item.title}</p>

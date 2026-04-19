@@ -3,7 +3,30 @@
     "allow": [
       "Bash(npx tsc *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git config *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh api *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:getdesign.md)",
+      "Bash(npx getdesign@latest add revolut)",
+      "Bash(npx kill-port *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000/api/debug)",
+      "Bash(curl -s http://localhost:3000/settings)",
+      "Bash(curl -s -L http://localhost:3000/settings)",
+      "Bash(python3 -c \"import sys; content=sys.stdin.read\\(\\); print\\(len\\(content\\), 'chars'\\); print\\('form' in content, 'has form'\\); print\\('ChildPin' in content\\); print\\(content[:2000]\\)\")",
+      "Bash(vercel env *)",
+      "Bash(npx vercel *)",
+      "Bash(npx gh *)",
+      "Bash(curl -s https://api.github.com/repos/mikmin7315/kids-money-os)"
     ]
   }
 }

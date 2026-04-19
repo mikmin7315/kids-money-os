@@ -1,28 +1,142 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #ffffff;
-  --color-panel: #fafafa;
-  --color-card: #f4f3ff;
-  --color-text: #1a1523;
-  --color-muted: #6b7280;
-  --color-soft: #9ca3af;
-  --color-border: rgba(99, 102, 241, 0.14);
-  --color-accent: #4f46e5;
+  --font-display: "Sora", "Pretendard Variable", "SUIT Variable", sans-serif;
+  --font-body: "Pretendard Variable", "SUIT Variable", "Inter", "Noto Sans KR", sans-serif;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+
+  --shadow-soft: 0 20px 60px rgba(52, 39, 19, 0.14);
+  --shadow-card: 0 28px 90px rgba(52, 39, 19, 0.2);
+
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+
+  --color-bg: #f3e8d7;
+  --color-panel: rgba(255, 250, 242, 0.9);
+  --color-card: #ead6ba;
+  --color-card-2: #fff7ec;
+  --color-text: #191612;
+  --color-muted: #65584b;
+  --color-soft: #8f7a66;
+  --color-border: rgba(74, 54, 24, 0.18);
+  --color-accent: #0a7f73;
+  --color-accent-strong: #075b53;
   --color-accent-fg: #ffffff;
-  --color-success: #059669;
-  --color-warning: #d97706;
+  --color-success: #237b57;
+  --color-warn: #c87a22;
+  --color-danger: #cf4c3c;
+  --color-hero-start: rgba(255, 231, 190, 0.96);
+  --color-hero-end: rgba(215, 238, 232, 0.94);
+  --color-hero-orb: rgba(196, 129, 39, 0.22);
+}
+
+[data-theme="parent"] {
+  --color-bg: #f6efe2;
+  --color-panel: rgba(255, 251, 245, 0.88);
+  --color-card: #efe4d2;
+  --color-card-2: #f9f3ea;
+  --color-text: #1d1b17;
+  --color-muted: #6f665c;
+  --color-soft: #a08f7a;
+  --color-border: rgba(87, 70, 49, 0.12);
+  --color-accent: #0f8b7c;
+  --color-accent-strong: #0a5d56;
+  --color-accent-fg: #ffffff;
+  --color-success: #237b57;
+  --color-warn: #c87a22;
+  --color-danger: #cf4c3c;
+  --color-hero-start: rgba(255, 241, 214, 0.9);
+  --color-hero-end: rgba(233, 243, 240, 0.9);
+  --color-hero-orb: rgba(201, 139, 58, 0.16);
+}
+
+[data-theme="child"] {
+  --color-bg: #fff8ec;
+  --color-panel: #fffdf8;
+  --color-card: #ffe7a8;
+  --color-card-2: #fff2cb;
+  --color-text: #2d1f12;
+  --color-muted: #7a624d;
+  --color-soft: #d79a34;
+  --color-border: #f2cf7a;
+  --color-accent: #ff8a3d;
+  --color-accent-strong: #ec6c1a;
+  --color-accent-fg: #ffffff;
+  --color-success: #3aa76d;
+  --color-warn: #d97706;
   --color-danger: #dc2626;
+  --color-hero-from: #ff8a3d;
+  --color-hero-via: #ffb347;
+  --color-hero-to: #ffd98a;
+  --color-hero-text: #ffffff;
+  --color-hero-subtext: rgba(255, 255, 255, 0.8);
+  --color-hero-muted: rgba(255, 255, 255, 0.6);
+  --color-hero-label: rgba(255, 255, 255, 0.7);
+  --color-chip-bg: #fffdf8;
+  --color-chip-border: #f2cf7a;
+  --color-stamp-done: #3aa76d;
+  --color-stamp-done-bg: rgba(58, 167, 109, 0.1);
+  --color-stamp-pending-bg: #fff2cb;
+  --color-surface-soft: #fff2cb;
+  --color-surface-strong: #ffe7a8;
+  --color-overlay-soft: rgba(255, 138, 61, 0.1);
+}
+
+.bg-hero-gradient {
+  background: linear-gradient(
+    to bottom,
+    var(--color-hero-from, #ff8a3d),
+    var(--color-hero-via, #ffb347) 50%,
+    var(--color-hero-to, #ffd98a)
+  );
+}
+
+html {
+  background:
+    linear-gradient(90deg, rgba(122, 96, 54, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(122, 96, 54, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, #f7efe4 0%, #efe2cf 100%);
+  background-size: 28px 28px, 28px 28px, auto;
 }
 
 body {
-  background-color: var(--color-bg);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 8%, var(--color-hero-orb), transparent 18rem),
+    radial-gradient(circle at 90% 6%, rgba(10, 127, 115, 0.18), transparent 16rem),
+    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.42), transparent 22rem),
+    linear-gradient(180deg, var(--color-hero-start) 0%, var(--color-bg) 26%, #eadcc8 100%);
   color: var(--color-text);
-  font-family: "Pretendard Variable", "SUIT Variable", "Inter", "Noto Sans KR", sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
-a { color: inherit; text-decoration: none; }
-button { cursor: pointer; }
-::selection { background: rgba(79, 70, 229, 0.15); }
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgba(15, 139, 124, 0.18);
+}

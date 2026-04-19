@@ -14,8 +14,8 @@ export function ReportBarGroup({
   const max = Math.max(allowance, spend, save, borrowed, 1);
 
   return (
-    <div className="space-y-4 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">항목별 비교</p>
+    <div className="space-y-5 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(249,243,234,0.94))] p-5">
+      <p className="font-display text-xl font-semibold">항목별 비교</p>
       <MetricBar label="용돈" value={allowance} max={max} tone="sky" />
       <MetricBar label="지출" value={spend} max={max} tone="rose" />
       <MetricBar label="저축" value={save} max={max} tone="emerald" />
@@ -30,12 +30,12 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
   const saveWidth = (save / total) * 100;
 
   return (
-    <div className="space-y-3 rounded-[28px] border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
-      <p className="text-lg font-semibold">지출 vs 저축</p>
+    <div className="space-y-4 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(239,228,210,0.9))] p-5">
+      <p className="font-display text-xl font-semibold">지출 vs 저축</p>
       <div className="overflow-hidden rounded-full bg-[var(--color-card)]">
         <div className="flex h-4">
-          <div className="bg-rose-400" style={{ width: `${spendWidth}%` }} />
-          <div className="bg-emerald-400" style={{ width: `${saveWidth}%` }} />
+          <div className="bg-[linear-gradient(90deg,#e27d60,#d65f4a)]" style={{ width: `${spendWidth}%` }} />
+          <div className="bg-[linear-gradient(90deg,#2e8b68,#56b487)]" style={{ width: `${saveWidth}%` }} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -73,7 +73,7 @@ function MetricBar({
         <span className="text-[var(--color-muted)]">{label}</span>
         <span className="font-semibold text-[var(--color-text)]">{formatWon(value)}</span>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-[var(--color-card)]">
+      <div className="h-3 overflow-hidden rounded-full bg-[rgba(160,143,122,0.18)]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width }} />
       </div>
     </div>
@@ -90,12 +90,12 @@ function LegendBox({
   tone: "rose" | "emerald";
 }) {
   return (
-    <div className="rounded-3xl bg-[var(--color-card)] p-4">
+    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-white/60 p-4">
       <div className="flex items-center gap-2">
         <span className={`h-2.5 w-2.5 rounded-full ${tone === "rose" ? "bg-rose-400" : "bg-emerald-400"}`} />
-        <p className="text-xs text-[var(--color-muted)]">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-soft)]">{label}</p>
       </div>
-      <p className="mt-2 text-lg font-semibold text-[var(--color-text)]">{value}</p>
+      <p className="mt-3 font-display text-xl font-semibold text-[var(--color-text)]">{value}</p>
     </div>
   );
 }

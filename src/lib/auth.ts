@@ -42,9 +42,7 @@ export async function requireParentSession() {
 
   if (
     auth.isConfigured &&
-    auth.profile &&
-    auth.profile.role !== "parent" &&
-    auth.profile.role !== "admin"
+    (!auth.profile || (auth.profile.role !== "parent" && auth.profile.role !== "admin"))
   ) {
     redirect("/login");
   }
@@ -57,9 +55,19 @@ export async function requireAdminSession() {
 
   if (auth.isConfigured && !auth.user) redirect("/admin/login");
 
-  if (auth.isConfigured && auth.profile && auth.profile.role !== "admin") {
+  if (auth.isConfigured && (!auth.profile || auth.profile.role !== "admin")) {
     redirect("/admin/login");
   }
 
   return auth;
+}
+
+export async function requireChildOrParentAccess(childId: string): Promise<{ isParent: boolean; isChild: boolean }> {
+  const [auth, childMode] = await Promise.all([getAuthContext(), getChildModeContext()]);
+  const isChild = childMode.childId === childId;
+  const isParent =
+    auth.user != null &&
+    auth.profile != null &&
+    (auth.profile.role === "parent" || auth.profile.role === "admin");
+  return { isParent, isChild };
 }

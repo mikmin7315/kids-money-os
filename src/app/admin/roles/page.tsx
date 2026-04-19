@@ -31,13 +31,24 @@ export default function AdminRolesPage() {
       <MobileShell>
         <AppHeader eyebrow="Admin / RBAC" title="역할 관리" />
 
+        <section className="mt-6">
+          <Surface className="bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">RBAC</p>
+            <p className="mt-3 font-display text-2xl font-semibold tracking-tight text-[var(--color-text)]">
+              사용자 역할을
+              <br />
+              중앙에서 관리합니다.
+            </p>
+          </Surface>
+        </section>
+
         <Section title="사용자 목록" description="모든 계정의 역할을 조회하고 변경합니다.">
           {loading ? (
-            <Surface>
+            <Surface className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))]">
               <p className="text-sm text-[var(--color-muted)]">불러오는 중...</p>
             </Surface>
           ) : profiles.length === 0 ? (
-            <Surface>
+            <Surface className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))]">
               <p className="text-sm text-[var(--color-muted)]">등록된 계정이 없습니다.</p>
             </Surface>
           ) : (
@@ -57,10 +68,10 @@ function ProfileCard({ profile }: { profile: Profile }) {
   const [state, action, pending] = useActionState(updateRoleForm, initialState);
 
   return (
-    <Surface>
+    <Surface className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))]">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-semibold">{profile.name}</p>
+          <p className="font-display text-xl font-semibold">{profile.name}</p>
           <p className="mt-1 text-sm text-[var(--color-muted)]">{profile.email}</p>
         </div>
         <Badge tone={profile.role === "admin" ? "rose" : "sky"}>
@@ -73,7 +84,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         <select
           name="role"
           defaultValue={profile.role}
-          className="flex-1 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)]"
+          className="flex-1 rounded-[20px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-text)]"
         >
           <option value="parent">parent</option>
           <option value="admin">admin</option>
@@ -81,7 +92,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-full bg-[var(--color-text)] px-4 py-2 text-sm font-semibold text-[var(--color-bg)] disabled:opacity-60"
+          className="rounded-full bg-[var(--color-text)] px-4 py-3 text-sm font-semibold text-[var(--color-bg)] disabled:opacity-60"
         >
           {pending ? "저장 중" : "변경"}
         </button>

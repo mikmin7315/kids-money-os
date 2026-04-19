@@ -1,6 +1,6 @@
 "use server";
 
-import { requireParentSession, getChildModeContext } from "@/lib/auth";
+import { requireParentSession, getAuthContext, getChildModeContext } from "@/lib/auth";
 import { hasSupabaseEnv } from "@/lib/data";
 import { getSupabaseAdminClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -96,12 +96,27 @@ export async function countUnreadParentNotificationsAction(): Promise<number> {
 export async function markNotificationsReadAction(ids: string[]): Promise<ActionResult<void>> {
   if (!hasSupabaseEnv() || ids.length === 0) return { ok: true };
   try {
+    const [auth, childMode] = await Promise.all([getAuthContext(), getChildModeContext()]);
     const admin = getSupabaseAdminClient();
-    const { error } = await admin
-      .from("notifications")
-      .update({ is_read: true })
-      .in("id", ids);
-    if (error) throw error;
+
+    if (auth.user) {
+      const { error } = await admin
+        .from("notifications")
+        .update({ is_read: true })
+        .in("id", ids)
+        .eq("parent_id", auth.user.id);
+      if (error) throw error;
+    } else if (childMode.childId) {
+      const { error } = await admin
+        .from("notifications")
+        .update({ is_read: true })
+        .in("id", ids)
+        .eq("child_id", childMode.childId);
+      if (error) throw error;
+    } else {
+      return { ok: false, error: "권한 없음" };
+    }
+
     return { ok: true };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "읽음 처리 실패." };

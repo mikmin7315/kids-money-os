@@ -34,8 +34,8 @@ export default async function AdminDashboardPage() {
         <AppHeader eyebrow="Admin" title="운영 대시보드" />
 
         <section className="mt-6">
-          <Surface className="bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(224,242,254,0.92))]">
-            <p className="text-sm font-medium text-[var(--color-soft)]">Monari 관리자</p>
+          <Surface className="bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">Monari Admin</p>
             <div className="mt-4 grid grid-cols-3 gap-3">
               <StatChip label="부모 계정" value={`${stats.totalParents}`} />
               <StatChip label="아이" value={`${stats.totalChildren}`} />
@@ -84,9 +84,9 @@ export default async function AdminDashboardPage() {
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl bg-white/70 p-3">
-      <p className="text-xs text-[var(--color-muted)]">{label}</p>
-      <p className="mt-2 text-lg font-semibold">{value}</p>
+    <div className="rounded-[22px] border border-[rgba(87,70,49,0.08)] bg-white/70 p-3">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
+      <p className="mt-2 font-display text-lg font-semibold">{value}</p>
     </div>
   );
 }
@@ -94,7 +94,7 @@ function StatChip({ label, value }: { label: string; value: string }) {
 function MenuCard({ href, title, description, badge }: { href: string; title: string; description: string; badge: string }) {
   return (
     <Link href={href}>
-      <Surface className="transition hover:bg-white">
+      <Surface className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] transition hover:bg-white">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="font-semibold">{title}</p>

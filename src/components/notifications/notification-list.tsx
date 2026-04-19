@@ -40,7 +40,7 @@ export function NotificationList({ notifications }: { notifications: AppNotifica
           <button
             onClick={markAllRead}
             disabled={pending}
-            className="rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-xs font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-card)] disabled:opacity-50"
+            className="rounded-full border border-[var(--color-border)] bg-white/80 px-4 py-2 text-xs font-medium text-[var(--color-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50"
           >
             {pending ? "처리 중..." : "모두 읽음 처리"}
           </button>
@@ -73,8 +73,8 @@ function NotificationCard({
       onClick={onRead}
       className={`cursor-pointer rounded-[28px] border p-5 shadow-[0_18px_48px_rgba(48,36,24,0.10)] transition ${
         n.isRead
-          ? "border-[var(--color-border)] bg-[var(--color-panel)]"
-          : "border-[var(--color-soft)]/30 bg-white"
+          ? "border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(249,243,234,0.95))]"
+          : "border-[rgba(15,139,124,0.2)] bg-white"
       }`}
     >
       <div className="flex items-start gap-3">

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { approveBorrowRequest, computeMonthlyReport, createMoneyTransaction } from "@/lib/finance";
-import { requireParentSession } from "@/lib/auth";
+import { requireParentSession, requireChildOrParentAccess } from "@/lib/auth";
 import { getAppDataBundle, hasSupabaseEnv } from "@/lib/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { insertNotification, getParentIdForChild } from "@/lib/notifications";
@@ -24,6 +24,9 @@ export async function createBehaviorLogAction(input: {
   date: string;
   memo?: string;
 }): Promise<ActionResult<{ id: string }>> {
+  const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
+  if (!isParent && !isChild) return { ok: false, error: "권한 없음" };
+
   if (!hasSupabaseEnv()) {
     return { ok: true, data: { id: `mock-log-${Date.now()}` } };
   }
@@ -244,6 +247,9 @@ export async function createBorrowRequestAction(input: {
   repaymentMode: "next_allowance" | "installment";
   installmentCount?: number;
 }): Promise<ActionResult<{ id: string }>> {
+  const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
+  if (!isParent && !isChild) return { ok: false, error: "권한 없음" };
+
   // Interest rate computed server-side from child's current policy (not accepted from client)
   const bundle = await getAppDataBundle();
   const policy = bundle.interestPolicies.find((p) => p.childId === input.childId);

@@ -134,11 +134,11 @@ export async function validateChildPinAction(input: {
     if (error) throw error;
     if (!child) return { ok: false, error: "아이를 찾을 수 없습니다." };
 
-    // If no PIN is set, any input passes (parent hasn't configured PIN yet)
-    if (child.pin_code) {
-      const valid = await verifyPin(input.pin, child.pin_code);
-      if (!valid) return { ok: false, error: "PIN이 올바르지 않습니다." };
+    if (!child.pin_code) {
+      return { ok: false, error: "PIN이 설정되지 않았습니다. 부모님께 PIN 설정을 요청하세요." };
     }
+    const valid = await verifyPin(input.pin, child.pin_code);
+    if (!valid) return { ok: false, error: "PIN이 올바르지 않습니다." };
 
     const cookieStore = await cookies();
     cookieStore.set("child_mode", input.childId, {
@@ -372,8 +372,8 @@ export async function createChildForm(_: ManagementFormState, formData: FormData
 
   const result = await createChildAction({ name, nickname, birthYear });
   return result.ok
-    ? { ok: true, message: `아이 생성 완료: ${result.data?.id}` }
-    : { ok: false, message: result.error ?? "아이 생성 실패." };
+    ? { ok: true, message: `${name} 프로필이 추가됐어요! 🎉` }
+    : { ok: false, message: result.error ?? "아이 추가에 실패했어요." };
 }
 
 export async function createBehaviorRuleForm(

@@ -25,10 +25,10 @@ export function ChildSummaryList({ summaries }: { summaries: ChildSummary[] }) {
     <div className="space-y-3">
       {summaries.map((item) => (
         <Link key={item.child.id} href={`/child/${item.child.id}`} className="block">
-          <Surface className="transition hover:-translate-y-0.5 hover:bg-white">
+          <Surface className="transition hover:-translate-y-0.5 hover:bg-white/95">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold">{item.child.name}</p>
+                <p className="font-display text-xl font-semibold">{item.child.name}</p>
                 <p className="mt-1 text-sm text-[var(--color-muted)]">
                   오늘 행동 {item.todaysBehaviorCount} · 대기 {item.pendingApprovals}
                 </p>
@@ -38,7 +38,7 @@ export function ChildSummaryList({ summaries }: { summaries: ChildSummary[] }) {
               </Badge>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-2 gap-3">
               <QuickStat label="잔액" value={formatWon(item.wallet.balance)} />
               <QuickStat label="이번달 저축" value={formatWon(item.monthReport.totalSave)} />
             </div>
@@ -58,7 +58,7 @@ export function TodaysBehaviorPanel({
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-lg font-semibold">오늘의 행동 약속</p>
+          <p className="font-display text-xl font-semibold">오늘의 행동 약속</p>
           <p className="mt-1 text-sm text-[var(--color-muted)]">아이가 가장 먼저 확인하는 화면입니다.</p>
         </div>
         <TrendingUp className="h-5 w-5 text-[var(--color-accent)]" />
@@ -66,7 +66,10 @@ export function TodaysBehaviorPanel({
 
       <div className="mt-4 space-y-3">
         {items.map((item) => (
-          <div key={`${item.title}-${item.status}`} className="rounded-3xl bg-[var(--color-card)] p-4">
+          <div
+            key={`${item.title}-${item.status}`}
+            className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(239,228,210,0.92))] p-4"
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium">{item.title}</p>
@@ -86,7 +89,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-lg font-semibold">최근 활동</p>
+          <p className="font-display text-xl font-semibold">최근 활동</p>
           <p className="mt-1 text-sm text-[var(--color-muted)]">행동과 금융 이벤트를 함께 확인합니다.</p>
         </div>
         <Link href="/records" className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-text)]">
@@ -97,7 +100,10 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
 
       <div className="mt-4 space-y-3">
         {items.slice(0, 8).map((item) => (
-          <div key={item.id} className="flex items-start gap-3 rounded-3xl bg-[var(--color-card)] p-4">
+          <div
+            key={item.id}
+            className="flex items-start gap-3 rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(249,243,234,0.92))] p-4"
+          >
             <span className={`mt-1 h-2.5 w-2.5 rounded-full ${accentClass(item.accent)}`} />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-3">
@@ -116,9 +122,9 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="text-xs text-[var(--color-muted)]">{label}</p>
-      <p className="mt-2 text-lg font-semibold">{value}</p>
+    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[var(--color-card-2)] p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
+      <p className="mt-3 font-display text-xl font-semibold">{value}</p>
     </div>
   );
 }

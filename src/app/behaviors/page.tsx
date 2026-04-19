@@ -1,8 +1,7 @@
-import { BehaviorLogQuickForm } from "@/components/finance/action-forms";
 import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
 import { AppHeader, HeaderActions } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { Badge, MobileShell, PageContainer, Section, Surface } from "@/components/ui/primitives";
+import { Badge, EmptyState, HeroPill, MobileShell, PageContainer, PageHero, Section } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
@@ -10,71 +9,104 @@ import { formatPercent, formatWon } from "@/lib/format";
 export default async function BehaviorsPage() {
   await requireParentSession();
   const bundle = await getAppDataBundle();
+  const activeRules = bundle.behaviorRules.filter((r) => r.isActive);
+  const autoRules = activeRules.filter((r) => !r.requiresParentApproval).length;
+  const reviewRules = activeRules.filter((r) => r.requiresParentApproval).length;
+  const recentLogs = bundle.behaviorLogs.slice(0, 10);
 
   return (
     <PageContainer>
       <MobileShell>
-        <AppHeader eyebrow="행동 규칙" title="행동 약속 관리" right={<HeaderActions />} />
+        <AppHeader eyebrow="행동 약속" title="함께 정한 약속" right={<HeaderActions />} />
 
-        <Section title="이 시스템의 원리" description="보상과 이자율 변동이 연결되어 행동이 금융에 직접 영향을 줍니다.">
-          <Surface>
-            <ul className="space-y-3 text-sm leading-6 text-[var(--color-muted)]">
-              <li>행동 약속은 현금 보상, 이자율 변동, 또는 둘 다에 영향을 줄 수 있습니다.</li>
-              <li>부모 확인은 선택 사항으로 설정할 수 있어 신뢰 우선 또는 확인 우선 방식을 모두 지원합니다.</li>
-              <li>이 구조는 미션, 배지, AI 코칭으로 자연스럽게 확장될 수 있습니다.</li>
-            </ul>
-          </Surface>
-        </Section>
+        <PageHero
+          eyebrow="약속과 돈의 연결"
+          title={<>행동이 이자를<br />만들어요</>}
+          description="아이와 함께 정한 약속이 지켜지면 보상이 생기고, 쌓이면 이자율이 올라가요."
+          stats={
+            <div className="grid grid-cols-3 gap-3">
+              <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
+              <HeroPill label="자동 완료" value={`${autoRules}개`} />
+              <HeroPill label="확인 필요" value={`${reviewRules}개`} />
+            </div>
+          }
+        />
 
-        <Section title="행동 규칙 목록" description="부모가 설정한 행동 약속 규칙 목록입니다.">
-          <div className="space-y-3">
-            {bundle.behaviorRules.map((rule) => (
-              <Surface key={rule.id}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-lg font-semibold">{rule.title}</p>
-                    <p className="mt-1 text-sm text-[var(--color-muted)]">{rule.description}</p>
-                  </div>
-                  <Badge tone={rule.requiresParentApproval ? "amber" : "emerald"}>
-                    {rule.requiresParentApproval ? "부모 확인 필요" : "자동 적용"}
-                  </Badge>
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <RuleMetric label="보상" value={formatWon(rule.rewardAmount)} />
-                  <RuleMetric label="이자율 변동" value={formatPercent(rule.interestDelta)} />
-                </div>
-              </Surface>
-            ))}
-          </div>
-        </Section>
-
-        <Section title="새 규칙 만들기" description="앱을 벗어나지 않고 새 행동 약속을 추가하세요.">
-          <BehaviorRuleCreateForm />
-        </Section>
-
-        <Section title="행동 기록 테스트" description="행동 기록 흐름을 확인할 수 있는 테스트 폼입니다.">
-          <BehaviorLogQuickForm childOptions={bundle.children} behaviorRules={bundle.behaviorRules} />
-        </Section>
-
-        <Section title="최근 기록" description="아이의 최근 행동 체크인과 부모 승인 상태입니다.">
-          <div className="space-y-3">
-            {bundle.behaviorLogs.map((log) => {
-              const rule = bundle.behaviorRules.find((item) => item.id === log.behaviorRuleId);
-              return (
-                <Surface key={log.id}>
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-semibold">{rule?.title}</p>
-                      <p className="mt-1 text-sm text-[var(--color-muted)]">{log.date}</p>
+        <Section title="현재 약속 목록" description="아이와 함께 정한 약속들이에요.">
+          {activeRules.length === 0 ? (
+            <EmptyState
+              message="아직 정한 약속이 없어요."
+              hint="아래에서 첫 번째 약속을 만들어보세요."
+            />
+          ) : (
+            <div className="space-y-3">
+              {activeRules.map((rule) => (
+                <div
+                  key={rule.id}
+                  className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <p className="font-display text-lg font-semibold leading-tight">{rule.title}</p>
+                      {rule.description && (
+                        <p className="mt-1.5 text-sm leading-6 text-[var(--color-muted)]">{rule.description}</p>
+                      )}
                     </div>
-                    <Badge tone={toneForStatus(log.status)}>{statusLabel(log.status)}</Badge>
+                    <Badge tone={rule.requiresParentApproval ? "amber" : "emerald"}>
+                      {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
+                    </Badge>
                   </div>
-                </Surface>
-              );
-            })}
+
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <RuleMetric label="약속 보상" value={formatWon(rule.rewardAmount)} />
+                    <RuleMetric label="이자율 변화" value={`+${formatPercent(rule.interestDelta)}`} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+
+        <Section title="새 약속 만들기" description="아이와 함께 이야기한 뒤 약속을 추가해보세요.">
+          <div className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5">
+            <p className="mb-4 text-sm leading-6 text-[var(--color-muted)]">
+              보상 금액과 이자율 변화를 같이 설정하면, 약속이 아이의 통장에 바로 연결돼요.
+            </p>
+            <BehaviorRuleCreateForm />
           </div>
         </Section>
+
+        {recentLogs.length > 0 && (
+          <Section title="최근 약속 기록" description="아이가 체크한 약속 기록이에요.">
+            <div className="space-y-2">
+              {recentLogs.map((log) => {
+                const rule = bundle.behaviorRules.find((r) => r.id === log.behaviorRuleId);
+                const child = bundle.children.find((c) => c.id === log.childId);
+                const statusMap: Record<string, { label: string; tone: "neutral" | "sky" | "emerald" | "amber" | "rose" }> = {
+                  pending: { label: "확인 대기", tone: "amber" },
+                  completed: { label: "완료", tone: "emerald" },
+                  approved: { label: "확인됨", tone: "emerald" },
+                  rejected: { label: "다시 도전", tone: "neutral" },
+                };
+                const display = statusMap[log.status] ?? { label: log.status, tone: "neutral" as const };
+                return (
+                  <div
+                    key={log.id}
+                    className="flex items-center justify-between rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-[var(--color-text)]">{rule?.title ?? "약속"}</p>
+                      <p className="mt-0.5 text-xs text-[var(--color-muted)]">
+                        {child?.name} · {log.date}
+                      </p>
+                    </div>
+                    <Badge tone={display.tone}>{display.label}</Badge>
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+        )}
       </MobileShell>
       <BottomNav pathname="/behaviors" />
     </PageContainer>
@@ -83,23 +115,9 @@ export default async function BehaviorsPage() {
 
 function RuleMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl bg-[var(--color-card)] p-4">
-      <p className="text-xs text-[var(--color-muted)]">{label}</p>
-      <p className="mt-2 text-lg font-semibold">{value}</p>
+    <div className="rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-white/60 p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
+      <p className="mt-2.5 font-display text-lg font-semibold">{value}</p>
     </div>
   );
-}
-
-function toneForStatus(status: string) {
-  if (status === "approved" || status === "completed") return "emerald" as const;
-  if (status === "pending") return "amber" as const;
-  return "rose" as const;
-}
-
-function statusLabel(status: string) {
-  if (status === "pending") return "대기";
-  if (status === "approved") return "승인";
-  if (status === "completed") return "완료";
-  if (status === "rejected") return "반려";
-  return status;
 }

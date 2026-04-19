@@ -115,9 +115,8 @@ export function AuthTabs() {
   const [tab, setTab] = useState<"social" | "phone" | "email">("social");
 
   return (
-    <div className="space-y-5">
-      {/* 탭 */}
-      <div className="grid grid-cols-3 gap-1 rounded-full bg-[var(--color-card)] p-1">
+    <div className="space-y-5 rounded-[30px] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(249,243,234,0.95))] p-5 shadow-[var(--shadow-card)]">
+      <div className="grid grid-cols-3 gap-1 rounded-full bg-[rgba(160,143,122,0.12)] p-1">
         {(["social", "phone", "email"] as const).map((t) => (
           <button
             key={t}
@@ -182,7 +181,7 @@ function GoogleIcon() {
 }
 
 const fieldClass =
-  "h-13 w-full rounded-full border border-[var(--color-border)] bg-[var(--color-panel)] px-5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-soft)] focus:border-[var(--color-accent)] focus:outline-none transition";
+  "h-13 w-full rounded-full border border-[var(--color-border)] bg-white/85 px-5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-soft)] focus:border-[var(--color-accent)] focus:outline-none transition";
 
 const btnPrimary =
   "flex h-13 w-full items-center justify-center rounded-full bg-[var(--color-accent)] text-sm font-bold text-white transition hover:opacity-90 disabled:opacity-50";

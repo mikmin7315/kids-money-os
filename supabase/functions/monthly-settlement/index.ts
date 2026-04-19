@@ -49,6 +49,16 @@ Deno.serve(async (req) => {
     const policy = policyRes.data;
     if (!wallet || !policy) continue;
 
+    // Idempotency: skip if already settled this month
+    const { data: existingScore } = await supabase
+      .from("behavior_scores")
+      .select("id")
+      .eq("child_id", child.id)
+      .eq("year", year)
+      .eq("month", month)
+      .maybeSingle();
+    if (existingScore) continue;
+
     // Behavior score
     const logs = logsRes.data ?? [];
     const totalAttempts = logs.length;

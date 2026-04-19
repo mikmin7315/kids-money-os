@@ -72,10 +72,9 @@ export default function LearnInterestPage() {
   const isLast = step === steps.length - 1;
 
   return (
-    <main className="flex min-h-screen flex-col bg-white px-5 pb-10 pt-10">
-      <div className="mx-auto w-full max-w-sm flex-1 flex flex-col">
+    <main className="flex min-h-screen flex-col bg-[var(--color-bg)] px-5 pb-10 pt-10" data-theme="child">
+      <div className="mx-auto flex w-full max-w-sm flex-1 flex-col">
 
-        {/* 헤더 */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => router.back()}
@@ -88,7 +87,6 @@ export default function LearnInterestPage() {
           </span>
         </div>
 
-        {/* 프로그레스 바 */}
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[var(--color-card)]">
           <div
             className="h-full rounded-full transition-all duration-300"
@@ -99,13 +97,14 @@ export default function LearnInterestPage() {
           />
         </div>
 
-        {/* 메인 카드 */}
         <div
-          className="mt-8 flex-1 rounded-3xl p-7"
-          style={{ backgroundColor: current.bg }}
+          className="mt-8 flex-1 rounded-[30px] border border-[var(--color-chip-border)] p-7 shadow-[var(--shadow-card)]"
+          style={{
+            background: `linear-gradient(180deg, rgba(255,255,255,0.65), ${current.bg})`,
+          }}
         >
           <div className="text-center text-7xl">{current.emoji}</div>
-          <h1 className="mt-6 text-center text-2xl font-black tracking-tight text-[var(--color-text)]">
+          <h1 className="mt-6 text-center font-display text-3xl font-semibold tracking-tight text-[var(--color-text)]">
             {current.title}
           </h1>
           <p className="mt-4 whitespace-pre-line text-center text-base leading-7 text-[var(--color-muted)]">
@@ -113,7 +112,7 @@ export default function LearnInterestPage() {
           </p>
 
           {current.example && (
-            <div className="mt-6 rounded-2xl bg-white/80 p-4 space-y-3">
+            <div className="mt-6 space-y-3 rounded-[24px] bg-white/75 p-4">
               {current.example.items.map((item) => (
                 <div key={item.text} className="flex items-center gap-3">
                   <span className="text-2xl">{item.icon}</span>
@@ -124,12 +123,11 @@ export default function LearnInterestPage() {
           )}
         </div>
 
-        {/* 네비게이션 */}
         <div className="mt-6 flex gap-3">
           {step > 0 && (
             <button
               onClick={() => setStep((s) => s - 1)}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-accent)]"
+              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-border)] bg-white/70 text-[var(--color-text)] hover:border-[var(--color-accent)]"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
