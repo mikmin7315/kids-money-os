@@ -155,39 +155,51 @@
 
 /* ─── Child theme ─── */
 [data-theme="child"] {
-  --color-bg:            #FFF8EC;
-  --color-panel:         #FFFDF8;
-  --color-card:          #FFE7A8;
-  --color-card-2:        #FFF2CB;
-  --color-text:          #2D1F12;
-  --color-muted:         #7A624D;
-  --color-soft:          #B07B3A;
-  --color-border:        #F2CF7A;
-  --color-accent:        #E66A2C;
-  --color-accent-strong: #BF4E16;
+  /* ── Child App Color System ── */
+  --child-bg-app:        #EBEBEB;
+  --child-bg-surface:    #FFFFFF;
+  --child-bg-hero:       #10367D;
+  --child-text-primary:  #2B2B2B;
+  --child-text-on-dark:  #FFFFFF;
+  --child-text-secondary:rgba(43,43,43,0.72);
+  --child-text-muted:    rgba(43,43,43,0.56);
+  --child-brand:         #C66B3D;
+  --child-brand-hover:   #A85930;
+  --child-border-soft:   rgba(43,43,43,0.08);
+  --child-border-strong: rgba(43,43,43,0.14);
+  --child-shadow-soft:   0 10px 30px rgba(16,54,125,0.08);
+  --child-shadow-card:   0 8px 24px rgba(43,43,43,0.06);
+
+  /* Legacy compat — keeps existing forms working */
+  --color-bg:            #EBEBEB;
+  --color-panel:         #FFFFFF;
+  --color-card:          #F4F4F4;
+  --color-card-2:        #EBEBEB;
+  --color-text:          #2B2B2B;
+  --color-muted:         rgba(43,43,43,0.72);
+  --color-soft:          rgba(43,43,43,0.56);
+  --color-border:        rgba(43,43,43,0.08);
+  --color-accent:        #C66B3D;
+  --color-accent-strong: #A85930;
   --color-accent-fg:     #FFFFFF;
-  --color-success:       var(--child-leaf-green);
+  --color-success:       var(--status-success);
   --color-warn:          var(--status-pending);
   --color-danger:        var(--status-danger);
-
-  /* Hero */
-  --color-hero-from:    #E66A2C;
-  --color-hero-via:     #F08044;
-  --color-hero-to:      #F9B87A;
+  --color-chip-bg:       #FFFFFF;
+  --color-chip-border:   rgba(43,43,43,0.10);
+  --color-stamp-done:       var(--status-success);
+  --color-stamp-done-bg:    var(--status-success-bg);
+  --color-stamp-pending-bg: #F4F4F4;
+  --color-surface-soft:     #F4F4F4;
+  --color-surface-strong:   #EBEBEB;
+  --color-overlay-soft:     rgba(198,107,61,0.08);
   --color-hero-text:    #FFFFFF;
-  --color-hero-subtext: rgba(255,255,255,0.82);
-  --color-hero-muted:   rgba(255,255,255,0.62);
-  --color-hero-label:   rgba(255,255,255,0.72);
-
-  /* Chips & Stamps */
-  --color-chip-bg:          #FFFDF8;
-  --color-chip-border:      #F2CF7A;
-  --color-stamp-done:       var(--child-leaf-green);
-  --color-stamp-done-bg:    var(--child-leaf-green-bg);
-  --color-stamp-pending-bg: #FFF2CB;
-  --color-surface-soft:     #FFF2CB;
-  --color-surface-strong:   #FFE7A8;
-  --color-overlay-soft:     rgba(230,106,44,0.10);
+  --color-hero-subtext: rgba(255,255,255,0.80);
+  --color-hero-muted:   rgba(255,255,255,0.60);
+  --color-hero-label:   rgba(255,255,255,0.70);
+  --color-hero-from:    #C66B3D;
+  --color-hero-via:     #C66B3D;
+  --color-hero-to:      #C66B3D;
 }
 
 /* ═══════════════════════════════════════════════════

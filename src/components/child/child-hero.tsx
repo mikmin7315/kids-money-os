@@ -1,71 +1,71 @@
-import { HeaderActions } from "@/components/layout/app-header";
+import Link from "next/link";
 import { formatWon } from "@/lib/format";
 
 interface ChildHeroProps {
+  childId: string;
   childName: string;
   balance: number;
   savingsBalance: number;
-  borrowedBalance: number;
-  currentInterestRate: number;
-  maxInterestRate: number;
-  isParent: boolean;
+  pendingCount: number;
+  todayPromiseCount: number;
 }
 
 export function ChildHero({
+  childId,
   childName,
   balance,
   savingsBalance,
-  borrowedBalance,
-  currentInterestRate,
-  maxInterestRate,
-  isParent,
+  pendingCount,
+  todayPromiseCount,
 }: ChildHeroProps) {
-  const xpPct = Math.min((currentInterestRate / maxInterestRate) * 100, 100);
+  const statusLine =
+    pendingCount > 0
+      ? `확인 기다리는 약속이 ${pendingCount}개 있어`
+      : todayPromiseCount > 0
+        ? `오늘 약속 ${todayPromiseCount}개, 같이 확인해봐`
+        : "오늘은 약속이 없어. 잘하고 있어!";
 
   return (
-    <section className="bg-hero-gradient relative overflow-hidden pb-10 pt-safe">
-      <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10" />
-      <div aria-hidden className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full bg-white/10" />
+    <section className="px-4 pt-5">
+      <div
+        className="relative overflow-hidden rounded-[28px] bg-[#10367D] px-6 py-7"
+        style={{ boxShadow: "0 12px 36px rgba(16,54,125,0.22)" }}
+      >
+        <div aria-hidden className="pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full bg-white/[0.04]" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-10 -left-8 h-32 w-32 rounded-full bg-white/[0.04]" />
 
-      <div className="relative flex items-center justify-between px-5 pt-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-hero-label)]">Monari</p>
-          <p className="mt-0.5 text-base font-bold text-[var(--color-hero-text)]">{childName}의 통장 🏆</p>
-        </div>
-        {isParent && (
-          <div className="[&_a]:border-white/30 [&_a]:bg-white/20 [&_a]:text-white [&_a:hover]:border-white [&_a:hover]:bg-white/30">
-            <HeaderActions />
+        <div className="relative">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">
+            Monari
+          </p>
+
+          <p className="mt-4 text-[15px] font-semibold text-white/85">{childName}아</p>
+          <p className="mt-1 text-[38px] font-extrabold leading-none tracking-tight text-white tabular-nums">
+            {formatWon(balance)}
+          </p>
+          <p className="mt-2 text-[13px] font-medium text-white/65">
+            저축 중 {formatWon(savingsBalance)}
+          </p>
+
+          <p className="mt-5 text-[14px] font-medium leading-snug text-white/80">
+            {statusLine}
+          </p>
+
+          <div className="mt-5 flex gap-3">
+            <Link
+              href={`#today-promises`}
+              className="inline-flex h-11 min-w-0 items-center justify-center rounded-2xl bg-[#C66B3D] px-5 text-[14px] font-bold text-white transition hover:bg-[#A85930] active:scale-[0.98]"
+            >
+              오늘 약속 보기
+            </Link>
+            <Link
+              href="/records"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/25 bg-white/10 px-5 text-[14px] font-semibold text-white transition hover:bg-white/[0.18]"
+            >
+              기록 확인
+            </Link>
           </div>
-        )}
-      </div>
-
-      <div className="relative mt-6 px-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--color-hero-muted)]">지금 내 돈</p>
-        <p className="mt-1 text-6xl font-black tracking-tight text-[var(--color-hero-text)] drop-shadow-sm">
-          {formatWon(balance)}
-        </p>
-        <p className="mt-2 text-sm font-medium text-[var(--color-hero-subtext)]">
-          저축 <strong className="text-[var(--color-hero-text)]">{formatWon(savingsBalance)}</strong>
-          {borrowedBalance > 0 && (
-            <> · 빌린 돈 <strong className="text-[var(--color-hero-text)]">{formatWon(borrowedBalance)}</strong></>
-          )}
-        </p>
-      </div>
-
-      <div className="relative mt-5 px-5">
-        <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-hero-subtext)]">
-          <span>이자율 레벨 ⚡</span>
-          <span className="text-[var(--color-hero-text)]">{currentInterestRate}% / {maxInterestRate}%</span>
         </div>
-        <div className="mt-2 h-3 overflow-hidden rounded-full bg-white/30">
-          <div
-            className="h-full rounded-full bg-white transition-all duration-700"
-            style={{ width: `${xpPct}%` }}
-          />
-        </div>
-        <p className="mt-1.5 text-[11px] text-[var(--color-hero-muted)]">
-          약속을 지킬수록 이자율이 올라가요 🚀
-        </p>
       </div>
     </section>
   );
