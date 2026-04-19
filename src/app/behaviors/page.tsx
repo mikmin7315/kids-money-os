@@ -43,7 +43,7 @@ export default async function BehaviorsPage() {
               {activeRules.map((rule) => (
                 <div
                   key={rule.id}
-                  className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5"
+                  className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
@@ -68,7 +68,7 @@ export default async function BehaviorsPage() {
         </Section>
 
         <Section title="새 약속 만들기" description="아이와 함께 이야기한 뒤 약속을 추가해보세요.">
-          <div className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5">
+          <div className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]">
             <p className="mb-4 text-sm leading-6 text-[var(--color-muted)]">
               보상 금액과 이자율 변화를 같이 설정하면, 약속이 아이의 통장에 바로 연결돼요.
             </p>
@@ -92,7 +92,7 @@ export default async function BehaviorsPage() {
                 return (
                   <div
                     key={log.id}
-                    className="flex items-center justify-between rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] px-4 py-3"
+                    className="flex items-center justify-between rounded-[20px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] px-4 py-3"
                   >
                     <div>
                       <p className="text-sm font-semibold text-[var(--color-text)]">{rule?.title ?? "약속"}</p>
@@ -115,7 +115,7 @@ export default async function BehaviorsPage() {
 
 function RuleMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-white/60 p-4">
+    <div className="rounded-[20px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
       <p className="mt-2.5 font-display text-lg font-semibold">{value}</p>
     </div>

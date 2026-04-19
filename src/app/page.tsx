@@ -62,11 +62,11 @@ export default async function HomePage() {
         />
 
         {isDemo && (
-          <div className="mt-4 rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-amber-50/60 px-4 py-3">
-            <p className="text-xs font-medium text-amber-700">
+          <div className="mt-4 rounded-[20px] border border-[var(--status-pending-border)] bg-[var(--status-pending-bg)] px-4 py-3">
+            <p className="text-xs font-medium text-[var(--status-pending)]">
               지금은 데모 모드예요. 로그인하면 실제 데이터로 연결됩니다.
             </p>
-            <Link href="/login" className="mt-2 inline-flex text-xs font-semibold text-amber-800 underline underline-offset-2">
+            <Link href="/login" className="mt-2 inline-flex text-xs font-semibold text-[var(--status-pending)] underline underline-offset-2">
               로그인하러 가기 →
             </Link>
           </div>
@@ -76,17 +76,17 @@ export default async function HomePage() {
           <Section title="지금 확인할 내용" description="아이가 기다리고 있어요. 먼저 확인해주세요.">
             <Link
               href="/approvals"
-              className="flex items-center justify-between rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(255,242,210,0.92))] px-5 py-4 transition-opacity hover:opacity-90"
+              className="flex items-center justify-between rounded-[24px] bg-[var(--brand-secondary)] px-5 py-5 text-white transition hover:bg-[var(--brand-secondary-hover)] active:bg-[var(--brand-secondary-active)]"
             >
               <div>
-                <p className="font-display text-base font-semibold">
+                <p className="font-display text-base font-semibold text-white">
                   {pendingBehaviors.length > 0 && `약속 확인 ${pendingBehaviors.length}건`}
                   {pendingBehaviors.length > 0 && pendingBorrows.length > 0 && " · "}
                   {pendingBorrows.length > 0 && `미리쓰기 요청 ${pendingBorrows.length}건`}
                 </p>
-                <p className="mt-1 text-sm text-[var(--color-muted)]">탭해서 확인하러 가기</p>
+                <p className="mt-1 text-sm text-white/65">탭해서 확인하러 가기</p>
               </div>
-              <span className="text-xl">→</span>
+              <span className="text-xl text-white/80">→</span>
             </Link>
           </Section>
         )}
@@ -121,7 +121,7 @@ export default async function HomePage() {
               message="아직 등록된 아이가 없어요."
               hint="아이를 등록하면 약속, 용돈, 이자가 연결됩니다."
               action={
-                <Link href="/settings" className="inline-flex h-11 items-center rounded-full bg-[var(--color-accent)] px-5 text-sm font-bold text-[var(--color-accent-fg)]">
+                <Link href="/settings" className="inline-flex h-11 items-center rounded-full bg-[var(--brand-primary)] px-5 text-sm font-bold text-white">
                   아이 등록하러 가기 →
                 </Link>
               }
@@ -133,7 +133,7 @@ export default async function HomePage() {
           <div className="mb-3">
             <Link
               href="/child-mode"
-              className="inline-flex items-center rounded-full border border-[var(--color-border)] bg-white/60 px-4 py-2.5 text-sm font-medium text-[var(--color-text)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition"
+              className="inline-flex items-center rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
             >
               아이 모드로 보기
             </Link>
@@ -152,11 +152,11 @@ export default async function HomePage() {
 
 function MonthBox({ label, value, emoji }: { label: string; value: string; emoji?: string }) {
   return (
-    <div className="rounded-[22px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">
+    <div className="rounded-[22px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
         {emoji && <span className="mr-1">{emoji}</span>}{label}
       </p>
-      <p className="mt-3 font-display text-2xl font-semibold">{value}</p>
+      <p className="mt-3 font-display text-2xl font-semibold text-[var(--text-primary)]">{value}</p>
     </div>
   );
 }

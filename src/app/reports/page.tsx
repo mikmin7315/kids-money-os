@@ -2,7 +2,7 @@ import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit } from "@/components/finance/report-visuals";
 import { AppHeader, HeaderActions } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { MobileShell, PageContainer, Section, Surface } from "@/components/ui/primitives";
+import { HeroPill, MobileShell, PageContainer, PageHero, Section, Surface } from "@/components/ui/primitives";
 import { InfoCard } from "@/components/ui/cards";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -23,36 +23,27 @@ export default async function ReportsPage() {
         {!primary && (
           <Section title="아이를 먼저 등록해주세요" description="리포트를 보려면 아이 프로필이 필요합니다.">
             <Surface>
-              <a href="/settings" className="inline-flex h-11 items-center rounded-full bg-[var(--color-accent)] px-5 text-sm font-bold text-white">
+              <a href="/settings" className="inline-flex h-11 items-center rounded-full bg-[var(--brand-primary)] px-5 text-sm font-bold text-white">
                 아이 등록하러 가기 →
               </a>
             </Surface>
           </Section>
         )}
+
         {primary && (
           <>
-            <section className="mt-6">
-              <Surface className="relative overflow-hidden border-[rgba(87,70,49,0.1)] bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))] px-6 py-6">
-                <div className="pointer-events-none absolute -left-10 top-2 h-28 w-28 rounded-full border border-[rgba(200,122,34,0.18)]" />
-                <div className="pointer-events-none absolute -right-8 bottom-0 h-32 w-32 rounded-full bg-[rgba(15,139,124,0.08)] blur-2xl" />
-                <div className="relative">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">{primary.child.name}</p>
-                  <h2 className="mt-4 font-display text-[2rem] font-semibold leading-[1.06] tracking-tight">
-                    이번달 돈의 흐름과
-                    <br />
-                    행동 성과를 같이 봅니다.
-                  </h2>
-                  <p className="mt-4 max-w-[30ch] text-sm leading-6 text-[var(--color-muted)]">
-                    용돈 대비 지출과 저축 비중, 행동 성공률을 한 번에 읽을 수 있게 요약했습니다.
-                  </p>
-                  <div className="mt-6 grid grid-cols-3 gap-3">
-                    <HeroPill label="지출 비중" value={`${spendRatio}%`} />
-                    <HeroPill label="저축 비중" value={`${saveRatio}%`} />
-                    <HeroPill label="행동 성공률" value={`${primary.monthReport.behaviorSuccessRate.toFixed(0)}%`} />
-                  </div>
+            <PageHero
+              eyebrow={primary.child.name}
+              title={<>이번달 돈의 흐름과<br />행동 성과를 같이 봅니다.</>}
+              description="용돈 대비 지출과 저축 비중, 행동 성공률을 한 번에 읽을 수 있게 요약했습니다."
+              stats={
+                <div className="grid grid-cols-3 gap-3">
+                  <HeroPill label="지출 비중" value={`${spendRatio}%`} />
+                  <HeroPill label="저축 비중" value={`${saveRatio}%`} />
+                  <HeroPill label="행동 성공률" value={`${primary.monthReport.behaviorSuccessRate.toFixed(0)}%`} />
                 </div>
-              </Surface>
-            </section>
+              }
+            />
 
             <Section title="핵심 수치" description="이번달의 기준 숫자를 먼저 고정해서 보도록 정리했습니다.">
               <div className="grid grid-cols-2 gap-3">
@@ -64,21 +55,21 @@ export default async function ReportsPage() {
             </Section>
 
             <Section title="행동 성공률" description="행동 데이터는 금융 습관의 선행 지표로 해석합니다.">
-              <InfoCard className="border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(249,243,234,0.94))]">
+              <InfoCard>
                 <div className="flex items-end justify-between gap-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-soft)]">Behavior</p>
-                    <p className="mt-3 font-display text-4xl font-semibold leading-none">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Behavior</p>
+                    <p className="mt-3 font-display text-4xl font-semibold leading-none text-[var(--text-primary)]">
                       {primary.monthReport.behaviorSuccessRate.toFixed(1)}%
                     </p>
                   </div>
-                  <p className="max-w-[18ch] text-right text-xs leading-5 text-[var(--color-muted)]">
+                  <p className="max-w-[18ch] text-right text-xs leading-5 text-[var(--text-secondary)]">
                     약속 이행률이 높을수록 이자 설명과 저축 대화가 쉬워집니다.
                   </p>
                 </div>
-                <div className="mt-5 h-4 overflow-hidden rounded-full bg-[rgba(160,143,122,0.16)]">
+                <div className="mt-5 h-4 overflow-hidden rounded-full bg-[var(--bg-surface-strong)]">
                   <div
-                    className="h-full rounded-full bg-[linear-gradient(90deg,#d7a553,#0f8b7c)]"
+                    className="h-full rounded-full bg-[var(--brand-primary)] transition-all"
                     style={{ width: `${primary.monthReport.behaviorSuccessRate}%` }}
                   />
                 </div>
@@ -123,27 +114,18 @@ export default async function ReportsPage() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <InfoCard className="border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
-      <p className="mt-3 font-display text-2xl font-semibold">{value}</p>
+    <InfoCard>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-3 font-display text-2xl font-semibold text-[var(--text-primary)]">{value}</p>
     </InfoCard>
   );
 }
 
 function InsightCard({ title, body }: { title: string; body: string }) {
   return (
-    <InfoCard className="border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(249,243,234,0.94))]">
-      <p className="font-display text-xl font-semibold">{title}</p>
-      <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">{body}</p>
+    <InfoCard>
+      <p className="font-display text-xl font-semibold text-[var(--text-primary)]">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">{body}</p>
     </InfoCard>
-  );
-}
-
-function HeroPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[22px] border border-[rgba(87,70,49,0.08)] bg-white/70 p-3">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
-      <p className="mt-2 font-display text-lg font-semibold">{value}</p>
-    </div>
   );
 }

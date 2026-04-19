@@ -56,20 +56,19 @@ export default async function ApprovalsPage() {
                 return (
                   <div
                     key={log.id}
-                    className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5"
+                    className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]"
                   >
-                    {/* 누가 / 무엇을 */}
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-primary)]">
                           {child?.name}
                         </p>
-                        <p className="mt-2 font-display text-xl font-semibold leading-tight">{rule?.title}</p>
+                        <p className="mt-2 font-display text-xl font-semibold leading-tight text-[var(--text-primary)]">{rule?.title}</p>
                         {rule?.description && (
-                          <p className="mt-1 text-sm text-[var(--color-muted)]">{rule.description}</p>
+                          <p className="mt-1 text-sm text-[var(--text-secondary)]">{rule.description}</p>
                         )}
                         {log.memo && (
-                          <p className="mt-2 rounded-xl bg-[rgba(87,70,49,0.05)] px-3 py-2 text-sm italic text-[var(--color-muted)]">
+                          <p className="mt-2 rounded-xl bg-[var(--bg-surface-alt)] px-3 py-2 text-sm italic text-[var(--text-secondary)]">
                             "{log.memo}"
                           </p>
                         )}
@@ -77,13 +76,12 @@ export default async function ApprovalsPage() {
                       <Badge tone="amber">확인 대기</Badge>
                     </div>
 
-                    {/* 반영되면 어떻게 달라지는지 */}
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       <ContextBox label="확인하면 보상" value={formatWon(rule?.rewardAmount ?? 0)} />
                       <ContextBox label="이자율 변화" value={`+${rule?.interestDelta ?? 0}%`} />
                     </div>
 
-                    <div className="mt-4 border-t border-[rgba(87,70,49,0.06)] pt-4">
+                    <div className="mt-4 border-t border-[var(--border-soft)] pt-4">
                       <InlineBehaviorDecisionForm behaviorLogId={log.id} />
                     </div>
                   </div>
@@ -106,19 +104,18 @@ export default async function ApprovalsPage() {
                 return (
                   <div
                     key={request.id}
-                    className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(239,228,210,0.92))] p-5"
+                    className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]"
                   >
-                    {/* 누가 / 무엇을 / 왜 */}
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-primary)]">
                           {child?.name}
                         </p>
-                        <p className="mt-2 font-display text-xl font-semibold leading-tight">
+                        <p className="mt-2 font-display text-xl font-semibold leading-tight text-[var(--text-primary)]">
                           {formatWon(request.requestedAmount)} 미리 쓰고 싶어요
                         </p>
                         {request.purpose && (
-                          <p className="mt-2 rounded-xl bg-[rgba(87,70,49,0.05)] px-3 py-2 text-sm italic text-[var(--color-muted)]">
+                          <p className="mt-2 rounded-xl bg-[var(--bg-surface-alt)] px-3 py-2 text-sm italic text-[var(--text-secondary)]">
                             "{request.purpose}"
                           </p>
                         )}
@@ -126,7 +123,6 @@ export default async function ApprovalsPage() {
                       <Badge tone="amber">확인 대기</Badge>
                     </div>
 
-                    {/* 반영 조건 */}
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       <ContextBox label="요청 금액" value={formatWon(request.requestedAmount)} />
                       <ContextBox
@@ -135,7 +131,7 @@ export default async function ApprovalsPage() {
                       />
                     </div>
 
-                    <div className="mt-4 border-t border-[rgba(87,70,49,0.06)] pt-4">
+                    <div className="mt-4 border-t border-[var(--border-soft)] pt-4">
                       <InlineBorrowDecisionForm borrowRequestId={request.id} />
                     </div>
                   </div>
@@ -155,15 +151,15 @@ export default async function ApprovalsPage() {
                 return (
                   <div
                     key={request.id}
-                    className="rounded-[28px] border border-[rgba(87,70,49,0.10)] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))] p-5"
+                    className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]"
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-primary)]">
                           {child?.name}
                         </p>
-                        <p className="mt-1 font-display text-lg font-semibold">{request.purpose}</p>
-                        <p className="mt-1 text-sm text-[var(--color-muted)]">{formatWon(request.requestedAmount)}</p>
+                        <p className="mt-1 font-display text-lg font-semibold text-[var(--text-primary)]">{request.purpose}</p>
+                        <p className="mt-1 text-sm text-[var(--text-secondary)]">{formatWon(request.requestedAmount)}</p>
                       </div>
                       <Badge tone={request.status === "partial" ? "amber" : "emerald"}>
                         {request.status === "partial" ? "상환 중" : "정산 완료"}
@@ -171,13 +167,13 @@ export default async function ApprovalsPage() {
                     </div>
                     {schedules.length > 0 && (
                       <div className="mt-4">
-                        <div className="mb-2 flex items-center justify-between text-xs text-[var(--color-muted)]">
+                        <div className="mb-2 flex items-center justify-between text-xs text-[var(--text-secondary)]">
                           <span>상환 진행</span>
                           <span>{paidCount}/{schedules.length}회</span>
                         </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-[rgba(87,70,49,0.10)]">
+                        <div className="h-2 overflow-hidden rounded-full bg-[var(--bg-surface-strong)]">
                           <div
-                            className="h-full rounded-full bg-[var(--color-accent)] transition-all"
+                            className="h-full rounded-full bg-[var(--brand-primary)] transition-all"
                             style={{ width: `${(paidCount / schedules.length) * 100}%` }}
                           />
                         </div>
@@ -197,9 +193,9 @@ export default async function ApprovalsPage() {
 
 function ContextBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-[rgba(87,70,49,0.08)] bg-white/60 p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
-      <p className="mt-2.5 font-display text-lg font-semibold">{value}</p>
+    <div className="rounded-[20px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-2.5 font-display text-lg font-semibold text-[var(--text-primary)]">{value}</p>
     </div>
   );
 }

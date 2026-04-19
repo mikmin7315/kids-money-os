@@ -25,11 +25,11 @@ export function ChildSummaryList({ summaries }: { summaries: ChildSummary[] }) {
     <div className="space-y-3">
       {summaries.map((item) => (
         <Link key={item.child.id} href={`/child/${item.child.id}`} className="block">
-          <Surface className="transition hover:-translate-y-0.5 hover:bg-white/95">
+          <Surface className="transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-display text-xl font-semibold">{item.child.name}</p>
-                <p className="mt-1 text-sm text-[var(--color-muted)]">
+                <p className="font-display text-xl font-semibold text-[var(--text-primary)]">{item.child.name}</p>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
                   오늘 행동 {item.todaysBehaviorCount} · 대기 {item.pendingApprovals}
                 </p>
               </div>
@@ -58,22 +58,22 @@ export function TodaysBehaviorPanel({
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-display text-xl font-semibold">오늘의 행동 약속</p>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">아이가 가장 먼저 확인하는 화면입니다.</p>
+          <p className="font-display text-xl font-semibold text-[var(--text-primary)]">오늘의 행동 약속</p>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">아이가 가장 먼저 확인하는 화면입니다.</p>
         </div>
-        <TrendingUp className="h-5 w-5 text-[var(--color-accent)]" />
+        <TrendingUp className="h-5 w-5 text-[var(--brand-primary)]" />
       </div>
 
       <div className="mt-4 space-y-3">
         {items.map((item) => (
           <div
             key={`${item.title}-${item.status}`}
-            className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.62),rgba(239,228,210,0.92))] p-4"
+            className="rounded-[22px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-medium">{item.title}</p>
-                <p className="mt-1 text-sm text-[var(--color-muted)]">보상 {formatWon(item.reward)}</p>
+                <p className="font-medium text-[var(--text-primary)]">{item.title}</p>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">보상 {formatWon(item.reward)}</p>
               </div>
               <Badge tone={item.needsApproval ? "amber" : "sky"}>{statusLabel(item.status)}</Badge>
             </div>
@@ -89,10 +89,10 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
     <Surface>
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-display text-xl font-semibold">최근 활동</p>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">행동과 금융 이벤트를 함께 확인합니다.</p>
+          <p className="font-display text-xl font-semibold text-[var(--text-primary)]">최근 활동</p>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">행동과 금융 이벤트를 함께 확인합니다.</p>
         </div>
-        <Link href="/records" className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-text)]">
+        <Link href="/records" className="inline-flex items-center gap-1 text-sm font-medium text-[var(--text-primary)]">
           전체 보기
           <ArrowRight className="h-4 w-4" />
         </Link>
@@ -102,16 +102,18 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
         {items.slice(0, 8).map((item) => (
           <div
             key={item.id}
-            className="flex items-start gap-3 rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(249,243,234,0.92))] p-4"
+            className="flex items-start gap-3 rounded-[22px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
           >
-            <span className={`mt-1 h-2.5 w-2.5 rounded-full ${accentClass(item.accent)}`} />
+            <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${accentClass(item.accent)}`} />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-3">
-                <p className="font-medium">{item.title}</p>
-                {typeof item.amount === "number" ? <p className="shrink-0 text-sm font-semibold">{formatWon(item.amount)}</p> : null}
+                <p className="font-medium text-[var(--text-primary)]">{item.title}</p>
+                {typeof item.amount === "number" ? (
+                  <p className="shrink-0 text-sm font-semibold text-[var(--text-primary)]">{formatWon(item.amount)}</p>
+                ) : null}
               </div>
-              <p className="mt-1 text-sm text-[var(--color-muted)]">{item.description}</p>
-              <p className="mt-2 text-xs text-[var(--color-soft)]">{item.date}</p>
+              <p className="mt-1 text-sm text-[var(--text-secondary)]">{item.description}</p>
+              <p className="mt-2 text-xs text-[var(--text-muted)]">{item.date}</p>
             </div>
           </div>
         ))}
@@ -122,24 +124,24 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-[var(--color-card-2)] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
-      <p className="mt-3 font-display text-xl font-semibold">{value}</p>
+    <div className="rounded-[20px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-3 font-display text-xl font-semibold text-[var(--text-primary)]">{value}</p>
     </div>
   );
 }
 
 function statusLabel(status: string) {
   if (status === "pending") return "대기";
-  if (status === "approved") return "승인";
+  if (status === "approved") return "확인됨";
   if (status === "completed") return "완료";
-  if (status === "rejected") return "반려";
+  if (status === "rejected") return "다시 도전";
   return status;
 }
 
 function accentClass(accent: ActivityItem["accent"]) {
-  if (accent === "emerald") return "bg-emerald-500";
-  if (accent === "amber") return "bg-amber-500";
-  if (accent === "rose") return "bg-rose-500";
-  return "bg-sky-500";
+  if (accent === "emerald") return "bg-[var(--status-success)]";
+  if (accent === "amber")   return "bg-[var(--status-pending)]";
+  if (accent === "rose")    return "bg-[var(--status-danger)]";
+  return "bg-[var(--status-review)]";
 }
