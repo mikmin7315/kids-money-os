@@ -36,9 +36,10 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
   const childLogs = bundle.behaviorLogs.filter((l) => l.childId === id);
   const todayLogs = childLogs.filter((l) => l.date === today);
   const pendingLogs = childLogs.filter((l) => l.status === "pending");
-  const todayDone = todayLogs.filter(
-    (l) => l.status === "approved" || l.status === "completed",
-  ).length;
+  const doneTodayRuleIds = todayLogs
+    .filter((l) => l.status === "approved" || l.status === "completed")
+    .map((l) => l.behaviorRuleId);
+  const todayDone = doneTodayRuleIds.length;
 
   const childTx = bundle.moneyTransactions.filter((t) => t.childId === id);
 
@@ -126,7 +127,11 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
         <section id="today-promises" className="pt-2">
           <h2 className="mb-3 text-[18px] font-bold text-[#2B2B2B]">오늘 약속 체크</h2>
           <div className="rounded-[22px] border border-[rgba(43,43,43,0.08)] bg-white px-4 py-4">
-            <ChildBehaviorCheckForm childId={id} behaviorRules={activeRules} />
+            <ChildBehaviorCheckForm
+              childId={id}
+              behaviorRules={activeRules}
+              doneRuleIds={doneTodayRuleIds}
+            />
           </div>
         </section>
 
