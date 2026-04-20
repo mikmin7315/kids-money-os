@@ -1,55 +1,71 @@
-import { ChildModeCard } from "@/components/finance/child-mode-card";
-import { AppHeader, HeaderActions } from "@/components/layout/app-header";
-import { BottomNav } from "@/components/layout/bottom-nav";
-import { MobileShell, PageContainer, Section, Surface } from "@/components/ui/primitives";
+import Link from "next/link";
+import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getDashboardView } from "@/lib/data";
+import { formatWon } from "@/lib/format";
 
 export default async function ChildModePage() {
   await requireParentSession();
   const dashboard = await getDashboardView();
 
   return (
-    <PageContainer>
-      <MobileShell>
-        <AppHeader eyebrow="아이 모드" title="아이 프로필 선택" right={<HeaderActions />} />
+    <MobileAppShell title="아이 프로필 선택" subtitle="아이 모드">
+      {/* Hero */}
+      <div className="monari-hero mb-4">
+        <p className="text-[15px] font-800 text-white mb-1">아이 화면으로 전환</p>
+        <p className="text-[13px] text-white/70">
+          프로필을 선택하고 PIN을 입력하면 아이 전용 통장 화면으로 바로 들어갑니다.
+        </p>
+      </div>
 
-        <section className="mt-6">
-          <Surface className="relative overflow-hidden border-[rgba(87,70,49,0.1)] bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))] px-6 py-6">
-            <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[rgba(15,139,124,0.08)] blur-2xl" />
-            <div className="relative">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">Child Mode</p>
-              <h2 className="mt-4 font-display text-[2rem] font-semibold leading-[1.06] tracking-tight">
-                부모 세션을 유지한 채
-                <br />
-                아이 화면으로 전환합니다.
-              </h2>
-              <p className="mt-4 max-w-[31ch] text-sm leading-6 text-[var(--color-muted)]">
-                프로필을 선택하고 PIN을 입력하면 아이가 보는 전용 통장 화면으로 바로 들어갑니다.
-              </p>
-            </div>
-          </Surface>
-        </section>
+      {/* How it works */}
+      <section className="mb-4">
+        <SectionTitle>사용 방법</SectionTitle>
+        <div className="monari-card mt-3 p-4">
+          <ul className="space-y-2 text-[13px] text-[var(--monari-ink-soft)]">
+            <li>• 핸드폰을 아이에게 건넬 때 사용합니다.</li>
+            <li>• 아이 카드를 탭하면 PIN 입력 화면으로 이동합니다.</li>
+            <li>• PIN은 설정 화면에서 아이별로 설정할 수 있습니다.</li>
+          </ul>
+        </div>
+      </section>
 
-        <Section title="모드 전환" description="부모 세션은 유지되고 화면만 아이 전용 뷰로 바뀝니다.">
-          <Surface className="bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(249,243,234,0.95))]">
-            <ul className="space-y-3 text-sm leading-6 text-[var(--color-muted)]">
-              <li>핸드폰을 아이에게 건넬 때 사용합니다.</li>
-              <li>아이 카드를 탭하면 PIN 입력 화면으로 이동합니다.</li>
-              <li>PIN은 설정 화면에서 아이별로 설정할 수 있습니다.</li>
-            </ul>
-          </Surface>
-        </Section>
-
-        <Section title="아이 프로필" description="각 카드를 탭하면 아이 전용 화면으로 진입합니다.">
-          <div className="space-y-3">
+      {/* Child profiles */}
+      <section className="mb-4">
+        <SectionTitle>아이 프로필</SectionTitle>
+        {dashboard.children.length === 0 ? (
+          <div className="monari-card mt-3 px-4 py-5 text-center">
+            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">등록된 아이가 없어요</p>
+            <p className="monari-meta mt-1 mb-4">설정 화면에서 아이를 추가해주세요.</p>
+            <Link href="/settings" className="monari-btn-primary px-5 text-[13px]">설정으로 가기 →</Link>
+          </div>
+        ) : (
+          <div className="space-y-3 mt-3">
             {dashboard.children.map((summary) => (
-              <ChildModeCard key={summary.child.id} summary={summary} />
+              <Link
+                key={summary.child.id}
+                href={`/child-pin/${summary.child.id}`}
+                className="monari-card flex items-center justify-between p-5 block"
+              >
+                <div>
+                  <p className="text-[18px] font-800 text-[var(--monari-ink)]">{summary.child.name}</p>
+                  <p className="monari-meta mt-0.5">{formatWon(summary.wallet.balance)}</p>
+                  {summary.pendingApprovals > 0 && (
+                    <p className="text-[12px] font-700 text-[var(--monari-pending)] mt-1">
+                      확인 대기 {summary.pendingApprovals}건
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[var(--monari-hero)] font-700">→</span>
+                  <span className="text-[11px] font-600 text-[var(--monari-ink-muted)]">PIN 입력</span>
+                </div>
+              </Link>
             ))}
           </div>
-        </Section>
-      </MobileShell>
-      <BottomNav pathname="/" />
-    </PageContainer>
+        )}
+      </section>
+    </MobileAppShell>
   );
 }

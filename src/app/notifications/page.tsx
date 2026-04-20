@@ -1,5 +1,5 @@
-import { AppHeader } from "@/components/layout/app-header";
-import { EmptyState, MobileShell, PageContainer, PageHero, Section } from "@/components/ui/primitives";
+import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession, getChildModeContext } from "@/lib/auth";
 import { fetchParentNotificationsAction, fetchChildNotificationsAction } from "@/actions/notifications";
 import { NotificationList } from "@/components/notifications/notification-list";
@@ -22,38 +22,26 @@ export default async function NotificationsPage() {
     notifications = result.data ?? [];
   }
 
+  const count = notifications?.length ?? 0;
+  const headline = count > 0 ? `${count}건의 새 소식이 있어요` : "새로운 소식이 없어요";
+
   return (
-    <PageContainer>
-      <MobileShell>
-        <AppHeader eyebrow={isChildMode ? "아이" : "부모"} title="알림" />
-
-        <PageHero
-          eyebrow={isChildMode ? "나에게 온 소식" : "확인할 소식"}
-          title={
-            notifications && notifications.length > 0 ? (
-              <>{notifications.length}건의<br />새 소식이 있어요</>
-            ) : (
-              <>새로운 소식이<br />없어요</>
-            )
-          }
-          description={
-            isChildMode
-              ? "약속 확인 결과나 정산 소식이 여기 도착해요."
-              : "아이의 약속 요청, 미리쓰기 요청, 정산 소식을 모아뒀어요."
-          }
-        />
-
-        <Section title={`전체 ${notifications?.length ?? 0}건`}>
-          {!notifications || notifications.length === 0 ? (
-            <EmptyState
-              message="새로운 알림이 없어요."
-              hint={isChildMode ? "약속이나 정산 소식이 오면 여기에 보여요." : "아이가 요청하거나 약속을 체크하면 알림이 와요."}
-            />
-          ) : (
-            <NotificationList notifications={notifications} />
-          )}
-        </Section>
-      </MobileShell>
-    </PageContainer>
+    <MobileAppShell title={headline} subtitle={isChildMode ? "나에게 온 소식" : "확인할 소식"}>
+      <section className="mb-4">
+        <SectionTitle>전체 {count}건</SectionTitle>
+        {count === 0 ? (
+          <div className="monari-card mt-3 px-4 py-5 text-center">
+            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">새로운 알림이 없어요</p>
+            <p className="monari-meta mt-1">
+              {isChildMode ? "약속이나 정산 소식이 오면 여기에 보여요." : "아이가 요청하거나 약속을 체크하면 알림이 와요."}
+            </p>
+          </div>
+        ) : (
+          <div className="monari-card mt-3 px-4">
+            <NotificationList notifications={notifications!} />
+          </div>
+        )}
+      </section>
+    </MobileAppShell>
   );
 }
