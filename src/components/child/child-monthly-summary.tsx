@@ -2,27 +2,25 @@ import { formatWon } from "@/lib/format";
 
 interface ChildMonthlySummaryProps {
   monthlyAllowance: number;
+  monthlySpend: number;
   monthlySaved: number;
-  balance: number;
 }
 
 export function ChildMonthlySummary({
   monthlyAllowance,
+  monthlySpend,
   monthlySaved,
-  balance,
 }: ChildMonthlySummaryProps) {
   return (
-    <section>
-      <h2 className="mb-3 text-[18px] font-bold text-[#2B2B2B]">이번 달 요약</h2>
-      <div
-        className="rounded-[24px] bg-white px-5 py-5"
-        style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
-      >
-        <div className="grid grid-cols-3">
-          <SummaryCol label="받은 용돈" value={formatWon(monthlyAllowance)} align="left" />
-          <SummaryCol label="저축한 금액" value={formatWon(monthlySaved)} align="center" />
-          <SummaryCol label="남은 돈" value={formatWon(balance)} align="right" accent />
-        </div>
+    <section
+      className="rounded-[24px] bg-white px-5 py-5 mb-4"
+      style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
+    >
+      <p className="text-[16px] font-700 text-[#2B2B2B] mb-4">이번 달 요약</p>
+      <div className="grid grid-cols-3">
+        <SummaryCol label="받은 용돈" value={formatWon(monthlyAllowance)} />
+        <SummaryCol label="지출 합계" value={formatWon(monthlySpend)} center />
+        <SummaryCol label="저축 금액" value={formatWon(monthlySaved)} right />
       </div>
     </section>
   );
@@ -31,35 +29,20 @@ export function ChildMonthlySummary({
 function SummaryCol({
   label,
   value,
-  align,
-  accent,
+  center,
+  right,
 }: {
   label: string;
   value: string;
-  align: "left" | "center" | "right";
-  accent?: boolean;
+  center?: boolean;
+  right?: boolean;
 }) {
-  const alignClass =
-    align === "center"
-      ? "items-center text-center"
-      : align === "right"
-        ? "items-end text-right"
-        : "items-start text-left";
-
   return (
     <div
-      className={`flex flex-col gap-1.5 px-3 py-1 ${alignClass} ${
-        align === "center"
-          ? "border-x border-[rgba(43,43,43,0.08)]"
-          : ""
-      }`}
+      className={`flex flex-col gap-1.5 px-3 py-1 ${center ? "items-center text-center border-x border-[rgba(43,43,43,0.08)]" : right ? "items-end text-right" : "items-start"}`}
     >
-      <p className="text-[12px] font-medium leading-none text-[rgba(43,43,43,0.55)]">{label}</p>
-      <p
-        className={`text-[20px] font-bold leading-tight tracking-tight tabular-nums ${
-          accent ? "text-[#C66B3D]" : "text-[#2B2B2B]"
-        }`}
-      >
+      <p className="text-[12px] font-500 text-[rgba(43,43,43,0.55)]">{label}</p>
+      <p className="text-[18px] font-700 leading-tight tracking-tight tabular-nums text-[#2B2B2B]">
         {value}
       </p>
     </div>

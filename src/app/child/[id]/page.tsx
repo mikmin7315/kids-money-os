@@ -1,14 +1,12 @@
 import { notFound, redirect } from "next/navigation";
-import { BorrowRequestQuickForm, ChildBehaviorCheckForm } from "@/components/finance/action-forms";
+import { BorrowRequestQuickForm, ChildBehaviorCheckForm, ChildSaveForm } from "@/components/finance/action-forms";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ChildHero } from "@/components/child/child-hero";
 import { ChildMonthlySummary } from "@/components/child/child-monthly-summary";
 import { ChildQuickStats } from "@/components/child/child-quick-stats";
-import { ChildProgressSection } from "@/components/child/child-progress-section";
 import { ChildActivityList, type ChildActivityItem } from "@/components/child/child-activity-list";
 import { getAuthContext, getChildModeContext } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
-import { estimateInterest } from "@/lib/finance";
 import { formatWon } from "@/lib/format";
 
 export default async function ChildDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -43,104 +41,125 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
 
   const childTx = bundle.moneyTransactions.filter((t) => t.childId === id);
 
-  // saving goal progress: saved this month vs allowance received
   const { totalAllowance, totalSave, totalSpend } = summary.monthReport;
+
+  // saving goal progress
   const savingGoalProgress =
     totalAllowance > 0 ? Math.min(Math.round((totalSave / totalAllowance) * 100), 100) : 0;
 
-  // most recent spend transaction amount
-  const recentSpendTx = childTx
-    .filter((t) => t.type === "spend")
-    .sort((a, b) => b.date.localeCompare(a.date))[0];
-  const recentSpend = recentSpendTx?.amount ?? 0;
+  // this week spend
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekAgoStr = weekAgo.toISOString().slice(0, 10);
+  const weekSpend = childTx
+    .filter((t) => t.type === "spend" && t.date >= weekAgoStr)
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  // activity list: combine transactions + behavior logs, most recent 4
-  const txItems: ChildActivityItem[] = childTx
+  // top spend category
+  const spendTx = childTx.filter((t) => t.type === "spend");
+  const categoryCount: Record<string, number> = {};
+  spendTx.forEach((t) => {
+    const key = t.memo || "기타";
+    categoryCount[key] = (categoryCount[key] || 0) + 1;
+  });
+  const topCategory = Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "없음";
+
+  // remaining challenges
+  const remainingChallenges = Math.max(0, activeRules.length - todayDone);
+
+  // most recent allowance tx for hero subtitle
+  const recentAllowanceTx = childTx
+    .filter((t) => t.type === "allowance")
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  // activity list
+  const activityItems: ChildActivityItem[] = childTx
     .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 6)
+    .slice(0, 4)
     .map((tx) => ({
       id: tx.id,
       title: txTypeLabel(tx.type, tx.memo),
       dateLabel: relativeDate(tx.date, today),
       rightLabel: txAmountLabel(tx),
       rightAccent: tx.type === "reward" || tx.type === "interest" || tx.type === "allowance",
+      type: tx.type,
     }));
 
-  const logItems: ChildActivityItem[] = childLogs
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 4)
-    .map((log) => {
-      const rule = bundle.behaviorRules.find((r) => r.id === log.behaviorRuleId);
-      return {
-        id: log.id,
-        title: rule?.title ?? "약속 체크",
-        dateLabel: relativeDate(log.date, today),
-        rightLabel: behaviorStatusLabel(log.status),
-        rightAccent: log.status === "approved" || log.status === "completed",
-      };
-    });
-
-  // merge and take top 4 by date
-  const allActivity = [...txItems, ...logItems]
-    .sort((a, b) => b.id.localeCompare(a.id))
-    .slice(0, 4);
-
   return (
-    <div data-theme="child" className="min-h-screen bg-[#EBEBEB] text-[#2B2B2B]">
-      {/* ── Block 1: Hero ── */}
-      <ChildHero
-        childId={id}
-        childName={child.name}
-        balance={summary.wallet.balance}
-        savingsBalance={summary.wallet.savingsBalance}
-        pendingCount={pendingLogs.length}
-        todayPromiseCount={todayLogs.length}
-      />
+    <div className="min-h-screen bg-[#EBEBEB]">
+      <div className="mx-auto max-w-[440px] px-4 pt-5 pb-36">
+        {/* Hero */}
+        <ChildHero
+          childId={id}
+          childName={child.name}
+          balance={summary.wallet.balance}
+          savingsBalance={summary.wallet.savingsBalance}
+          pendingCount={pendingLogs.length}
+          recentAllowanceDate={recentAllowanceTx?.date}
+        />
 
-      <div className="mx-auto max-w-[420px] space-y-4 px-4 pb-36 pt-4">
-        {/* ── Block 2: Monthly Summary ── */}
+        {/* Monthly Summary */}
         <ChildMonthlySummary
           monthlyAllowance={totalAllowance}
+          monthlySpend={totalSpend}
           monthlySaved={totalSave}
-          balance={summary.wallet.balance}
         />
 
-        {/* ── Block 3: Quick Stats 2×2 ── */}
+        {/* Quick Stats 2×2 */}
         <ChildQuickStats
-          todayPromises={todayLogs.length}
-          pendingCount={pendingLogs.length}
+          weekSpend={weekSpend}
+          topCategory={topCategory}
           savingGoalProgress={savingGoalProgress}
-          recentSpend={recentSpend}
+          remainingChallenges={remainingChallenges}
         />
 
-        {/* ── Block 4: Progress ── */}
-        <ChildProgressSection
-          promiseTotal={activeRules.length}
-          promiseDone={todayDone}
-          savingGoalProgress={savingGoalProgress}
-        />
+        {/* Recent Activity */}
+        <ChildActivityList items={activityItems} />
 
-        {/* ── Block 5: Recent Activity ── */}
-        <ChildActivityList items={allActivity.length > 0 ? allActivity : txItems} />
-
-        {/* ── Functional section: behavior check form ── */}
-        <section id="today-promises" className="pt-2">
-          <h2 className="mb-3 text-[18px] font-bold text-[#2B2B2B]">오늘 약속 체크</h2>
-          <div className="rounded-[22px] border border-[rgba(43,43,43,0.08)] bg-white px-4 py-4">
-            <ChildBehaviorCheckForm
-              childId={id}
-              behaviorRules={activeRules}
-              doneRuleIds={doneTodayRuleIds}
+        {/* Savings Goal card */}
+        <section
+          className="rounded-[24px] bg-white px-5 py-5 mb-4"
+          style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[16px] font-700 text-[#2B2B2B]">나의 저축 목표</p>
+            <span className="text-[rgba(43,43,43,0.40)] text-[16px]">›</span>
+          </div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[14px] font-600 text-[#2B2B2B]">이번달 저축</p>
+            <p className="text-[13px] text-[rgba(43,43,43,0.55)]">
+              {formatWon(totalSave)} / {formatWon(totalAllowance)}
+            </p>
+          </div>
+          <div className="h-2.5 rounded-full bg-[rgba(43,43,43,0.08)] overflow-hidden mb-1">
+            <div
+              className="h-full rounded-full bg-[#10367D]"
+              style={{ width: `${savingGoalProgress}%` }}
             />
           </div>
+          <p className="text-right text-[12px] font-600 text-[rgba(43,43,43,0.55)]">{savingGoalProgress}%</p>
         </section>
 
-        {/* ── Functional section: borrow request ── */}
-        <section className="pt-2">
-          <h2 className="mb-3 text-[18px] font-bold text-[#2B2B2B]">미리쓰기 요청</h2>
-          <div className="rounded-[22px] border border-[rgba(43,43,43,0.08)] bg-white px-4 py-4">
-            <BorrowRequestQuickForm childId={id} />
-          </div>
+        {/* Save form */}
+        <section id="save-form" className="rounded-[24px] bg-white px-5 py-5 mb-4" style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}>
+          <p className="text-[16px] font-700 text-[#2B2B2B] mb-4">저축하기</p>
+          <ChildSaveForm childId={id} />
+        </section>
+
+        {/* Behavior check */}
+        <section id="today-promises" className="rounded-[24px] bg-white px-5 py-5 mb-4" style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}>
+          <p className="text-[16px] font-700 text-[#2B2B2B] mb-4">오늘 약속 체크</p>
+          <ChildBehaviorCheckForm
+            childId={id}
+            behaviorRules={activeRules}
+            doneRuleIds={doneTodayRuleIds}
+          />
+        </section>
+
+        {/* Borrow request */}
+        <section id="borrow-form" className="rounded-[24px] bg-white px-5 py-5 mb-4" style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}>
+          <p className="text-[16px] font-700 text-[#2B2B2B] mb-4">용돈 요청하기</p>
+          <BorrowRequestQuickForm childId={id} />
         </section>
       </div>
 
@@ -168,16 +187,8 @@ function txAmountLabel(tx: { type: string; amount: number }): string {
   return `${sign}${formatWon(tx.amount)}`;
 }
 
-function behaviorStatusLabel(status: string): string {
-  if (status === "approved" || status === "completed") return "완료";
-  if (status === "pending") return "확인 대기";
-  if (status === "rejected") return "다시 도전";
-  return status;
-}
-
 function relativeDate(date: string, today: string): string {
-  const diffMs =
-    new Date(today).getTime() - new Date(date).getTime();
+  const diffMs = new Date(today).getTime() - new Date(date).getTime();
   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
   if (diffDays === 0) return "오늘";
   if (diffDays === 1) return "어제";

@@ -187,6 +187,71 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
   );
 }
 
+const SAVE_PRESETS = [1000, 2000, 5000, 10000];
+
+export function ChildSaveForm({ childId }: { childId: string }) {
+  const [amount, setAmount] = useState(1000);
+  const [showCustom, setShowCustom] = useState(false);
+  const [state, action] = useActionState(submitTransactionForm, initialState);
+
+  return (
+    <form action={action} className="space-y-4">
+      <input type="hidden" name="childId" value={childId} />
+      <input type="hidden" name="type" value="save" />
+      <input type="hidden" name="date" value={today()} />
+      <input type="hidden" name="memo" value="저축하기" />
+      <input type="hidden" name="amount" value={amount} />
+
+      <div>
+        <label className="mb-2 block text-[13px] font-semibold text-[rgba(43,43,43,0.65)]">
+          얼마를 저축할까?
+        </label>
+        <div className="grid grid-cols-4 gap-2">
+          {SAVE_PRESETS.map((a) => (
+            <button
+              key={a}
+              type="button"
+              onClick={() => { setAmount(a); setShowCustom(false); }}
+              className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] ${
+                amount === a && !showCustom
+                  ? "bg-[#10367D] text-white"
+                  : "bg-[#EBEBEB] text-[#2B2B2B]"
+              }`}
+            >
+              {formatWon(a)}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowCustom((v) => !v)}
+          className="mt-2 text-[12px] font-medium text-[rgba(43,43,43,0.50)] underline underline-offset-2"
+        >
+          직접 입력
+        </button>
+        {showCustom && (
+          <input
+            type="number"
+            min="100"
+            step="100"
+            value={amount}
+            onChange={(e) => setAmount(Math.max(100, Number(e.target.value)))}
+            className="mt-2 w-full rounded-[16px] border-2 border-[#10367D] bg-[#EBEBEB] px-4 py-3 text-[15px] font-bold text-[#2B2B2B] outline-none"
+          />
+        )}
+      </div>
+
+      <button
+        type="submit"
+        className="w-full h-12 rounded-[16px] bg-[#10367D] text-[15px] font-700 text-white"
+      >
+        저축하기
+      </button>
+      <FormMessage state={state} />
+    </form>
+  );
+}
+
 // ────────────────────────────────────────────────────────────
 // Parent approval forms (inline — one per card, no duplicate quick forms)
 // ────────────────────────────────────────────────────────────
