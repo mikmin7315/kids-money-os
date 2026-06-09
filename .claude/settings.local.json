@@ -26,7 +26,11 @@
       "Bash(vercel env *)",
       "Bash(npx vercel *)",
       "Bash(npx gh *)",
-      "Bash(curl -s https://api.github.com/repos/mikmin7315/kids-money-os)"
+      "Bash(curl -s https://api.github.com/repos/mikmin7315/kids-money-os)",
+      "WebFetch(domain:claude.ai)",
+      "mcp__plugin_portone-integration_portone__listSharedTestChannels",
+      "mcp__plugin_portone-integration_portone__getChannelsOfStore",
+      "mcp__plugin_portone-integration_portone__listStores"
     ]
   }
 }
