@@ -1,29 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --monari-bg: #ebebeb;
+  /* ── Brand ── */
+  --monari-hero: #4f3ff0;
+  --monari-hero-mid: #3b2fd4;
+  --monari-hero-strong: #2a20b8;
+
+  /* ── Accent (action / highlight) ── */
+  --monari-primary: #ff6b35;
+  --monari-primary-strong: #e85a26;
+
+  /* ── Semantic ── */
+  --monari-done: #16a34a;
+  --monari-done-bg: rgba(22, 163, 74, 0.10);
+  --monari-pending: #b45309;
+  --monari-pending-bg: rgba(180, 83, 9, 0.10);
+  --monari-minus: #dc2626;
+  --monari-minus-bg: rgba(220, 38, 38, 0.08);
+  --monari-plus: #4f3ff0;
+  --monari-plus-bg: rgba(79, 63, 240, 0.08);
+
+  /* ── Surface ── */
+  --monari-bg: #f0efff;
   --monari-surface: #ffffff;
-  --monari-surface-soft: rgba(255, 255, 255, 0.72);
-  --monari-hero: #10367d;
-  --monari-hero-strong: #0d2d66;
-  --monari-primary: #c66b3d;
-  --monari-primary-strong: #a9582d;
-  --monari-ink: #2b2b2b;
-  --monari-ink-soft: rgba(43, 43, 43, 0.72);
-  --monari-ink-muted: rgba(43, 43, 43, 0.54);
-  --monari-line: rgba(43, 43, 43, 0.08);
-  --monari-line-strong: rgba(43, 43, 43, 0.14);
-  --monari-done: #1f7a4d;
-  --monari-done-bg: rgba(31, 122, 77, 0.1);
-  --monari-pending: #a56a14;
-  --monari-pending-bg: rgba(165, 106, 20, 0.1);
-  --monari-minus: #8a3d2f;
-  --monari-minus-bg: rgba(138, 61, 47, 0.1);
-  --monari-plus: #10367d;
-  --monari-plus-bg: rgba(16, 54, 125, 0.08);
-  --monari-shadow-card: 0 8px 24px rgba(43, 43, 43, 0.05);
-  --monari-shadow-hero: 0 14px 34px rgba(16, 54, 125, 0.16);
-  --monari-shadow-soft: 0 10px 30px rgba(16, 54, 125, 0.08);
+  --monari-surface-soft: rgba(255, 255, 255, 0.80);
+
+  /* ── Ink ── */
+  --monari-ink: #1c1b3a;
+  --monari-ink-soft: rgba(28, 27, 58, 0.68);
+  --monari-ink-muted: rgba(28, 27, 58, 0.48);
+
+  /* ── Border ── */
+  --monari-line: rgba(79, 63, 240, 0.10);
+  --monari-line-strong: rgba(79, 63, 240, 0.18);
+
+  /* ── Shadow ── */
+  --monari-shadow-card: 0 2px 12px rgba(79, 63, 240, 0.08), 0 1px 3px rgba(28, 27, 58, 0.04);
+  --monari-shadow-hero: 0 16px 40px rgba(79, 63, 240, 0.30);
+  --monari-shadow-soft: 0 8px 24px rgba(79, 63, 240, 0.10);
+  --monari-shadow-float: 0 12px 32px rgba(28, 27, 58, 0.12);
 }
 
 html,
@@ -31,10 +46,14 @@ body {
   min-height: 100%;
   background: var(--monari-bg);
   color: var(--monari-ink);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 }
 
 body {
   margin: 0;
+  background: linear-gradient(160deg, #eeeeff 0%, #f5f4ff 40%, #fdf4ff 100%);
+  background-attachment: fixed;
 }
 
 * {
@@ -42,6 +61,7 @@ body {
 }
 
 @layer components {
+  /* ── Layout shells ── */
   .monari-shell {
     width: 100%;
     max-width: 440px;
@@ -63,14 +83,15 @@ body {
 
   .monari-auth-card {
     width: 100%;
-    border-radius: 30px;
-    border: 1px solid var(--monari-line);
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: var(--monari-shadow-card);
-    padding: 24px;
-    backdrop-filter: blur(8px);
+    border-radius: 32px;
+    border: 1px solid rgba(79, 63, 240, 0.12);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: var(--monari-shadow-float);
+    padding: 28px 24px;
+    backdrop-filter: blur(12px);
   }
 
+  /* ── Typography ── */
   .monari-header {
     display: flex;
     align-items: center;
@@ -84,7 +105,7 @@ body {
     font-size: 24px;
     line-height: 1.15;
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     color: var(--monari-ink);
   }
 
@@ -93,9 +114,36 @@ body {
     font-size: 13px;
     line-height: 1.4;
     font-weight: 600;
-    color: rgba(43, 43, 43, 0.64);
+    color: var(--monari-ink-muted);
   }
 
+  .monari-section-title {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--monari-ink);
+  }
+
+  .monari-kpi-value {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--monari-ink);
+  }
+
+  .monari-meta {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--monari-ink-muted);
+  }
+
+  /* ── Cards ── */
   .monari-card {
     border-radius: 24px;
     border: 1px solid var(--monari-line);
@@ -108,169 +156,179 @@ body {
     border: 1px solid var(--monari-line);
     background: var(--monari-surface-soft);
     box-shadow: var(--monari-shadow-soft);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
   }
 
+  /* ── Hero banner ── */
   .monari-hero {
-    border-radius: 30px;
-    padding: 20px;
+    border-radius: 28px;
+    padding: 22px 20px;
     color: #fff;
-    background: linear-gradient(180deg, var(--monari-hero) 0%, var(--monari-hero-strong) 100%);
+    background: linear-gradient(135deg, #4f3ff0 0%, #7c3aed 60%, #9b2bd6 100%);
     box-shadow: var(--monari-shadow-hero);
+    position: relative;
+    overflow: hidden;
   }
 
+  .monari-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── Buttons ── */
   .monari-btn-primary,
   .monari-btn-secondary,
   .monari-btn-ghost {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    padding: 0 16px;
+    height: 48px;
+    padding: 0 20px;
     border-radius: 16px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     line-height: 1;
+    letter-spacing: -0.02em;
     text-decoration: none;
     transition:
-      background-color 0.18s ease,
-      border-color 0.18s ease,
-      color 0.18s ease,
-      transform 0.18s ease;
+      background-color 0.15s ease,
+      transform 0.12s ease,
+      box-shadow 0.15s ease;
     cursor: pointer;
   }
 
   .monari-btn-primary {
-    background: var(--monari-primary);
+    background: linear-gradient(135deg, #ff6b35 0%, #ff4b12 100%);
     color: #fff;
     border: none;
+    box-shadow: 0 4px 14px rgba(255, 107, 53, 0.35);
   }
 
   .monari-btn-primary:hover {
-    background: var(--monari-primary-strong);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(255, 107, 53, 0.42);
+  }
+
+  .monari-btn-primary:active {
+    transform: translateY(0);
   }
 
   .monari-btn-secondary {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.12);
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.20);
   }
 
   .monari-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.18);
   }
 
   .monari-btn-ghost {
     background: #fff;
     color: var(--monari-hero);
-    border: 1px solid var(--monari-line);
+    border: 1px solid var(--monari-line-strong);
+    box-shadow: var(--monari-shadow-card);
   }
 
   .monari-btn-ghost:hover {
-    background: rgba(16, 54, 125, 0.04);
+    background: rgba(79, 63, 240, 0.04);
+    border-color: rgba(79, 63, 240, 0.25);
   }
 
-  .monari-section-title {
-    margin: 0;
-    font-size: 18px;
-    line-height: 1.25;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--monari-ink);
-  }
-
-  .monari-kpi-value {
-    margin: 0;
-    font-size: 22px;
-    line-height: 1.2;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--monari-ink);
-  }
-
-  .monari-meta {
-    margin: 0;
-    font-size: 12px;
-    line-height: 1.45;
-    font-weight: 600;
-    color: rgba(43, 43, 43, 0.58);
-  }
-
-  .monari-progress-track {
-    width: 100%;
-    height: 8px;
-    border-radius: 999px;
-    background: rgba(43, 43, 43, 0.08);
-    overflow: hidden;
-  }
-
-  .monari-progress-fill {
-    height: 8px;
-    border-radius: 999px;
-    background: var(--monari-primary);
-  }
-
+  /* ── Inputs ── */
   .monari-input {
     width: 100%;
-    height: 48px;
+    height: 50px;
     border-radius: 16px;
-    border: 1px solid var(--monari-line);
+    border: 1.5px solid var(--monari-line-strong);
     background: #fff;
-    padding: 0 14px;
-    font-size: 14px;
+    padding: 0 16px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--monari-ink);
     outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .monari-input::placeholder {
-    color: rgba(43, 43, 43, 0.42);
+    color: var(--monari-ink-muted);
   }
 
   .monari-input:focus {
     border-color: var(--monari-hero);
+    box-shadow: 0 0 0 3px rgba(79, 63, 240, 0.12);
   }
 
   .monari-textarea {
     width: 100%;
     min-height: 120px;
     border-radius: 16px;
-    border: 1px solid var(--monari-line);
+    border: 1.5px solid var(--monari-line-strong);
     background: #fff;
-    padding: 14px;
-    font-size: 14px;
+    padding: 14px 16px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--monari-ink);
     outline: none;
     resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
+  .monari-textarea:focus {
+    border-color: var(--monari-hero);
+    box-shadow: 0 0 0 3px rgba(79, 63, 240, 0.12);
+  }
+
+  /* ── Filter chips ── */
   .monari-filter-chip,
   .monari-filter-chip-active {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 38px;
+    height: 36px;
     padding: 0 14px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
     text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .monari-filter-chip {
-    border: 1px solid var(--monari-line);
+    border: 1.5px solid var(--monari-line-strong);
     background: #fff;
-    color: var(--monari-ink);
+    color: var(--monari-ink-soft);
   }
 
   .monari-filter-chip-active {
-    border: 1px solid transparent;
+    border: 1.5px solid transparent;
     background: var(--monari-hero);
     color: #fff;
   }
 
+  /* ── Progress ── */
+  .monari-progress-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(79, 63, 240, 0.10);
+    overflow: hidden;
+  }
+
+  .monari-progress-fill {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4f3ff0 0%, #7c3aed 100%);
+    transition: width 0.4s ease;
+  }
+
+  /* ── Tab bar ── */
   .monari-tabbar {
     position: fixed;
     left: 50%;
@@ -284,11 +342,11 @@ body {
     justify-content: space-between;
     gap: 4px;
     padding: 8px 10px;
-    border-radius: 24px;
-    border: 1px solid var(--monari-line);
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 10px 30px rgba(43, 43, 43, 0.08);
-    backdrop-filter: blur(12px);
+    border-radius: 26px;
+    border: 1px solid rgba(79, 63, 240, 0.12);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 8px 32px rgba(79, 63, 240, 0.14), 0 2px 8px rgba(28, 27, 58, 0.06);
+    backdrop-filter: blur(16px);
   }
 
   .monari-tab {
@@ -298,20 +356,21 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px 8px;
-    border-radius: 16px;
+    border-radius: 18px;
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
-    color: rgba(43, 43, 43, 0.58);
+    color: var(--monari-ink-muted);
     text-decoration: none;
-    transition: background-color 0.18s ease, color 0.18s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .monari-tab-active {
-    background: rgba(16, 54, 125, 0.08);
+    background: linear-gradient(135deg, rgba(79, 63, 240, 0.12) 0%, rgba(124, 58, 237, 0.10) 100%);
     color: var(--monari-hero);
   }
 
+  /* ── Focus ring ── */
   .monari-shell a:focus-visible,
   .monari-shell button:focus-visible,
   .monari-shell input:focus-visible,
@@ -319,7 +378,7 @@ body {
   .monari-auth-shell a:focus-visible,
   .monari-auth-shell button:focus-visible,
   .monari-auth-shell input:focus-visible {
-    outline: 2px solid rgba(16, 54, 125, 0.35);
+    outline: 2px solid rgba(79, 63, 240, 0.40);
     outline-offset: 2px;
   }
 }

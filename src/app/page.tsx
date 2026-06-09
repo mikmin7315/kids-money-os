@@ -85,10 +85,10 @@ export default async function HomePage() {
             {dashboard.children.map((s) => {
               const successRate = s.monthReport.behaviorSuccessRate;
               return (
-                <Link key={s.child.id} href={`/child/${s.child.id}`} className="monari-card block p-4">
+                <Link key={s.child.id} href={`/child/${s.child.id}`} className="monari-card block p-4 transition active:scale-[0.99]">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <p className="text-[16px] font-800 text-[var(--monari-ink)]">{s.child.name}</p>
+                      <p className="text-[16px] font-800 text-[var(--monari-ink)] tracking-tight">{s.child.name}</p>
                       <p className="monari-meta mt-0.5">{formatWon(s.wallet.balance)}</p>
                     </div>
                     <span className="text-[13px] font-700 text-[var(--monari-hero)]">보기 →</span>
