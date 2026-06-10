@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { InfoList, InfoSection, PublicInfoPage } from "@/components/legal/public-info-page";
-import { policyEffectiveDate } from "@/lib/public-info";
+import { getSupportEmail, policyEffectiveDate } from "@/lib/public-info";
 
 export const metadata: Metadata = { title: "개인정보 처리 안내" };
 
 export default function PrivacyPage() {
+  const supportEmail = getSupportEmail();
+
   return (
     <PublicInfoPage
       eyebrow="PRIVACY"
@@ -46,6 +48,15 @@ export default function PrivacyPage() {
 
       <InfoSection title="이용자 권리와 문의">
         <p>부모 사용자는 앱에서 가족 정보를 확인·수정하고 설정 화면에서 계정을 삭제할 수 있습니다. 문의 방법은 고객지원 페이지에서 확인할 수 있습니다.</p>
+      </InfoSection>
+
+      <InfoSection title="보유 기간과 파기">
+        <p>계정과 가족 금융교육 기록은 서비스 제공 기간 동안 보관합니다. 사용자가 계정 삭제를 요청하면 관련 계정과 가족 기록을 삭제하며, 법령상 보관 의무가 있는 경우에만 해당 기간 동안 별도 보관합니다.</p>
+      </InfoSection>
+
+      <InfoSection title="개인정보 보호 문의">
+        <p>서비스 운영자 및 개인정보 보호 담당: Monari 운영자</p>
+        <p>문의 이메일: {supportEmail ?? "고객지원 페이지에서 확인해 주세요."}</p>
       </InfoSection>
     </PublicInfoPage>
   );
