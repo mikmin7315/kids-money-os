@@ -1,8 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
-export async function getSupabaseServerClient() {
+export const getSupabaseServerClient = cache(async () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -28,7 +29,7 @@ export async function getSupabaseServerClient() {
       },
     },
   });
-}
+});
 
 export function getSupabaseAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
