@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Capacitor uses reflection and WebView JavaScript interfaces for its native
+# bridge. Keep the bridge surface stable in minified release builds.
+-keep class com.getcapacitor.** { *; }
+-keep @com.getcapacitor.annotation.CapacitorPlugin class * { *; }
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}

@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+def uploadStoreFile = System.getenv('MONARI_UPLOAD_STORE_FILE')
+def uploadStorePassword = System.getenv('MONARI_UPLOAD_STORE_PASSWORD')
+def uploadKeyAlias = System.getenv('MONARI_UPLOAD_KEY_ALIAS')
+def uploadKeyPassword = System.getenv('MONARI_UPLOAD_KEY_PASSWORD')
+def canSignRelease = uploadStoreFile && uploadStorePassword && uploadKeyAlias && uploadKeyPassword
+def releaseBuildRequested = gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }
+
+if (releaseBuildRequested && !canSignRelease) {
+    throw new GradleException('Release builds require all MONARI_UPLOAD_* signing environment variables.')
+}
+
 android {
     namespace = "com.monari.family"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,10 +27,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            storeFile canSignRelease ? file(uploadStoreFile) : null
+            storePassword uploadStorePassword ?: ''
+            keyAlias uploadKeyAlias ?: ''
+            keyPassword uploadKeyPassword ?: ''
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig canSignRelease ? signingConfigs.release : null
         }
     }
 }
