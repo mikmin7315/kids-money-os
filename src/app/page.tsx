@@ -55,12 +55,14 @@ export default async function HomePage() {
         <div className="mt-6 grid grid-cols-2 gap-3">
           <Link
             href={totalPending > 0 ? "/approvals" : "/behaviors"}
+            prefetch={false}
             className="flex h-14 items-center justify-center rounded-[15px] bg-[var(--monari-primary)] text-[15px] font-800 text-white transition active:scale-[0.98]"
           >
             {totalPending > 0 ? `요청 ${totalPending}건 확인` : "약속 만들기"}
           </Link>
           <Link
             href="/records"
+            prefetch={false}
             className="flex h-14 items-center justify-center rounded-[15px] bg-white text-[15px] font-800 text-[#0d326c] transition active:scale-[0.98]"
           >
             금융 기록 보기
@@ -111,7 +113,7 @@ export default async function HomePage() {
       </section>
 
       <section className="mb-5">
-        <SectionTitle action={<Link href="/records">전체 보기</Link>}>최근 금융 활동</SectionTitle>
+        <SectionTitle action={<Link href="/records" prefetch={false}>전체 보기</Link>}>최근 금융 활동</SectionTitle>
         <div className="monari-card mt-3 px-4">
           {recentFeed.length > 0 ? (
             recentFeed.map((item) => (
@@ -131,10 +133,10 @@ export default async function HomePage() {
 
       {dashboard.children.length > 0 ? (
         <section className="mb-5">
-          <SectionTitle action={<Link href="/child-mode">아이 모드</Link>}>아이별 통장</SectionTitle>
+          <SectionTitle action={<Link href="/child-mode" prefetch={false}>아이 모드</Link>}>아이별 통장</SectionTitle>
           <div className="mt-3 space-y-3">
             {dashboard.children.map((summary) => (
-              <Link key={summary.child.id} href={`/child/${summary.child.id}`} className="monari-card block p-5 transition active:scale-[0.99]">
+              <Link key={summary.child.id} href={`/child/${summary.child.id}`} prefetch={false} className="monari-card block p-5 transition active:scale-[0.99]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-[16px] font-800 text-[var(--monari-ink)]">{summary.child.name}</p>
@@ -155,7 +157,7 @@ export default async function HomePage() {
         <div className="monari-card mb-5 p-5 text-center">
           <p className="text-[15px] font-800 text-[var(--monari-ink)]">첫 아이 통장을 만들어주세요</p>
           <p className="monari-meta mt-1 mb-4">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
-          <Link href="/settings" className="monari-btn-primary w-full">아이 등록하기</Link>
+          <Link href="/settings" prefetch={false} className="monari-btn-primary w-full">아이 등록하기</Link>
         </div>
       )}
 
@@ -165,7 +167,7 @@ export default async function HomePage() {
             <p className="text-[14px] font-800 text-[var(--monari-ink)]">지금은 체험 모드예요</p>
             <p className="monari-meta mt-1">로그인하면 가족 기록이 안전하게 저장됩니다.</p>
           </div>
-          <Link href="/login" className="monari-btn-primary h-10 shrink-0 px-4 text-[13px]">로그인</Link>
+          <Link href="/login" prefetch={false} className="monari-btn-primary h-10 shrink-0 px-4 text-[13px]">로그인</Link>
         </div>
       )}
     </MobileAppShell>
