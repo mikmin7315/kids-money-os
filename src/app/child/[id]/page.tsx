@@ -126,10 +126,18 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
               <p className="text-[13px] font-800">오늘의 약속</p>
             </div>
             <p className="mt-3 text-[18px] font-900 leading-tight">
-              {remaining > 0 ? `${remaining}개만 더 해볼까요?` : "오늘 약속을 모두 지켰어요!"}
+              {todayTotal === 0
+                ? "오늘 등록된 약속이 없어요"
+                : remaining > 0
+                  ? `${remaining}개만 더 해볼까요?`
+                  : "오늘 약속을 모두 지켰어요!"}
             </p>
             <p className="mt-1 text-[12px] leading-5 text-white/50">
-              {streak > 0 ? `${streak}일 연속 좋은 습관을 만들고 있어요.` : "작은 약속 하나부터 시작해봐요."}
+              {todayTotal === 0
+                ? "부모님과 함께 새로운 약속을 만들어봐요."
+                : streak > 0
+                  ? `${streak}일 연속 좋은 습관을 만들고 있어요.`
+                  : "작은 약속 하나부터 시작해봐요."}
             </p>
             <div className="mt-4 flex gap-1.5">
               {week.map((day) => (
