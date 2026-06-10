@@ -12,6 +12,7 @@
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "smoke": "node scripts/smoke-test.mjs",
     "preflight:release": "node scripts/release-preflight.mjs",
+    "pre-promote": "node scripts/pre-promote.mjs",
     "verify:release": "npm run verify && npm run smoke && npm run audit:prod",
     "verify:store": "npm run preflight:release && npm run verify:release",
     "native:sync": "cap sync",
