@@ -20,7 +20,7 @@ import { formatWon } from "@/lib/format";
 const initialState: FormState = { ok: false, message: "" };
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
 }
 
 // ────────────────────────────────────────────────────────────

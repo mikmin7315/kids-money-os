@@ -1,5 +1,16 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Landmark,
+  PiggyBank,
+  ReceiptText,
+  Sparkles,
+  TrendingUp,
+  WalletCards,
+} from "lucide-react";
 import { BorrowRequestQuickForm, ChildBehaviorCheckForm, ChildSaveForm } from "@/components/finance/action-forms";
 import { ChildBottomNav } from "@/components/child/child-bottom-nav";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -10,7 +21,6 @@ import type { BehaviorLog } from "@/lib/types";
 
 export default async function ChildDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
   const auth = await requireAppConsent();
   const [childMode, bundle, dashboard] = await Promise.all([
     getChildModeContext(),
@@ -23,280 +33,302 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
   const isChildMode = childMode.childId === id;
   if (!isParentOrAdmin && !isChildMode) redirect("/login");
 
-  const today = new Date().toISOString().slice(0, 10);
-  const child = bundle.children.find((c) => c.id === id);
-  if (!child) notFound();
-  const summary = dashboard.children.find((c) => c.child.id === id);
-  if (!summary) notFound();
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const child = bundle.children.find((item) => item.id === id);
+  const summary = dashboard.children.find((item) => item.child.id === id);
+  if (!child || !summary) notFound();
 
-  const activeRules = bundle.behaviorRules.filter((r) => r.isActive);
-  const childLogs = bundle.behaviorLogs.filter((l) => l.childId === id);
-  const todayLogs = childLogs.filter((l) => l.date === today);
+  const activeRules = bundle.behaviorRules.filter((rule) => rule.isActive);
+  const childLogs = bundle.behaviorLogs.filter((log) => log.childId === id);
+  const todayLogs = childLogs.filter((log) => log.date === today);
   const doneTodayRuleIds = todayLogs
-    .filter((l) => l.status === "approved" || l.status === "completed")
-    .map((l) => l.behaviorRuleId);
+    .filter((log) => log.status === "approved" || log.status === "completed")
+    .map((log) => log.behaviorRuleId);
   const todayDone = doneTodayRuleIds.length;
   const todayTotal = activeRules.length;
-  const todayProgress = todayTotal > 0 ? Math.round((todayDone / todayTotal) * 100) : 0;
-  const remaining = todayTotal - todayDone;
+  const todayProgress = todayTotal > 0 ? Math.min(100, Math.round((todayDone / todayTotal) * 100)) : 0;
+  const remaining = Math.max(0, todayTotal - todayDone);
+  const activeRuleIds = activeRules.map((rule) => rule.id);
+  const streak = computeStreak(childLogs, activeRuleIds, today);
+  const week = buildWeek(childLogs, activeRuleIds, today);
 
-  // Interest policy & rate
-  const policy = bundle.interestPolicies.find((p) => p.childId === id);
-  const interestRate = summary.wallet.currentInterestRate;
+  const policy = bundle.interestPolicies.find((item) => item.childId === id);
   const todayInterest = policy ? Math.round(estimateInterest(summary.wallet, policy) / 30) : 0;
-
-  // Streak: consecutive days with at least one approved behavior log
-  const streak = computeStreak(childLogs, today);
-
-  // Monthly numbers
   const { totalAllowance, totalSave, totalSpend, totalInterest } = summary.monthReport;
-
-  // Recent transactions (top 4 spend/allowance/reward)
   const childTx = bundle.moneyTransactions
-    .filter((t) => t.childId === id)
+    .filter((transaction) => transaction.childId === id)
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 4);
 
   return (
-    <div
-      className="mx-auto min-h-screen max-w-[440px] overflow-hidden shadow-[0_0_60px_rgba(28,27,58,0.20)]"
-      style={{ background: "linear-gradient(160deg, #3b2fd4 0%, #4f3ff0 40%, #7c3aed 100%)" }}
-    >
-      {/* ── HERO ── */}
-      <div className="px-4 pb-5 pt-[calc(28px+env(safe-area-inset-top))]">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h1 className="text-[26px] font-extrabold text-white leading-tight tracking-tight">
-              안녕, {child.name}! 👋
-            </h1>
-            <p className="text-[13px] text-white/60 mt-0.5">
-              🔥 {streak > 0 ? `${streak}일 연속으로 약속을 지키고 있어요` : "오늘도 약속을 지켜봐요!"}
-            </p>
-          </div>
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ff4b12 100%)", boxShadow: "0 4px 12px rgba(255,107,53,0.40)" }} role="img" aria-label={`${child.name} 프로필`}>
-            <span className="text-[16px] font-extrabold text-white">{child.name[0]}</span>
-          </div>
-        </div>
+    <div className="mx-auto min-h-screen max-w-[440px] overflow-hidden bg-[#f4f5f8] shadow-[0_0_60px_rgba(23,24,28,0.14)]">
+      <section className="relative overflow-hidden bg-[#23204f] px-4 pb-8 pt-[calc(18px+env(safe-area-inset-top))] text-white">
+        <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#6857ff]/55 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-20 h-52 w-52 rounded-full bg-[#f06432]/20 blur-3xl" />
 
-        {/* Promise card */}
-        <div className="rounded-[22px] bg-white/[0.10] border border-white/[0.15] p-4 mb-3 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[12px] font-semibold text-white/60">오늘의 약속</p>
-            <Link href="#today-promises" className="text-[12px] font-bold text-white/80 hover:text-white">
-              약속 보기 →
+        {isParentOrAdmin && !isChildMode && (
+          <div className="relative mb-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 px-3.5 py-2.5 text-[12px] backdrop-blur">
+            <span className="font-700 text-white/75">부모 보기 중</span>
+            <Link href="/approvals" prefetch={false} className="font-800 text-white">
+              승인 대기 {summary.pendingApprovals}건 <ArrowRight className="inline h-3 w-3" />
             </Link>
           </div>
-          <p className="text-[38px] font-extrabold text-white leading-none mb-0.5 tracking-tight">
-            {todayDone}
-            <span className="text-[22px] font-bold text-white/40">/{todayTotal}</span>
-          </p>
-          <p className="text-[13px] text-white/60 mb-3">
-            {remaining > 0 ? `아직 ${remaining}개 기회가 남았어요` : "오늘 약속을 모두 지켰어요! 🎉"}
-          </p>
-          <div className="h-2 rounded-full bg-white/[0.15] overflow-hidden mb-1.5">
-            <div className="h-full rounded-full transition-all" style={{ width: `${todayProgress}%`, background: "linear-gradient(90deg, #ff6b35 0%, #ff9a00 100%)" }} />
+        )}
+
+        <header className="relative flex items-center justify-between">
+          {isParentOrAdmin ? (
+            <Link
+              href="/"
+              prefetch={false}
+              aria-label="가족 홈으로 이동"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          ) : <span className="h-10 w-10" aria-hidden="true" />}
+          <div className="text-center">
+            <p className="text-[11px] font-700 tracking-[0.16em] text-white/45">MONARI PASSBOOK</p>
+            <h1 className="mt-0.5 text-[15px] font-800">{child.name}의 통장</h1>
           </div>
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] text-white/45">{todayProgress}% 완료</p>
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f06432] text-[15px] font-900 shadow-[0_6px_16px_rgba(240,100,50,0.35)]"
+            aria-label={`${child.name} 프로필`}
+            role="img"
+          >
+            {child.name[0]}
+          </div>
+        </header>
+
+        <div className="relative mt-7">
+          <div className="flex items-center gap-2 text-white/55">
+            <WalletCards className="h-4 w-4" />
+            <p className="text-[13px] font-700">지금 쓸 수 있는 돈</p>
+          </div>
+          <p className="mt-2 text-[45px] font-900 leading-none tracking-[-0.06em] tabular-nums">
+            {formatWon(summary.wallet.balance)}
+          </p>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-[#3fd17f]/15 px-3 py-1.5 text-[11px] font-800 text-[#7ce8a9]">
+              현재 이자율 {summary.wallet.currentInterestRate}%
+            </span>
             {todayInterest > 0 && (
-              <p className="text-[11px] font-bold text-[#ffd166]">오늘 이자 +{formatWon(todayInterest)}</p>
+              <span className="rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-700 text-white/70">
+                오늘 예상 이자 +{formatWon(todayInterest)}
+              </span>
             )}
           </div>
         </div>
 
-        {/* Balance card */}
-        <div className="rounded-[22px] bg-white/[0.10] border border-white/[0.15] p-4 mb-4 backdrop-blur-sm">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-[12px] font-semibold text-white/60 mb-1">내 남긴 돈 💰</p>
-              <p className="text-[36px] font-extrabold text-white leading-none tracking-tight tabular-nums">
-                {formatWon(summary.wallet.balance)}
-              </p>
+        <div className="relative mt-7 grid grid-cols-[1fr_112px] gap-3 rounded-[24px] border border-white/10 bg-white/[0.08] p-4 backdrop-blur-sm">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#ffd166]" />
+              <p className="text-[13px] font-800">오늘의 약속</p>
             </div>
-            <div className="shrink-0 rounded-[16px] px-3.5 py-3 text-center min-w-[72px]" style={{ background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)", boxShadow: "0 4px 12px rgba(34,197,94,0.35)" }}>
-              <p className="text-[20px] font-extrabold text-white leading-none">{interestRate}%</p>
-              <p className="text-[10px] text-white/80 mt-1 leading-tight">이번 주<br />이자율</p>
-              <Link href="/records" className="mt-1.5 block text-[10px] font-semibold text-white/70 underline">
-                정산 보기 →
-              </Link>
+            <p className="mt-3 text-[18px] font-900 leading-tight">
+              {remaining > 0 ? `${remaining}개만 더 해볼까요?` : "오늘 약속을 모두 지켰어요!"}
+            </p>
+            <p className="mt-1 text-[12px] leading-5 text-white/50">
+              {streak > 0 ? `${streak}일 연속 좋은 습관을 만들고 있어요.` : "작은 약속 하나부터 시작해봐요."}
+            </p>
+            <div className="mt-4 flex gap-1.5">
+              {week.map((day) => (
+                <div key={day.date} className="text-center">
+                  <div
+                    className={`flex h-6 w-6 items-center justify-center rounded-full border text-[10px] font-900 ${
+                      day.done
+                        ? "border-[#7ce8a9] bg-[#3fd17f] text-[#173a2a]"
+                        : day.isToday
+                          ? "border-[#ffd166] bg-[#ffd166]/15 text-[#ffd166]"
+                          : "border-white/15 text-white/25"
+                    }`}
+                    aria-label={`${day.date} ${day.done ? "약속 완료" : day.isToday ? "오늘, 약속 진행 중" : "약속 미완료"}`}
+                  >
+                    {day.done ? <Check className="h-3 w-3" strokeWidth={3} /> : day.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+
+          <Link
+            href="#today-promises"
+            aria-label={`오늘 약속 ${todayDone}개 중 ${todayTotal}개 완료, 약속 체크로 이동`}
+            className="relative flex aspect-square items-center justify-center rounded-full"
+            style={{
+              background: `conic-gradient(#ffd166 ${todayProgress * 3.6}deg, rgba(255,255,255,0.10) 0deg)`,
+            }}
+          >
+            <span className="absolute inset-[8px] flex flex-col items-center justify-center rounded-full bg-[#302b68]">
+              <strong className="text-[25px] font-900 leading-none">{todayDone}/{todayTotal}</strong>
+              <span className="mt-1 text-[10px] font-700 text-white/45">약속 완료</span>
+            </span>
+          </Link>
         </div>
 
-        {/* Action buttons */}
-        <div className="grid grid-cols-3 gap-2">
-          <ActionBtn emoji="🐷" label="저금통" href="#save-form" />
-          <ActionBtn emoji="✅" label="약속 체크" href="#today-promises" />
-          <ActionBtn emoji="📊" label="미리쓰기" href="#borrow-form" orange />
+        <div className="relative mt-3 grid grid-cols-2 gap-2.5">
+          <Link href="#today-promises" className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white text-[13px] font-900 text-[#282458]">
+            <Check className="h-4 w-4" strokeWidth={3} /> 약속 체크하기
+          </Link>
+          <Link href="#save-form" className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-[#f06432] text-[13px] font-900 text-white shadow-[0_8px_20px_rgba(240,100,50,0.28)]">
+            <PiggyBank className="h-4 w-4" /> 저금하기
+          </Link>
         </div>
-      </div>
+      </section>
 
-      {/* ── BOTTOM SECTION ── */}
-      <div className="min-h-[55vh] rounded-t-[32px] bg-[#f5f4ff] px-4 pb-40 pt-6">
-        {/* 이번 달 흐름 */}
-        <section className="mb-5">
-          <p className="text-[17px] font-extrabold text-[var(--monari-ink)] mb-3 tracking-tight">이번 달 흐름</p>
-          <div className="grid grid-cols-2 gap-3">
-            <SummaryCard emoji="💰" value={formatWon(totalAllowance)} label="받은 용돈" />
-            <SummaryCard emoji="⭐" value={formatWon(totalInterest)} label="약속 이자" sub="약속 덕분에" yellowAccent />
-            <SummaryCard emoji="🐷" value={formatWon(totalSave)} label="저금통" />
-            <SummaryCard emoji="🛍️" value={formatWon(totalSpend)} label="사용한 돈" orangeAccent />
-          </div>
-        </section>
+      <main className="relative -mt-1 rounded-t-[30px] bg-[#f4f5f8] px-4 pb-36 pt-6">
+        <SectionHeading title="이번 달 흐름" />
+        <div className="-mx-4 mb-7 flex gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <FlowCard icon={<Landmark />} label="받은 용돈" value={formatWon(totalAllowance)} tone="violet" />
+          <FlowCard icon={<TrendingUp />} label="받은 이자" value={formatWon(totalInterest)} tone="green" />
+          <FlowCard icon={<PiggyBank />} label="저금한 돈" value={formatWon(totalSave)} tone="blue" />
+          <FlowCard icon={<ReceiptText />} label="사용한 돈" value={formatWon(totalSpend)} tone="orange" />
+          <span className="w-1 shrink-0" aria-hidden="true" />
+        </div>
 
-        {/* 최근 내역 */}
-        <section className="mb-5">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-[17px] font-extrabold text-[var(--monari-ink)] tracking-tight">최근 내역</p>
-            <Link href="/records" className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">전체 →</Link>
-          </div>
-          <div className="rounded-[20px] bg-white overflow-hidden" style={{ boxShadow: "var(--monari-shadow-card)" }}>
+        <section className="mb-7">
+          <SectionHeading title="최근 내역" actionHref="/records" actionLabel="전체 보기" />
+          <div className="overflow-hidden rounded-[22px] border border-[var(--monari-line)] bg-white shadow-[var(--monari-shadow-card)]">
             {childTx.length === 0 ? (
-              <p className="px-5 py-5 text-[14px] text-[rgba(43,43,43,0.45)] text-center">거래 내역이 없어요</p>
+              <p className="px-5 py-8 text-center text-[13px] text-[var(--monari-ink-muted)]">아직 거래 내역이 없어요.</p>
             ) : (
               <ul>
-                {childTx.map((tx, i) => (
-                  <li key={tx.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[rgba(43,43,43,0.06)]" : ""}`}>
-                    <TxIcon type={tx.type} title={tx.memo} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[14px] font-semibold text-[#1A1A2E] truncate">{txLabel(tx.type, tx.memo)}</p>
-                      <p className="text-[12px] text-[rgba(43,43,43,0.50)]">{relativeDate(tx.date, today)}</p>
-                    </div>
-                    <p className={`text-[14px] font-bold tabular-nums shrink-0 ${
-                      tx.type === "spend" || tx.type === "borrow" ? "text-[#1A1A2E]" : "text-[#10367D]"
-                    }`}>
-                      {tx.type === "spend" || tx.type === "borrow" ? "-" : "+"}{formatWon(tx.amount)}
-                    </p>
-                  </li>
-                ))}
+                {childTx.map((transaction, index) => {
+                  const minus = transaction.type === "spend" || transaction.type === "borrow";
+                  return (
+                    <li key={transaction.id} className={`flex items-center gap-3 px-4 py-3.5 ${index < childTx.length - 1 ? "border-b border-[var(--monari-line)]" : ""}`}>
+                      <TransactionIcon type={transaction.type} />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[14px] font-800 text-[var(--monari-ink)]">{transactionLabel(transaction.type, transaction.memo)}</p>
+                        <p className="mt-0.5 text-[11px] text-[var(--monari-ink-muted)]">{relativeDate(transaction.date, today)}</p>
+                      </div>
+                      <p className={`shrink-0 text-[14px] font-900 tabular-nums ${minus ? "text-[var(--monari-ink)]" : "text-[var(--monari-plus)]"}`}>
+                        {minus ? "-" : "+"}{formatWon(transaction.amount)}
+                      </p>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
         </section>
 
-        {/* 저금통 */}
-        <section id="save-form" className="mb-4">
-          <p className="text-[17px] font-extrabold text-[var(--monari-ink)] mb-3 tracking-tight">🐷 저금통</p>
-          <div className="rounded-[20px] bg-white p-5" style={{ boxShadow: "var(--monari-shadow-card)" }}>
-            <ChildSaveForm childId={id} />
-          </div>
-        </section>
+        <FormSection id="today-promises" title="오늘 약속 체크" icon={<Check className="h-4 w-4" />}>
+          <ChildBehaviorCheckForm childId={id} behaviorRules={activeRules} doneRuleIds={doneTodayRuleIds} />
+        </FormSection>
 
-        {/* 오늘 약속 체크 */}
-        <section id="today-promises" className="mb-4">
-          <p className="text-[17px] font-extrabold text-[var(--monari-ink)] mb-3 tracking-tight">✅ 오늘 약속 체크</p>
-          <div className="rounded-[20px] bg-white p-5" style={{ boxShadow: "var(--monari-shadow-card)" }}>
-            <ChildBehaviorCheckForm
-              childId={id}
-              behaviorRules={activeRules}
-              doneRuleIds={doneTodayRuleIds}
-            />
-          </div>
-        </section>
+        <FormSection id="save-form" title="저금하기" icon={<PiggyBank className="h-4 w-4" />}>
+          <ChildSaveForm childId={id} />
+        </FormSection>
 
-        {/* 미리쓰기 */}
-        <section id="borrow-form" className="mb-4">
-          <p className="text-[17px] font-extrabold text-[var(--monari-ink)] mb-3 tracking-tight">📊 미리쓰기 요청</p>
-          <div className="rounded-[20px] bg-white p-5" style={{ boxShadow: "var(--monari-shadow-card)" }}>
-            <BorrowRequestQuickForm childId={id} />
-          </div>
-        </section>
-      </div>
+        <FormSection id="borrow-form" title="미리쓰기 요청" icon={<ReceiptText className="h-4 w-4" />}>
+          <BorrowRequestQuickForm childId={id} />
+        </FormSection>
+      </main>
 
       <ChildBottomNav childId={id} />
     </div>
   );
 }
 
-// ── Sub-components ──
-
-function ActionBtn({ emoji, label, href, orange }: { emoji: string; label: string; href: string; orange?: boolean }) {
+function SectionHeading({ title, actionHref, actionLabel }: { title: string; actionHref?: string; actionLabel?: string }) {
   return (
-    <Link
-      href={href}
-      className={`flex flex-col items-center justify-center gap-1.5 rounded-[20px] py-3.5 text-[12px] font-bold transition active:scale-[0.96] ${
-        orange
-          ? "text-white"
-          : "bg-white/[0.12] border border-white/[0.18] text-white"
-      }`}
-      style={orange ? { background: "linear-gradient(135deg, #ff6b35 0%, #ff4b12 100%)", boxShadow: "0 4px 12px rgba(255,107,53,0.40)" } : undefined}
-    >
-      <span className="text-[22px]">{emoji}</span>
-      {label}
-    </Link>
-  );
-}
-
-function SummaryCard({ emoji, value, label, sub, yellowAccent, orangeAccent }: {
-  emoji: string;
-  value: string;
-  label: string;
-  sub?: string;
-  yellowAccent?: boolean;
-  orangeAccent?: boolean;
-}) {
-  return (
-    <div className="rounded-[20px] bg-white p-4" style={{ boxShadow: "var(--monari-shadow-card)" }}>
-      <span className="text-[24px]">{emoji}</span>
-      <p className={`text-[19px] font-extrabold mt-2 leading-tight tabular-nums tracking-tight ${
-        yellowAccent ? "text-[#d97706]" : orangeAccent ? "text-[var(--monari-primary)]" : "text-[var(--monari-ink)]"
-      }`}>
-        {value}
-      </p>
-      <p className="text-[12px] text-[var(--monari-ink-muted)] mt-0.5">{label}</p>
-      {sub && <p className="text-[11px] text-[var(--monari-ink-muted)] opacity-70 mt-0.5">{sub}</p>}
+    <div className="mb-3 flex items-center justify-between">
+      <h2 className="text-[17px] font-900 tracking-tight text-[var(--monari-ink)]">{title}</h2>
+      {actionHref && (
+        <Link href={actionHref} prefetch={false} className="text-[12px] font-800 text-[var(--monari-ink-muted)]">
+          {actionLabel} <ArrowRight className="inline h-3 w-3" />
+        </Link>
+      )}
     </div>
   );
 }
 
-function TxIcon({ type, title }: { type: string; title: string }) {
-  const styles: Record<string, { bg: string; text: string; symbol: string }> = {
-    allowance: { bg: "bg-[#ede9fe]", text: "text-[#4f3ff0]", symbol: "용" },
-    reward:    { bg: "bg-[#dcfce7]", text: "text-[#16a34a]", symbol: "★" },
-    spend:     { bg: "bg-[#fff1ee]", text: "text-[#ff6b35]", symbol: "사" },
-    save:      { bg: "bg-[#ede9fe]", text: "text-[#4f3ff0]", symbol: "저" },
-    interest:  { bg: "bg-[#dcfce7]", text: "text-[#16a34a]", symbol: "이" },
-    borrow:    { bg: "bg-[#fff1ee]", text: "text-[#ff6b35]", symbol: "미" },
+function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: string; tone: "violet" | "green" | "blue" | "orange" }) {
+  const tones = {
+    violet: "bg-[#eeeaff] text-[#5547d7]",
+    green: "bg-[#e7f8ed] text-[#238b51]",
+    blue: "bg-[#e9f2ff] text-[#2d67b2]",
+    orange: "bg-[#fff0e9] text-[#d95d2d]",
   };
-  const s = styles[type] ?? { bg: "bg-[#F2F4F8]", text: "text-[#6B7280]", symbol: title?.[0] ?? "·" };
   return (
-    <div className={`h-10 w-10 rounded-full ${s.bg} flex items-center justify-center shrink-0 text-[13px] font-bold ${s.text}`}>
-      {s.symbol}
+    <div className="min-w-[138px] rounded-[20px] border border-[var(--monari-line)] bg-white p-4 shadow-[var(--monari-shadow-card)]">
+      <span className={`flex h-9 w-9 items-center justify-center rounded-full ${tones[tone]} [&>svg]:h-4 [&>svg]:w-4`}>{icon}</span>
+      <p className="mt-3 text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>
+      <p className="mt-1 text-[17px] font-900 tracking-tight text-[var(--monari-ink)] tabular-nums">{value}</p>
     </div>
   );
 }
 
-// ── Helpers ──
+function FormSection({ id, title, icon, children }: { id: string; title: string; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <section id={id} className="mb-6 scroll-mt-4">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eeeaff] text-[#5547d7]">{icon}</span>
+        <h2 className="text-[17px] font-900 tracking-tight text-[var(--monari-ink)]">{title}</h2>
+      </div>
+      <div className="rounded-[22px] border border-[var(--monari-line)] bg-white p-5 shadow-[var(--monari-shadow-card)]">{children}</div>
+    </section>
+  );
+}
 
-function txLabel(type: string, memo: string): string {
-  const m: Record<string, string> = {
-    allowance: "용돈", reward: "약속 보상", spend: memo || "사용",
-    save: "저축하기", unsave: "저축 해제", borrow: "미리쓰기",
-    repay: "상환", interest: "이자 지급",
+function TransactionIcon({ type }: { type: string }) {
+  const positive = type === "allowance" || type === "reward" || type === "interest";
+  const saved = type === "save";
+  return (
+    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${positive ? "bg-[#e7f8ed] text-[#238b51]" : saved ? "bg-[#e9f2ff] text-[#2d67b2]" : "bg-[#fff0e9] text-[#d95d2d]"}`}>
+      {saved ? <PiggyBank className="h-4 w-4" /> : positive ? <TrendingUp className="h-4 w-4" /> : <ReceiptText className="h-4 w-4" />}
+    </span>
+  );
+}
+
+function transactionLabel(type: string, memo: string): string {
+  const labels: Record<string, string> = {
+    allowance: "용돈",
+    reward: "약속 보상",
+    spend: memo || "사용",
+    save: "저금하기",
+    unsave: "저금 해제",
+    borrow: "미리쓰기",
+    repay: "상환",
+    interest: "이자 지급",
   };
-  return (m[type] ?? memo) || type;
+  return (labels[type] ?? memo) || type;
 }
 
 function relativeDate(date: string, today: string): string {
   const diff = Math.round((new Date(today).getTime() - new Date(date).getTime()) / 86400000);
   if (diff === 0) return "오늘";
   if (diff === 1) return "어제";
-  if (diff <= 6) return `${diff}일 전`;
+  if (diff >= 0 && diff <= 6) return `${diff}일 전`;
   return date.slice(5).replace("-", ".");
 }
 
-function computeStreak(logs: BehaviorLog[], today: string): number {
-  const approvedDates = new Set(
-    logs
-      .filter((l) => l.status === "approved" || l.status === "completed")
-      .map((l) => l.date)
-  );
+function buildWeek(logs: BehaviorLog[], activeRuleIds: string[], today: string) {
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() - (6 - index));
+    const value = date.toISOString().slice(0, 10);
+    return { date: value, done: completedAllRules(logs, activeRuleIds, value), isToday: value === today, label: date.getDate() };
+  });
+}
+
+function computeStreak(logs: BehaviorLog[], activeRuleIds: string[], today: string): number {
   let streak = 0;
-  const d = new Date(today);
-  while (approvedDates.has(d.toISOString().slice(0, 10))) {
+  const date = new Date(today);
+  while (completedAllRules(logs, activeRuleIds, date.toISOString().slice(0, 10))) {
     streak++;
-    d.setDate(d.getDate() - 1);
+    date.setDate(date.getDate() - 1);
   }
   return streak;
+}
+
+function completedAllRules(logs: BehaviorLog[], activeRuleIds: string[], date: string) {
+  if (activeRuleIds.length === 0) return false;
+  const completedRuleIds = new Set(
+    logs
+      .filter((log) => log.date === date && (log.status === "approved" || log.status === "completed"))
+      .map((log) => log.behaviorRuleId),
+  );
+  return activeRuleIds.every((ruleId) => completedRuleIds.has(ruleId));
 }
