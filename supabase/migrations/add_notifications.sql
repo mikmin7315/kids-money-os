@@ -15,10 +15,12 @@ alter table public.notifications enable row level security;
 
 -- Application notification writes use the service role through src/lib/notifications.ts
 -- and the monthly-settlement Edge Function. Authenticated clients only read/update.
+drop policy if exists "parent_can_read_own_notifications" on public.notifications;
 create policy "parent_can_read_own_notifications"
   on public.notifications for select
   using (parent_id = auth.uid());
 
+drop policy if exists "parent_can_update_own_notifications" on public.notifications;
 create policy "parent_can_update_own_notifications"
   on public.notifications for update
   using (parent_id = auth.uid())
