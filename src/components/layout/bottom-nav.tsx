@@ -11,7 +11,7 @@ const items = [
 
 export function BottomNav({ pathname }: { pathname: string }) {
   return (
-    <nav className="fixed bottom-4 left-1/2 z-30 w-[calc(100%-32px)] max-w-md -translate-x-1/2 overflow-hidden rounded-[34px] border border-[rgba(74,54,24,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(241,229,210,0.98))] shadow-[var(--shadow-card)] backdrop-blur-xl">
+    <nav aria-label="주요 메뉴" className="fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2 overflow-hidden rounded-[28px] border border-[var(--border-strong)] bg-white/95 shadow-[var(--shadow-card)] backdrop-blur-xl">
       <ul className="grid grid-cols-5">
         {items.map((item) => {
           const active = pathname === item.href;
@@ -20,9 +20,10 @@ export function BottomNav({ pathname }: { pathname: string }) {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-1 py-4 text-[10px] font-semibold transition ${
+                aria-current={active ? "page" : undefined}
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-[10px] font-semibold transition ${
                   active
-                    ? "bg-[rgba(10,127,115,0.12)] text-[var(--color-accent)]"
+                    ? "bg-[var(--status-review-bg)] text-[var(--brand-primary)]"
                     : "text-[var(--color-soft)] hover:text-[var(--color-text)]"
                 }`}
               >

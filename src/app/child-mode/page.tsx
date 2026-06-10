@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
@@ -19,15 +20,15 @@ export default async function ChildModePage() {
         </p>
       </div>
 
-      {/* How it works */}
-      <section className="mb-4">
-        <SectionTitle>사용 방법</SectionTitle>
-        <div className="monari-card mt-3 p-4">
-          <ul className="space-y-2 text-[13px] text-[var(--monari-ink-soft)]">
-            <li>• 핸드폰을 아이에게 건넬 때 사용합니다.</li>
-            <li>• 아이 카드를 탭하면 PIN 입력 화면으로 이동합니다.</li>
-            <li>• PIN은 설정 화면에서 아이별로 설정할 수 있습니다.</li>
-          </ul>
+      <section className="mb-5">
+        <div className="monari-card flex items-start gap-3 p-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[var(--monari-done-bg)] text-[var(--monari-done)]">
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div>
+            <p className="text-[14px] font-700 text-[var(--monari-ink)]">부모 기능은 PIN으로 보호돼요</p>
+            <p className="monari-meta mt-1">아이 모드에서는 약속 체크, 저축, 미리쓰기 요청만 사용할 수 있습니다.</p>
+          </div>
         </div>
       </section>
 
@@ -46,20 +47,25 @@ export default async function ChildModePage() {
               <Link
                 key={summary.child.id}
                 href={`/child-pin/${summary.child.id}`}
-                className="monari-card flex items-center justify-between p-5 block"
+                className="monari-card flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5 hover:border-[var(--monari-line-strong)] active:translate-y-0"
               >
-                <div>
-                  <p className="text-[18px] font-800 text-[var(--monari-ink)]">{summary.child.name}</p>
-                  <p className="monari-meta mt-0.5">{formatWon(summary.wallet.balance)}</p>
-                  {summary.pendingApprovals > 0 && (
-                    <p className="text-[12px] font-700 text-[var(--monari-pending)] mt-1">
-                      확인 대기 {summary.pendingApprovals}건
-                    </p>
-                  )}
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-[var(--monari-plus-bg)] text-[17px] font-800 text-[var(--monari-hero)]">
+                    {summary.child.name[0]}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[17px] font-800 tracking-tight text-[var(--monari-ink)]">{summary.child.name}</p>
+                    <p className="monari-meta mt-0.5">현재 잔액 {formatWon(summary.wallet.balance)}</p>
+                    {summary.pendingApprovals > 0 && (
+                      <p className="mt-1 text-[12px] font-700 text-[var(--monari-pending)]">
+                        확인 대기 {summary.pendingApprovals}건
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <span className="text-[var(--monari-hero)] font-700">→</span>
-                  <span className="text-[11px] font-600 text-[var(--monari-ink-muted)]">PIN 입력</span>
+                <div className="flex shrink-0 items-center gap-2 text-[var(--monari-hero)]">
+                  <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </div>
               </Link>
             ))}

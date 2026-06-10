@@ -1,7 +1,7 @@
-# Kids Money OS MVP
+# Monari
 
-Kids Money OS is a mobile-first financial education app for parents and children.
-The MVP connects daily behavior, allowance, saving, spending, interest, and borrowing into one timeline so a child can understand money flow and a parent can manage clear rules.
+Monari is a mobile-first financial education app for parents and children.
+It connects daily behavior, allowance, saving, spending, interest, borrowing, and realtime notifications so children can understand money flow and parents can manage clear rules.
 
 ## Stack
 
@@ -10,6 +10,8 @@ The MVP connects daily behavior, allowance, saving, spending, interest, and borr
 - Tailwind CSS 4
 - Supabase Auth
 - Supabase Postgres
+- Supabase Realtime
+- Capacitor 8
 
 ## Current MVP Scope
 
@@ -24,16 +26,15 @@ The MVP connects daily behavior, allowance, saving, spending, interest, and borr
 - Parent borrow approval and rejection flow
 - Monthly report generation
 - Record timeline view
+- Realtime parent and child notifications
+- PWA manifest and offline fallback
+- Android and iOS Capacitor projects
 - Mock fallback mode when Supabase is not configured
 
 ## Project Structure
 
 ```text
 src/
-  actions/
-    auth.ts
-    finance.ts
-    management.ts
   app/
     approvals/
     behaviors/
@@ -58,9 +59,14 @@ src/
     mock-data.ts
     types.ts
     supabase/
+      actions/
 docs/
+  ai-collaboration.md
   mvp-spec.md
+  release-handoff.md
+  store-release-checklist.md
 supabase/
+  migrations/
   schema.sql
 ```
 
@@ -70,7 +76,7 @@ supabase/
 2. Install dependencies.
 3. Create `.env.local`.
 4. Create a Supabase project.
-5. Run `supabase/schema.sql` in the Supabase SQL editor.
+5. Run `supabase/schema.sql` and the files in `supabase/migrations/` in the Supabase SQL editor.
 6. Start the dev server.
 
 ```bash
@@ -90,7 +96,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-If these values are missing, the app falls back to local mock data so the UI can still be reviewed.
+During local development, missing Supabase values enable mock data so the UI can still be reviewed. Production never falls back to mock data and fails closed when Supabase is misconfigured.
 
 ## Recommended Validation Flow
 
@@ -103,10 +109,21 @@ If these values are missing, the app falls back to local mock data so the UI can
 7. Approve or reject the request in `/approvals`.
 8. Add spend, save, or allowance transactions in `/settings`.
 9. Generate a monthly report in `/reports`.
+10. Open `/notifications` in two sessions and confirm new notifications appear without refreshing.
+
+Run the full static validation before handing off or deploying:
+
+```bash
+npm run verify
+npm run audit:prod
+npm run smoke
+npm run native:doctor
+```
 
 ## Notes
 
 - Auth is wired for Supabase SSR.
 - The schema includes a trigger that creates a `profiles` row when a new Supabase auth user is created.
 - Data reads use Supabase when configured and fall back to mock data otherwise.
-- The current UI is optimized for MVP validation, not final production polish.
+- Realtime notifications require `supabase/migrations/enable_notifications_realtime.sql`.
+- Store release preparation and remaining blockers are tracked in `docs/release-handoff.md`.

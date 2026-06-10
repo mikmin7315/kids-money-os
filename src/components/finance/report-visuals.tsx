@@ -14,8 +14,11 @@ export function ReportBarGroup({
   const max = Math.max(allowance, spend, save, borrowed, 1);
 
   return (
-    <div className="space-y-5 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(249,243,234,0.94))] p-5">
-      <p className="font-display text-xl font-semibold">항목별 비교</p>
+    <div className="space-y-5" role="img" aria-label="용돈, 지출, 저축, 빌린 돈 항목별 비교">
+      <div>
+        <p className="text-[15px] font-800 text-[var(--monari-ink)]">돈의 흐름 비교</p>
+        <p className="monari-meta mt-1">가장 큰 항목을 기준으로 비교해요</p>
+      </div>
       <MetricBar label="용돈" value={allowance} max={max} tone="sky" />
       <MetricBar label="지출" value={spend} max={max} tone="rose" />
       <MetricBar label="저축" value={save} max={max} tone="emerald" />
@@ -30,12 +33,15 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
   const saveWidth = (save / total) * 100;
 
   return (
-    <div className="space-y-4 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.66),rgba(239,228,210,0.9))] p-5">
-      <p className="font-display text-xl font-semibold">지출 vs 저축</p>
-      <div className="overflow-hidden rounded-full bg-[var(--color-card)]">
-        <div className="flex h-4">
-          <div className="bg-[linear-gradient(90deg,#e27d60,#d65f4a)]" style={{ width: `${spendWidth}%` }} />
-          <div className="bg-[linear-gradient(90deg,#2e8b68,#56b487)]" style={{ width: `${saveWidth}%` }} />
+    <div className="space-y-4">
+      <div>
+        <p className="text-[15px] font-800 text-[var(--monari-ink)]">지출과 저축 비율</p>
+        <p className="monari-meta mt-1">사용한 돈과 남긴 돈의 균형이에요</p>
+      </div>
+      <div className="overflow-hidden rounded-full bg-[var(--monari-line)]" role="img" aria-label={`지출 ${spendWidth.toFixed(0)}%, 저축 ${saveWidth.toFixed(0)}%`}>
+        <div className="flex h-3">
+          <div className="bg-[var(--monari-minus)]" style={{ width: `${spendWidth}%` }} />
+          <div className="bg-[var(--monari-done)]" style={{ width: `${saveWidth}%` }} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -60,20 +66,20 @@ function MetricBar({
   const width = `${(value / max) * 100}%`;
   const barClass =
     tone === "rose"
-      ? "bg-rose-400"
+      ? "bg-[var(--monari-minus)]"
       : tone === "emerald"
-        ? "bg-emerald-400"
+        ? "bg-[var(--monari-done)]"
         : tone === "amber"
-          ? "bg-amber-400"
-          : "bg-sky-400";
+          ? "bg-[var(--monari-pending)]"
+          : "bg-[var(--monari-plus)]";
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-[var(--color-muted)]">{label}</span>
-        <span className="font-semibold text-[var(--color-text)]">{formatWon(value)}</span>
+        <span className="font-600 text-[var(--monari-ink-soft)]">{label}</span>
+        <span className="font-800 text-[var(--monari-ink)]">{formatWon(value)}</span>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-[rgba(160,143,122,0.18)]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-[var(--monari-line)]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width }} />
       </div>
     </div>
@@ -90,12 +96,12 @@ function LegendBox({
   tone: "rose" | "emerald";
 }) {
   return (
-    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-white/60 p-4">
+    <div className="rounded-[18px] border border-[var(--monari-line)] bg-[var(--monari-bg)] p-4">
       <div className="flex items-center gap-2">
-        <span className={`h-2.5 w-2.5 rounded-full ${tone === "rose" ? "bg-rose-400" : "bg-emerald-400"}`} />
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-soft)]">{label}</p>
+        <span className={`h-2.5 w-2.5 rounded-full ${tone === "rose" ? "bg-[var(--monari-minus)]" : "bg-[var(--monari-done)]"}`} />
+        <p className="text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>
       </div>
-      <p className="mt-3 font-display text-xl font-semibold text-[var(--color-text)]">{value}</p>
+      <p className="mt-2 text-[17px] font-800 text-[var(--monari-ink)]">{value}</p>
     </div>
   );
 }

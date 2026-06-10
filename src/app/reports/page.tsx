@@ -16,6 +16,22 @@ export default async function ReportsPage() {
   const saveRatio = primary
     ? Math.round((primary.monthReport.totalSave / Math.max(primary.monthReport.totalAllowance, 1)) * 100)
     : 0;
+  const coachingInsight = !primary
+    ? null
+    : saveRatio >= 30
+      ? {
+          title: "저축 습관을 잘 만들고 있어요",
+          body: `이번달 용돈의 ${saveRatio}%를 저축했어요. 저축 목표와 이자를 함께 이야기해 보세요.`,
+        }
+      : spendRatio >= 80
+        ? {
+            title: "소비 계획을 함께 점검해 보세요",
+            body: `이번달 용돈의 ${spendRatio}%를 사용했어요. 다음 구매 전 필요한 것과 원하는 것을 나눠보면 좋아요.`,
+          }
+        : {
+            title: "돈의 균형을 함께 살펴보세요",
+            body: "지출과 저축 기록을 보며 다음달에 유지할 습관 하나를 정해 보세요.",
+          };
 
   return (
     <MobileAppShell title="이번달 리포트" subtitle="리포트">
@@ -32,6 +48,9 @@ export default async function ReportsPage() {
           {/* Hero */}
           <div className="monari-hero mb-4">
             <p className="text-[13px] font-700 text-white/70 mb-2">{primary.child.name}</p>
+            <p className="relative mb-4 text-[22px] font-800 leading-tight tracking-[-0.04em] text-white">
+              이번달 돈 습관을<br />한눈에 확인해요
+            </p>
             <div className="grid grid-cols-3 gap-2">
               <HeroPill label="지출 비중" value={`${spendRatio}%`} />
               <HeroPill label="저축 비중" value={`${saveRatio}%`} />
@@ -87,13 +106,12 @@ export default async function ReportsPage() {
             </div>
           </section>
 
-          {/* Coaching insights */}
           <section className="mb-4">
-            <SectionTitle>코칭 메모</SectionTitle>
+            <SectionTitle>이번달 코칭 포인트</SectionTitle>
             <div className="space-y-3 mt-3">
               <InsightCard
-                title="저축 습관이 안정적이에요"
-                body="이번달 저축이 지출의 절반 이상입니다. 이자 개념을 짧고 반복적으로 연결해 주세요."
+                title={coachingInsight!.title}
+                body={coachingInsight!.body}
               />
               <InsightCard
                 title="미리쓰기는 목적 중심으로"

@@ -8,6 +8,7 @@ export function InfoCard({ children, className }: { children: ReactNode; classNa
       className={clsx(
         "rounded-[var(--radius-lg)] border border-[var(--color-border)]",
         "bg-[var(--color-panel)] p-5 shadow-[var(--shadow-soft)]",
+        "transition-[border-color,box-shadow,transform] duration-[var(--transition-fast)] hover:border-[var(--brand-primary)]/20 hover:shadow-[var(--shadow-card)]",
         className,
       )}
     >
@@ -23,6 +24,7 @@ export function StoryCard({ children, className }: { children: ReactNode; classN
       className={clsx(
         "rounded-[var(--radius-lg)] border border-[var(--color-border)]",
         "bg-[var(--color-panel)] p-5 shadow-[var(--shadow-card)]",
+        "transition-[border-color,box-shadow,transform] duration-[var(--transition-fast)] hover:-translate-y-0.5 hover:shadow-[var(--monari-shadow-float)]",
         className,
       )}
     >

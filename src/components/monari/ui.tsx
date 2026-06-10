@@ -77,13 +77,15 @@ export function StatTile({
 }
 
 export function ProgressBar({ value }: { value: number }) {
+  const safeValue = Math.min(100, Math.max(0, value));
+
   return (
     <div className="monari-progress-track">
       <div
         className="monari-progress-fill"
-        style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+        style={{ width: `${safeValue}%` }}
         role="progressbar"
-        aria-valuenow={value}
+        aria-valuenow={safeValue}
         aria-valuemin={0}
         aria-valuemax={100}
       />

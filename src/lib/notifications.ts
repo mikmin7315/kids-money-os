@@ -1,4 +1,4 @@
-import { hasSupabaseEnv } from "@/lib/data";
+import { isDemoMode } from "@/lib/data";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
 
 type InsertParams = {
@@ -11,7 +11,7 @@ type InsertParams = {
 };
 
 export async function insertNotification(params: InsertParams): Promise<void> {
-  if (!hasSupabaseEnv()) return;
+  if (isDemoMode()) return;
   try {
     const admin = getSupabaseAdminClient();
     await admin.from("notifications").insert({
@@ -28,7 +28,7 @@ export async function insertNotification(params: InsertParams): Promise<void> {
 }
 
 export async function getParentIdForChild(childId: string): Promise<string | null> {
-  if (!hasSupabaseEnv()) return null;
+  if (isDemoMode()) return null;
   try {
     const admin = getSupabaseAdminClient();
     const { data } = await admin

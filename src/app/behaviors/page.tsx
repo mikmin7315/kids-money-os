@@ -1,6 +1,7 @@
 import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
+import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
@@ -18,6 +19,9 @@ export default async function BehaviorsPage() {
       {/* Hero */}
       <div className="monari-hero mb-4">
         <p className="text-[13px] font-700 text-white/70 mb-2">행동이 이자를 만들어요</p>
+        <p className="relative mb-4 max-w-[34ch] text-[13px] leading-5 text-white/80">
+          아이가 이해하기 쉬운 약속과 보상을 연결해 꾸준한 금융 습관을 만들어 보세요.
+        </p>
         <div className="grid grid-cols-3 gap-2">
           <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
           <HeroPill label="자동 완료" value={`${autoRules}개`} />
@@ -30,7 +34,7 @@ export default async function BehaviorsPage() {
         <SectionTitle>현재 약속 목록</SectionTitle>
         {activeRules.length === 0 ? (
           <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">아직 정한 약속이 없어요</p>
+            <p className="text-[14px] font-700 text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
             <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
           </div>
         ) : (
@@ -96,6 +100,12 @@ export default async function BehaviorsPage() {
             })}
           </div>
         </section>
+      )}
+
+      {recentLogs.some((log) => log.status === "pending") && (
+        <Link href="/approvals" className="monari-btn-primary w-full">
+          확인 대기 약속 처리하기
+        </Link>
       )}
     </MobileAppShell>
   );

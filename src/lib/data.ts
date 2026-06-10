@@ -40,28 +40,23 @@ export type AppDataBundle = {
 };
 
 export async function getDashboardView(): Promise<DashboardData> {
-  if (!hasSupabaseEnv()) return getDashboardData();
+  if (isDemoMode()) return getDashboardData();
 
-  try {
-    const bundle = await fetchAppDataFromSupabase();
-    return buildDashboardFromBundle(bundle);
-  } catch {
-    return getDashboardData();
-  }
+  const bundle = await fetchAppDataFromSupabase();
+  return buildDashboardFromBundle(bundle);
 }
 
 export async function getAppDataBundle(): Promise<AppDataBundle> {
-  if (!hasSupabaseEnv()) return getMockBundle();
-
-  try {
-    return await fetchAppDataFromSupabase();
-  } catch {
-    return getMockBundle();
-  }
+  if (isDemoMode()) return getMockBundle();
+  return fetchAppDataFromSupabase();
 }
 
 export function hasSupabaseEnv() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+export function isDemoMode() {
+  return process.env.NODE_ENV !== "production" && !hasSupabaseEnv();
 }
 
 async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {

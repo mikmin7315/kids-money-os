@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/auth";
-import { hasSupabaseEnv } from "@/lib/data";
-import { getSupabaseAdminClient } from "@/lib/supabase/server";
+import { isDemoMode } from "@/lib/data";
+import { getSupabaseAdminClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type AdminFormState = {
   ok: boolean;
@@ -21,7 +21,7 @@ export async function listProfilesAction(): Promise<
 > {
   await requireAdminSession();
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return {
       ok: true,
       data: [{ id: "mock-1", email: "admin@example.com", name: "Admin", role: "admin", createdAt: new Date().toISOString() }],
@@ -56,20 +56,23 @@ export async function updateProfileRoleAction(input: {
   profileId: string;
   role: "parent" | "admin";
 }): Promise<ActionResult<{ profileId: string }>> {
-  await requireAdminSession();
+  const auth = await requireAdminSession();
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { profileId: input.profileId } };
   }
 
   try {
-    const admin = getSupabaseAdminClient();
-    const { error } = await admin
-      .from("profiles")
-      .update({ role: input.role })
-      .eq("id", input.profileId);
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase.rpc("change_profile_role", {
+      p_profile_id: input.profileId,
+      p_role: input.role,
+    });
 
     if (error) throw error;
+    if (input.profileId === auth.user?.id && input.role !== "admin") {
+      revalidatePath("/admin", "layout");
+    }
     revalidatePath("/admin/roles");
     return { ok: true, data: { profileId: input.profileId } };
   } catch (error) {

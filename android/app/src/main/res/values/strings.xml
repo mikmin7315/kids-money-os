@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Monari</string>
+    <string name="title_activity_main">Monari</string>
+    <string name="package_name">com.monari.family</string>
+    <string name="custom_url_scheme">com.monari.family</string>
+</resources>

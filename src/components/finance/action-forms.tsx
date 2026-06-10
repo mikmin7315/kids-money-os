@@ -261,15 +261,17 @@ export function InlineBehaviorDecisionForm({ behaviorLogId }: { behaviorLogId: s
   const [rejectState, rejectAction] = useActionState(submitBehaviorRejectForm, initialState);
 
   return (
-    <div className="space-y-2.5">
-      <form action={approveAction} className="space-y-2.5">
+    <div className="space-y-3">
+      <form action={approveAction} className="space-y-3">
         <input type="hidden" name="behaviorLogId" value={behaviorLogId} />
-        <input className={fieldClass} name="approvedDate" type="date" defaultValue={today()} />
-        <SubmitButton label="약속 확인해줄게요 ✓" />
+        <Field label="완료한 날짜">
+          <input className={fieldClass} name="approvedDate" type="date" defaultValue={today()} required />
+        </Field>
+        <SubmitButton label="확인하고 보상 반영" />
       </form>
       <form action={rejectAction}>
         <input type="hidden" name="behaviorLogId" value={behaviorLogId} />
-        <SecondarySubmitButton label="다시 이야기해봐요" />
+        <SecondarySubmitButton label="이번에는 반려하기" />
       </form>
       <FormMessage state={approveState.message ? approveState : rejectState} />
     </div>
@@ -281,15 +283,17 @@ export function InlineBorrowDecisionForm({ borrowRequestId }: { borrowRequestId:
   const [rejectState, rejectAction] = useActionState(submitBorrowRejectForm, initialState);
 
   return (
-    <div className="space-y-2.5">
-      <form action={approveAction} className="space-y-2.5">
+    <div className="space-y-3">
+      <form action={approveAction} className="space-y-3">
         <input type="hidden" name="borrowRequestId" value={borrowRequestId} />
-        <input className={fieldClass} name="approvalDate" type="date" defaultValue={today()} />
-        <SubmitButton label="이 조건으로 허락할게요 ✓" />
+        <Field label="승인 날짜">
+          <input className={fieldClass} name="approvalDate" type="date" defaultValue={today()} required />
+        </Field>
+        <SubmitButton label="조건 확인 후 승인" />
       </form>
       <form action={rejectAction}>
         <input type="hidden" name="borrowRequestId" value={borrowRequestId} />
-        <SecondarySubmitButton label="조금 더 이야기해봐요" />
+        <SecondarySubmitButton label="이번에는 반려하기" />
       </form>
       <FormMessage state={approveState.message ? approveState : rejectState} />
     </div>
@@ -310,25 +314,25 @@ export function BehaviorLogQuickForm({
   const [state, action] = useActionState(submitBehaviorLogForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
-      <p className="font-display text-xl font-semibold">행동 기록 테스트</p>
-      <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
-        {childOptions.map((child) => (
-          <option key={child.id} value={child.id}>
-            {child.name}
-          </option>
-        ))}
-      </select>
-      <select name="behaviorRuleId" className={fieldClass} defaultValue={behaviorRules[0]?.id}>
-        {behaviorRules.map((rule) => (
-          <option key={rule.id} value={rule.id}>
-            {rule.title}
-          </option>
-        ))}
-      </select>
-      <input className={fieldClass} name="date" type="date" defaultValue={today()} />
-      <input className={fieldClass} name="memo" type="text" placeholder="메모" />
-      <SubmitButton label="기록 저장" />
+    <form action={action} className="space-y-4">
+      <FormIntro title="약속 활동 기록" description="아이와 확인한 약속 활동을 직접 남겨요." />
+      <Field label="아이">
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id} required>
+          {childOptions.map((child) => <option key={child.id} value={child.id}>{child.name}</option>)}
+        </select>
+      </Field>
+      <Field label="완료한 약속">
+        <select name="behaviorRuleId" className={fieldClass} defaultValue={behaviorRules[0]?.id} required>
+          {behaviorRules.map((rule) => <option key={rule.id} value={rule.id}>{rule.title}</option>)}
+        </select>
+      </Field>
+      <Field label="완료 날짜">
+        <input className={fieldClass} name="date" type="date" defaultValue={today()} required />
+      </Field>
+      <Field label="메모" optional>
+        <input className={fieldClass} name="memo" type="text" placeholder="칭찬할 점이나 기억할 내용을 적어주세요" />
+      </Field>
+      <SubmitButton label="약속 활동 저장" />
       <FormMessage state={state} />
     </form>
   );
@@ -338,29 +342,33 @@ export function TransactionQuickForm({ childOptions }: { childOptions: ChildProf
   const [state, action] = useActionState(submitTransactionForm, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
-      <p className="font-display text-xl font-semibold">거래 테스트</p>
-      <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
-        {childOptions.map((child) => (
-          <option key={child.id} value={child.id}>
-            {child.name}
-          </option>
-        ))}
-      </select>
-      <select name="type" className={fieldClass} defaultValue="spend">
-        <option value="allowance">용돈</option>
-        <option value="reward">보상</option>
-        <option value="spend">지출</option>
-        <option value="save">저축</option>
-        <option value="unsave">저축 인출</option>
-        <option value="borrow">미리쓰기</option>
-        <option value="repay">상환</option>
-        <option value="interest">이자</option>
-      </select>
-      <input className={fieldClass} name="date" type="date" defaultValue={today()} />
-      <input className={fieldClass} name="amount" type="number" min="1" defaultValue="1000" />
-      <input className={fieldClass} name="memo" type="text" placeholder="메모" />
-      <SubmitButton label="거래 저장" />
+    <form action={action} className="space-y-4">
+      <FormIntro title="돈 기록 추가" description="현금으로 주고받은 내용도 빠짐없이 반영해요." />
+      <Field label="아이">
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id} required>
+          {childOptions.map((child) => <option key={child.id} value={child.id}>{child.name}</option>)}
+        </select>
+      </Field>
+      <Field label="기록 종류">
+        <select name="type" className={fieldClass} defaultValue="spend" required>
+          <option value="allowance">용돈</option><option value="reward">보상</option>
+          <option value="spend">지출</option><option value="save">저축</option>
+          <option value="unsave">저축 인출</option><option value="borrow">미리쓰기</option>
+          <option value="repay">상환</option><option value="interest">이자</option>
+        </select>
+      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="날짜">
+          <input className={fieldClass} name="date" type="date" defaultValue={today()} required />
+        </Field>
+        <Field label="금액">
+          <input className={fieldClass} name="amount" type="number" min="1" inputMode="numeric" defaultValue="1000" required />
+        </Field>
+      </div>
+      <Field label="메모" optional>
+        <input className={fieldClass} name="memo" type="text" placeholder="예: 주말 서점에서 책 구매" />
+      </Field>
+      <SubmitButton label="돈 기록 저장" />
       <FormMessage state={state} />
     </form>
   );
@@ -371,18 +379,22 @@ export function MonthlyReportQuickForm({ childOptions }: { childOptions: ChildPr
   const now = new Date();
 
   return (
-    <form action={action} className="space-y-3 rounded-[28px] border border-[rgba(87,70,49,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(239,228,210,0.9))] p-4">
-      <p className="font-display text-xl font-semibold">월별 리포트 생성</p>
-      <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id}>
-        {childOptions.map((child) => (
-          <option key={child.id} value={child.id}>
-            {child.name}
-          </option>
-        ))}
-      </select>
-      <input className={fieldClass} name="year" type="number" defaultValue={now.getFullYear()} />
-      <input className={fieldClass} name="month" type="number" min="1" max="12" defaultValue={now.getMonth() + 1} />
-      <SubmitButton label="리포트 생성" />
+    <form action={action} className="space-y-4">
+      <FormIntro title="월간 리포트 확정" description="선택한 달의 활동을 모아 리포트를 생성해요." />
+      <Field label="아이">
+        <select name="childId" className={fieldClass} defaultValue={childOptions[0]?.id} required>
+          {childOptions.map((child) => <option key={child.id} value={child.id}>{child.name}</option>)}
+        </select>
+      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="연도">
+          <input className={fieldClass} name="year" type="number" min="2020" defaultValue={now.getFullYear()} required />
+        </Field>
+        <Field label="월">
+          <input className={fieldClass} name="month" type="number" min="1" max="12" defaultValue={now.getMonth() + 1} required />
+        </Field>
+      </div>
+      <SubmitButton label="월간 리포트 생성" />
       <FormMessage state={state} />
     </form>
   );
@@ -391,19 +403,6 @@ export function MonthlyReportQuickForm({ childOptions }: { childOptions: ChildPr
 // ────────────────────────────────────────────────────────────
 // Shared primitives
 // ────────────────────────────────────────────────────────────
-
-function PlayButton({ label }: { label: string }) {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-full bg-[var(--color-accent)] px-4 py-3.5 text-sm font-bold text-[var(--color-accent-fg)] shadow-[0_4px_0_var(--color-accent-strong)] transition-all active:translate-y-[2px] active:shadow-[0_2px_0_var(--color-accent-strong)] disabled:opacity-60"
-    >
-      {pending ? "처리 중..." : label}
-    </button>
-  );
-}
 
 function ChildPlayButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -425,7 +424,7 @@ function SubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-full bg-[var(--color-text)] px-4 py-3 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-95 disabled:opacity-60"
+      className="monari-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>
@@ -439,7 +438,7 @@ function SecondarySubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-full border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm font-semibold text-[var(--color-text)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-60"
+      className="monari-btn-ghost w-full disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>
@@ -450,14 +449,36 @@ function FormMessage({ state }: { state: FormState }) {
   if (!state.message) return null;
 
   return (
-    <p className={`text-sm ${state.ok ? "text-emerald-700" : "text-rose-700"}`}>
+    <p
+      role={state.ok ? "status" : "alert"}
+      aria-live="polite"
+      className={`rounded-[14px] px-3 py-2.5 text-[13px] font-600 ${state.ok ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]" : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"}`}
+    >
       {state.message}
     </p>
   );
 }
 
-const fieldClass =
-  "w-full rounded-[20px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-text)] outline-none transition focus:border-[var(--color-accent)]";
+function FormIntro({ title, description }: { title: string; description: string }) {
+  return (
+    <div>
+      <p className="text-[16px] font-800 text-[var(--monari-ink)]">{title}</p>
+      <p className="mt-1 text-[13px] leading-5 text-[var(--monari-ink-soft)]">{description}</p>
+    </div>
+  );
+}
 
-const childFieldClass =
-  "w-full rounded-[20px] border border-[var(--color-chip-border,var(--color-border))] bg-[var(--color-surface-soft,var(--color-card))] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition focus:border-[var(--color-accent)]";
+function Field({ label, optional = false, children }: { label: string; optional?: boolean; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-2 flex items-center gap-1 text-[12px] font-700 text-[var(--monari-ink-soft)]">
+        {label}
+        {optional && <span className="font-500 text-[var(--monari-ink-muted)]">(선택)</span>}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+const fieldClass =
+  "monari-input";
