@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { CURRENT_CONSENT_VERSION } from "@/lib/consent";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type AuthFormState = {
@@ -32,8 +33,12 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
   const email = readString(formData, "email");
   const password = readString(formData, "password");
   const name = readString(formData, "name");
+  const consentAccepted =
+    formData.get("termsAccepted") === "on" &&
+    formData.get("privacyAccepted") === "on" &&
+    formData.get("childDataAccepted") === "on";
 
-  if (!email || !password || !name) {
+  if (!email || !password || !name || !consentAccepted) {
     return { ok: false, message: "모든 항목을 입력해주세요." };
   }
 
@@ -42,7 +47,13 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } },
+      options: {
+        data: {
+          name,
+          consent_version: CURRENT_CONSENT_VERSION,
+          consent_at: new Date().toISOString(),
+        },
+      },
     });
     if (error) return { ok: false, message: error.message };
     revalidatePath("/");
@@ -54,7 +65,7 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
 
 export async function signInWithGoogle() {
   const supabase = await getSupabaseServerClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo: `${siteUrl}/auth/callback` },
@@ -106,4 +117,11 @@ export async function signOut() {
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
+}
+
+function getSiteUrl() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (siteUrl) return siteUrl.replace(/\/$/, "");
+  if (process.env.NODE_ENV !== "production") return "http://localhost:3000";
+  throw new Error("NEXT_PUBLIC_SITE_URL is required for Google OAuth.");
 }

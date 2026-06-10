@@ -13,6 +13,8 @@ create table if not exists public.notifications (
 
 alter table public.notifications enable row level security;
 
+-- Application notification writes use the service role through src/lib/notifications.ts
+-- and the monthly-settlement Edge Function. Authenticated clients only read/update.
 create policy "parent_can_read_own_notifications"
   on public.notifications for select
   using (parent_id = auth.uid());

@@ -1,16 +1,19 @@
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
-import { SectionTitle } from "@/components/monari/ui";
-import { requireParentSession, getChildModeContext } from "@/lib/auth";
-import { fetchParentNotificationsAction, fetchChildNotificationsAction } from "@/actions/notifications";
+import { getChildModeContext, requireAppConsent, requireParentSession } from "@/lib/auth";
+import {
+  fetchChildNotificationsAction,
+  fetchParentNotificationsAction,
+} from "@/lib/supabase/actions/notifications";
 import { NotificationList } from "@/components/notifications/notification-list";
 
 export default async function NotificationsPage() {
   const [auth, childMode] = await Promise.all([
-    requireParentSession().catch(() => null),
+    requireAppConsent(),
     getChildModeContext(),
   ]);
 
-  const isChildMode = !!childMode.childId && !auth?.user;
+  const isChildMode = Boolean(childMode.childId);
+  if (!isChildMode) await requireParentSession();
 
   let notifications: Awaited<ReturnType<typeof fetchParentNotificationsAction>>["data"] = [];
 
@@ -22,26 +25,17 @@ export default async function NotificationsPage() {
     notifications = result.data ?? [];
   }
 
-  const count = notifications?.length ?? 0;
-  const headline = count > 0 ? `${count}건의 새 소식이 있어요` : "새로운 소식이 없어요";
+  const unreadCount = notifications?.filter((notification) => !notification.isRead).length ?? 0;
+  const headline = unreadCount > 0 ? `확인할 알림이 ${unreadCount}건 있어요` : "알림을 모두 확인했어요";
 
   return (
     <MobileAppShell title={headline} subtitle={isChildMode ? "나에게 온 소식" : "확인할 소식"}>
-      <section className="mb-4">
-        <SectionTitle>전체 {count}건</SectionTitle>
-        {count === 0 ? (
-          <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">새로운 알림이 없어요</p>
-            <p className="monari-meta mt-1">
-              {isChildMode ? "약속이나 정산 소식이 오면 여기에 보여요." : "아이가 요청하거나 약속을 체크하면 알림이 와요."}
-            </p>
-          </div>
-        ) : (
-          <div className="monari-card mt-3 px-4">
-            <NotificationList notifications={notifications!} />
-          </div>
-        )}
-      </section>
+      <NotificationList
+        initialNotifications={notifications ?? []}
+        parentId={auth.user?.id ?? null}
+        target={isChildMode ? "child" : "parent"}
+        childId={isChildMode ? childMode.childId : null}
+      />
     </MobileAppShell>
   );
 }

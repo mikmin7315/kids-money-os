@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { BorrowRequestQuickForm, ChildBehaviorCheckForm, ChildSaveForm } from "@/components/finance/action-forms";
 import { ChildBottomNav } from "@/components/child/child-bottom-nav";
-import { getAuthContext, getChildModeContext } from "@/lib/auth";
+import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { estimateInterest } from "@/lib/finance";
 import { formatWon } from "@/lib/format";
@@ -11,8 +11,8 @@ import type { BehaviorLog } from "@/lib/types";
 export default async function ChildDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [auth, childMode, bundle, dashboard] = await Promise.all([
-    getAuthContext(),
+  const auth = await requireAppConsent();
+  const [childMode, bundle, dashboard] = await Promise.all([
     getChildModeContext(),
     getAppDataBundle(),
     getDashboardView(),
@@ -58,9 +58,12 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(160deg, #3b2fd4 0%, #4f3ff0 40%, #7c3aed 100%)" }}>
+    <div
+      className="mx-auto min-h-screen max-w-[440px] overflow-hidden shadow-[0_0_60px_rgba(28,27,58,0.20)]"
+      style={{ background: "linear-gradient(160deg, #3b2fd4 0%, #4f3ff0 40%, #7c3aed 100%)" }}
+    >
       {/* ── HERO ── */}
-      <div className="px-4 pt-14 pb-5">
+      <div className="px-4 pb-5 pt-[calc(28px+env(safe-area-inset-top))]">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -71,7 +74,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
               🔥 {streak > 0 ? `${streak}일 연속으로 약속을 지키고 있어요` : "오늘도 약속을 지켜봐요!"}
             </p>
           </div>
-          <div className="h-11 w-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ff4b12 100%)", boxShadow: "0 4px 12px rgba(255,107,53,0.40)" }}>
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ff4b12 100%)", boxShadow: "0 4px 12px rgba(255,107,53,0.40)" }} role="img" aria-label={`${child.name} 프로필`}>
             <span className="text-[16px] font-extrabold text-white">{child.name[0]}</span>
           </div>
         </div>
@@ -130,7 +133,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* ── BOTTOM SECTION ── */}
-      <div className="rounded-t-[32px] bg-[#f5f4ff] px-4 pt-6 pb-40">
+      <div className="min-h-[55vh] rounded-t-[32px] bg-[#f5f4ff] px-4 pb-40 pt-6">
         {/* 이번 달 흐름 */}
         <section className="mb-5">
           <p className="text-[17px] font-extrabold text-[var(--monari-ink)] mb-3 tracking-tight">이번 달 흐름</p>

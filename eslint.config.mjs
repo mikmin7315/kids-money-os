@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Git worktrees managed by Claude Code
+    ".claude/**",
+    // Shared AI collaboration worktrees
+    "worktrees/**",
   ]),
 ]);
 

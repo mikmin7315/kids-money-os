@@ -123,7 +123,8 @@ export function approveBorrowRequest(input: {
 
   // interest rate is treated as a one-time fee (not annualised) for the loan period
   const totalRepayable = Math.ceil(request.requestedAmount * (1 + request.interestRate / 100));
-  const installmentAmount = Math.ceil(totalRepayable / installments);
+  const installmentAmount = Math.floor(totalRepayable / installments);
+  const remainder = totalRepayable % installments;
   const now = new Date().toISOString();
 
   return {
@@ -143,7 +144,7 @@ export function approveBorrowRequest(input: {
       id: crypto.randomUUID(),
       borrowRequestId: request.id,
       dueDate: addWeeks(approvalDate, index + 1),
-      amount: installmentAmount,
+      amount: installmentAmount + (index < remainder ? 1 : 0),
       paidAmount: 0,
       status: "scheduled" as const,
       createdAt: now,

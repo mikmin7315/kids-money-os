@@ -1,164 +1,231 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  CheckCircle2,
+  CircleDollarSign,
+  ClipboardList,
+  ReceiptText,
+  Store,
+  Target,
+  TrendingUp,
+} from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
-import { SectionTitle, ListRow, ProgressBar } from "@/components/monari/ui";
-import { getAuthContext } from "@/lib/auth";
+import { ProgressBar, SectionTitle } from "@/components/monari/ui";
+import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
+
 export default async function HomePage() {
   const today = new Date().toISOString().slice(0, 10);
-  const [dashboard, bundle, auth] = await Promise.all([getDashboardView(), getAppDataBundle(), getAuthContext()]);
-  const pendingBehaviors = bundle.behaviorLogs.filter((l) => l.status === "pending");
-  const pendingBorrows = bundle.borrowRequests.filter((r) => r.status === "pending");
+  const auth = await requireAppConsent();
+  const [dashboard, bundle] = await Promise.all([getDashboardView(), getAppDataBundle()]);
+  const pendingBehaviors = bundle.behaviorLogs.filter((log) => log.status === "pending");
+  const pendingBorrows = bundle.borrowRequests.filter((request) => request.status === "pending");
   const totalPending = pendingBehaviors.length + pendingBorrows.length;
-
-  const headline =
-    totalPending > 0
-      ? `오늘 확인할 내용이 ${totalPending}건 있어요`
-      : "약속과 돈의 흐름이 잘 이어지고 있어요";
-
   const primary = dashboard.children[0];
-
-  const accentToTone = (accent: string) => {
-    if (accent === "emerald") return "done";
-    if (accent === "amber") return "pending";
-    if (accent === "rose") return "minus";
-    return "plus";
-  };
-
-  const recentFeed = dashboard.activityFeed.slice(0, 4).map((item) => {
-    const childName = dashboard.children.find((c) => c.child.id === item.childId)?.child.name;
-    const dateLabel = item.date === today ? "오늘" : item.date.slice(5).replace("-", ".");
+  const recentFeed = dashboard.activityFeed.slice(0, 3).map((item) => {
+    const childName = dashboard.children.find((child) => child.child.id === item.childId)?.child.name;
     return {
-      title: item.title,
-      sub: childName ? `${childName} · ${dateLabel}` : dateLabel,
-      right: item.amount != null ? (item.accent === "rose" || item.accent === "amber" ? `-${formatWon(item.amount)}` : `+${formatWon(item.amount)}`) : item.description,
-      tone: accentToTone(item.accent) as "done" | "pending" | "plus" | "minus" | "neutral",
+      ...item,
+      sub: `${childName ?? "가족"} · ${item.date === today ? "오늘" : item.date.slice(5).replace("-", ".")}`,
     };
   });
 
+  const monthlyGoal = primary
+    ? Math.min(100, Math.round((primary.monthReport.totalSave / Math.max(primary.monthReport.totalAllowance, 1)) * 100))
+    : 0;
+
   return (
-    <MobileAppShell title={headline} subtitle={`${dashboard.parent.name}님 안녕하세요`}>
-      {/* Hero */}
-      <div className="monari-hero mb-4">
-        <p className="text-[13px] font-700 text-white/70 mb-1">이번달 전체 흐름</p>
+    <MobileAppShell title="가족 금융 홈" subtitle={`${dashboard.parent.name}님, 안녕하세요`}>
+      <section className="mb-5 overflow-hidden rounded-[24px] bg-[linear-gradient(145deg,#0d326c_0%,#123f82_55%,#0b2d63_100%)] p-5 text-white shadow-[0_14px_32px_rgba(13,50,108,0.24)]">
+        <p className="text-[17px] font-800 tracking-tight">이번 달 가족 통장</p>
         {primary ? (
           <>
-            <p className="text-[34px] font-800 leading-none tracking-tight text-white tabular-nums">
+            <p className="mt-5 text-center text-[38px] font-900 leading-none tracking-[-0.05em] tabular-nums">
               {formatWon(primary.wallet.balance)}
             </p>
-            <p className="mt-1 text-[13px] text-white/70">{primary.child.name} 잔액</p>
+            <p className="mt-3 text-center text-[14px] font-600 text-white/75">
+              {primary.child.name}의 현재 사용 가능 금액
+            </p>
           </>
         ) : (
-          <p className="text-[18px] font-700 text-white">아이를 등록해주세요</p>
+          <p className="mt-5 text-center text-[22px] font-800">아이 프로필을 등록해주세요</p>
         )}
 
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <HeroPill label="확인 대기" value={`${totalPending}건`} />
-          <HeroPill label="연결 아이" value={`${dashboard.children.length}명`} />
-          <HeroPill label="이번달 약속" value={`${bundle.behaviorLogs.length}건`} />
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <Link
+            href={totalPending > 0 ? "/approvals" : "/behaviors"}
+            className="flex h-14 items-center justify-center rounded-[15px] bg-[var(--monari-primary)] text-[15px] font-800 text-white transition active:scale-[0.98]"
+          >
+            {totalPending > 0 ? `요청 ${totalPending}건 확인` : "약속 만들기"}
+          </Link>
+          <Link
+            href="/records"
+            className="flex h-14 items-center justify-center rounded-[15px] bg-white text-[15px] font-800 text-[#0d326c] transition active:scale-[0.98]"
+          >
+            금융 기록 보기
+          </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Pending alert */}
-      {totalPending > 0 && (
-        <Link
-          href="/approvals"
-          className="mb-4 flex items-center justify-between rounded-[20px] bg-[var(--monari-pending-bg)] border border-[var(--monari-pending)] px-4 py-3"
-        >
-          <div>
-            <p className="text-[14px] font-700 text-[var(--monari-pending)]">
-              {pendingBehaviors.length > 0 && `약속 ${pendingBehaviors.length}건`}
-              {pendingBehaviors.length > 0 && pendingBorrows.length > 0 && " · "}
-              {pendingBorrows.length > 0 && `미리쓰기 ${pendingBorrows.length}건`}
-            </p>
-            <p className="text-[12px] text-[var(--monari-pending)] opacity-80">탭해서 확인하기</p>
-          </div>
-          <span className="text-[var(--monari-pending)]">→</span>
-        </Link>
-      )}
-
-      {/* Children summary */}
-      {dashboard.children.length > 0 && (
-        <section className="mb-4 space-y-3">
-          <SectionTitle>자녀 현황</SectionTitle>
-          <div className="space-y-3 mt-3">
-            {dashboard.children.map((s) => {
-              const successRate = s.monthReport.behaviorSuccessRate;
-              return (
-                <Link key={s.child.id} href={`/child/${s.child.id}`} className="monari-card block p-4 transition active:scale-[0.99]">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="text-[16px] font-800 text-[var(--monari-ink)] tracking-tight">{s.child.name}</p>
-                      <p className="monari-meta mt-0.5">{formatWon(s.wallet.balance)}</p>
-                    </div>
-                    <span className="text-[13px] font-700 text-[var(--monari-hero)]">보기 →</span>
-                  </div>
-                  <ProgressBar value={successRate} />
-                  <p className="monari-meta mt-1.5">약속 달성 {successRate.toFixed(0)}%</p>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {dashboard.children.length === 0 && (
-        <div className="monari-card p-5 mb-4 text-center">
-          <p className="text-[15px] font-700 text-[var(--monari-ink)] mb-1">아직 등록된 아이가 없어요</p>
-          <p className="monari-meta mb-4">아이를 등록하면 약속, 용돈, 이자가 연결됩니다.</p>
-          <Link href="/settings" className="monari-btn-primary px-5">아이 등록하기 →</Link>
-        </div>
-      )}
-
-      {/* Monthly summary */}
       {primary && (
-        <section className="mb-4 space-y-3">
-          <SectionTitle>이번달 흐름</SectionTitle>
-          <div className="grid grid-cols-2 gap-3 mt-3">
-            <MonthTile label="용돈" value={formatWon(primary.monthReport.totalAllowance)} />
-            <MonthTile label="지출" value={formatWon(primary.monthReport.totalSpend)} />
-            <MonthTile label="저축" value={formatWon(primary.monthReport.totalSave)} />
-            <MonthTile label="약속 달성" value={`${primary.monthReport.behaviorSuccessRate.toFixed(0)}%`} />
+        <section className="monari-card mb-5 p-5">
+          <SectionTitle>이번 달 요약</SectionTitle>
+          <div className="mt-4 grid grid-cols-3 divide-x divide-[var(--monari-line-strong)]">
+            <SummaryMetric label="받은 용돈" value={formatWon(primary.monthReport.totalAllowance)} />
+            <SummaryMetric label="지출 합계" value={formatWon(primary.monthReport.totalSpend)} />
+            <SummaryMetric label="저축 금액" value={formatWon(primary.monthReport.totalSave)} />
           </div>
         </section>
       )}
 
-      {/* Recent activity */}
-      {recentFeed.length > 0 && (
-        <section className="mb-4">
-          <SectionTitle>최근 활동</SectionTitle>
-          <div className="monari-card mt-3 px-4 divide-y divide-[var(--monari-line)]">
-            {recentFeed.map((item, i) => (
-              <ListRow key={i} title={item.title} sub={item.sub} right={item.right} tone={item.tone} />
+      <section className="monari-card mb-5 overflow-hidden">
+        <div className="grid grid-cols-2">
+          <InsightCell
+            icon={<TrendingUp className="h-5 w-5" />}
+            label="이번 주 활동"
+            value={`${bundle.behaviorLogs.filter((log) => log.date >= weekStart(today)).length}건`}
+          />
+          <InsightCell
+            icon={<Store className="h-5 w-5" />}
+            label="확인할 요청"
+            value={`${totalPending}건`}
+            rightBorder={false}
+          />
+          <InsightCell
+            icon={<Target className="h-5 w-5" />}
+            label="저축 목표 달성률"
+            value={`${monthlyGoal}%`}
+            bottomBorder={false}
+          >
+            <ProgressBar value={monthlyGoal} />
+          </InsightCell>
+          <InsightCell
+            icon={<CheckCircle2 className="h-5 w-5" />}
+            label="남은 약속"
+            value={`${pendingBehaviors.length}개`}
+            rightBorder={false}
+            bottomBorder={false}
+          />
+        </div>
+      </section>
+
+      <section className="mb-5">
+        <SectionTitle action={<Link href="/records">전체 보기</Link>}>최근 금융 활동</SectionTitle>
+        <div className="monari-card mt-3 px-4">
+          {recentFeed.length > 0 ? (
+            recentFeed.map((item) => (
+              <RecentRow
+                key={item.id}
+                title={item.title}
+                sub={item.sub}
+                value={item.amount != null ? `${item.accent === "rose" || item.accent === "amber" ? "-" : "+"}${formatWon(item.amount)}` : item.description}
+                kind={item.kind}
+              />
+            ))
+          ) : (
+            <p className="py-8 text-center text-[13px] text-[var(--monari-ink-muted)]">아직 금융 활동이 없어요.</p>
+          )}
+        </div>
+      </section>
+
+      {dashboard.children.length > 0 ? (
+        <section className="mb-5">
+          <SectionTitle action={<Link href="/child-mode">아이 모드</Link>}>아이별 통장</SectionTitle>
+          <div className="mt-3 space-y-3">
+            {dashboard.children.map((summary) => (
+              <Link key={summary.child.id} href={`/child/${summary.child.id}`} className="monari-card block p-5 transition active:scale-[0.99]">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[16px] font-800 text-[var(--monari-ink)]">{summary.child.name}</p>
+                    <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">
+                      저축 {formatWon(summary.wallet.savingsBalance)}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[16px] font-800 text-[var(--monari-ink)]">{formatWon(summary.wallet.balance)}</p>
+                    <p className="mt-1 text-[12px] font-700 text-[var(--monari-hero)]">통장 보기 <ArrowRight className="inline h-3 w-3" /></p>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
+      ) : (
+        <div className="monari-card mb-5 p-5 text-center">
+          <p className="text-[15px] font-800 text-[var(--monari-ink)]">첫 아이 통장을 만들어주세요</p>
+          <p className="monari-meta mt-1 mb-4">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
+          <Link href="/settings" className="monari-btn-primary w-full">아이 등록하기</Link>
+        </div>
       )}
 
       {!auth.user && (
-        <div className="monari-card p-4 mb-4">
-          <p className="text-[13px] text-[var(--monari-ink-soft)] mb-2">지금은 데모 모드예요. 로그인하면 실제 데이터로 연결됩니다.</p>
-          <Link href="/login" className="monari-btn-primary text-[13px] px-4 h-9">로그인하기</Link>
+        <div className="monari-card mb-4 flex items-center justify-between gap-4 p-4">
+          <div>
+            <p className="text-[14px] font-800 text-[var(--monari-ink)]">지금은 체험 모드예요</p>
+            <p className="monari-meta mt-1">로그인하면 가족 기록이 안전하게 저장됩니다.</p>
+          </div>
+          <Link href="/login" className="monari-btn-primary h-10 shrink-0 px-4 text-[13px]">로그인</Link>
         </div>
       )}
     </MobileAppShell>
   );
 }
 
-function HeroPill({ label, value }: { label: string; value: string }) {
+function SummaryMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-2 gap-0.5">
-      <p className="text-[11px] font-600 text-white/70">{label}</p>
-      <p className="text-[14px] font-800 text-white">{value}</p>
+    <div className="min-w-0 px-2 text-center first:pl-0 last:pr-0">
+      <p className="text-[11px] font-600 text-[var(--monari-ink-muted)]">{label}</p>
+      <p className="mt-1 truncate text-[16px] font-900 tracking-tight text-[var(--monari-ink)]">{value}</p>
     </div>
   );
 }
 
-function MonthTile({ label, value }: { label: string; value: string }) {
+function InsightCell({
+  icon,
+  label,
+  value,
+  children,
+  rightBorder = true,
+  bottomBorder = true,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  children?: React.ReactNode;
+  rightBorder?: boolean;
+  bottomBorder?: boolean;
+}) {
   return (
-    <div className="monari-card p-4">
-      <p className="monari-meta">{label}</p>
-      <p className="monari-kpi-value mt-1">{value}</p>
+    <div className={`min-h-[112px] p-4 ${rightBorder ? "border-r border-[var(--monari-line)]" : ""} ${bottomBorder ? "border-b border-[var(--monari-line)]" : ""}`}>
+      <div className="flex items-center gap-2">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f1f2f4] text-[#183d70]">{icon}</span>
+        <p className="text-[11px] font-600 text-[var(--monari-ink-muted)]">{label}</p>
+      </div>
+      <p className="mt-2 text-[18px] font-900 tracking-tight text-[var(--monari-ink)]">{value}</p>
+      {children && <div className="mt-2">{children}</div>}
     </div>
   );
+}
+
+function RecentRow({ title, sub, value, kind }: { title: string; sub: string; value: string; kind: string }) {
+  const Icon = kind === "money" ? CircleDollarSign : kind === "borrow" ? ReceiptText : ClipboardList;
+  return (
+    <div className="flex items-center gap-3 border-b border-[var(--monari-line)] py-3.5 last:border-b-0">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] text-[#183d70]">
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[14px] font-700 text-[var(--monari-ink)]">{title}</p>
+        <p className="mt-0.5 text-[11px] text-[var(--monari-ink-muted)]">{sub}</p>
+      </div>
+      <p className="shrink-0 text-[14px] font-800 text-[var(--monari-ink)]">{value}</p>
+    </div>
+  );
+}
+
+function weekStart(today: string) {
+  const date = new Date(today);
+  date.setDate(date.getDate() - 6);
+  return date.toISOString().slice(0, 10);
 }

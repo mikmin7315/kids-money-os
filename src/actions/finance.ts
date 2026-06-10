@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { approveBorrowRequest, computeMonthlyReport, createMoneyTransaction } from "@/lib/finance";
 import { requireParentSession, requireChildOrParentAccess } from "@/lib/auth";
-import { getAppDataBundle, hasSupabaseEnv } from "@/lib/data";
+import { getAppDataBundle, isDemoMode } from "@/lib/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { insertNotification, getParentIdForChild } from "@/lib/notifications";
 
@@ -12,6 +12,8 @@ type ActionResult<T> = {
   data?: T;
   error?: string;
 };
+
+const MAX_MONEY_AMOUNT = 100_000_000;
 
 export type FormState = {
   ok: boolean;
@@ -27,12 +29,21 @@ export async function createBehaviorLogAction(input: {
   const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
   if (!isParent && !isChild) return { ok: false, error: "권한 없음" };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-log-${Date.now()}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
+    const { data: authData } = await supabase.auth.getUser();
+    const { data: rule } = await supabase
+      .from("behavior_rules")
+      .select("id")
+      .eq("id", input.behaviorRuleId)
+      .eq("parent_id", authData.user?.id ?? "")
+      .maybeSingle();
+    if (!rule) return { ok: false, error: "행동 규칙을 찾을 수 없습니다." };
+
     const { data, error } = await supabase
       .from("behavior_logs")
       .insert({
@@ -73,71 +84,33 @@ export async function approveBehaviorLogAction(input: {
   behaviorLogId: string;
   approvedDate: string;
 }): Promise<ActionResult<{ id: string }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
   const bundle = await getAppDataBundle();
   const log = bundle.behaviorLogs.find((item) => item.id === input.behaviorLogId);
 
   if (!log) return { ok: false, error: "행동 기록을 찾을 수 없습니다." };
 
   const rule = bundle.behaviorRules.find((item) => item.id === log.behaviorRuleId);
-  const policy = bundle.interestPolicies.find((item) => item.childId === log.childId);
-  const nextRate = Math.max(
-    policy?.minInterestRate ?? 0,
-    Math.min((policy?.baseInterestRate ?? 0) + (rule?.interestDelta ?? 0), policy?.maxInterestRate ?? 100),
-  );
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-approved-${log.id}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
 
-    const { error: updateError } = await supabase
-      .from("behavior_logs")
-      .update({ status: "approved" })
-      .eq("id", input.behaviorLogId);
+    const { data: approval, error: updateError } = await supabase
+      .rpc("approve_behavior_log", {
+        p_behavior_log_id: input.behaviorLogId,
+        p_approved_date: input.approvedDate,
+      })
+      .maybeSingle();
     if (updateError) throw updateError;
+    if (!approval) return { ok: false, error: "이미 처리된 행동 기록입니다." };
 
-    if (rule && rule.rewardAmount > 0) {
-      const rewardTx = createMoneyTransaction({
-        childId: log.childId,
-        date: input.approvedDate,
-        type: "reward",
-        amount: rule.rewardAmount,
-        memo: `${rule.title} 보상 승인`,
-      });
-
-      const { error: txError } = await supabase.from("money_transactions").insert({
-        child_id: rewardTx.childId,
-        tx_date: rewardTx.date,
-        type: rewardTx.type,
-        amount: rewardTx.amount,
-        savings_delta: rewardTx.savingsDelta,
-        borrowed_delta: rewardTx.borrowedDelta,
-        related_behavior_log_id: log.id,
-        memo: rewardTx.memo,
-      });
-      if (txError) throw txError;
-    }
-
-    if (rule && rule.interestDelta !== 0 && policy) {
-      // DB trigger on interest_rate_events automatically updates wallet_snapshots.current_interest_rate
-      const { error: rateError } = await supabase.from("interest_rate_events").insert({
-        child_id: log.childId,
-        behavior_rule_id: rule.id,
-        rate_delta: rule.interestDelta,
-        applied_rate: nextRate,
-        reason: `${rule.title} 승인`,
-        effective_date: input.approvedDate,
-      });
-      if (rateError) throw rateError;
-    }
-
-    const auth2 = await requireParentSession();
-    if (auth2.user) {
+    if (auth.user) {
       await insertNotification({
-        parentId: auth2.user.id,
+        parentId: auth.user.id,
         childId: log.childId,
         target: "child",
         type: "behavior_approved",
@@ -159,28 +132,31 @@ export async function approveBehaviorLogAction(input: {
 export async function rejectBehaviorLogAction(input: {
   behaviorLogId: string;
 }): Promise<ActionResult<{ id: string }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
   const bundle = await getAppDataBundle();
   const log = bundle.behaviorLogs.find((item) => item.id === input.behaviorLogId);
 
   if (!log) return { ok: false, error: "행동 기록을 찾을 수 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-rejected-${log.id}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
-    const { error } = await supabase
+    const { data: updatedLog, error } = await supabase
       .from("behavior_logs")
       .update({ status: "rejected" })
-      .eq("id", input.behaviorLogId);
+      .eq("id", input.behaviorLogId)
+      .eq("status", "pending")
+      .select("id")
+      .maybeSingle();
     if (error) throw error;
+    if (!updatedLog) return { ok: false, error: "이미 처리된 행동 기록입니다." };
 
-    const auth3 = await requireParentSession();
-    if (auth3.user) {
+    if (auth.user) {
       await insertNotification({
-        parentId: auth3.user.id,
+        parentId: auth.user.id,
         childId: log.childId,
         target: "child",
         type: "behavior_rejected",
@@ -206,10 +182,11 @@ export async function createMoneyTransactionAction(input: {
   memo: string;
 }): Promise<ActionResult<{ id: string }>> {
   await requireParentSession();
+  if (!isValidMoneyAmount(input.amount)) return { ok: false, error: "금액이 올바르지 않습니다." };
 
   const transaction = createMoneyTransaction(input);
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: transaction.id } };
   }
 
@@ -249,13 +226,20 @@ export async function createBorrowRequestAction(input: {
 }): Promise<ActionResult<{ id: string }>> {
   const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
   if (!isParent && !isChild) return { ok: false, error: "권한 없음" };
+  if (!isValidMoneyAmount(input.requestedAmount)) return { ok: false, error: "금액이 올바르지 않습니다." };
+  if (
+    input.repaymentMode === "installment" &&
+    (!Number.isInteger(input.installmentCount) || (input.installmentCount ?? 0) < 1 || (input.installmentCount ?? 0) > 60)
+  ) {
+    return { ok: false, error: "상환 횟수가 올바르지 않습니다." };
+  }
 
   // Interest rate computed server-side from child's current policy (not accepted from client)
   const bundle = await getAppDataBundle();
   const policy = bundle.interestPolicies.find((p) => p.childId === input.childId);
   const interestRate = policy?.baseInterestRate ?? 0;
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-borrow-${Date.now()}` } };
   }
 
@@ -301,16 +285,15 @@ export async function approveBorrowRequestAction(input: {
   borrowRequestId: string;
   approvalDate: string;
 }): Promise<ActionResult<{ transactionId: string; scheduleCount: number }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
 
   const bundle = await getAppDataBundle();
   const request = bundle.borrowRequests.find((item) => item.id === input.borrowRequestId);
 
   if (!request) return { ok: false, error: "미리쓰기 요청을 찾을 수 없습니다." };
 
-  const approved = approveBorrowRequest({ request, approvalDate: input.approvalDate });
-
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
+    const approved = approveBorrowRequest({ request, approvalDate: input.approvalDate });
     return {
       ok: true,
       data: { transactionId: approved.transaction.id, scheduleCount: approved.repaymentSchedule.length },
@@ -320,48 +303,24 @@ export async function approveBorrowRequestAction(input: {
   try {
     const supabase = await getSupabaseServerClient();
 
-    const { error: requestError } = await supabase
-      .from("borrow_requests")
-      .update({ status: "approved" })
-      .eq("id", input.borrowRequestId);
-    if (requestError) throw requestError;
-
-    const { data: txData, error: txError } = await supabase
-      .from("money_transactions")
-      .insert({
-        child_id: approved.transaction.childId,
-        tx_date: approved.transaction.date,
-        type: approved.transaction.type,
-        amount: approved.transaction.amount,
-        savings_delta: approved.transaction.savingsDelta,
-        borrowed_delta: approved.transaction.borrowedDelta,
-        related_borrow_request_id: approved.transaction.relatedBorrowRequestId,
-        memo: approved.transaction.memo,
+    const { data: rawApproval, error: requestError } = await supabase
+      .rpc("approve_borrow_request", {
+        p_borrow_request_id: input.borrowRequestId,
+        p_approval_date: input.approvalDate,
       })
-      .select("id")
-      .single();
-    if (txError) throw txError;
+      .maybeSingle();
+    if (requestError) throw requestError;
+    const approval = rawApproval as { transaction_id?: string; schedule_count?: number } | null;
+    if (!approval?.transaction_id) return { ok: false, error: "이미 처리된 미리쓰기 요청입니다." };
 
-    const { error: scheduleError } = await supabase.from("borrow_repayments").insert(
-      approved.repaymentSchedule.map((item) => ({
-        borrow_request_id: item.borrowRequestId,
-        due_date: item.dueDate,
-        amount: item.amount,
-        paid_amount: item.paidAmount,
-        status: item.status,
-      })),
-    );
-    if (scheduleError) throw scheduleError;
-
-    const auth4 = await requireParentSession();
-    if (auth4.user) {
+    if (auth.user) {
       await insertNotification({
-        parentId: auth4.user.id,
+        parentId: auth.user.id,
         childId: request.childId,
         target: "child",
         type: "borrow_approved",
         title: "미리쓰기 승인",
-        body: `${request.requestedAmount.toLocaleString()}원 미리쓰기가 승인됐어요! 상환 일정 ${approved.repaymentSchedule.length}건이 생성됐습니다.`,
+        body: `${request.requestedAmount.toLocaleString()}원 미리쓰기가 승인됐어요! 상환 일정 ${approval.schedule_count ?? 0}건이 생성됐습니다.`,
       });
     }
 
@@ -370,7 +329,7 @@ export async function approveBorrowRequestAction(input: {
     revalidatePath(`/child/${request.childId}`);
     return {
       ok: true,
-      data: { transactionId: String(txData.id), scheduleCount: approved.repaymentSchedule.length },
+      data: { transactionId: approval.transaction_id, scheduleCount: approval.schedule_count ?? 0 },
     };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "미리쓰기 승인 실패." };
@@ -380,28 +339,31 @@ export async function approveBorrowRequestAction(input: {
 export async function rejectBorrowRequestAction(input: {
   borrowRequestId: string;
 }): Promise<ActionResult<{ id: string }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
   const bundle = await getAppDataBundle();
   const request = bundle.borrowRequests.find((item) => item.id === input.borrowRequestId);
 
   if (!request) return { ok: false, error: "미리쓰기 요청을 찾을 수 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-rejected-${request.id}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
-    const { error } = await supabase
+    const { data: updatedRequest, error } = await supabase
       .from("borrow_requests")
       .update({ status: "rejected" })
-      .eq("id", input.borrowRequestId);
+      .eq("id", input.borrowRequestId)
+      .eq("status", "pending")
+      .select("id")
+      .maybeSingle();
     if (error) throw error;
+    if (!updatedRequest) return { ok: false, error: "이미 처리된 미리쓰기 요청입니다." };
 
-    const auth5 = await requireParentSession();
-    if (auth5.user) {
+    if (auth.user) {
       await insertNotification({
-        parentId: auth5.user.id,
+        parentId: auth.user.id,
         childId: request.childId,
         target: "child",
         type: "borrow_rejected",
@@ -434,7 +396,7 @@ export async function generateMonthlyReportAction(input: {
     bundle.behaviorLogs,
   );
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { childId: report.childId, year: report.year, month: report.month } };
   }
 
@@ -602,4 +564,8 @@ function readString(formData: FormData, key: string) {
 function readOptionalString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : undefined;
+}
+
+function isValidMoneyAmount(amount: number) {
+  return Number.isInteger(amount) && amount > 0 && amount <= MAX_MONEY_AMOUNT;
 }

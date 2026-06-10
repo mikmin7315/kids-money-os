@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { requireParentSession } from "@/lib/auth";
-import { hasSupabaseEnv } from "@/lib/data";
+import { isDemoMode } from "@/lib/data";
 import { getSupabaseAdminClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 const scryptAsync = promisify(scrypt);
@@ -50,7 +50,7 @@ export async function createChildAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-child-${Date.now()}` } };
   }
 
@@ -86,19 +86,24 @@ export async function setChildPinAction(input: {
   childId: string;
   pin: string;
 }): Promise<ActionResult<{ childId: string }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { childId: input.childId } };
   }
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
   try {
     const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, auth.user.id, input.childId))) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
     const hashedPin = await hashPin(input.pin);
     const { error } = await supabase
       .from("children")
       .update({ pin_code: hashedPin })
-      .eq("id", input.childId);
+      .eq("id", input.childId)
+      .eq("parent_id", auth.user.id);
 
     if (error) throw error;
     return { ok: true, data: { childId: input.childId } };
@@ -111,7 +116,7 @@ export async function validateChildPinAction(input: {
   childId: string;
   pin: string;
 }): Promise<ActionResult<{ childId: string }>> {
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     // Demo mode: any PIN works
     const cookieStore = await cookies();
     cookieStore.set("child_mode", input.childId, {
@@ -119,26 +124,50 @@ export async function validateChildPinAction(input: {
       maxAge: 60 * 60 * 8,
       path: "/",
       sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
     return { ok: true, data: { childId: input.childId } };
   }
+
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "인증이 필요합니다." };
 
   try {
     const admin = getSupabaseAdminClient();
     const { data: child, error } = await admin
       .from("children")
-      .select("id, pin_code")
+      .select("id, parent_id, pin_code, pin_failed_attempts, pin_locked_until")
       .eq("id", input.childId)
       .maybeSingle();
 
     if (error) throw error;
     if (!child) return { ok: false, error: "아이를 찾을 수 없습니다." };
+    if (auth.profile?.role !== "admin" && child.parent_id !== auth.user.id) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
 
     if (!child.pin_code) {
       return { ok: false, error: "PIN이 설정되지 않았습니다. 부모님께 PIN 설정을 요청하세요." };
     }
+    const { data: rawAttempt, error: attemptError } = await admin
+      .rpc("consume_child_pin_attempt", { p_child_id: input.childId })
+      .single();
+    if (attemptError) throw attemptError;
+    const attempt = rawAttempt as { attempt_allowed?: boolean; locked_until?: string | null } | null;
+    if (!attempt?.attempt_allowed) {
+      return { ok: false, error: "PIN 입력이 잠시 잠겼습니다. 15분 후 다시 시도해주세요." };
+    }
+
     const valid = await verifyPin(input.pin, child.pin_code);
-    if (!valid) return { ok: false, error: "PIN이 올바르지 않습니다." };
+    if (!valid) {
+      return { ok: false, error: "PIN이 올바르지 않습니다." };
+    }
+
+    const { error: resetError } = await admin
+      .from("children")
+      .update({ pin_failed_attempts: 0, pin_locked_until: null })
+      .eq("id", input.childId);
+    if (resetError) throw resetError;
 
     const cookieStore = await cookies();
     cookieStore.set("child_mode", input.childId, {
@@ -146,6 +175,7 @@ export async function validateChildPinAction(input: {
       maxAge: 60 * 60 * 8,
       path: "/",
       sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
 
     return { ok: true, data: { childId: input.childId } };
@@ -168,7 +198,7 @@ export async function createBehaviorRuleAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-rule-${Date.now()}` } };
   }
 
@@ -211,12 +241,15 @@ export async function upsertInterestPolicyAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-policy-${Date.now()}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, auth.user.id, input.childId))) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
     const { data, error } = await supabase
       .from("interest_policies")
       .upsert(
@@ -257,12 +290,15 @@ export async function createAllowanceRuleAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-allowance-${Date.now()}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, auth.user.id, input.childId))) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
     const { data, error } = await supabase
       .from("allowance_rules")
       .insert({
@@ -299,12 +335,15 @@ export async function upsertBorrowConditionsAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
-  if (!hasSupabaseEnv()) {
+  if (isDemoMode()) {
     return { ok: true, data: { id: `mock-borrow-conditions-${Date.now()}` } };
   }
 
   try {
     const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, auth.user.id, input.childId))) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
     const { data, error } = await supabase
       .from("borrow_conditions")
       .upsert(
@@ -333,7 +372,7 @@ export async function upsertBorrowConditionsAction(input: {
 // ────────────────────────────────────────────────────────────
 
 export async function seedSampleChildrenIfEmpty() {
-  if (!hasSupabaseEnv()) return;
+  if (isDemoMode()) return;
 
   const auth = await requireParentSession();
   if (!auth.user) return;
@@ -508,8 +547,8 @@ export async function validateChildPinForm(
   const childId = readString(formData, "childId");
   const pin = readString(formData, "pin");
 
-  if (!childId || !pin) {
-    return { ok: false, message: "PIN을 입력해주세요." };
+  if (!childId || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    return { ok: false, message: "4자리 숫자 PIN을 입력해주세요." };
   }
 
   const result = await validateChildPinAction({ childId, pin });
@@ -521,4 +560,19 @@ export async function validateChildPinForm(
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
+}
+
+async function parentOwnsChild(
+  supabase: Awaited<ReturnType<typeof getSupabaseServerClient>>,
+  parentId: string,
+  childId: string,
+) {
+  const { data, error } = await supabase
+    .from("children")
+    .select("id")
+    .eq("id", childId)
+    .eq("parent_id", parentId)
+    .maybeSingle();
+  if (error) throw error;
+  return data != null;
 }

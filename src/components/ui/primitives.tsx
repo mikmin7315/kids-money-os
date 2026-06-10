@@ -70,7 +70,11 @@ export function PageContainer({ children }: { children: ReactNode }) {
 }
 
 export function MobileShell({ children }: { children: ReactNode }) {
-  return <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-36 pt-5">{children}</div>;
+  return (
+    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))]">
+      {children}
+    </div>
+  );
 }
 
 export function Section(props: {
@@ -112,6 +116,7 @@ export function NavLink({ href, label, active }: { href: string; label: string; 
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       className={clsx(
         "inline-flex items-center rounded-full border px-4 py-2.5 text-sm font-medium transition",
         active

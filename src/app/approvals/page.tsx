@@ -2,6 +2,7 @@ import {
   InlineBehaviorDecisionForm,
   InlineBorrowDecisionForm,
 } from "@/components/finance/action-forms";
+import Link from "next/link";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
@@ -22,8 +23,10 @@ export default async function ApprovalsPage() {
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
-      {/* Hero */}
       <div className="monari-hero mb-4">
+        <p className="relative mb-3 text-[13px] font-600 leading-5 text-white/75">
+          승인하면 보상과 잔액에 바로 반영됩니다. 아이와 조건을 확인한 뒤 처리해 주세요.
+        </p>
         <div className="grid grid-cols-3 gap-2">
           <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
           <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
@@ -35,8 +38,10 @@ export default async function ApprovalsPage() {
       <section className="mb-4">
         <SectionTitle>약속 확인 대기</SectionTitle>
         {pendingBehaviorLogs.length === 0 ? (
-          <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">대기 중인 약속이 없어요</p>
+          <div className="monari-card mt-3 px-5 py-6 text-center">
+            <p className="text-[14px] font-700 text-[var(--monari-ink)]">확인할 약속이 없어요</p>
+            <p className="monari-meta mt-1">아이의 다음 약속 활동을 기다리고 있어요.</p>
+            <Link href="/behaviors" className="monari-btn-ghost mt-4 h-10 px-4 text-[13px]">약속 관리하기</Link>
           </div>
         ) : (
           <div className="space-y-3 mt-3">
@@ -54,7 +59,7 @@ export default async function ApprovalsPage() {
                       )}
                       {log.memo && (
                         <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[13px] italic text-[var(--monari-ink-soft)]">
-                          "{log.memo}"
+                          &ldquo;{log.memo}&rdquo;
                         </p>
                       )}
                     </div>
@@ -82,8 +87,9 @@ export default async function ApprovalsPage() {
       <section className="mb-4">
         <SectionTitle>미리쓰기 확인 대기</SectionTitle>
         {pendingBorrows.length === 0 ? (
-          <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">대기 중인 미리쓰기 요청이 없어요</p>
+          <div className="monari-card mt-3 px-5 py-6 text-center">
+            <p className="text-[14px] font-700 text-[var(--monari-ink)]">미리쓰기 요청이 없어요</p>
+            <p className="monari-meta mt-1">새 요청이 오면 사용 목적과 상환 조건을 확인할 수 있어요.</p>
           </div>
         ) : (
           <div className="space-y-3 mt-3">
@@ -99,7 +105,7 @@ export default async function ApprovalsPage() {
                       </p>
                       {request.purpose && (
                         <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[13px] italic text-[var(--monari-ink-soft)]">
-                          "{request.purpose}"
+                          &ldquo;{request.purpose}&rdquo;
                         </p>
                       )}
                     </div>
@@ -144,8 +150,8 @@ export default async function ApprovalsPage() {
                       <p className="text-[15px] font-700 text-[var(--monari-ink)] mt-0.5">{request.purpose}</p>
                       <p className="monari-meta">{formatWon(request.requestedAmount)}</p>
                     </div>
-                    <span className={`inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${request.status === "partial" ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
-                      {request.status === "partial" ? "상환 중" : "완료"}
+                    <span className="inline-flex h-[26px] items-center rounded-[10px] bg-[var(--monari-pending-bg)] px-[10px] text-[12px] font-700 text-[var(--monari-pending)]">
+                      상환 진행
                     </span>
                   </div>
                   {schedules.length > 0 && (
