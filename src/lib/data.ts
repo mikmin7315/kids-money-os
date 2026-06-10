@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { getAuthContext } from "@/lib/auth";
 import { buildActivityFeed, computeMonthlyReport, computeWallet } from "@/lib/finance";
 import {
   allowanceRules,
@@ -59,11 +61,13 @@ export function isDemoMode() {
   return process.env.NODE_ENV !== "production" && !hasSupabaseEnv();
 }
 
-async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {
+const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
+  const auth = await getAuthContext();
+  if (!auth.user || !auth.profile) throw new Error("Profile not found for current user.");
+
   const supabase = await getSupabaseServerClient();
 
   const [
-    profilesRes,
     childrenRes,
     behaviorRulesRes,
     behaviorLogsRes,
@@ -75,7 +79,6 @@ async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {
     interestRateEventsRes,
     walletSnapshotsRes,
   ] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", (await supabase.auth.getUser()).data.user?.id ?? "").maybeSingle(),
     supabase.from("children").select("*").order("created_at", { ascending: true }),
     supabase.from("behavior_rules").select("*").order("created_at", { ascending: true }),
     supabase.from("behavior_logs").select("*").order("behavior_date", { ascending: false }),
@@ -88,7 +91,6 @@ async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {
     supabase.from("wallet_snapshots").select("*"),
   ]);
 
-  if (profilesRes.error) throw profilesRes.error;
   if (childrenRes.error) throw childrenRes.error;
   if (behaviorRulesRes.error) throw behaviorRulesRes.error;
   if (behaviorLogsRes.error) throw behaviorLogsRes.error;
@@ -98,10 +100,9 @@ async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {
   if (borrowRepaymentsRes.error) throw borrowRepaymentsRes.error;
   if (interestPoliciesRes.error) throw interestPoliciesRes.error;
   if (interestRateEventsRes.error) throw interestRateEventsRes.error;
+  if (walletSnapshotsRes.error) throw walletSnapshotsRes.error;
 
-  if (!profilesRes.data) throw new Error("Profile not found for current user.");
-
-  const parent = mapProfile(profilesRes.data);
+  const parent = mapProfile(auth.profile);
   const mappedChildren = (childrenRes.data ?? []).map(mapChild);
   const mappedBehaviorRules = (behaviorRulesRes.data ?? []).map(mapBehaviorRule);
   const mappedBehaviorLogs = (behaviorLogsRes.data ?? []).map(mapBehaviorLog);
@@ -133,7 +134,7 @@ async function fetchAppDataFromSupabase(): Promise<AppDataBundle> {
     })),
     walletSnapshots: mappedWalletSnapshots,
   };
-}
+});
 
 function buildDashboardFromBundle(bundle: AppDataBundle): DashboardData {
   const now = new Date();
