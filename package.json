@@ -13,12 +13,14 @@
     "smoke": "node scripts/smoke-test.mjs",
     "preflight:release": "node scripts/release-preflight.mjs",
     "pre-promote": "node scripts/pre-promote.mjs",
+    "verify:account-deletion": "node scripts/verify-account-deletion.mjs",
     "verify:release": "npm run verify && npm run smoke && npm run audit:prod",
     "verify:store": "npm run preflight:release && npm run verify:release",
     "native:sync": "cap sync",
     "native:android": "cap open android",
     "native:ios": "cap open ios",
-    "native:doctor": "cap doctor"
+    "native:doctor": "cap doctor",
+    "smoke:android-device": "powershell -ExecutionPolicy Bypass -File scripts/android-device-smoke.ps1"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.0",

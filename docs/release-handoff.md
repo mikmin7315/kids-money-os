@@ -97,7 +97,7 @@ npm run native:sync
 
 - 운영 HTTPS URL과 최종 번들 ID 미확정
 - 공개 안내 URL은 구현 완료했으며 법률 검토와 `NEXT_PUBLIC_SUPPORT_EMAIL` 확정이 필요
-- 계정 삭제 흐름은 구현 완료했으며 운영 Supabase에서 cascade 삭제를 검증해야 함
+- 계정 삭제 흐름과 운영 Supabase cascade 삭제 검증 완료. 재검증은 명시적 운영 프로젝트 확인 후 `npm run verify:account-deletion` 사용
 - 부모 동의 기록·사용 전 게이트는 구현 완료했으며 운영 DB 적용과 아동 개인정보 처리 법률 검토가 필요
 - 네이티브 Google OAuth 코드는 구현 완료했으며 Supabase Redirect URL 등록과 실제 기기 검증이 필요
 - Android/iOS 스토어 계정, 서명 자료, 실제 기기 테스트 미완료
