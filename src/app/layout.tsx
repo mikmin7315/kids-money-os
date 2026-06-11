@@ -4,6 +4,7 @@ import Providers from "./providers";
 import { NativeRuntime } from "@/components/native/native-runtime";
 import { InstallAppPrompt } from "@/components/pwa/install-app-prompt";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
+import { StartupSplash } from "@/components/startup/startup-splash";
 
 export const metadata: Metadata = {
   title: {
@@ -52,6 +53,7 @@ export default function RootLayout({
         />
       </head>
       <body data-theme="parent" className="min-h-screen antialiased">
+        <StartupSplash />
         <Providers>{children}</Providers>
         <NativeRuntime />
         <InstallAppPrompt />

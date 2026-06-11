@@ -118,8 +118,286 @@ body {
   overflow-wrap: break-word;
 }
 
+body[data-startup-splash="visible"] {
+  overflow: hidden;
+}
+
 * {
   box-sizing: border-box;
+}
+
+.monari-startup-splash {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(81, 70, 229, 0.34), transparent 38%),
+    linear-gradient(160deg, #25273a 0%, #1d1f31 100%);
+  opacity: 1;
+  transition: opacity 360ms ease, visibility 360ms ease;
+}
+
+.monari-startup-splash.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.monari-startup-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: rgba(81, 70, 229, 0.22);
+  filter: blur(44px);
+  animation: startup-glow 1.3s ease-in-out both;
+}
+
+.monari-startup-stage {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  transform: translateY(-24px);
+}
+
+.monari-startup-card {
+  position: absolute;
+  inset: 30px 18px 38px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 30px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.06));
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px);
+  transform-origin: 50% 58%;
+  animation: startup-card 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.monari-startup-card::after {
+  content: "";
+  position: absolute;
+  inset: -70% -30%;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.18) 50%, transparent 58%);
+  transform: translateX(-55%) rotate(8deg);
+  animation: startup-shine 1.2s 280ms ease-out both;
+}
+
+.monari-startup-mark {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+}
+
+.monari-startup-mark span {
+  color: #25273a;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.08em;
+  transform: translateX(-1px);
+}
+
+.monari-startup-mark i {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--monari-primary);
+  border: 3px solid #292b42;
+}
+
+.monari-startup-card-lines {
+  position: absolute;
+  left: 22px;
+  bottom: 23px;
+  display: grid;
+  gap: 7px;
+}
+
+.monari-startup-card-lines span {
+  display: block;
+  height: 5px;
+  width: 70px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.24);
+  transform-origin: left;
+  animation: startup-line 540ms 600ms ease-out both;
+}
+
+.monari-startup-card-lines span:last-child {
+  width: 43px;
+  opacity: 0.66;
+  animation-delay: 700ms;
+}
+
+.monari-startup-balance {
+  position: absolute;
+  right: 20px;
+  bottom: 21px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
+  font-weight: 900;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: startup-balance 480ms 750ms ease-out forwards;
+}
+
+.monari-startup-coin {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 12px;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #ff8352, #f06432);
+  border: 5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 30px rgba(240, 100, 50, 0.3);
+  animation: startup-coin 1.25s cubic-bezier(0.22, 0.9, 0.36, 1) both;
+}
+
+.monari-startup-coin span {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.monari-startup-orbit {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: startup-orbit 1.3s ease-out both;
+}
+
+.monari-startup-orbit-two {
+  inset: 19px;
+  border-color: rgba(240, 100, 50, 0.14);
+  animation-delay: 90ms;
+}
+
+.monari-startup-spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff8352;
+  opacity: 0;
+  animation: startup-spark 520ms 790ms ease-out both;
+}
+
+.spark-one {
+  top: 42px;
+  right: 45px;
+}
+
+.spark-two {
+  top: 69px;
+  right: 18px;
+  width: 4px;
+  height: 4px;
+  animation-delay: 850ms;
+}
+
+.spark-three {
+  top: 24px;
+  right: 78px;
+  width: 5px;
+  height: 5px;
+  animation-delay: 900ms;
+}
+
+.monari-startup-copy {
+  position: absolute;
+  bottom: max(58px, calc(env(safe-area-inset-bottom) + 38px));
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: startup-copy 500ms 620ms ease-out forwards;
+}
+
+.monari-startup-copy strong {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.monari-startup-copy span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+@keyframes startup-card {
+  0% { opacity: 0; transform: scale(0.64) rotate(-7deg); border-radius: 50%; }
+  50% { opacity: 1; transform: scale(1.04) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); border-radius: 30px; }
+}
+
+@keyframes startup-coin {
+  0% { opacity: 0; transform: translate(32px, -42px) scale(0.4) rotate(-80deg); }
+  58% { opacity: 1; transform: translate(-55px, 52px) scale(1) rotate(12deg); }
+  78% { opacity: 1; transform: translate(-55px, 47px) scale(0.9) rotate(0); }
+  100% { opacity: 0; transform: translate(-55px, 74px) scale(0.42) rotate(0); }
+}
+
+@keyframes startup-line {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes startup-balance {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes startup-orbit {
+  from { opacity: 0; transform: scale(0.55); }
+  55% { opacity: 1; }
+  to { opacity: 0; transform: scale(1.16); }
+}
+
+@keyframes startup-spark {
+  0% { opacity: 0; transform: scale(0.2); }
+  45% { opacity: 1; transform: scale(1.35); }
+  100% { opacity: 0; transform: translateY(-14px) scale(0.3); }
+}
+
+@keyframes startup-shine {
+  to { transform: translateX(60%) rotate(8deg); }
+}
+
+@keyframes startup-glow {
+  0% { opacity: 0; transform: scale(0.7); }
+  55% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.55; transform: scale(1.08); }
+}
+
+@keyframes startup-copy {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monari-startup-splash {
+    display: none;
+  }
 }
 
 button,
