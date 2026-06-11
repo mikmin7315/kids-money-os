@@ -1,21 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 
 export function StartupSplash() {
   const [leaving, setLeaving] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const hideTimer = window.setTimeout(() => setHidden(true), 0);
+      return () => window.clearTimeout(hideTimer);
+    }
 
     document.body.dataset.startupSplash = "visible";
 
-    const leaveTimer = window.setTimeout(() => setLeaving(true), 1250);
+    const native = Capacitor.isNativePlatform();
+    const leaveTimer = window.setTimeout(() => setLeaving(true), native ? 550 : 1250);
     const hideTimer = window.setTimeout(() => {
       setHidden(true);
       delete document.body.dataset.startupSplash;
-    }, 1650);
+    }, native ? 900 : 1650);
 
     return () => {
       window.clearTimeout(leaveTimer);
