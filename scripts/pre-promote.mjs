@@ -122,6 +122,7 @@ try {
     "approve_borrow_request",
     "consume_child_pin_attempt",
     "change_profile_role",
+    "get_app_data_bundle",
   ];
 
   for (const table of requiredTables) {

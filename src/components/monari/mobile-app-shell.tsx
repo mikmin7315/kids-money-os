@@ -56,7 +56,6 @@ export function MobileAppShell({
             <Link
               key={tab.href}
               href={tab.href}
-              prefetch={false}
               className={`monari-tab ${active ? "monari-tab-active" : ""}`}
               aria-current={active ? "page" : undefined}
             >
@@ -74,7 +73,6 @@ function HeaderLink({ href, label, children }: { href: string; label: string; ch
   return (
     <Link
       href={href}
-      prefetch={false}
       className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--monari-ink-soft)] transition hover:bg-white hover:text-[var(--monari-hero)]"
       aria-label={label}
     >

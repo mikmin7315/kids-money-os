@@ -67,56 +67,26 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
 
   const supabase = await getSupabaseServerClient();
 
-  const [
-    childrenRes,
-    behaviorRulesRes,
-    behaviorLogsRes,
-    allowanceRulesRes,
-    transactionsRes,
-    borrowRequestsRes,
-    borrowRepaymentsRes,
-    interestPoliciesRes,
-    interestRateEventsRes,
-    walletSnapshotsRes,
-  ] = await Promise.all([
-    supabase.from("children").select("*").order("created_at", { ascending: true }),
-    supabase.from("behavior_rules").select("*").order("created_at", { ascending: true }),
-    supabase.from("behavior_logs").select("*").order("behavior_date", { ascending: false }),
-    supabase.from("allowance_rules").select("*").order("created_at", { ascending: true }),
-    supabase.from("money_transactions").select("*").order("tx_date", { ascending: false }),
-    supabase.from("borrow_requests").select("*").order("created_at", { ascending: false }),
-    supabase.from("borrow_repayments").select("*").order("due_date", { ascending: true }),
-    supabase.from("interest_policies").select("*").order("created_at", { ascending: true }),
-    supabase.from("interest_rate_events").select("*").order("effective_date", { ascending: false }),
-    supabase.from("wallet_snapshots").select("*"),
-  ]);
-
-  if (childrenRes.error) throw childrenRes.error;
-  if (behaviorRulesRes.error) throw behaviorRulesRes.error;
-  if (behaviorLogsRes.error) throw behaviorLogsRes.error;
-  if (allowanceRulesRes.error) throw allowanceRulesRes.error;
-  if (transactionsRes.error) throw transactionsRes.error;
-  if (borrowRequestsRes.error) throw borrowRequestsRes.error;
-  if (borrowRepaymentsRes.error) throw borrowRepaymentsRes.error;
-  if (interestPoliciesRes.error) throw interestPoliciesRes.error;
-  if (interestRateEventsRes.error) throw interestRateEventsRes.error;
-  if (walletSnapshotsRes.error) throw walletSnapshotsRes.error;
+  const { data, error } = await supabase.rpc("get_app_data_bundle");
+  if (error) throw error;
+  const rows = (data ?? {}) as Record<string, Record<string, unknown>[]>;
 
   const parent = mapProfile(auth.profile);
-  const mappedChildren = (childrenRes.data ?? []).map(mapChild);
-  const mappedBehaviorRules = (behaviorRulesRes.data ?? []).map(mapBehaviorRule);
-  const mappedBehaviorLogs = (behaviorLogsRes.data ?? []).map(mapBehaviorLog);
-  const mappedAllowanceRules = (allowanceRulesRes.data ?? []).map(mapAllowanceRule);
-  const mappedTransactions = (transactionsRes.data ?? []).map(mapMoneyTransaction);
-  const mappedBorrowRequests = (borrowRequestsRes.data ?? []).map(mapBorrowRequest);
-  const mappedBorrowRepayments = (borrowRepaymentsRes.data ?? []).map(mapBorrowRepayment);
-  const mappedInterestPolicies = (interestPoliciesRes.data ?? []).map(mapInterestPolicy);
-  const mappedWalletSnapshots = (walletSnapshotsRes.data ?? []).map(mapWalletSnapshot);
+  const mappedChildren = (rows.children ?? []).map(mapChild);
+  const mappedBehaviorRules = (rows.behavior_rules ?? []).map(mapBehaviorRule);
+  const mappedBehaviorLogs = (rows.behavior_logs ?? []).map(mapBehaviorLog);
+  const mappedAllowanceRules = (rows.allowance_rules ?? []).map(mapAllowanceRule);
+  const mappedTransactions = (rows.money_transactions ?? []).map(mapMoneyTransaction);
+  const mappedBorrowRequests = (rows.borrow_requests ?? []).map(mapBorrowRequest);
+  const mappedBorrowRepayments = (rows.borrow_repayments ?? []).map(mapBorrowRepayment);
+  const mappedInterestPolicies = (rows.interest_policies ?? []).map(mapInterestPolicy);
+  const mappedWalletSnapshots = (rows.wallet_snapshots ?? []).map(mapWalletSnapshot);
 
   // Latest applied rate per child (from events, for policy display)
   const latestRates = new Map<string, number>();
-  for (const event of interestRateEventsRes.data ?? []) {
-    if (!latestRates.has(event.child_id)) latestRates.set(event.child_id, Number(event.applied_rate));
+  for (const event of rows.interest_rate_events ?? []) {
+    const childId = String(event.child_id);
+    if (!latestRates.has(childId)) latestRates.set(childId, Number(event.applied_rate));
   }
 
   return {
