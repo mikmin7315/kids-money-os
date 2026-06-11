@@ -51,7 +51,7 @@ npm run verify:store
 - 최종 번들 ID 미확정
 - Supabase 운영 프로젝트에 `docs/release-handoff.md`에 나열된 전체 마이그레이션 미적용
 - 공개 안내 URL 법률 검토 및 고객지원 이메일 확정 미완료
-- 앱 내부 계정 삭제 흐름의 운영 DB cascade 검증 미완료
+- 앱 내부 계정 삭제 흐름의 운영 DB cascade 검증 완료
 - Google Play 및 Apple Developer 계정/서명 자료 없음
 - Android 실제 기기 및 AAB 릴리스 검증 미완료
 - iOS 빌드는 macOS와 Xcode가 필요
