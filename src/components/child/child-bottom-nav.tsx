@@ -32,6 +32,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
+                onClick={() => setHash(itemHash)}
                 className={`flex min-h-[62px] flex-col items-center justify-center gap-1 rounded-[18px] py-2 text-[10px] font-800 transition active:scale-95 active:bg-[#eeeaff] ${
                   active ? "text-[#5547d7]" : "text-[var(--monari-ink-muted)]"
                 }`}
