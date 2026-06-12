@@ -161,7 +161,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
 
           <Link
             href="#today-promises"
-            aria-label={`오늘 약속 ${todayDone}개 중 ${todayTotal}개 완료, 약속 체크로 이동`}
+            aria-label={`오늘 약속 ${todayTotal}개 중 ${todayDone}개 완료, 약속 체크로 이동`}
             className="relative flex aspect-square items-center justify-center rounded-full"
             style={{
               background: `conic-gradient(#ffd166 ${todayProgress * 3.6}deg, rgba(255,255,255,0.10) 0deg)`,
@@ -186,13 +186,24 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
 
       <main className="relative -mt-1 rounded-t-[30px] bg-[#f4f5f8] px-4 pb-36 pt-6">
         <SectionHeading title="이번 달 흐름" />
-        <div className="-mx-4 mb-7 flex gap-2.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mb-7 grid grid-cols-2 gap-2.5">
           <FlowCard icon={<Landmark />} label="받은 용돈" value={formatWon(totalAllowance)} tone="violet" />
           <FlowCard icon={<TrendingUp />} label="받은 이자" value={formatWon(totalInterest)} tone="green" />
           <FlowCard icon={<PiggyBank />} label="저금한 돈" value={formatWon(totalSave)} tone="blue" />
           <FlowCard icon={<ReceiptText />} label="사용한 돈" value={formatWon(totalSpend)} tone="orange" />
-          <span className="w-1 shrink-0" aria-hidden="true" />
         </div>
+
+        <FormSection id="today-promises" title="오늘 약속 체크" icon={<Check className="h-4 w-4" />}>
+          <ChildBehaviorCheckForm childId={id} behaviorRules={activeRules} doneRuleIds={doneTodayRuleIds} />
+        </FormSection>
+
+        <FormSection id="save-form" title="저금하기" icon={<PiggyBank className="h-4 w-4" />}>
+          <ChildSaveForm childId={id} />
+        </FormSection>
+
+        <FormSection id="borrow-form" title="미리쓰기 요청" icon={<ReceiptText className="h-4 w-4" />}>
+          <BorrowRequestQuickForm childId={id} />
+        </FormSection>
 
         <section className="mb-7">
           <SectionHeading title="최근 내역" actionHref="/records" actionLabel="전체 보기" />
@@ -220,18 +231,6 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
         </section>
-
-        <FormSection id="today-promises" title="오늘 약속 체크" icon={<Check className="h-4 w-4" />}>
-          <ChildBehaviorCheckForm childId={id} behaviorRules={activeRules} doneRuleIds={doneTodayRuleIds} />
-        </FormSection>
-
-        <FormSection id="save-form" title="저금하기" icon={<PiggyBank className="h-4 w-4" />}>
-          <ChildSaveForm childId={id} />
-        </FormSection>
-
-        <FormSection id="borrow-form" title="미리쓰기 요청" icon={<ReceiptText className="h-4 w-4" />}>
-          <BorrowRequestQuickForm childId={id} />
-        </FormSection>
       </main>
 
       <ChildBottomNav childId={id} />
@@ -260,7 +259,7 @@ function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: 
     orange: "bg-[#fff0e9] text-[#d95d2d]",
   };
   return (
-    <div className="min-w-[138px] rounded-[20px] border border-[var(--monari-line)] bg-white p-4 shadow-[var(--monari-shadow-card)]">
+    <div className="min-w-0 rounded-[20px] border border-[var(--monari-line)] bg-white p-4 shadow-[var(--monari-shadow-card)]">
       <span className={`flex h-9 w-9 items-center justify-center rounded-full ${tones[tone]} [&>svg]:h-4 [&>svg]:w-4`}>{icon}</span>
       <p className="mt-3 text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>
       <p className="mt-1 text-[17px] font-900 tracking-tight text-[var(--monari-ink)] tabular-nums">{value}</p>

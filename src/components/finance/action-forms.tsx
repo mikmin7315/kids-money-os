@@ -81,14 +81,7 @@ export function ChildBehaviorCheckForm({
                   </svg>
                 </span>
               ) : (
-                <button
-                  type="submit"
-                  name="behaviorRuleId"
-                  value={rule.id}
-                  className="h-10 shrink-0 rounded-2xl bg-[#10367D] px-4 text-[13px] font-bold text-white transition hover:bg-[#0d2d6a] active:scale-[0.96]"
-                >
-                  했어요
-                </button>
+                <BehaviorSubmitButton ruleId={rule.id} />
               )}
             </div>
           );
@@ -181,7 +174,7 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
         </p>
       </div>
 
-      <ChildPlayButton label="부모님께 요청 보내기" />
+      <ChildPlayButton label={`${formatWon(amount)} 미리 써도 될까요?`} />
       <FormMessage state={state} />
     </form>
   );
@@ -241,12 +234,7 @@ export function ChildSaveForm({ childId }: { childId: string }) {
         )}
       </div>
 
-      <button
-        type="submit"
-        className="w-full h-12 rounded-[16px] bg-[#10367D] text-[15px] font-700 text-white"
-      >
-        저축하기
-      </button>
+      <ChildSaveButton label={`${formatWon(amount)} 저금할게요!`} />
       <FormMessage state={state} />
     </form>
   );
@@ -413,6 +401,34 @@ function ChildPlayButton({ label }: { label: string }) {
       className="mt-1 w-full rounded-[18px] bg-[#C66B3D] py-4 text-[15px] font-bold text-white transition hover:bg-[#A85930] active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
+    </button>
+  );
+}
+
+function BehaviorSubmitButton({ ruleId }: { ruleId: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      name="behaviorRuleId"
+      value={ruleId}
+      disabled={pending}
+      className="h-12 shrink-0 rounded-2xl bg-[#10367D] px-5 text-[14px] font-bold text-white transition hover:bg-[#0d2d6a] active:scale-[0.96] disabled:opacity-60"
+    >
+      {pending ? "확인 중..." : "했어요"}
+    </button>
+  );
+}
+
+function ChildSaveButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="h-12 w-full rounded-[16px] bg-[#10367D] text-[15px] font-700 text-white transition active:scale-[0.98] disabled:opacity-60"
+    >
+      {pending ? "저금하는 중..." : label}
     </button>
   );
 }
