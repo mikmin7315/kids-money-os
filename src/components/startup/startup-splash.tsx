@@ -16,11 +16,11 @@ export function StartupSplash() {
     document.body.dataset.startupSplash = "visible";
 
     const native = Capacitor.isNativePlatform();
-    const leaveTimer = window.setTimeout(() => setLeaving(true), native ? 550 : 1250);
+    const leaveTimer = window.setTimeout(() => setLeaving(true), native ? 2000 : 1250);
     const hideTimer = window.setTimeout(() => {
       setHidden(true);
       delete document.body.dataset.startupSplash;
-    }, native ? 900 : 1650);
+    }, native ? 2600 : 1650);
 
     return () => {
       window.clearTimeout(leaveTimer);
