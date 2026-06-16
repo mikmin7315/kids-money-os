@@ -76,6 +76,9 @@ export async function createBehaviorLogAction(input: {
     revalidatePath(`/child/${input.childId}`);
     return { ok: true, data: { id: String(data.id) } };
   } catch (error) {
+    if (isUniqueViolation(error)) {
+      return { ok: false, error: "오늘은 이미 이 약속을 기록했어요." };
+    }
     return { ok: false, error: error instanceof Error ? error.message : "행동 기록 생성 실패." };
   }
 }
@@ -167,6 +170,7 @@ export async function rejectBehaviorLogAction(input: {
 
     revalidatePath("/behaviors");
     revalidatePath("/approvals");
+    revalidatePath("/");
     revalidatePath(`/child/${log.childId}`);
     return { ok: true, data: { id: log.id } };
   } catch (error) {
@@ -181,7 +185,8 @@ export async function createMoneyTransactionAction(input: {
   amount: number;
   memo: string;
 }): Promise<ActionResult<{ id: string }>> {
-  await requireParentSession();
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
   if (!isValidMoneyAmount(input.amount)) return { ok: false, error: "금액이 올바르지 않습니다." };
 
   const transaction = createMoneyTransaction(input);
@@ -192,6 +197,11 @@ export async function createMoneyTransactionAction(input: {
 
   try {
     const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, auth.user.id, input.childId))) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
+    const limitError = await validateTransactionLimits(supabase, input.childId, input.type, input.amount);
+    if (limitError) return { ok: false, error: limitError };
     // DB trigger on money_transactions automatically updates wallet_snapshots balance
     const { data, error } = await supabase
       .from("money_transactions")
@@ -245,6 +255,19 @@ export async function createBorrowRequestAction(input: {
 
   try {
     const supabase = await getSupabaseServerClient();
+    const { data: conditions, error: conditionsError } = await supabase
+      .from("borrow_conditions")
+      .select("max_amount, requires_purpose")
+      .eq("child_id", input.childId)
+      .maybeSingle();
+    if (conditionsError) throw conditionsError;
+    const maxAmount = Number(conditions?.max_amount ?? 10_000);
+    if (input.requestedAmount > maxAmount) {
+      return { ok: false, error: `미리쓰기는 최대 ${maxAmount.toLocaleString()}원까지 요청할 수 있어요.` };
+    }
+    if ((conditions?.requires_purpose ?? true) && !input.purpose.trim()) {
+      return { ok: false, error: "미리쓰기 목적을 입력해주세요." };
+    }
     const { data, error } = await supabase
       .from("borrow_requests")
       .insert({
@@ -373,6 +396,7 @@ export async function rejectBorrowRequestAction(input: {
     }
 
     revalidatePath("/approvals");
+    revalidatePath("/");
     revalidatePath(`/child/${request.childId}`);
     return { ok: true, data: { id: request.id } };
   } catch (error) {
@@ -453,11 +477,11 @@ export async function submitTransactionForm(_: FormState, formData: FormData): P
   const amount = Number(readString(formData, "amount"));
   const memo = readString(formData, "memo");
 
-  if (!childId || !date || !memo || !Number.isFinite(amount) || amount <= 0) {
+  if (!childId || !date || !Number.isFinite(amount) || amount <= 0) {
     return { ok: false, message: "입력값이 올바르지 않습니다." };
   }
 
-  const result = await createMoneyTransactionAction({ childId, date, type, amount, memo });
+  const result = await createMoneyTransactionAction({ childId, date, type, amount, memo: memo || transactionTypeLabel(type) });
   return result.ok
     ? { ok: true, message: `거래 완료: ${result.data?.id}` }
     : { ok: false, message: result.error ?? "거래 실패." };
@@ -568,4 +592,59 @@ function readOptionalString(formData: FormData, key: string) {
 
 function isValidMoneyAmount(amount: number) {
   return Number.isInteger(amount) && amount > 0 && amount <= MAX_MONEY_AMOUNT;
+}
+
+function transactionTypeLabel(type: string) {
+  const labels: Record<string, string> = {
+    allowance: "용돈",
+    reward: "보상",
+    spend: "사용",
+    save: "저금",
+    unsave: "저금 해제",
+    borrow: "미리쓰기",
+    repay: "상환",
+    interest: "이자",
+  };
+  return labels[type] ?? "금융 기록";
+}
+
+function isUniqueViolation(error: unknown) {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "23505";
+}
+
+async function parentOwnsChild(
+  supabase: Awaited<ReturnType<typeof getSupabaseServerClient>>,
+  parentId: string,
+  childId: string,
+) {
+  const { data, error } = await supabase
+    .from("children")
+    .select("id")
+    .eq("id", childId)
+    .eq("parent_id", parentId)
+    .maybeSingle();
+  if (error) throw error;
+  return data != null;
+}
+
+async function validateTransactionLimits(
+  supabase: Awaited<ReturnType<typeof getSupabaseServerClient>>,
+  childId: string,
+  type: "allowance" | "reward" | "spend" | "save" | "unsave" | "borrow" | "repay" | "interest",
+  amount: number,
+) {
+  if (!["spend", "save", "unsave", "repay"].includes(type)) return null;
+  const { data: wallet, error } = await supabase
+    .from("wallet_snapshots")
+    .select("balance, savings_balance, borrowed_balance")
+    .eq("child_id", childId)
+    .maybeSingle();
+  if (error) throw error;
+  const balance = Number(wallet?.balance ?? 0);
+  const savings = Number(wallet?.savings_balance ?? 0);
+  const borrowed = Number(wallet?.borrowed_balance ?? 0);
+  if (type === "repay" && amount > borrowed) return "갚아야 할 금액보다 많이 갚을 수 없습니다.";
+  if (["spend", "save", "repay"].includes(type) && amount > balance) return "사용 가능한 금액이 부족합니다.";
+  if (type === "unsave" && amount > savings) return "저금한 금액이 부족합니다.";
+  return null;
 }

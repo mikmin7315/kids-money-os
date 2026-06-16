@@ -44,6 +44,9 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
   const doneTodayRuleIds = todayLogs
     .filter((log) => log.status === "approved" || log.status === "completed")
     .map((log) => log.behaviorRuleId);
+  const pendingTodayRuleIds = todayLogs
+    .filter((log) => log.status === "pending")
+    .map((log) => log.behaviorRuleId);
   const todayDone = doneTodayRuleIds.length;
   const todayTotal = activeRules.length;
   const todayProgress = todayTotal > 0 ? Math.min(100, Math.round((todayDone / todayTotal) * 100)) : 0;
@@ -194,11 +197,16 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
         </div>
 
         <FormSection id="today-promises" title="오늘 약속 체크" icon={<Check className="h-4 w-4" />}>
-          <ChildBehaviorCheckForm childId={id} behaviorRules={activeRules} doneRuleIds={doneTodayRuleIds} />
+          <ChildBehaviorCheckForm
+            childId={id}
+            behaviorRules={activeRules}
+            doneRuleIds={doneTodayRuleIds}
+            pendingRuleIds={pendingTodayRuleIds}
+          />
         </FormSection>
 
         <FormSection id="save-form" title="저금하기" icon={<PiggyBank className="h-4 w-4" />}>
-          <ChildSaveForm childId={id} />
+          <ChildSaveForm childId={id} availableBalance={summary.wallet.balance} />
         </FormSection>
 
         <FormSection id="borrow-form" title="미리쓰기 요청" icon={<ReceiptText className="h-4 w-4" />}>

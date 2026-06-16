@@ -31,10 +31,12 @@ export function ChildBehaviorCheckForm({
   childId,
   behaviorRules,
   doneRuleIds = [],
+  pendingRuleIds = [],
 }: {
   childId: string;
   behaviorRules: BehaviorRule[];
   doneRuleIds?: string[];
+  pendingRuleIds?: string[];
 }) {
   const [state, action] = useActionState(submitBehaviorLogForm, initialState);
 
@@ -54,18 +56,19 @@ export function ChildBehaviorCheckForm({
       <div className="space-y-2">
         {behaviorRules.map((rule) => {
           const isDone = doneRuleIds.includes(rule.id);
+          const isPending = pendingRuleIds.includes(rule.id);
           return (
             <div
               key={rule.id}
               className={`flex items-center gap-3 rounded-[18px] px-4 py-3.5 transition ${
-                isDone ? "opacity-60" : "bg-[#F0F0F0]"
+                isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"
               }`}
-              style={isDone ? { background: "rgba(43,43,43,0.05)" } : {}}
+              style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}
             >
               <div className="min-w-0 flex-1">
                 <p
                   className={`truncate text-[15px] font-semibold ${
-                    isDone ? "text-[rgba(43,43,43,0.50)]" : "text-[#2B2B2B]"
+                    isDone || isPending ? "text-[rgba(43,43,43,0.50)]" : "text-[#2B2B2B]"
                   }`}
                 >
                   {rule.title}
@@ -79,6 +82,10 @@ export function ChildBehaviorCheckForm({
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                     <path d="M4 9.5L7.5 13L14 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
+                </span>
+              ) : isPending ? (
+                <span className="shrink-0 rounded-full bg-[var(--monari-pending-bg)] px-3 py-2 text-[12px] font-800 text-[var(--monari-pending)]">
+                  확인 기다리는 중
                 </span>
               ) : (
                 <BehaviorSubmitButton ruleId={rule.id} />
@@ -182,7 +189,7 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
 
 const SAVE_PRESETS = [1000, 2000, 5000, 10000];
 
-export function ChildSaveForm({ childId }: { childId: string }) {
+export function ChildSaveForm({ childId, availableBalance }: { childId: string; availableBalance: number }) {
   const [amount, setAmount] = useState(1000);
   const [showCustom, setShowCustom] = useState(false);
   const [state, action] = useActionState(submitTransactionForm, initialState);
@@ -196,6 +203,11 @@ export function ChildSaveForm({ childId }: { childId: string }) {
       <input type="hidden" name="amount" value={amount} />
 
       <div>
+        {availableBalance <= 0 && (
+          <p className="mb-3 rounded-[14px] bg-[var(--monari-pending-bg)] px-4 py-3 text-[13px] font-700 text-[var(--monari-pending)]">
+            지금 쓸 수 있는 돈이 없어 저금할 수 없어요.
+          </p>
+        )}
         <label className="mb-2 block text-[13px] font-semibold text-[rgba(43,43,43,0.65)]">
           얼마를 저축할까?
         </label>
@@ -204,8 +216,9 @@ export function ChildSaveForm({ childId }: { childId: string }) {
             <button
               key={a}
               type="button"
+              disabled={a > availableBalance}
               onClick={() => { setAmount(a); setShowCustom(false); }}
-              className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] ${
+              className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-[35%] ${
                 amount === a && !showCustom
                   ? "bg-[#10367D] text-white"
                   : "bg-[#EBEBEB] text-[#2B2B2B]"
@@ -226,15 +239,16 @@ export function ChildSaveForm({ childId }: { childId: string }) {
           <input
             type="number"
             min="100"
+            max={Math.max(100, availableBalance)}
             step="100"
             value={amount}
-            onChange={(e) => setAmount(Math.max(100, Number(e.target.value)))}
+            onChange={(e) => setAmount(Math.min(Math.max(100, Number(e.target.value)), Math.max(100, availableBalance)))}
             className="mt-2 w-full rounded-[16px] border-2 border-[#10367D] bg-[#EBEBEB] px-4 py-3 text-[15px] font-bold text-[#2B2B2B] outline-none"
           />
         )}
       </div>
 
-      <ChildSaveButton label={`${formatWon(amount)} 저금할게요!`} />
+      <ChildSaveButton label={`${formatWon(amount)} 저금할게요!`} disabled={availableBalance <= 0 || amount > availableBalance} />
       <FormMessage state={state} />
     </form>
   );
@@ -420,12 +434,12 @@ function BehaviorSubmitButton({ ruleId }: { ruleId: string }) {
   );
 }
 
-function ChildSaveButton({ label }: { label: string }) {
+function ChildSaveButton({ label, disabled }: { label: string; disabled: boolean }) {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className="h-12 w-full rounded-[16px] bg-[#10367D] text-[15px] font-700 text-white transition active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "저금하는 중..." : label}
