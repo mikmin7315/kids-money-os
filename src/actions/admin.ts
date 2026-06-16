@@ -42,7 +42,7 @@ export async function listProfilesAction(): Promise<
       data: (data ?? []).map((row) => ({
         id: String(row.id),
         email: String(row.email ?? ""),
-        name: String(row.name),
+        name: String(row.name ?? ""),
         role: String(row.role),
         createdAt: String(row.created_at),
       })),

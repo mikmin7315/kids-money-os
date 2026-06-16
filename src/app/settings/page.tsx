@@ -15,6 +15,8 @@ import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage() {
   const auth = await requireParentSession();
   const bundle = await getAppDataBundle();

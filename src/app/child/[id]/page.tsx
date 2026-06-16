@@ -19,6 +19,8 @@ import { estimateInterest } from "@/lib/finance";
 import { formatWon } from "@/lib/format";
 import type { BehaviorLog } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function ChildDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requireAppConsent();

@@ -9,6 +9,8 @@ import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function ApprovalsPage() {
   await requireParentSession();
   const bundle = await getAppDataBundle();

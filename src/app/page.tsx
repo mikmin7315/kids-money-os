@@ -11,6 +11,8 @@ import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const today = new Date().toISOString().slice(0, 10);
   const auth = await requireAppConsent();

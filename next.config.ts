@@ -10,7 +10,6 @@ const privateRoutes = [
   "/child-mode/:path*",
   "/child-pin/:path*",
   "/consent/:path*",
-  "/learn/:path*",
   "/notifications/:path*",
   "/onboarding/:path*",
   "/records/:path*",
