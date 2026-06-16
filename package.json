@@ -16,6 +16,7 @@
     "verify:account-deletion": "node scripts/verify-account-deletion.mjs",
     "verify:release": "npm run verify && npm run smoke && npm run audit:prod",
     "verify:store": "npm run preflight:release && npm run verify:release",
+    "admin:ensure": "node scripts/ensure-admin.mjs",
     "native:sync": "cap sync",
     "native:android": "cap open android",
     "native:ios": "cap open ios",
