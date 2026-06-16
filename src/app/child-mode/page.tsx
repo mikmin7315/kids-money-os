@@ -6,6 +6,8 @@ import { requireParentSession } from "@/lib/auth";
 import { getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function ChildModePage() {
   await requireParentSession();
   const dashboard = await getDashboardView();

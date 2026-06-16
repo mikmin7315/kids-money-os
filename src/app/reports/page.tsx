@@ -6,6 +6,8 @@ import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 
+export const dynamic = "force-dynamic";
+
 export default async function ReportsPage() {
   await requireParentSession();
   const [dashboard, bundle] = await Promise.all([getDashboardView(), getAppDataBundle()]);

@@ -4,6 +4,8 @@ import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer, Section, Surface } from "@/components/ui/primitives";
 import { getAuthContext } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminLoginPage() {
   const auth = await getAuthContext();
 
@@ -12,7 +14,6 @@ export default async function AdminLoginPage() {
   }
 
   if (auth.user && auth.profile?.role !== "admin") {
-    // Logged in but not admin
     return (
       <PageContainer>
         <MobileShell>
@@ -40,7 +41,7 @@ export default async function AdminLoginPage() {
             <ul className="space-y-2 text-sm leading-6 text-[var(--color-muted)]">
               <li>일반 부모 계정과 같은 Supabase Auth를 사용합니다.</li>
               <li>로그인 후 역할이 admin인 경우에만 접근이 허용됩니다.</li>
-              <li>역할 변경은 Supabase SQL 에디터 또는 다른 관리자가 처리합니다.</li>
+              <li>역할 변경은 관리자 화면 또는 운영 스크립트에서 처리합니다.</li>
             </ul>
           </Surface>
         </Section>

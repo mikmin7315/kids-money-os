@@ -4,6 +4,8 @@ import { ConsentForm } from "@/components/auth/consent-form";
 import { getAuthContext } from "@/lib/auth";
 import { hasCurrentConsent } from "@/lib/consent";
 
+export const dynamic = "force-dynamic";
+
 export default async function ConsentPage() {
   const auth = await getAuthContext();
   if (!auth.user) redirect("/login");

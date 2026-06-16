@@ -6,6 +6,8 @@ import {
 } from "@/lib/supabase/actions/notifications";
 import { NotificationList } from "@/components/notifications/notification-list";
 
+export const dynamic = "force-dynamic";
+
 export default async function NotificationsPage() {
   const [auth, childMode] = await Promise.all([
     requireAppConsent(),
