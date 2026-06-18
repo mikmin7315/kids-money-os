@@ -114,7 +114,10 @@ body {
 
 body {
   margin: 0;
-  background: var(--monari-bg);
+  background:
+    radial-gradient(circle at 50% -8%, rgba(81, 70, 229, 0.12), transparent 34rem),
+    radial-gradient(circle at 100% 8%, rgba(240, 100, 50, 0.08), transparent 22rem),
+    var(--monari-bg);
   overflow-wrap: break-word;
 }
 
@@ -434,10 +437,10 @@ a {
   /* ── Layout shells ── */
   .monari-shell {
     width: 100%;
-    max-width: 440px;
+    max-width: 460px;
     min-height: 100dvh;
     margin: 0 auto;
-    padding: max(16px, env(safe-area-inset-top)) 16px
+    padding: max(14px, env(safe-area-inset-top)) 16px
       calc(112px + env(safe-area-inset-bottom));
   }
 
@@ -464,18 +467,27 @@ a {
 
   /* ── Typography ── */
   .monari-header {
+    position: sticky;
+    top: max(8px, env(safe-area-inset-top));
+    z-index: 40;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    padding: 12px 12px 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 10px 30px rgba(23, 24, 28, 0.07);
+    backdrop-filter: blur(18px);
   }
 
   .monari-page-title {
     margin: 0;
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1.15;
-    font-weight: 800;
+    font-weight: 900;
     letter-spacing: -0.04em;
     color: var(--monari-ink);
   }
@@ -516,15 +528,15 @@ a {
 
   /* ── Cards ── */
   .monari-card {
-    border-radius: 20px;
+    border-radius: 24px;
     border: 1px solid var(--monari-line);
     background: var(--monari-surface);
-    box-shadow: var(--monari-shadow-card);
+    box-shadow: 0 8px 24px rgba(23, 24, 28, 0.055);
     transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
   }
 
   .monari-card-soft {
-    border-radius: 20px;
+    border-radius: 24px;
     border: 1px solid var(--monari-line);
     background: var(--monari-surface-soft);
     box-shadow: var(--monari-shadow-soft);
@@ -532,8 +544,8 @@ a {
 
   /* ── Hero banner ── */
   .monari-hero {
-    border-radius: 24px;
-    padding: 22px 20px;
+    border-radius: 30px;
+    padding: 24px 20px;
     color: #fff;
     background: linear-gradient(145deg, #25273a 0%, #343653 100%);
     box-shadow: var(--monari-shadow-hero);
@@ -556,9 +568,9 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    min-height: 50px;
     padding: 0 20px;
-    border-radius: 14px;
+    border-radius: 16px;
     font-size: 15px;
     font-weight: 700;
     line-height: 1;
@@ -573,7 +585,7 @@ a {
   }
 
   .monari-btn-primary {
-    background: var(--monari-hero);
+    background: linear-gradient(135deg, var(--monari-hero) 0%, var(--monari-hero-mid) 100%);
     color: #fff;
     border: none;
     box-shadow: none;
@@ -715,19 +727,19 @@ a {
     left: 50%;
     bottom: max(12px, env(safe-area-inset-bottom));
     z-index: 50;
-    width: calc(100% - 24px);
-    max-width: 420px;
+    width: calc(100% - 22px);
+    max-width: 432px;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4px;
     padding: 8px 10px;
-    border-radius: 22px;
-    border: 1px solid var(--monari-line);
-    background: rgba(255, 255, 255, 0.97);
-    box-shadow: 0 8px 24px rgba(23, 24, 28, 0.10);
-    backdrop-filter: blur(14px);
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.74);
+    background: rgba(255, 255, 255, 0.90);
+    box-shadow: 0 18px 45px rgba(23, 24, 28, 0.15);
+    backdrop-filter: blur(18px);
   }
 
   .monari-tab {
@@ -740,7 +752,7 @@ a {
     justify-content: center;
     gap: 4px;
     padding: 10px 8px;
-    border-radius: 15px;
+    border-radius: 18px;
     font-size: 11px;
     font-weight: 700;
     line-height: 1.1;
@@ -751,7 +763,7 @@ a {
   }
 
   .monari-tab-active {
-    background: rgba(81, 70, 229, 0.08);
+    background: linear-gradient(135deg, rgba(81, 70, 229, 0.12), rgba(81, 70, 229, 0.06));
     color: var(--monari-hero);
   }
 
