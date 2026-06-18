@@ -108,8 +108,11 @@ body {
   background: var(--monari-bg);
   color: var(--monari-ink);
   font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-synthesis-weight: none;
 }
 
 body {
@@ -486,9 +489,9 @@ a {
   .monari-page-title {
     margin: 0;
     font-size: 22px;
-    line-height: 1.15;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+    line-height: 1.22;
+    font-weight: 800;
+    letter-spacing: -0.025em;
     color: var(--monari-ink);
   }
 
@@ -503,9 +506,9 @@ a {
   .monari-section-title {
     margin: 0;
     font-size: 17px;
-    line-height: 1.25;
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    line-height: 1.32;
+    font-weight: 750;
+    letter-spacing: -0.015em;
     color: var(--monari-ink);
   }
 
@@ -513,15 +516,15 @@ a {
     margin: 0;
     font-size: 22px;
     line-height: 1.2;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-weight: 750;
+    letter-spacing: -0.02em;
     color: var(--monari-ink);
   }
 
   .monari-meta {
     margin: 0;
     font-size: 12px;
-    line-height: 1.45;
+    line-height: 1.55;
     font-weight: 600;
     color: var(--monari-ink-muted);
   }
@@ -572,9 +575,9 @@ a {
     padding: 0 20px;
     border-radius: 16px;
     font-size: 15px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.02em;
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
     text-decoration: none;
     transition:
       background-color 0.15s ease,

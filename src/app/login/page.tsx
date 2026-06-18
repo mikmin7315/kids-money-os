@@ -18,14 +18,14 @@ export default async function LoginPage({
       <div className="w-full space-y-5">
         <header className="px-1">
           <div className="mb-5 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--monari-hero)] text-lg font-black text-white shadow-[var(--monari-shadow-soft)]">M</div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--monari-hero)] text-lg font-extrabold text-white shadow-[var(--monari-shadow-soft)]">M</div>
             <div>
-              <p className="text-base font-extrabold tracking-tight text-[var(--monari-ink)]">Monari</p>
+              <p className="text-base font-bold tracking-[-0.01em] text-[var(--monari-ink)]">Monari</p>
               <p className="text-xs font-semibold text-[var(--monari-ink-muted)]">우리 가족 금융 습관</p>
             </div>
           </div>
-          <p className="mb-2 text-xs font-extrabold tracking-[0.14em] text-[var(--monari-primary)]">PARENT ACCOUNT</p>
-          <h1 className="text-[30px] font-black leading-[1.2] tracking-[-0.04em] text-[var(--monari-ink)]">
+          <p className="mb-2 text-xs font-bold tracking-[0.11em] text-[var(--monari-primary)]">PARENT ACCOUNT</p>
+          <h1 className="text-[29px] font-extrabold leading-[1.28] tracking-[-0.025em] text-[var(--monari-ink)]">
             아이의 좋은 금융 습관,<br />오늘부터 함께 만들어요.
           </h1>
           <p className="mt-3 text-sm leading-6 text-[var(--monari-ink-soft)]">

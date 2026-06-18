@@ -92,11 +92,11 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
             </Link>
           ) : <span className="h-10 w-10" aria-hidden="true" />}
           <div className="text-center">
-            <p className="text-[11px] font-700 tracking-[0.16em] text-white/45">MONARI PASSBOOK</p>
-            <h1 className="mt-0.5 text-[15px] font-800">{child.name}의 통장</h1>
+            <p className="text-[11px] font-600 tracking-[0.12em] text-white/48">MONARI PASSBOOK</p>
+            <h1 className="mt-0.5 text-[15px] font-700 leading-5">{child.name}의 통장</h1>
           </div>
           <div
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f06432] text-[15px] font-900 shadow-[0_6px_16px_rgba(240,100,50,0.35)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f06432] text-[15px] font-800 shadow-[0_6px_16px_rgba(240,100,50,0.35)]"
             aria-label={`${child.name} 프로필`}
             role="img"
           >
@@ -109,7 +109,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
             <WalletCards className="h-4 w-4" />
             <p className="text-[13px] font-700">지금 쓸 수 있는 돈</p>
           </div>
-          <p className="mt-2 text-[45px] font-900 leading-none tracking-[-0.06em] tabular-nums">
+          <p className="mt-2 text-[42px] font-800 leading-none tracking-[-0.03em] tabular-nums">
             {formatWon(summary.wallet.balance)}
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -128,9 +128,9 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-[#ffd166]" />
-              <p className="text-[13px] font-800">오늘의 약속</p>
+              <p className="text-[13px] font-700">오늘의 약속</p>
             </div>
-            <p className="mt-3 text-[18px] font-900 leading-tight">
+            <p className="mt-3 text-[18px] font-800 leading-[1.28]">
               {todayTotal === 0
                 ? "오늘 등록된 약속이 없어요"
                 : remaining > 0
@@ -173,17 +173,17 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
             }}
           >
             <span className="absolute inset-[8px] flex flex-col items-center justify-center rounded-full bg-[#302b68]">
-              <strong className="text-[25px] font-900 leading-none">{todayDone}/{todayTotal}</strong>
+              <strong className="text-[25px] font-800 leading-none tracking-[-0.02em]">{todayDone}/{todayTotal}</strong>
               <span className="mt-1 text-[10px] font-700 text-white/45">약속 완료</span>
             </span>
           </Link>
         </div>
 
         <div className="relative mt-3 grid grid-cols-2 gap-2.5">
-          <Link href="#today-promises" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-white text-[14px] font-900 text-[#282458] shadow-[0_8px_22px_rgba(0,0,0,0.13)]">
+          <Link href="#today-promises" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-white text-[14px] font-700 text-[#282458] shadow-[0_8px_22px_rgba(0,0,0,0.13)]">
             <Check className="h-4 w-4" strokeWidth={3} /> 약속 체크하기
           </Link>
-          <Link href="#save-form" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-[#f06432] text-[14px] font-900 text-white shadow-[0_10px_24px_rgba(240,100,50,0.34)]">
+          <Link href="#save-form" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-[#f06432] text-[14px] font-700 text-white shadow-[0_10px_24px_rgba(240,100,50,0.34)]">
             <PiggyBank className="h-4 w-4" /> 저금하기
           </Link>
         </div>
@@ -228,10 +228,10 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
                     <li key={transaction.id} className={`flex items-center gap-3 px-4 py-3.5 ${index < childTx.length - 1 ? "border-b border-[var(--monari-line)]" : ""}`}>
                       <TransactionIcon type={transaction.type} />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[14px] font-800 text-[var(--monari-ink)]">{transactionLabel(transaction.type, transaction.memo)}</p>
+                        <p className="truncate text-[14px] font-700 leading-5 text-[var(--monari-ink)]">{transactionLabel(transaction.type, transaction.memo)}</p>
                         <p className="mt-0.5 text-[11px] text-[var(--monari-ink-muted)]">{relativeDate(transaction.date, today)}</p>
                       </div>
-                      <p className={`shrink-0 text-[14px] font-900 tabular-nums ${minus ? "text-[var(--monari-ink)]" : "text-[var(--monari-plus)]"}`}>
+                      <p className={`shrink-0 text-[14px] font-800 tracking-[-0.01em] tabular-nums ${minus ? "text-[var(--monari-ink)]" : "text-[var(--monari-plus)]"}`}>
                         {minus ? "-" : "+"}{formatWon(transaction.amount)}
                       </p>
                     </li>
@@ -251,7 +251,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
 function SectionHeading({ title, actionHref, actionLabel }: { title: string; actionHref?: string; actionLabel?: string }) {
   return (
     <div className="mb-3 flex items-center justify-between">
-      <h2 className="text-[17px] font-900 tracking-tight text-[var(--monari-ink)]">{title}</h2>
+      <h2 className="text-[17px] font-800 tracking-[-0.01em] text-[var(--monari-ink)]">{title}</h2>
       {actionHref && (
         <Link href={actionHref} prefetch={false} className="text-[12px] font-800 text-[var(--monari-ink-muted)]">
           {actionLabel} <ArrowRight className="inline h-3 w-3" />
@@ -272,7 +272,7 @@ function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: 
     <div className="min-w-0 rounded-[24px] border border-white/70 bg-white p-4 shadow-[0_10px_24px_rgba(23,24,28,0.06)]">
       <span className={`flex h-9 w-9 items-center justify-center rounded-full ${tones[tone]} [&>svg]:h-4 [&>svg]:w-4`}>{icon}</span>
       <p className="mt-3 text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>
-      <p className="mt-1 text-[17px] font-900 tracking-tight text-[var(--monari-ink)] tabular-nums">{value}</p>
+      <p className="mt-1 text-[17px] font-800 tracking-[-0.01em] text-[var(--monari-ink)] tabular-nums">{value}</p>
     </div>
   );
 }
@@ -282,7 +282,7 @@ function FormSection({ id, title, icon, children }: { id: string; title: string;
     <section id={id} className="mb-6 scroll-mt-4">
       <div className="mb-3 flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eeeaff] text-[#5547d7]">{icon}</span>
-        <h2 className="text-[17px] font-900 tracking-tight text-[var(--monari-ink)]">{title}</h2>
+        <h2 className="text-[17px] font-800 tracking-[-0.01em] text-[var(--monari-ink)]">{title}</h2>
       </div>
       <div className="rounded-[26px] border border-white/70 bg-white p-5 shadow-[0_10px_26px_rgba(23,24,28,0.07)]">{children}</div>
     </section>
