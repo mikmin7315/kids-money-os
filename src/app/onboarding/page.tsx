@@ -20,13 +20,13 @@ export default async function OnboardingPage() {
           <div className="relative z-10">
             <div className="mb-12 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-lg font-black text-[var(--monari-hero)]">M</div>
-                <span className="text-lg font-extrabold tracking-tight text-white">Monari</span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-[var(--monari-hero)]">M</div>
+                <span className="text-lg font-bold tracking-[-0.01em] text-white">Monari</span>
               </div>
               <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white/90">부모와 아이가 함께</span>
             </div>
-            <p className="mb-3 text-xs font-extrabold tracking-[0.18em] text-white/70">MONEY HABITS FOR KIDS</p>
-            <h1 className="text-[36px] font-black leading-[1.14] tracking-[-0.05em] text-white">
+            <p className="mb-3 text-xs font-bold tracking-[0.13em] text-white/72">MONEY HABITS FOR KIDS</p>
+            <h1 className="text-[34px] font-extrabold leading-[1.22] tracking-[-0.03em] text-white">
               돈을 주는 것을 넘어,<br />돈 쓰는 힘을 길러주세요.
             </h1>
             <p className="mt-5 max-w-sm text-sm leading-6 text-white/80">
@@ -36,7 +36,7 @@ export default async function OnboardingPage() {
         </section>
 
         <section className="px-5 py-6 sm:px-7 sm:py-7">
-          <h2 className="text-lg font-extrabold tracking-tight text-[var(--monari-ink)]">한눈에 이해하고, 함께 결정해요</h2>
+          <h2 className="text-lg font-bold tracking-[-0.01em] text-[var(--monari-ink)]">한눈에 이해하고, 함께 결정해요</h2>
           <div className="mt-4 space-y-2.5">
             {features.map(({ icon: Icon, title, body }) => (
               <div key={title} className="flex items-start gap-3 rounded-2xl border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-4">
