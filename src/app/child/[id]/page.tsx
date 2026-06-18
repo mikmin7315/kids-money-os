@@ -66,8 +66,8 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
     .slice(0, 4);
 
   return (
-    <div className="mx-auto min-h-screen max-w-[440px] overflow-hidden bg-[#f4f5f8] shadow-[0_0_60px_rgba(23,24,28,0.14)]">
-      <section className="relative overflow-hidden bg-[#23204f] px-4 pb-8 pt-[calc(18px+env(safe-area-inset-top))] text-white">
+    <div className="mx-auto min-h-screen max-w-[460px] overflow-hidden bg-[#f7f4ee] shadow-[0_0_70px_rgba(23,24,28,0.16)]">
+      <section className="relative overflow-hidden bg-[linear-gradient(155deg,#211d59_0%,#34308c_58%,#191648_100%)] px-4 pb-8 pt-[calc(18px+env(safe-area-inset-top))] text-white">
         <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#6857ff]/55 blur-2xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-20 h-52 w-52 rounded-full bg-[#f06432]/20 blur-3xl" />
 
@@ -124,7 +124,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
           </div>
         </div>
 
-        <div className="relative mt-7 grid grid-cols-[1fr_112px] gap-3 rounded-[24px] border border-white/10 bg-white/[0.08] p-4 backdrop-blur-sm">
+        <div className="relative mt-7 grid grid-cols-[1fr_112px] gap-3 rounded-[28px] border border-white/14 bg-white/[0.10] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-sm">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-[#ffd166]" />
@@ -180,16 +180,16 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
         </div>
 
         <div className="relative mt-3 grid grid-cols-2 gap-2.5">
-          <Link href="#today-promises" className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white text-[13px] font-900 text-[#282458]">
+          <Link href="#today-promises" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-white text-[14px] font-900 text-[#282458] shadow-[0_8px_22px_rgba(0,0,0,0.13)]">
             <Check className="h-4 w-4" strokeWidth={3} /> 약속 체크하기
           </Link>
-          <Link href="#save-form" className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-[#f06432] text-[13px] font-900 text-white shadow-[0_8px_20px_rgba(240,100,50,0.28)]">
+          <Link href="#save-form" className="flex h-[58px] items-center justify-center gap-2 rounded-[20px] bg-[#f06432] text-[14px] font-900 text-white shadow-[0_10px_24px_rgba(240,100,50,0.34)]">
             <PiggyBank className="h-4 w-4" /> 저금하기
           </Link>
         </div>
       </section>
 
-      <main className="relative -mt-1 rounded-t-[30px] bg-[#f4f5f8] px-4 pb-36 pt-6">
+      <main className="relative -mt-1 rounded-t-[34px] bg-[#f7f4ee] px-4 pb-36 pt-6">
         <SectionHeading title="이번 달 흐름" />
         <div className="mb-7 grid grid-cols-2 gap-2.5">
           <FlowCard icon={<Landmark />} label="받은 용돈" value={formatWon(totalAllowance)} tone="violet" />
@@ -217,7 +217,7 @@ export default async function ChildDetailPage({ params }: { params: Promise<{ id
 
         <section className="mb-7">
           <SectionHeading title="최근 내역" actionHref="/records" actionLabel="전체 보기" />
-          <div className="overflow-hidden rounded-[22px] border border-[var(--monari-line)] bg-white shadow-[var(--monari-shadow-card)]">
+          <div className="overflow-hidden rounded-[26px] border border-white/70 bg-white shadow-[0_10px_26px_rgba(23,24,28,0.07)]">
             {childTx.length === 0 ? (
               <p className="px-5 py-8 text-center text-[13px] text-[var(--monari-ink-muted)]">아직 거래 내역이 없어요.</p>
             ) : (
@@ -269,7 +269,7 @@ function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: 
     orange: "bg-[#fff0e9] text-[#d95d2d]",
   };
   return (
-    <div className="min-w-0 rounded-[20px] border border-[var(--monari-line)] bg-white p-4 shadow-[var(--monari-shadow-card)]">
+    <div className="min-w-0 rounded-[24px] border border-white/70 bg-white p-4 shadow-[0_10px_24px_rgba(23,24,28,0.06)]">
       <span className={`flex h-9 w-9 items-center justify-center rounded-full ${tones[tone]} [&>svg]:h-4 [&>svg]:w-4`}>{icon}</span>
       <p className="mt-3 text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>
       <p className="mt-1 text-[17px] font-900 tracking-tight text-[var(--monari-ink)] tabular-nums">{value}</p>
@@ -284,7 +284,7 @@ function FormSection({ id, title, icon, children }: { id: string; title: string;
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eeeaff] text-[#5547d7]">{icon}</span>
         <h2 className="text-[17px] font-900 tracking-tight text-[var(--monari-ink)]">{title}</h2>
       </div>
-      <div className="rounded-[22px] border border-[var(--monari-line)] bg-white p-5 shadow-[var(--monari-shadow-card)]">{children}</div>
+      <div className="rounded-[26px] border border-white/70 bg-white p-5 shadow-[0_10px_26px_rgba(23,24,28,0.07)]">{children}</div>
     </section>
   );
 }

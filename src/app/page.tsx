@@ -35,33 +35,35 @@ export default async function HomePage() {
 
   return (
     <MobileAppShell title="가족 금융 홈" subtitle={`${dashboard.parent.name}님, 안녕하세요`}>
-      <section className="mb-5 overflow-hidden rounded-[24px] bg-[linear-gradient(145deg,#0d326c_0%,#123f82_55%,#0b2d63_100%)] p-5 text-white shadow-[0_14px_32px_rgba(13,50,108,0.24)]">
-        <p className="text-[17px] font-800 tracking-tight">
+      <section className="relative mb-5 overflow-hidden rounded-[30px] bg-[linear-gradient(145deg,#17194b_0%,#28327f_56%,#111d4f_100%)] p-5 text-white shadow-[0_18px_42px_rgba(23,25,75,0.26)]">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-44 w-44 rounded-full bg-[var(--monari-primary)]/20 blur-3xl" />
+        <p className="relative text-[17px] font-900 tracking-tight">
           {primary ? `${primary.child.name}의 통장` : "가족 통장 시작하기"}
         </p>
         {primary ? (
           <>
-            <p className="mt-5 text-center text-[38px] font-900 leading-none tracking-[-0.05em] tabular-nums">
+            <p className="relative mt-6 text-center text-[42px] font-900 leading-none tracking-[-0.06em] tabular-nums">
               {formatWon(primary.wallet.balance)}
             </p>
-            <p className="mt-3 text-center text-[14px] font-600 text-white/75">
+            <p className="relative mt-3 text-center text-[14px] font-700 text-white/72">
               {primary.child.name}의 현재 사용 가능 금액
             </p>
           </>
         ) : (
-          <p className="mt-5 text-center text-[22px] font-800">아이 프로필을 등록해주세요</p>
+          <p className="relative mt-5 text-center text-[22px] font-900">아이 프로필을 등록해주세요</p>
         )}
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <div className="relative mt-6 grid grid-cols-2 gap-3">
           <Link
             href={totalPending > 0 ? "/approvals" : "/behaviors"}
-            className="flex h-14 items-center justify-center rounded-[15px] bg-[var(--monari-primary)] text-[15px] font-800 text-white transition active:scale-[0.98]"
+            className="flex h-14 items-center justify-center rounded-[18px] bg-[var(--monari-primary)] text-[15px] font-900 text-white shadow-[0_10px_24px_rgba(240,100,50,0.28)] transition active:scale-[0.98]"
           >
             {totalPending > 0 ? `요청 ${totalPending}건 확인` : "약속 만들기"}
           </Link>
           <Link
             href="/records"
-            className="flex h-14 items-center justify-center rounded-[15px] bg-white text-[15px] font-800 text-[#0d326c] transition active:scale-[0.98]"
+            className="flex h-14 items-center justify-center rounded-[18px] bg-white/94 text-[15px] font-900 text-[#17194b] shadow-[0_8px_22px_rgba(0,0,0,0.12)] transition active:scale-[0.98]"
           >
             금융 기록 보기
           </Link>
@@ -75,11 +77,16 @@ export default async function HomePage() {
             {dashboard.children.map((summary) => (
               <Link key={summary.child.id} href={`/child/${summary.child.id}`} className="monari-card block p-5 transition active:scale-[0.99]">
                 <div className="flex items-center justify-between gap-3">
-                  <div>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#eeeaff,#fff0e9)] text-[17px] font-900 text-[var(--monari-hero)]">
+                      {summary.child.name[0]}
+                    </span>
+                    <div className="min-w-0">
                     <p className="text-[16px] font-800 text-[var(--monari-ink)]">{summary.child.name}</p>
                     <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">
                       저축 {formatWon(summary.wallet.savingsBalance)}
                     </p>
+                    </div>
                   </div>
                   <div className="text-right">
                     <p className="text-[18px] font-900 text-[var(--monari-ink)]">{formatWon(summary.wallet.balance)}</p>
