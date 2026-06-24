@@ -71,9 +71,14 @@ export default async function SettingsPage() {
                         <p className="truncate text-lg font-black text-[var(--monari-ink)]">{child.name}</p>
                         <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">{child.nickname} · {child.birthYear}년생</p>
                       </div>
-                      <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
-                        통장 보기 <ChevronRight size={14} aria-hidden="true" />
-                      </Link>
+                      <div className="flex flex-col gap-1.5">
+                        <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
+                          통장 보기 <ChevronRight size={14} aria-hidden="true" />
+                        </Link>
+                        <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[#f5f3ff] px-3 text-xs font-bold text-[#5b21b6]">
+                          이자 확정 🔒
+                        </Link>
+                      </div>
                     </div>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <MetricBox label="기본 이자율" value={policy ? formatPercent(policy.baseInterestRate) : "설정 전"} />

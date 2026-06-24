@@ -24,12 +24,12 @@ export default async function LoginPage({
               <p className="text-xs font-semibold text-[var(--monari-ink-muted)]">우리 가족 금융 습관</p>
             </div>
           </div>
-          <p className="mb-2 text-xs font-bold tracking-[0.11em] text-[var(--monari-primary)]">PARENT ACCOUNT</p>
+          <p className="mb-2 text-xs font-bold tracking-[0.11em] text-[var(--monari-primary)]">어린이 금융교육 앱</p>
           <h1 className="text-[29px] font-extrabold leading-[1.28] tracking-[-0.025em] text-[var(--monari-ink)]">
-            아이의 좋은 금융 습관,<br />오늘부터 함께 만들어요.
+            약속을 지키면<br />이자가 올라가요. 🎯
           </h1>
           <p className="mt-3 text-sm leading-6 text-[var(--monari-ink-soft)]">
-            용돈부터 저축, 약속 보상까지 한곳에서 투명하게 관리하세요.
+            용돈에 이자를 붙여주고, 좋은 습관엔 보상을 — 아이가 스스로 돈을 관리하는 법을 배워요.
           </p>
         </header>
 

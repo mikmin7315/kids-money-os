@@ -21,18 +21,15 @@ export default async function ApprovalsPage() {
   );
 
   const total = pendingBehaviorLogs.length + pendingBorrows.length;
-  const headline = total > 0 ? `아이가 기다리고 있어요 ${total}건` : "지금은 확인할 내용이 없어요";
+  const headline = total > 0 ? `${total}건 확인이 필요해요` : "모두 확인 완료!";
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
-      <div className="monari-hero mb-4">
-        <p className="relative mb-3 text-[13px] font-600 leading-5 text-white/75">
-          승인하면 보상과 잔액에 바로 반영됩니다. 아이와 조건을 확인한 뒤 처리해 주세요.
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
-          <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
-          <HeroPill label="상환 중" value={`${activeBorrows.length}건`} />
+      <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
+          <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="#7c3aed" />
+          <StatItem label="미리쓰기" value={pendingBorrows.length} color="#d97706" />
+          <StatItem label="상환 중" value={activeBorrows.length} color="#059669" />
         </div>
       </div>
 
@@ -41,9 +38,9 @@ export default async function ApprovalsPage() {
         <SectionTitle>약속 확인 대기</SectionTitle>
         {pendingBehaviorLogs.length === 0 ? (
           <div className="monari-card mt-3 px-5 py-6 text-center">
-            <p className="text-[14px] font-700 text-[var(--monari-ink)]">확인할 약속이 없어요</p>
+            <p className="text-[17px] font-700 text-[var(--monari-ink)]">확인할 약속이 없어요</p>
             <p className="monari-meta mt-1">아이의 다음 약속 활동을 기다리고 있어요.</p>
-            <Link href="/behaviors" className="monari-btn-ghost mt-4 h-10 px-4 text-[13px]">약속 관리하기</Link>
+            <Link href="/behaviors" className="monari-btn-ghost mt-4 h-11 px-5 text-[15px]">약속 관리하기</Link>
           </div>
         ) : (
           <div className="space-y-3 mt-3">
@@ -54,15 +51,31 @@ export default async function ApprovalsPage() {
                 <div key={log.id} className="monari-card p-5">
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
-                      <p className="text-[12px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
-                      <p className="text-[17px] font-800 text-[var(--monari-ink)] leading-tight">{rule?.title}</p>
+                      <p className="text-[14px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
+                      <p className="text-[19px] font-800 text-[var(--monari-ink)] leading-tight">{rule?.title}</p>
                       {rule?.description && (
-                        <p className="mt-1 text-[13px] text-[var(--monari-ink-soft)]">{rule.description}</p>
+                        <p className="mt-1 text-[15px] text-[var(--monari-ink-soft)]">{rule.description}</p>
                       )}
                       {log.memo && (
-                        <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[13px] italic text-[var(--monari-ink-soft)]">
+                        <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[15px] italic text-[var(--monari-ink-soft)]">
                           &ldquo;{log.memo}&rdquo;
                         </p>
+                      )}
+                      {(log as { photo_url?: string; photo_taken_at?: string }).photo_url && (
+                        <div className="mt-3 overflow-hidden rounded-[14px]">
+                          <div className="relative">
+                            <img
+                              src={(log as { photo_url?: string }).photo_url}
+                              alt="약속 인증 사진"
+                              className="w-full max-h-56 object-cover"
+                            />
+                            {(log as { photo_taken_at?: string }).photo_taken_at && (
+                              <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-700 text-white">
+                                📅 {new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date((log as { photo_taken_at?: string }).photo_taken_at!))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       )}
                     </div>
                     <span className="shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]">
@@ -90,7 +103,7 @@ export default async function ApprovalsPage() {
         <SectionTitle>미리쓰기 확인 대기</SectionTitle>
         {pendingBorrows.length === 0 ? (
           <div className="monari-card mt-3 px-5 py-6 text-center">
-            <p className="text-[14px] font-700 text-[var(--monari-ink)]">미리쓰기 요청이 없어요</p>
+            <p className="text-[17px] font-700 text-[var(--monari-ink)]">미리쓰기 요청이 없어요</p>
             <p className="monari-meta mt-1">새 요청이 오면 사용 목적과 상환 조건을 확인할 수 있어요.</p>
           </div>
         ) : (
@@ -106,7 +119,7 @@ export default async function ApprovalsPage() {
                         {formatWon(request.requestedAmount)} 미리 쓰고 싶어요
                       </p>
                       {request.purpose && (
-                        <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[13px] italic text-[var(--monari-ink-soft)]">
+                        <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[15px] italic text-[var(--monari-ink-soft)]">
                           &ldquo;{request.purpose}&rdquo;
                         </p>
                       )}
@@ -177,20 +190,20 @@ export default async function ApprovalsPage() {
   );
 }
 
-function HeroPill({ label, value }: { label: string; value: string }) {
+function StatItem({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-2 gap-0.5">
-      <p className="text-[11px] font-600 text-white/70">{label}</p>
-      <p className="text-[14px] font-800 text-white">{value}</p>
+    <div className="flex flex-col items-center py-5 gap-1.5">
+      <p style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>{label}</p>
+      <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}건</p>
     </div>
   );
 }
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] border border-[var(--monari-line)] bg-[rgba(43,43,43,0.03)] p-3">
-      <p className="monari-meta">{label}</p>
-      <p className="text-[15px] font-800 text-[var(--monari-ink)] mt-1">{value}</p>
+    <div className="rounded-[18px] bg-[#f5f3ff] p-4">
+      <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
+      <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 18, fontWeight: 800 }}>{value}</p>
     </div>
   );
 }

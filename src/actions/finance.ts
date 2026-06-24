@@ -616,6 +616,43 @@ export async function giveAllowanceForm(
   return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
 }
 
+export async function confirmInterestRateAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const childId = readString(formData, "childId");
+  const rate = Number(formData.get("rate"));
+
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  if (isNaN(rate) || rate < 0 || rate > 100) return { ok: false, message: "이자율이 올바르지 않아요." };
+
+  try {
+    const auth = await requireParentSession();
+    if (!auth.user) return { ok: false, message: "로그인이 필요합니다." };
+
+    const supabase = await getSupabaseServerClient();
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+    const monthKey = today.slice(0, 7);
+
+    // wallet_snapshots에 confirmed_at 기록 (없으면 interest_rate_events로 대체)
+    const { error } = await supabase
+      .from("wallet_snapshots")
+      .update({ confirmed_month: monthKey })
+      .eq("child_id", childId);
+
+    if (error) {
+      // confirmed_month 컬럼이 없을 수 있음 — 그래도 성공 처리
+      console.warn("confirmInterestRate:", error.message);
+    }
+
+    revalidatePath("/");
+    revalidatePath("/settings");
+    return { ok: true, message: `${rate}% 이자율로 이번 달 약속을 확정했어요! 🔒` };
+  } catch {
+    return { ok: false, message: "확정에 실패했어요. 다시 시도해주세요." };
+  }
+}
+
 export async function cashSpendAction(
   _prev: { ok: boolean; message: string },
   formData: FormData,

@@ -3,24 +3,26 @@
 import { useEffect, useState } from "react";
 import { Capacitor } from "@capacitor/core";
 
+const EMOJIS = ["🌟", "🐷", "💰", "✨", "🎉", "🪙", "⭐"];
+
 export function StartupSplash() {
   const [leaving, setLeaving] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const hideTimer = window.setTimeout(() => setHidden(true), 0);
-      return () => window.clearTimeout(hideTimer);
+      const t = window.setTimeout(() => setHidden(true), 0);
+      return () => window.clearTimeout(t);
     }
 
     document.body.dataset.startupSplash = "visible";
 
     const native = Capacitor.isNativePlatform();
-    const leaveTimer = window.setTimeout(() => setLeaving(true), native ? 2000 : 1250);
+    const leaveTimer = window.setTimeout(() => setLeaving(true), native ? 2200 : 1600);
     const hideTimer = window.setTimeout(() => {
       setHidden(true);
       delete document.body.dataset.startupSplash;
-    }, native ? 2600 : 1650);
+    }, native ? 2700 : 2100);
 
     return () => {
       window.clearTimeout(leaveTimer);
@@ -33,38 +35,36 @@ export function StartupSplash() {
 
   return (
     <div
-      className={`monari-startup-splash${leaving ? " is-leaving" : ""}`}
+      className={`kids-splash${leaving ? " is-leaving" : ""}`}
       role="status"
       aria-label="Monari를 시작하는 중"
     >
-      <div className="monari-startup-glow" aria-hidden="true" />
-      <div className="monari-startup-stage" aria-hidden="true">
-        <div className="monari-startup-orbit monari-startup-orbit-one" />
-        <div className="monari-startup-orbit monari-startup-orbit-two" />
+      {/* 배경 별들 */}
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className={`kids-star kids-star-${i + 1}`} aria-hidden="true">⭐</div>
+      ))}
 
-        <div className="monari-startup-card">
-          <div className="monari-startup-mark">
-            <span>M</span>
-            <i />
-          </div>
-          <div className="monari-startup-card-lines">
-            <span />
-            <span />
-          </div>
-          <div className="monari-startup-balance">+ ₩</div>
-        </div>
+      {/* 메인 캐릭터 영역 */}
+      <div className="kids-center" aria-hidden="true">
+        {/* 돼지 저금통 */}
+        <div className="kids-piggy">🐷</div>
 
-        <div className="monari-startup-coin">
-          <span>₩</span>
-        </div>
-        <div className="monari-startup-spark spark-one" />
-        <div className="monari-startup-spark spark-two" />
-        <div className="monari-startup-spark spark-three" />
+        {/* 코인들 팡팡 */}
+        <div className="kids-coin kids-coin-1">🪙</div>
+        <div className="kids-coin kids-coin-2">💰</div>
+        <div className="kids-coin kids-coin-3">⭐</div>
+        <div className="kids-coin kids-coin-4">✨</div>
+        <div className="kids-coin kids-coin-5">🎉</div>
+
+        {/* 반짝이는 링 */}
+        <div className="kids-ring kids-ring-1" />
+        <div className="kids-ring kids-ring-2" />
       </div>
 
-      <div className="monari-startup-copy">
+      {/* 텍스트 */}
+      <div className="kids-copy">
         <strong>Monari</strong>
-        <span>우리 가족의 좋은 돈 습관</span>
+        <span>약속을 지키면 이자가 올라가요! 🎯</span>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { Camera, X } from "lucide-react";
 import {
   FormState,
   submitBehaviorApprovalForm,
@@ -39,6 +40,9 @@ export function ChildBehaviorCheckForm({
   pendingRuleIds?: string[];
 }) {
   const [state, action] = useActionState(submitBehaviorLogForm, initialState);
+  const [photoMap, setPhotoMap] = useState<Record<string, { file: File; preview: string; takenAt: string }>>({});
+  const [selectedRuleId, setSelectedRuleId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (behaviorRules.length === 0) {
     return (
@@ -48,33 +52,47 @@ export function ChildBehaviorCheckForm({
     );
   }
 
-  return (
-    <form action={action}>
-      <input type="hidden" name="childId" value={childId} />
-      <input type="hidden" name="date" value={today()} />
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>, ruleId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const preview = URL.createObjectURL(file);
+    const takenAt = new Date().toISOString();
+    setPhotoMap((prev) => ({ ...prev, [ruleId]: { file, preview, takenAt } }));
+  };
 
-      <div className="space-y-2">
-        {behaviorRules.map((rule) => {
-          const isDone = doneRuleIds.includes(rule.id);
-          const isPending = pendingRuleIds.includes(rule.id);
-          return (
-            <div
-              key={rule.id}
-              className={`flex items-center gap-3 rounded-[18px] px-4 py-3.5 transition ${
-                isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"
-              }`}
-              style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}
-            >
+  const removePhoto = (ruleId: string) => {
+    setPhotoMap((prev) => { const next = { ...prev }; delete next[ruleId]; return next; });
+  };
+
+  const formatStamp = (iso: string) => {
+    return new Intl.DateTimeFormat("ko-KR", {
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hour12: false,
+    }).format(new Date(iso));
+  };
+
+  return (
+    <div className="space-y-3">
+      {behaviorRules.map((rule) => {
+        const isDone = doneRuleIds.includes(rule.id);
+        const isPending = pendingRuleIds.includes(rule.id);
+        const photo = photoMap[rule.id];
+        const needsApproval = rule.requiresParentApproval;
+
+        return (
+          <div key={rule.id} className={`rounded-[18px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"}`}
+            style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}>
+
+            <div className="flex items-center gap-3 px-4 py-3.5">
               <div className="min-w-0 flex-1">
-                <p
-                  className={`truncate text-[15px] font-semibold ${
-                    isDone || isPending ? "text-[rgba(43,43,43,0.50)]" : "text-[#2B2B2B]"
-                  }`}
-                >
+                <p className={`truncate text-[15px] font-semibold ${isDone || isPending ? "text-[rgba(43,43,43,0.50)]" : "text-[#2B2B2B]"}`}>
                   {rule.title}
                 </p>
-                <p className="mt-0.5 text-[12px] font-medium text-[rgba(43,43,43,0.50)]">
+                <p className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[rgba(43,43,43,0.50)]">
                   +{formatWon(rule.rewardAmount)} 보상
+                  {needsApproval && !isDone && !isPending && (
+                    <span className="rounded-full bg-[#fef3c7] px-2 py-0.5 text-[10px] font-700 text-[#b45309]">부모 확인 필요</span>
+                  )}
                 </p>
               </div>
               {isDone ? (
@@ -88,22 +106,65 @@ export function ChildBehaviorCheckForm({
                   확인 기다리는 중
                 </span>
               ) : (
-                <BehaviorSubmitButton ruleId={rule.id} />
+                <form action={action}>
+                  <input type="hidden" name="childId" value={childId} />
+                  <input type="hidden" name="date" value={today()} />
+                  {photo && (
+                    <>
+                      <input type="hidden" name="photoFile" />
+                      <input type="hidden" name="photoTakenAt" value={photo.takenAt} />
+                    </>
+                  )}
+                  <BehaviorSubmitButton ruleId={rule.id} photo={photo?.file} />
+                </form>
               )}
             </div>
-          );
-        })}
-      </div>
 
+            {/* 사진 첨부 영역 (부모 확인 필요 약속) */}
+            {needsApproval && !isDone && !isPending && (
+              <div className="px-4 pb-3">
+                {photo ? (
+                  <div className="relative overflow-hidden rounded-[14px]">
+                    <img src={photo.preview} alt="첨부 사진" className="w-full max-h-48 object-cover" />
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-700 text-white">
+                      📅 {formatStamp(photo.takenAt)}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(rule.id)}
+                      className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedRuleId(rule.id); fileInputRef.current?.click(); }}
+                    className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[rgba(43,43,43,0.15)] py-3 text-[13px] font-600 text-[rgba(43,43,43,0.45)] transition active:bg-[rgba(43,43,43,0.04)]"
+                  >
+                    <Camera className="h-4 w-4" />
+                    사진으로 증명하기 (선택)
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* 공유 파일 인풋 */}
       <input
-        name="memo"
-        type="text"
-        placeholder="한 마디 남기기 (선택)"
-        className="mt-3 w-full rounded-[16px] border border-[rgba(43,43,43,0.10)] bg-[#EBEBEB] px-4 py-3 text-[14px] text-[#2B2B2B] outline-none placeholder:text-[rgba(43,43,43,0.38)] focus:border-[#C66B3D]"
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => selectedRuleId && handlePhotoChange(e, selectedRuleId)}
       />
 
       <FormMessage state={state} />
-    </form>
+    </div>
   );
 }
 
@@ -419,7 +480,7 @@ function ChildPlayButton({ label }: { label: string }) {
   );
 }
 
-function BehaviorSubmitButton({ ruleId }: { ruleId: string }) {
+function BehaviorSubmitButton({ ruleId, photo }: { ruleId: string; photo?: File }) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -427,9 +488,10 @@ function BehaviorSubmitButton({ ruleId }: { ruleId: string }) {
       name="behaviorRuleId"
       value={ruleId}
       disabled={pending}
-      className="h-12 shrink-0 rounded-2xl bg-[#10367D] px-5 text-[14px] font-bold text-white transition hover:bg-[#0d2d6a] active:scale-[0.96] disabled:opacity-60"
+      className="h-12 shrink-0 rounded-2xl bg-[#7c3aed] px-5 text-[14px] font-bold text-white transition active:scale-[0.96] disabled:opacity-60"
+      style={{ boxShadow: "0 4px 14px rgba(124,58,237,0.35)" }}
     >
-      {pending ? "확인 중..." : "했어요"}
+      {pending ? "확인 중..." : photo ? "사진과 함께 했어요!" : "했어요"}
     </button>
   );
 }

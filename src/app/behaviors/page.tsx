@@ -18,16 +18,11 @@ export default async function BehaviorsPage() {
 
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
-      {/* Hero */}
-      <div className="monari-hero mb-4">
-        <p className="text-[13px] font-700 text-white/70 mb-2">행동이 이자를 만들어요</p>
-        <p className="relative mb-4 max-w-[34ch] text-[13px] leading-5 text-white/80">
-          아이가 이해하기 쉬운 약속과 보상을 연결해 꾸준한 금융 습관을 만들어 보세요.
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
-          <HeroPill label="자동 완료" value={`${autoRules}개`} />
-          <HeroPill label="확인 필요" value={`${reviewRules}개`} />
+      <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
+          <StatItem label="전체 약속" value={activeRules.length} unit="개" color="#7c3aed" />
+          <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
+          <StatItem label="확인 필요" value={reviewRules} unit="개" color="#d97706" />
         </div>
       </div>
 
@@ -113,20 +108,20 @@ export default async function BehaviorsPage() {
   );
 }
 
-function HeroPill({ label, value }: { label: string; value: string }) {
+function StatItem({ label, value, unit = "건", color }: { label: string; value: number; unit?: string; color: string }) {
   return (
-    <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-2 gap-0.5">
-      <p className="text-[11px] font-600 text-white/70">{label}</p>
-      <p className="text-[14px] font-800 text-white">{value}</p>
+    <div className="flex flex-col items-center py-5 gap-1.5">
+      <p style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>{label}</p>
+      <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}{unit}</p>
     </div>
   );
 }
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] border border-[var(--monari-line)] bg-[rgba(43,43,43,0.03)] p-3">
-      <p className="monari-meta">{label}</p>
-      <p className="text-[15px] font-800 text-[var(--monari-ink)] mt-1">{value}</p>
+    <div className="rounded-[18px] bg-[#f5f3ff] p-3">
+      <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
+      <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
     </div>
   );
 }
