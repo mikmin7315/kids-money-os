@@ -1,4 +1,4 @@
-import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ShieldCheck, UserPlus } from "lucide-react";
+import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
@@ -129,6 +129,11 @@ export default async function SettingsPage() {
             <PiggyBank size={22} className="text-[var(--monari-hero)]" />
             <p className="text-sm font-extrabold text-[#4c1d95]">이자율 설정</p>
             <p className="text-xs text-[#7c3aed]/70">약속 기반 이자 설정</p>
+          </Link>
+          <Link href="/settings/interest-history" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+            <ReceiptText size={22} className="text-[#059669]" />
+            <p className="text-sm font-extrabold text-[#065f46]">이자 지급 내역</p>
+            <p className="text-xs text-[#059669]/70">월별 이자 기록 확인</p>
           </Link>
         </div>
       </section>

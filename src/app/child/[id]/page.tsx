@@ -84,12 +84,12 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 잔액 */}
         <div className="relative text-center mb-6">
           <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6 }}>내 돈</p>
-          <div className="flex items-end justify-center gap-1 leading-none">
+          <Link href={`${base}/balance`} className="flex items-end justify-center gap-1 leading-none transition active:opacity-80">
             <span className="tabular-nums text-white" style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em" }}>
               {formatWonParts(summary.wallet.balance).amount}
             </span>
             <span className="mb-3" style={{ fontSize: 26, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>원</span>
-          </div>
+          </Link>
           <div className="mt-4 flex justify-center gap-2 flex-wrap">
             {summary.wallet.currentInterestRate > 0 && (
               <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-4 py-1.5">
@@ -211,7 +211,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 최근 내역 */}
         <div className="mb-3 flex items-center justify-between">
           <KidSectionTitle>최근 내역</KidSectionTitle>
-          <Link href="/records" prefetch={false} style={{ fontSize: 14, fontWeight: 700, color: "#7c3aed" }}>
+          <Link href={`${base}/records`} prefetch={false} style={{ fontSize: 14, fontWeight: 700, color: "#7c3aed" }}>
             전체 보기 <ArrowRight className="inline h-3.5 w-3.5" />
           </Link>
         </div>
