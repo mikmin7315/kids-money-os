@@ -1,6 +1,7 @@
 import {
   InlineBehaviorDecisionForm,
   InlineBorrowDecisionForm,
+  InlineCashSpendDecisionForm,
 } from "@/components/finance/action-forms";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,14 +22,16 @@ export default async function ApprovalsPage() {
     (item) => item.status === "approved" || item.status === "partial"
   );
 
-  const total = pendingBehaviorLogs.length + pendingBorrows.length;
+  const pendingCashRequests = bundle.cashSpendRequests.filter((r) => r.status === "pending");
+  const total = pendingBehaviorLogs.length + pendingBorrows.length + pendingCashRequests.length;
   const headline = total > 0 ? `${total}건 확인이 필요해요` : "모두 확인 완료!";
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
       <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
+        <div className="grid grid-cols-4 divide-x divide-[#f3f4f6]">
           <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="#7c3aed" />
+          <StatItem label="현금 대기" value={pendingCashRequests.length} color="#dc2626" />
           <StatItem label="미리쓰기" value={pendingBorrows.length} color="#d97706" />
           <StatItem label="상환 중" value={activeBorrows.length} color="#059669" />
         </div>
@@ -94,6 +97,47 @@ export default async function ApprovalsPage() {
 
                   <div className="border-t border-[var(--monari-line)] pt-4">
                     <InlineBehaviorDecisionForm behaviorLogId={log.id} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Cash spend approvals */}
+      <section className="mb-4">
+        <SectionTitle>현금 사용 확인 대기</SectionTitle>
+        {pendingCashRequests.length === 0 ? (
+          <div className="monari-card mt-3 px-5 py-6 text-center">
+            <p className="text-[17px] font-700 text-[var(--monari-ink)]">확인할 현금 사용이 없어요</p>
+            <p className="monari-meta mt-1">아이가 현금을 쓰면 여기서 확인할 수 있어요.</p>
+          </div>
+        ) : (
+          <div className="space-y-3 mt-3">
+            {pendingCashRequests.map((req) => {
+              const child = bundle.children.find((c) => c.id === req.childId);
+              return (
+                <div key={req.id} className="monari-card p-5">
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-[14px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
+                      <p className="text-[19px] font-800 text-[var(--monari-ink)] leading-tight">
+                        {formatWon(req.amount)} 현금 썼어요
+                      </p>
+                      {req.memo && (
+                        <p className="mt-2 rounded-[14px] bg-[rgba(43,43,43,0.04)] px-3 py-2 text-[15px] italic text-[var(--monari-ink-soft)]">
+                          &ldquo;{req.memo}&rdquo;
+                        </p>
+                      )}
+                      <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">{req.spendDate}</p>
+                    </div>
+                    <span className="shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[#fff1f2] text-[#be123c]">
+                      확인 대기
+                    </span>
+                  </div>
+                  <div className="border-t border-[var(--monari-line)] pt-4">
+                    <InlineCashSpendDecisionForm requestId={req.id} />
                   </div>
                 </div>
               );

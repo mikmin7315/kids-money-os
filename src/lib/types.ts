@@ -116,6 +116,19 @@ export type BorrowRequest = {
   repaidAt?: string;
 };
 
+export type CashSpendRequest = {
+  id: string;
+  childId: string;
+  amount: number;
+  spendDate: string;
+  memo?: string;
+  status: "pending" | "approved" | "rejected";
+  reviewedBy?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
+  createdAt: string;
+};
+
 export type BorrowRepayment = {
   id: string;
   borrowRequestId: string;
