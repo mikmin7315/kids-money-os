@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Landmark, PiggyBank, ReceiptText, TrendingUp } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -8,31 +8,30 @@ import type { TransactionType } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-const TYPE_LABEL: Record<TransactionType, string> = {
-  allowance: "용돈",
-  reward: "약속 보상",
-  spend: "사용",
-  save: "저금",
-  unsave: "저금 해제",
-  borrow: "미리쓰기",
-  repay: "갚기",
-  interest: "이자",
-};
-
 const MINUS_TYPES: TransactionType[] = ["spend", "repay", "unsave"];
 
-function TxIcon({ type }: { type: TransactionType }) {
-  if (type === "save") return <PiggyBank className="h-4 w-4" />;
-  if (MINUS_TYPES.includes(type)) return <ReceiptText className="h-4 w-4" />;
-  if (type === "interest") return <TrendingUp className="h-4 w-4" />;
-  return <Landmark className="h-4 w-4" />;
+const TX_META: Record<TransactionType, { label: string; emoji: string; color: string; bg: string }> = {
+  allowance: { label: "용돈",      emoji: "💵", color: "#1d4ed8", bg: "#eff6ff" },
+  reward:    { label: "보상",      emoji: "🏅", color: "#7c3aed", bg: "#f5f3ff" },
+  interest:  { label: "이자",      emoji: "✨", color: "#059669", bg: "#f0fdf4" },
+  save:      { label: "저금",      emoji: "🐷", color: "#2563eb", bg: "#eff6ff" },
+  unsave:    { label: "저금 인출", emoji: "↩️", color: "#d97706", bg: "#fef3c7" },
+  spend:     { label: "사용",      emoji: "🛍️", color: "#be123c", bg: "#fff1f2" },
+  borrow:    { label: "미리쓰기",  emoji: "🤝", color: "#9f1239", bg: "#fecdd3" },
+  repay:     { label: "상환",      emoji: "💳", color: "#7c2d12", bg: "#ffedd5" },
+};
+
+function txLabel(type: TransactionType, memo?: string) {
+  const base = TX_META[type]?.label ?? type;
+  return memo && memo !== base ? memo : base;
 }
 
-function txColor(type: TransactionType) {
-  if (type === "save") return { bg: "#e9f2ff", text: "#2d67b2" };
-  if (MINUS_TYPES.includes(type)) return { bg: "#fff0e9", text: "#d95d2d" };
-  if (type === "interest") return { bg: "#f3e8ff", text: "#7c3aed" };
-  return { bg: "#e7f8ed", text: "#238b51" };
+function relativeDate(date: string, today: string) {
+  if (date === today) return "오늘";
+  const diff = Math.round((new Date(today).getTime() - new Date(date).getTime()) / 86400000);
+  if (diff === 1) return "어제";
+  if (diff < 7) return `${diff}일 전`;
+  return date.slice(5).replace("-", "월 ") + "일";
 }
 
 export default async function ChildRecordsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -47,104 +46,92 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
   const child = bundle.children.find((c) => c.id === id);
   if (!child) notFound();
 
-  const txs = bundle.moneyTransactions
-    .filter((t) => t.childId === id)
-    .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
-
-  // 날짜별 그룹핑
-  const groups = txs.reduce<Record<string, typeof txs>>((acc, tx) => {
-    (acc[tx.date] ??= []).push(tx);
-    return acc;
-  }, {});
-  const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
-
-  const totalIn = txs.filter((t) => !MINUS_TYPES.includes(t.type)).reduce((s, t) => s + t.amount, 0);
-  const totalOut = txs.filter((t) => MINUS_TYPES.includes(t.type)).reduce((s, t) => s + t.amount, 0);
-
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
 
+  const txs = bundle.moneyTransactions
+    .filter((t) => t.childId === id)
+    .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
+
+  const totalIn  = txs.filter((t) => !MINUS_TYPES.includes(t.type)).reduce((s, t) => s + t.amount, 0);
+  const totalOut = txs.filter((t) =>  MINUS_TYPES.includes(t.type)).reduce((s, t) => s + t.amount, 0);
+
+  const grouped: Record<string, typeof txs> = {};
+  for (const tx of txs) (grouped[tx.date] ??= []).push(tx);
+  const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+
   return (
-    <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+    <div className="detail-shell">
+      <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기
       </Link>
 
-      <div className="mb-5">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>돈 기록</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
-          📒 내 돈 기록
-        </h1>
+      <p className="detail-eyebrow">{child.name}의 통장</p>
+      <h1 className="detail-title">거래 내역</h1>
+
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#9ca3af", marginBottom: 6 }}>들어온 돈</p>
+          <p style={{ fontSize: 22, fontWeight: 900, color: "#059669", letterSpacing: "-0.02em" }} className="tabular-nums">
+            +{formatWon(totalIn)}
+          </p>
+        </div>
+        <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#9ca3af", marginBottom: 6 }}>나간 돈</p>
+          <p style={{ fontSize: 22, fontWeight: 900, color: "#be123c", letterSpacing: "-0.02em" }} className="tabular-nums">
+            -{formatWon(totalOut)}
+          </p>
+        </div>
       </div>
 
-      {/* 요약 */}
-      <div className="mb-5 grid grid-cols-2 gap-3">
-        <div className="rounded-[20px] bg-[#e7f8ed] p-4">
-          <p style={{ fontSize: 12, fontWeight: 600, color: "#238b51" }}>들어온 돈</p>
-          <p style={{ fontSize: 22, fontWeight: 900, color: "#065f46", marginTop: 4 }}>+{formatWon(totalIn)}</p>
-        </div>
-        <div className="rounded-[20px] bg-[#fff0e9] p-4">
-          <p style={{ fontSize: 12, fontWeight: 600, color: "#d95d2d" }}>나간 돈</p>
-          <p style={{ fontSize: 22, fontWeight: 900, color: "#9a3412", marginTop: 4 }}>-{formatWon(totalOut)}</p>
-        </div>
-      </div>
-
-      {/* 타임라인 */}
-      {sortedDates.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-          <p style={{ fontSize: 48, marginBottom: 12 }}>📭</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>아직 기록이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>용돈을 받으면 여기서 확인할 수 있어요!</p>
+      {txs.length === 0 ? (
+        <div className="detail-card" style={{ padding: "48px 20px", textAlign: "center" }}>
+          <p style={{ fontSize: 52, marginBottom: 14 }}>🌱</p>
+          <p style={{ fontSize: 20, fontWeight: 800, color: "#1a0533" }}>아직 거래 내역이 없어요</p>
+          <p style={{ fontSize: 15, fontWeight: 500, color: "#9ca3af", marginTop: 8 }}>
+            용돈을 받거나 쓰면 여기서 확인할 수 있어요.
+          </p>
         </div>
       ) : (
         <div className="space-y-5">
-          {sortedDates.map((date) => {
-            const label =
-              date === today
-                ? "오늘"
-                : date === new Date(new Date(today).setDate(new Date(today).getDate() - 1)).toISOString().slice(0, 10)
-                ? "어제"
-                : `${date.slice(5, 7)}월 ${date.slice(8)}일`;
-
-            return (
-              <div key={date}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af", marginBottom: 8 }}>{label}</p>
-                <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-                  {groups[date].map((tx, i) => {
-                    const isPlus = !MINUS_TYPES.includes(tx.type);
-                    const color = txColor(tx.type);
-                    return (
-                      <div
-                        key={tx.id}
-                        className="flex items-center gap-3 px-4 py-3.5"
-                        style={{ borderTop: i > 0 ? "1px solid #f3f4f6" : undefined }}
+          {dates.map((date) => (
+            <div key={date}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af", marginBottom: 8 }}>
+                {relativeDate(date, today)} · {date.slice(5).replace("-", "월 ")}일
+              </p>
+              <div className="detail-card" style={{ marginBottom: 0 }}>
+                {grouped[date].map((tx, i) => {
+                  const minus = MINUS_TYPES.includes(tx.type);
+                  const meta = TX_META[tx.type] ?? { emoji: "•", color: "#374151", bg: "#f3f4f6", label: tx.type };
+                  return (
+                    <div
+                      key={tx.id}
+                      className="detail-row"
+                      style={{ borderBottom: i === grouped[date].length - 1 ? "none" : undefined }}
+                    >
+                      <span
+                        className="flex items-center justify-center rounded-[14px]"
+                        style={{ width: 44, height: 44, background: meta.bg, fontSize: 20, flexShrink: 0 }}
                       >
-                        <span
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                          style={{ background: color.bg, color: color.text }}
-                        >
-                          <TxIcon type={tx.type} />
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p style={{ fontSize: 14, fontWeight: 700, color: "#1a0533" }}>
-                            {tx.memo || TYPE_LABEL[tx.type]}
-                          </p>
-                          <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>{TYPE_LABEL[tx.type]}</p>
-                        </div>
-                        <p
-                          className="tabular-nums"
-                          style={{ fontSize: 16, fontWeight: 800, color: isPlus ? "#059669" : "#d95d2d" }}
-                        >
-                          {isPlus ? "+" : "-"}{formatWon(tx.amount)}
-                        </p>
+                        {meta.emoji}
+                      </span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p className="detail-row-label">{txLabel(tx.type, tx.memo)}</p>
+                        <p className="detail-row-sub">{meta.label}</p>
                       </div>
-                    );
-                  })}
-                </div>
+                      <p
+                        className="detail-row-value tabular-nums"
+                        style={{ color: minus ? "#be123c" : "#059669" }}
+                      >
+                        {minus ? "-" : "+"}{formatWon(tx.amount)}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }

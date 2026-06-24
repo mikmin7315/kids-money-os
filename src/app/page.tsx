@@ -11,6 +11,7 @@ import {
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
+import { getParentWalletAction } from "@/actions/parent-wallet";
 import { formatWon, formatWonParts } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,11 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const today = new Date().toISOString().slice(0, 10);
   const auth = await requireAppConsent();
-  const [dashboard, bundle] = await Promise.all([getDashboardView(), getAppDataBundle()]);
+  const [dashboard, bundle, parentWallet] = await Promise.all([
+    getDashboardView(),
+    getAppDataBundle(),
+    getParentWalletAction().catch(() => null),
+  ]);
   const pendingBehaviors = bundle.behaviorLogs.filter((log) => log.status === "pending");
   const pendingBorrows = bundle.borrowRequests.filter((request) => request.status === "pending");
   const totalPending = pendingBehaviors.length + pendingBorrows.length;
@@ -105,6 +110,42 @@ export default async function HomePage() {
           <p className="relative mt-5 leading-snug text-white" style={{ fontSize: 24, fontWeight: 800 }}>아이 프로필을<br />등록해주세요</p>
         )}
       </section>
+
+      {/* ── 부모 지갑 ── */}
+      {auth.user && (
+        <section className="mb-4">
+          <div className="rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4">
+              <div>
+                <p className="text-[12px] font-700 text-[#9ca3af] mb-1">내 지갑 잔액</p>
+                <p className="text-[26px] font-900 tracking-[-0.03em] text-[#1a0533] tabular-nums">
+                  {formatWon(parentWallet?.balance ?? 0)}
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 items-end">
+                <Link
+                  href="/settings/wallet"
+                  className="flex items-center gap-1.5 rounded-[12px] bg-[#7c3aed] px-4 py-2 text-sm font-extrabold text-white transition active:scale-[0.97]"
+                >
+                  <Wallet className="h-4 w-4" /> 충전하기
+                </Link>
+                {parentWallet?.bankName && (
+                  <p className="text-[11px] font-600 text-[#9ca3af]">
+                    {parentWallet.bankName} {parentWallet.accountNumber}
+                  </p>
+                )}
+              </div>
+            </div>
+            {(parentWallet?.balance ?? 0) === 0 && (
+              <div className="border-t border-[#f3f4f6] bg-[#fef3c7] px-5 py-3">
+                <p className="text-[13px] font-700 text-[#92400e]">
+                  💡 지갑을 충전하면 아이에게 바로 용돈을 지급할 수 있어요
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── 아이 통장 바로가기 ── */}
       {dashboard.children.length > 0 ? (

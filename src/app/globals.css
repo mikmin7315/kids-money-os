@@ -910,6 +910,195 @@ a {
     color: var(--monari-hero);
   }
 
+  /* ── Detail page layout ── */
+  .detail-shell {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    padding: max(16px, env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--monari-hero);
+    text-decoration: none;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  .detail-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--monari-hero);
+    margin: 0 0 6px;
+  }
+
+  .detail-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #1a0533;
+    line-height: 1.2;
+    margin: 0 0 4px;
+  }
+
+  .detail-subtitle {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--monari-ink-muted);
+    line-height: 1.6;
+    margin: 0 0 24px;
+  }
+
+  /* ── Detail cards ── */
+  .detail-card {
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.055);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .detail-card-head {
+    padding: 20px 20px 16px;
+  }
+
+  .detail-card-body {
+    padding: 0 20px 20px;
+  }
+
+  .detail-card-divider {
+    border: none;
+    border-top: 1px solid #f3f4f6;
+    margin: 0;
+  }
+
+  .detail-section-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--monari-hero);
+    margin: 0 0 10px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-row-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+    line-height: 1.4;
+  }
+
+  .detail-row-sub {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--monari-ink-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .detail-row-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a0533;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .detail-kpi {
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: #ffffff;
+    font-feature-settings: "tnum";
+  }
+
+  .detail-kpi-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 8px;
+  }
+
+  .detail-kpi-sub {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 8px;
+  }
+
+  .detail-hero {
+    border-radius: 24px;
+    padding: 24px 22px;
+    color: #fff;
+    background: linear-gradient(145deg, #5b21b6 0%, #7c3aed 55%, #9333ea 100%);
+    box-shadow: 0 16px 40px rgba(109, 40, 217, 0.32);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .detail-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 10%, rgba(255,255,255,0.14) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .detail-info-box {
+    border-radius: 18px;
+    background: #f5f3ff;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+
+  .detail-info-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #5b21b6;
+    margin-bottom: 6px;
+  }
+
+  .detail-info-body {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7c3aed;
+    line-height: 1.65;
+  }
+
+  .detail-tag {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
   /* ── Focus ring ── */
   .monari-shell a:focus-visible,
   .monari-shell button:focus-visible,
