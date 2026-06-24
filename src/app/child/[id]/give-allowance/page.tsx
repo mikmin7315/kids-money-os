@@ -97,7 +97,11 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
         </div>
 
         {/* 지급 폼 */}
-        <GiveAllowanceForm childId={id} childName={child.name} />
+        <GiveAllowanceForm
+          childId={id}
+          childName={child.name}
+          parentWalletBalance={parentWallet?.balance}
+        />
       </div>
     </div>
   );

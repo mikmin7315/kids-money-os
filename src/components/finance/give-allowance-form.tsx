@@ -7,9 +7,19 @@ const QUICK_AMOUNTS = [1000, 3000, 5000, 10000];
 
 const initialState = { ok: false, message: "" };
 
-export function GiveAllowanceForm({ childId, childName }: { childId: string; childName: string }) {
+export function GiveAllowanceForm({
+  childId,
+  childName,
+  parentWalletBalance,
+}: {
+  childId: string;
+  childName: string;
+  parentWalletBalance?: number;
+}) {
   const [state, action, pending] = useActionState(giveAllowanceForm, initialState);
   const [amount, setAmount] = useState("");
+  const numAmount = Math.floor(Number(amount));
+  const insufficient = parentWalletBalance !== undefined && numAmount > 0 && numAmount > parentWalletBalance;
 
   if (state.ok) {
     return (
@@ -87,9 +97,15 @@ export function GiveAllowanceForm({ childId, childName }: { childId: string; chi
         </p>
       )}
 
+      {insufficient && (
+        <p className="rounded-[14px] bg-[#fef2f2] px-4 py-3 text-sm font-bold text-[#dc2626]">
+          내 지갑 잔액({parentWalletBalance!.toLocaleString()}원)이 부족해요.
+        </p>
+      )}
+
       <button
         type="submit"
-        disabled={pending || !amount}
+        disabled={pending || !amount || insufficient}
         className="w-full rounded-[16px] py-4 text-base font-extrabold text-white transition-opacity disabled:opacity-50"
         style={{ background: "linear-gradient(135deg,#059669,#10b981)" }}
       >

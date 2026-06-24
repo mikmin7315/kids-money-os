@@ -610,6 +610,11 @@ export async function giveAllowanceForm(
   if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
   if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 지급할 수 있어요." };
 
+  // 부모 지갑 잔액 차감 (데모 모드에서는 항상 성공)
+  const { deductParentWalletAction } = await import("@/actions/parent-wallet");
+  const deduct = await deductParentWalletAction(amount);
+  if (!deduct.ok) return { ok: false, message: "내 지갑 잔액이 부족해요. 충전 후 다시 시도해주세요." };
+
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
   const result = await createMoneyTransactionAction({ childId, date: today, type: "allowance", amount, memo });
   if (!result.ok) return { ok: false, message: result.error ?? "지급에 실패했어요." };
