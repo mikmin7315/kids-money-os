@@ -101,6 +101,23 @@ export default async function SettingsPage() {
         </SettingsForm>
       </section>
 
+      {/* 빠른 설정 바로가기 */}
+      <section className="mb-7">
+        <SectionTitle>빠른 설정</SectionTitle>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <Link href="/settings/allowance" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+            <CircleDollarSign size={22} className="text-[#059669]" />
+            <p className="text-sm font-extrabold text-[#065f46]">정기 용돈 설정</p>
+            <p className="text-xs text-[#059669]/70">매주·매월 자동 지급</p>
+          </Link>
+          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[20px] bg-[#ede9fe] p-4 transition active:scale-[0.97]">
+            <PiggyBank size={22} className="text-[var(--monari-hero)]" />
+            <p className="text-sm font-extrabold text-[#4c1d95]">이자율 설정</p>
+            <p className="text-xs text-[#7c3aed]/70">약속 기반 이자 설정</p>
+          </Link>
+        </div>
+      </section>
+
       <section className="mb-7">
         <SectionTitle>금융 규칙</SectionTitle>
         <p className="mt-2 text-xs leading-5 text-[var(--monari-ink-muted)]">아이와 함께 정한 규칙은 언제든 다시 저장해 변경할 수 있어요.</p>
