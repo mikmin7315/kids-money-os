@@ -1,11 +1,10 @@
-import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ShieldCheck, UserPlus } from "lucide-react";
+import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
 import {
   AllowanceRuleForm,
   BorrowConditionsForm,
-  ChildCreateForm,
   ChildPinForm,
   InterestPolicyForm,
 } from "@/components/finance/management-forms";
@@ -71,9 +70,14 @@ export default async function SettingsPage() {
                         <p className="truncate text-lg font-black text-[var(--monari-ink)]">{child.name}</p>
                         <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">{child.nickname} · {child.birthYear}년생</p>
                       </div>
-                      <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
-                        통장 보기 <ChevronRight size={14} aria-hidden="true" />
-                      </Link>
+                      <div className="flex flex-col gap-1.5">
+                        <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
+                          통장 보기 <ChevronRight size={14} aria-hidden="true" />
+                        </Link>
+                        <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[#f5f3ff] px-3 text-xs font-bold text-[#5b21b6]">
+                          이자 확정 🔒
+                        </Link>
+                      </div>
                     </div>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <MetricBox label="기본 이자율" value={policy ? formatPercent(policy.baseInterestRate) : "설정 전"} />
@@ -96,9 +100,41 @@ export default async function SettingsPage() {
         ) : (
           <EmptyState icon={UserPlus} title="첫 아이를 등록해주세요" description="아이 프로필을 등록하면 용돈, 이자, 미리쓰기 규칙을 설정할 수 있어요." />
         )}
-        <SettingsForm title="아이 프로필 추가" description="새 아이의 금융 생활을 시작해요." icon={UserPlus} defaultOpen={!hasChildren}>
-          <ChildCreateForm />
-        </SettingsForm>
+        <Link
+          href="/children/new"
+          className="monari-card mt-3 flex min-h-16 items-center gap-3 px-4 py-3 transition active:scale-[0.99]"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-plus-bg)] text-[var(--monari-hero)]">
+            <UserPlus size={19} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필 추가</span>
+            <span className="mt-0.5 block text-xs leading-5 text-[var(--monari-ink-muted)]">새 아이의 금융 생활을 시작해요.</span>
+          </span>
+          <ChevronRight size={18} className="shrink-0 text-[var(--monari-hero)]" />
+        </Link>
+      </section>
+
+      {/* 빠른 설정 바로가기 */}
+      <section className="mb-7">
+        <SectionTitle>빠른 설정</SectionTitle>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <Link href="/settings/allowance" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+            <CircleDollarSign size={22} className="text-[#059669]" />
+            <p className="text-sm font-extrabold text-[#065f46]">정기 용돈 설정</p>
+            <p className="text-xs text-[#059669]/70">매주·매월 자동 지급</p>
+          </Link>
+          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[20px] bg-[#ede9fe] p-4 transition active:scale-[0.97]">
+            <PiggyBank size={22} className="text-[var(--monari-hero)]" />
+            <p className="text-sm font-extrabold text-[#4c1d95]">이자율 설정</p>
+            <p className="text-xs text-[#7c3aed]/70">약속 기반 이자 설정</p>
+          </Link>
+          <Link href="/settings/interest-history" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+            <ReceiptText size={22} className="text-[#059669]" />
+            <p className="text-sm font-extrabold text-[#065f46]">이자 지급 내역</p>
+            <p className="text-xs text-[#059669]/70">월별 이자 기록 확인</p>
+          </Link>
+        </div>
       </section>
 
       <section className="mb-7">

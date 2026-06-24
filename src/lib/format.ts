@@ -1,11 +1,11 @@
-const currency = new Intl.NumberFormat("ko-KR", {
-  style: "currency",
-  currency: "KRW",
-  maximumFractionDigits: 0,
-});
+const number = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 });
 
 export function formatWon(value: number) {
-  return currency.format(value);
+  return number.format(value) + "원";
+}
+
+export function formatWonParts(value: number) {
+  return { amount: number.format(value), unit: "원" };
 }
 
 export function formatPercent(value: number) {

@@ -59,7 +59,7 @@ export function MobileAppShell({
               className={`monari-tab ${active ? "monari-tab-active" : ""}`}
               aria-current={active ? "page" : undefined}
             >
-              <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={active ? 2.5 : 2} />
+              <Icon aria-hidden="true" className="h-[22px] w-[22px]" strokeWidth={active ? 2.5 : 2} />
               <span>{tab.label}</span>
             </Link>
           );

@@ -1,4 +1,5 @@
 import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
+import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components/finance/delete-rule-button";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import Link from "next/link";
@@ -18,31 +19,26 @@ export default async function BehaviorsPage() {
 
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
-      {/* Hero */}
-      <div className="monari-hero mb-4">
-        <p className="text-[13px] font-700 text-white/70 mb-2">행동이 이자를 만들어요</p>
-        <p className="relative mb-4 max-w-[34ch] text-[13px] leading-5 text-white/80">
-          아이가 이해하기 쉬운 약속과 보상을 연결해 꾸준한 금융 습관을 만들어 보세요.
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
-          <HeroPill label="자동 완료" value={`${autoRules}개`} />
-          <HeroPill label="확인 필요" value={`${reviewRules}개`} />
+      <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
+          <StatItem label="전체 약속" value={activeRules.length} unit="개" color="#7c3aed" />
+          <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
+          <StatItem label="확인 필요" value={reviewRules} unit="개" color="#d97706" />
         </div>
       </div>
 
       {/* Active rules */}
       <section className="mb-4">
         <SectionTitle>현재 약속 목록</SectionTitle>
-        {activeRules.length === 0 ? (
+        {bundle.behaviorRules.length === 0 ? (
           <div className="monari-card mt-3 px-4 py-5 text-center">
             <p className="text-[14px] font-700 text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
             <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
           </div>
         ) : (
           <div className="space-y-3 mt-3">
-            {activeRules.map((rule) => (
-              <div key={rule.id} className="monari-card p-5">
+            {bundle.behaviorRules.map((rule) => (
+              <div key={rule.id} className="monari-card p-5" style={{ opacity: rule.isActive ? 1 : 0.55 }}>
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex-1">
                     <p className="text-[16px] font-800 text-[var(--monari-ink)] leading-tight">{rule.title}</p>
@@ -50,9 +46,20 @@ export default async function BehaviorsPage() {
                       <p className="mt-1.5 text-[13px] text-[var(--monari-ink-soft)]">{rule.description}</p>
                     )}
                   </div>
-                  <span className={`shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <ToggleBehaviorRuleButton ruleId={rule.id} isActive={rule.isActive} label={rule.title} />
+                    <DeleteBehaviorRuleButton ruleId={rule.id} label={rule.title} />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap mb-3">
+                  <span className={`inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
                     {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                   </span>
+                  {!rule.isActive && (
+                    <span className="inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[#f3f4f6] text-[#9ca3af]">
+                      비활성
+                    </span>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <MetricBox label="약속 보상" value={formatWon(rule.rewardAmount)} />
@@ -113,20 +120,20 @@ export default async function BehaviorsPage() {
   );
 }
 
-function HeroPill({ label, value }: { label: string; value: string }) {
+function StatItem({ label, value, unit = "건", color }: { label: string; value: number; unit?: string; color: string }) {
   return (
-    <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-2 gap-0.5">
-      <p className="text-[11px] font-600 text-white/70">{label}</p>
-      <p className="text-[14px] font-800 text-white">{value}</p>
+    <div className="flex flex-col items-center py-5 gap-1.5">
+      <p style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>{label}</p>
+      <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}{unit}</p>
     </div>
   );
 }
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] border border-[var(--monari-line)] bg-[rgba(43,43,43,0.03)] p-3">
-      <p className="monari-meta">{label}</p>
-      <p className="text-[15px] font-800 text-[var(--monari-ink)] mt-1">{value}</p>
+    <div className="rounded-[18px] bg-[#f5f3ff] p-3">
+      <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
+      <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
     </div>
   );
 }

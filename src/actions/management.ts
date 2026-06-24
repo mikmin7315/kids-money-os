@@ -368,6 +368,120 @@ export async function upsertBorrowConditionsAction(input: {
 }
 
 // ────────────────────────────────────────────────────────────
+// Delete / toggle actions
+// ────────────────────────────────────────────────────────────
+
+export async function deleteAllowanceRuleAction(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "부모 세션이 없습니다." };
+  const ruleId = String(formData.get("ruleId") ?? "");
+  if (!ruleId) return { ok: false, message: "규칙 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/settings");
+    revalidatePath("/settings/allowance");
+    return { ok: true, message: "삭제되었어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("allowance_rules")
+    .delete()
+    .eq("id", ruleId)
+    .eq("parent_id", auth.user.id);
+
+  if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  revalidatePath("/settings");
+  revalidatePath("/settings/allowance");
+  return { ok: true, message: "용돈 규칙이 삭제되었어요." };
+}
+
+export async function deleteInterestPolicyAction(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "부모 세션이 없습니다." };
+  const policyId = String(formData.get("policyId") ?? "");
+  if (!policyId) return { ok: false, message: "정책 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/settings");
+    return { ok: true, message: "삭제되었어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("interest_policies")
+    .delete()
+    .eq("id", policyId)
+    .eq("parent_id", auth.user.id);
+
+  if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  revalidatePath("/settings");
+  revalidatePath("/settings/interest");
+  return { ok: true, message: "이자 정책이 삭제되었어요." };
+}
+
+export async function toggleBehaviorRuleAction(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "부모 세션이 없습니다." };
+  const ruleId = String(formData.get("ruleId") ?? "");
+  const isActive = formData.get("isActive") === "true";
+  if (!ruleId) return { ok: false, message: "규칙 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/behaviors");
+    return { ok: true, message: isActive ? "비활성화되었어요." : "활성화되었어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("behavior_rules")
+    .update({ is_active: !isActive })
+    .eq("id", ruleId)
+    .eq("parent_id", auth.user.id);
+
+  if (error) return { ok: false, message: "변경 중 오류가 발생했어요." };
+  revalidatePath("/behaviors");
+  revalidatePath("/");
+  return { ok: true, message: !isActive ? "활성화되었어요." : "비활성화되었어요." };
+}
+
+export async function deleteBehaviorRuleAction(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "부모 세션이 없습니다." };
+  const ruleId = String(formData.get("ruleId") ?? "");
+  if (!ruleId) return { ok: false, message: "규칙 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/behaviors");
+    return { ok: true, message: "삭제되었어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("behavior_rules")
+    .delete()
+    .eq("id", ruleId)
+    .eq("parent_id", auth.user.id);
+
+  if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  revalidatePath("/behaviors");
+  revalidatePath("/");
+  return { ok: true, message: "행동 약속이 삭제되었어요." };
+}
+
+// ────────────────────────────────────────────────────────────
 // Seeding
 // ────────────────────────────────────────────────────────────
 

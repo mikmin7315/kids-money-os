@@ -82,13 +82,6 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
   const mappedInterestPolicies = (rows.interest_policies ?? []).map(mapInterestPolicy);
   const mappedWalletSnapshots = (rows.wallet_snapshots ?? []).map(mapWalletSnapshot);
 
-  // Latest applied rate per child (from events, for policy display)
-  const latestRates = new Map<string, number>();
-  for (const event of rows.interest_rate_events ?? []) {
-    const childId = String(event.child_id);
-    if (!latestRates.has(childId)) latestRates.set(childId, Number(event.applied_rate));
-  }
-
   return {
     parent,
     children: mappedChildren,
@@ -98,10 +91,7 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
     moneyTransactions: mappedTransactions,
     borrowRequests: mappedBorrowRequests,
     borrowRepayments: mappedBorrowRepayments,
-    interestPolicies: mappedInterestPolicies.map((policy) => ({
-      ...policy,
-      baseInterestRate: latestRates.get(policy.childId) ?? policy.baseInterestRate,
-    })),
+    interestPolicies: mappedInterestPolicies,
     walletSnapshots: mappedWalletSnapshots,
   };
 });
@@ -119,7 +109,7 @@ function buildDashboardFromBundle(bundle: AppDataBundle): DashboardData {
     // Prefer wallet_snapshots (maintained by DB trigger); fall back to computing from transactions
     const snapshot = bundle.walletSnapshots.find((w) => w.childId === child.id);
     const wallet: Wallet = snapshot
-      ? { ...snapshot, currentInterestRate: currentRate }
+      ? snapshot
       : computeWallet(child.id, bundle.moneyTransactions, currentRate);
 
     const monthReport = computeMonthlyReport(child.id, year, month, bundle.moneyTransactions, bundle.behaviorLogs);
@@ -226,6 +216,7 @@ function mapAllowanceRule(row: Record<string, unknown>): AllowanceRule {
     dayOfMonth: row.day_of_month ? Number(row.day_of_month) : undefined,
     isActive: Boolean(row.is_active),
     createdAt: String(row.created_at),
+    deletedAt: row.deleted_at ? String(row.deleted_at) : undefined,
   };
 }
 
@@ -256,6 +247,7 @@ function mapBorrowRequest(row: Record<string, unknown>): BorrowRequest {
     installmentCount: row.installment_count ? Number(row.installment_count) : undefined,
     interestRate: Number(row.interest_rate ?? 0),
     createdAt: String(row.created_at),
+    repaidAt: row.repaid_at ? String(row.repaid_at) : undefined,
   };
 }
 

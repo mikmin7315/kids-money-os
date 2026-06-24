@@ -6,6 +6,7 @@ import { requireParentSession, requireChildOrParentAccess } from "@/lib/auth";
 import { getAppDataBundle, isDemoMode } from "@/lib/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { insertNotification, getParentIdForChild } from "@/lib/notifications";
+import { uploadBehaviorPhoto } from "@/lib/supabase/storage";
 
 type ActionResult<T> = {
   ok: boolean;
@@ -25,6 +26,8 @@ export async function createBehaviorLogAction(input: {
   behaviorRuleId: string;
   date: string;
   memo?: string;
+  photoUrl?: string;
+  photoTakenAt?: string;
 }): Promise<ActionResult<{ id: string }>> {
   const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
   if (!isParent && !isChild) return { ok: false, error: "권한 없음" };
@@ -52,6 +55,8 @@ export async function createBehaviorLogAction(input: {
         behavior_date: input.date,
         status: "pending",
         memo: input.memo ?? "",
+        photo_url: input.photoUrl ?? null,
+        photo_taken_at: input.photoTakenAt ?? null,
       })
       .select("id")
       .single();
@@ -463,9 +468,21 @@ export async function submitBehaviorLogForm(_: FormState, formData: FormData): P
     return { ok: false, message: "필수 항목이 누락되었습니다." };
   }
 
-  const result = await createBehaviorLogAction({ childId, behaviorRuleId, date, memo });
+  const photoFile = formData.get("photoFile") as File | null;
+  let photoUrl: string | undefined;
+  let photoTakenAt: string | undefined;
+
+  if (photoFile && photoFile.size > 0) {
+    const uploadResult = await uploadBehaviorPhoto(photoFile, childId);
+    if (uploadResult.ok) {
+      photoUrl = uploadResult.url;
+      photoTakenAt = readOptionalString(formData, "photoTakenAt") ?? new Date().toISOString();
+    }
+  }
+
+  const result = await createBehaviorLogAction({ childId, behaviorRuleId, date, memo, photoUrl, photoTakenAt });
   return result.ok
-    ? { ok: true, message: `행동 기록 완료: ${result.data?.id}` }
+    ? { ok: true, message: "약속을 기록했어요! 부모님이 확인해줄 거예요 🎉" }
     : { ok: false, message: result.error ?? "행동 기록 실패." };
 }
 
@@ -578,6 +595,101 @@ export async function submitMonthlyReportForm(_: FormState, formData: FormData):
   return result.ok
     ? { ok: true, message: `리포트 생성 완료: ${result.data?.year}-${result.data?.month}` }
     : { ok: false, message: result.error ?? "리포트 생성 실패." };
+}
+
+// ── P-14: 일회성 용돈 지급 폼 액션 ──
+export async function giveAllowanceForm(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const childId = readString(formData, "childId");
+  const amount = Math.floor(Number(formData.get("amount")));
+  const memo = readString(formData, "memo") || "용돈 지급";
+
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
+  if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 지급할 수 있어요." };
+
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "로그인이 필요합니다." };
+
+  if (isDemoMode()) return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase.rpc("give_allowance_from_parent_wallet", {
+      p_child_id: childId,
+      p_amount: amount,
+      p_memo: memo,
+      p_tx_date: today,
+    });
+    if (error) throw error;
+    if (!data) return { ok: false, message: "용돈 지급 결과를 확인하지 못했어요." };
+
+    revalidatePath("/");
+    revalidatePath("/records");
+    revalidatePath("/settings/wallet");
+    revalidatePath(`/child/${childId}`);
+    return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message.includes("Insufficient parent wallet balance")) {
+      return { ok: false, message: "내 지갑 잔액이 부족해요. 충전 후 다시 시도해주세요." };
+    }
+    return { ok: false, message: "용돈 지급에 실패했어요. 잠시 후 다시 시도해주세요." };
+  }
+}
+
+export async function confirmInterestRateAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const childId = readString(formData, "childId");
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+
+  try {
+    const auth = await requireParentSession();
+    if (!auth.user) return { ok: false, message: "로그인이 필요합니다." };
+
+    const supabase = await getSupabaseServerClient();
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+    const monthKey = today.slice(0, 7);
+
+    const { data: rawConfirmation, error } = await supabase
+      .rpc("confirm_interest_rate", { p_child_id: childId, p_month: monthKey })
+      .single();
+    if (error) throw error;
+    const confirmation = rawConfirmation as { confirmed_rate?: number } | null;
+    if (confirmation?.confirmed_rate == null) {
+      return { ok: false, message: "확정할 이자율을 찾지 못했어요." };
+    }
+
+    revalidatePath("/");
+    revalidatePath("/settings");
+    revalidatePath(`/child/${childId}`);
+    return { ok: true, message: `${Number(confirmation.confirmed_rate)}% 이자율로 이번 달 약속을 확정했어요! 🔒` };
+  } catch {
+    return { ok: false, message: "확정에 실패했어요. 다시 시도해주세요." };
+  }
+}
+
+export async function cashSpendAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const childId = readString(formData, "childId");
+  const amount = Math.floor(Number(formData.get("amount")));
+  const date = readString(formData, "date") || new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const memo = readString(formData, "memo") || "현금 사용";
+
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
+  if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 입력할 수 있어요." };
+
+  const result = await createMoneyTransactionAction({ childId, date, type: "spend", amount, memo });
+  if (!result.ok) return { ok: false, message: result.error ?? "기록에 실패했어요." };
+  return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 기록했어요.` };
 }
 
 function readString(formData: FormData, key: string) {

@@ -7,7 +7,7 @@ const baseUrl = `http://127.0.0.1:${port}`;
 const nextBin = "node_modules/next/dist/bin/next";
 const checks = [
   { path: "/", cacheControl: ["private", "no-store"], redirect: "manual" },
-  { path: "/login", contains: "아이의 좋은 금융 습관" },
+  { path: "/login", contains: "어린이 금융교육 앱" },
   { path: "/legal/privacy", contains: "개인정보 처리 안내" },
   { path: "/legal/terms", contains: "이용약관" },
   { path: "/support", contains: "고객지원" },

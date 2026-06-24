@@ -1,44 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CheckCircle2, House, PiggyBank, WalletCards } from "lucide-react";
+import { CheckCircle2, House, PiggyBank, Settings, WalletCards } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+const TABS = [
+  { label: "홈",     icon: House,         emoji: "🏠" },
+  { label: "약속",   icon: CheckCircle2,  emoji: "✅" },
+  { label: "저금",   icon: PiggyBank,     emoji: "🐷" },
+  { label: "미리쓰기", icon: WalletCards, emoji: "🛒" },
+  { label: "설정",   icon: Settings,      emoji: "⚙️" },
+];
 
 export function ChildBottomNav({ childId }: { childId: string }) {
   const pathname = usePathname();
   const base = `/child/${childId}`;
-  const [hash, setHash] = useState("");
 
-  useEffect(() => {
-    const syncHash = () => setHash(window.location.hash);
-    syncHash();
-    window.addEventListener("hashchange", syncHash);
-    return () => window.removeEventListener("hashchange", syncHash);
-  }, []);
+  const hrefs = [base, `${base}/promise`, `${base}/save`, `${base}/borrow`, `${base}/settings`];
 
   return (
-    <nav className="fixed bottom-3 left-1/2 z-50 w-[calc(100%-24px)] max-w-[416px] -translate-x-1/2 rounded-[22px] border border-white/60 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_12px_35px_rgba(23,24,28,0.18)] backdrop-blur-xl" aria-label="아이 메뉴">
-      <ul className="grid grid-cols-4">
-        {[
-          { href: base, label: "홈", icon: House, hash: "" },
-          { href: `${base}#today-promises`, label: "약속", icon: CheckCircle2, hash: "#today-promises" },
-          { href: `${base}#save-form`, label: "저금", icon: PiggyBank, hash: "#save-form" },
-          { href: `${base}#borrow-form`, label: "미리쓰기", icon: WalletCards, hash: "#borrow-form" },
-        ].map(({ href, label, icon: Icon, hash: itemHash }) => {
-          const active = pathname === base && hash === itemHash;
+    <nav
+      className="fixed bottom-0 left-1/2 z-50 w-full max-w-[460px] -translate-x-1/2 border-t border-[rgba(124,58,237,0.10)] bg-white/96 backdrop-blur-xl"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label="아이 메뉴"
+    >
+      <ul className="grid grid-cols-5">
+        {TABS.map(({ label, icon: Icon, emoji }, i) => {
+          const href = hrefs[i];
+          const active = pathname === href;
           return (
             <li key={label}>
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                onClick={() => setHash(itemHash)}
-                className={`flex min-h-[62px] flex-col items-center justify-center gap-1 rounded-[18px] py-2 text-[10px] font-800 transition active:scale-95 active:bg-[#eeeaff] ${
-                  active ? "text-[#5547d7]" : "text-[var(--monari-ink-muted)]"
-                }`}
+                className="flex flex-col items-center justify-center gap-1.5 py-3 transition-all active:scale-90"
+                style={{ minHeight: 72 }}
               >
-                <Icon className="h-5 w-5" strokeWidth={active ? 2.8 : 2} />
-                {label}
+                {/* 아이콘 배경 */}
+                <span
+                  className="flex items-center justify-center rounded-[16px] transition-all"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    background: active ? "linear-gradient(145deg, #7c3aed, #a855f7)" : "transparent",
+                    boxShadow: active ? "0 6px 16px rgba(124,58,237,0.35)" : "none",
+                  }}
+                >
+                  {active ? (
+                    <span style={{ fontSize: 22 }}>{emoji}</span>
+                  ) : (
+                    <Icon style={{ width: 24, height: 24, color: "#c4b5fd" }} strokeWidth={2} />
+                  )}
+                </span>
+                {/* 레이블 */}
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: active ? 800 : 600,
+                    color: active ? "#5b21b6" : "#9ca3af",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {label}
+                </span>
               </Link>
             </li>
           );
