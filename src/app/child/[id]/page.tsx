@@ -143,6 +143,14 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             style={{ fontSize: 16, fontWeight: 800, color: "white" }}>
             <PiggyBank className="h-5 w-5" /> 저금하기
           </Link>
+          <Link href={`${base}/promise-month`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white/80"
+            style={{ fontSize: 15, fontWeight: 800, color: "#5b21b6" }}>
+            🤝 이번 달 약속
+          </Link>
+          <Link href={`${base}/cash`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white/80"
+            style={{ fontSize: 15, fontWeight: 800, color: "#b45309" }}>
+            💸 현금 기록
+          </Link>
         </div>
       </section>
 

@@ -616,6 +616,24 @@ export async function giveAllowanceForm(
   return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
 }
 
+export async function cashSpendAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const childId = readString(formData, "childId");
+  const amount = Math.floor(Number(formData.get("amount")));
+  const date = readString(formData, "date") || new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const memo = readString(formData, "memo") || "현금 사용";
+
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
+  if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 입력할 수 있어요." };
+
+  const result = await createMoneyTransactionAction({ childId, date, type: "spend", amount, memo });
+  if (!result.ok) return { ok: false, message: result.error ?? "기록에 실패했어요." };
+  return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 기록했어요.` };
+}
+
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
