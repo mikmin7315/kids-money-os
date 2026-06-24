@@ -28,7 +28,9 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   const policy = bundle.interestPolicies.find((p) => p.childId === id);
   const estimated = policy ? estimateInterest(summary.wallet, policy) : 0;
   const wallet = summary.wallet;
-  const spendable = wallet.balance - wallet.savingsBalance;
+  // wallet.balance is already the spendable cash (save tx reduces it directly)
+  const spendable = wallet.balance;
+  const totalAssets = wallet.balance + wallet.savingsBalance;
   const activeBorrow = bundle.borrowRequests.find(
     (r) => r.childId === id && (r.status === "approved" || r.status === "partial"),
   );
@@ -44,8 +46,8 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
 
       {/* 총 잔액 히어로 */}
       <div className="detail-hero">
-        <p className="detail-kpi-label">지금 남긴 돈</p>
-        <p className="detail-kpi">{formatWon(wallet.balance)}</p>
+        <p className="detail-kpi-label">총 보유 금액</p>
+        <p className="detail-kpi">{formatWon(totalAssets)}</p>
         <p className="detail-kpi-sub">
           이대로면 이번 달 이자 <strong style={{ color: "#86efac" }}>+{formatWon(estimated)}</strong>
         </p>
@@ -67,7 +69,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         />
         <BalanceRow
           emoji="🐷"
-          label="저금통"
+          label="저금한 돈"
           sub="따로 모아두는 돈"
           value={formatWon(wallet.savingsBalance)}
           valueColor="#1d4ed8"
@@ -75,9 +77,9 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         {activeBorrow && (
           <BalanceRow
             emoji="🤝"
-            label="미리쓰기 잔액"
-            sub="아직 갚아야 할 돈"
-            value={`-${formatWon(activeBorrow.requestedAmount)}`}
+            label="갚아야 할 돈"
+            sub="미리쓰기 남은 금액"
+            value={`-${formatWon(wallet.borrowedBalance)}`}
             valueColor="#d97706"
           />
         )}

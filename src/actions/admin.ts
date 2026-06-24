@@ -100,3 +100,50 @@ export async function updateRoleForm(
     ? { ok: true, message: "역할이 변경되었습니다." }
     : { ok: false, message: result.error ?? "역할 변경 실패." };
 }
+
+export async function approveWalletChargeAction(
+  _prev: AdminFormState,
+  formData: FormData,
+): Promise<AdminFormState> {
+  const chargeId = String(formData.get("chargeId") ?? "").trim();
+  if (!chargeId) return { ok: false, message: "충전 ID가 없습니다." };
+
+  const auth = await requireAdminSession();
+  if (!auth.user) return { ok: false, message: "관리자 인증이 필요해요." };
+
+  if (isDemoMode()) {
+    revalidatePath("/admin/wallet-charges");
+    return { ok: true, message: "승인했어요. (데모)" };
+  }
+
+  const supabase = await getSupabaseAdminClient();
+  const { error } = await supabase.rpc("approve_parent_wallet_charge", { p_charge_id: chargeId });
+  if (error) return { ok: false, message: error.message.includes("Admin only") ? "관리자 권한이 필요해요." : "승인에 실패했어요." };
+
+  revalidatePath("/admin/wallet-charges");
+  revalidatePath("/");
+  return { ok: true, message: "충전을 승인했어요." };
+}
+
+export async function rejectWalletChargeAction(
+  _prev: AdminFormState,
+  formData: FormData,
+): Promise<AdminFormState> {
+  const chargeId = String(formData.get("chargeId") ?? "").trim();
+  if (!chargeId) return { ok: false, message: "충전 ID가 없습니다." };
+
+  const auth = await requireAdminSession();
+  if (!auth.user) return { ok: false, message: "관리자 인증이 필요해요." };
+
+  if (isDemoMode()) {
+    revalidatePath("/admin/wallet-charges");
+    return { ok: true, message: "반려했어요. (데모)" };
+  }
+
+  const supabase = await getSupabaseAdminClient();
+  const { error } = await supabase.rpc("reject_parent_wallet_charge", { p_charge_id: chargeId });
+  if (error) return { ok: false, message: "반려에 실패했어요." };
+
+  revalidatePath("/admin/wallet-charges");
+  return { ok: true, message: "충전 요청을 반려했어요." };
+}

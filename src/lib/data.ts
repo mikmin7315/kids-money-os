@@ -20,6 +20,7 @@ import {
   BehaviorRule,
   BorrowRepayment,
   BorrowRequest,
+  CashSpendRequest,
   ChildProfile,
   DashboardData,
   InterestPolicy,
@@ -39,6 +40,7 @@ export type AppDataBundle = {
   borrowRepayments: BorrowRepayment[];
   interestPolicies: InterestPolicy[];
   walletSnapshots: Wallet[];
+  cashSpendRequests: CashSpendRequest[];
 };
 
 export async function getDashboardView(): Promise<DashboardData> {
@@ -82,6 +84,15 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
   const mappedInterestPolicies = (rows.interest_policies ?? []).map(mapInterestPolicy);
   const mappedWalletSnapshots = (rows.wallet_snapshots ?? []).map(mapWalletSnapshot);
 
+  // cash_spend_requests is not in the RPC — fetch separately
+  const { data: cashRows } = await supabase
+    .from("cash_spend_requests")
+    .select("id,child_id,amount,spend_date,memo,status,reviewed_by,reviewed_at,rejection_reason,created_at")
+    .in("child_id", mappedChildren.map((c) => c.id))
+    .order("created_at", { ascending: false })
+    .limit(100);
+  const mappedCashRequests = (cashRows ?? []).map(mapCashSpendRequest);
+
   return {
     parent,
     children: mappedChildren,
@@ -93,6 +104,7 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
     borrowRepayments: mappedBorrowRepayments,
     interestPolicies: mappedInterestPolicies,
     walletSnapshots: mappedWalletSnapshots,
+    cashSpendRequests: mappedCashRequests,
   };
 });
 
@@ -154,6 +166,7 @@ function getMockBundle(): AppDataBundle {
     borrowRepayments,
     interestPolicies,
     walletSnapshots: [],
+    cashSpendRequests: [],
   };
 }
 
@@ -248,6 +261,21 @@ function mapBorrowRequest(row: Record<string, unknown>): BorrowRequest {
     interestRate: Number(row.interest_rate ?? 0),
     createdAt: String(row.created_at),
     repaidAt: row.repaid_at ? String(row.repaid_at) : undefined,
+  };
+}
+
+function mapCashSpendRequest(row: Record<string, unknown>): CashSpendRequest {
+  return {
+    id: String(row.id),
+    childId: String(row.child_id),
+    amount: Number(row.amount),
+    spendDate: String(row.spend_date),
+    memo: row.memo ? String(row.memo) : undefined,
+    status: row.status as CashSpendRequest["status"],
+    reviewedBy: row.reviewed_by ? String(row.reviewed_by) : undefined,
+    reviewedAt: row.reviewed_at ? String(row.reviewed_at) : undefined,
+    rejectionReason: row.rejection_reason ? String(row.rejection_reason) : undefined,
+    createdAt: String(row.created_at),
   };
 }
 

@@ -681,15 +681,80 @@ export async function cashSpendAction(
   const childId = readString(formData, "childId");
   const amount = Math.floor(Number(formData.get("amount")));
   const date = readString(formData, "date") || new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
-  const memo = readString(formData, "memo") || "현금 사용";
+  const memo = readString(formData, "memo") || undefined;
 
   if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
   if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
   if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 입력할 수 있어요." };
 
-  const result = await createMoneyTransactionAction({ childId, date, type: "spend", amount, memo });
-  if (!result.ok) return { ok: false, message: result.error ?? "기록에 실패했어요." };
-  return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 기록했어요.` };
+  if (isDemoMode()) {
+    return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 부모에게 알렸어요. 승인 후 잔액에 반영돼요.` };
+  }
+
+  const auth = await requireParentSession().catch(() => null);
+  const supabase = await getSupabaseServerClient();
+
+  // 아이 소유권 확인 (부모 세션이면 직접 확인, 아이 모드이면 children 테이블로 확인)
+  const { data: child } = await supabase
+    .from("children")
+    .select("id")
+    .eq("id", childId)
+    .maybeSingle();
+  if (!child) return { ok: false, message: "아이 정보를 찾을 수 없어요." };
+
+  const { error } = await supabase.from("cash_spend_requests").insert({
+    child_id: childId,
+    amount,
+    spend_date: date,
+    memo: memo ?? null,
+  });
+
+  if (error) return { ok: false, message: "기록에 실패했어요." };
+  revalidatePath("/approvals");
+  if (auth?.user) revalidatePath("/");
+  return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 부모에게 알렸어요. 승인 후 잔액에 반영돼요.` };
+}
+
+export async function approveCashSpendAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const requestId = readString(formData, "requestId");
+  if (!requestId) return { ok: false, message: "요청 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/approvals");
+    return { ok: true, message: "승인했어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase.rpc("approve_cash_spend", { p_request_id: requestId });
+  if (error) return { ok: false, message: error.message.includes("Not authorized") ? "권한이 없어요." : "승인에 실패했어요." };
+
+  revalidatePath("/approvals");
+  revalidatePath("/");
+  return { ok: true, message: "현금 사용을 승인했어요." };
+}
+
+export async function rejectCashSpendAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const requestId = readString(formData, "requestId");
+  const reason = readString(formData, "reason") || undefined;
+  if (!requestId) return { ok: false, message: "요청 ID가 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/approvals");
+    return { ok: true, message: "반려했어요." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase.rpc("reject_cash_spend", { p_request_id: requestId, p_reason: reason ?? null });
+  if (error) return { ok: false, message: "반려에 실패했어요." };
+
+  revalidatePath("/approvals");
+  return { ok: true, message: "현금 사용을 반려했어요." };
 }
 
 function readString(formData: FormData, key: string) {

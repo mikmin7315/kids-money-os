@@ -163,6 +163,12 @@ export default async function AdminDashboardPage() {
               badge="RBAC"
             />
             <MenuCard
+              href="/admin/wallet-charges"
+              title="충전 요청 관리"
+              description="부모 지갑 충전 요청을 확인하고 승인합니다."
+              badge="A-W-01"
+            />
+            <MenuCard
               href="/approvals"
               title="승인 대기 보기"
               description="부모 화면에서 약속과 미리쓰기 요청을 처리합니다."

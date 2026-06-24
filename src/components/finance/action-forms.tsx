@@ -15,6 +15,8 @@ import {
   submitBorrowApprovalForm,
   submitMonthlyReportForm,
   submitTransactionForm,
+  approveCashSpendAction,
+  rejectCashSpendAction,
 } from "@/actions/finance";
 import { BehaviorRule, ChildProfile } from "@/lib/types";
 import { formatWon } from "@/lib/format";
@@ -582,3 +584,44 @@ function Field({ label, optional = false, children }: { label: string; optional?
 
 const fieldClass =
   "monari-input";
+
+export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }) {
+  const [approveState, approveAction, approvePending] = useActionState(approveCashSpendAction, { ok: false, message: "" });
+  const [rejectState, rejectAction, rejectPending] = useActionState(rejectCashSpendAction, { ok: false, message: "" });
+
+  if (approveState.ok) return <p className="text-sm font-bold text-[#059669]">✓ 승인했어요</p>;
+  if (rejectState.ok) return <p className="text-sm font-bold text-[#9ca3af]">반려했어요</p>;
+
+  const pending = approvePending || rejectPending;
+
+  return (
+    <div className="flex gap-2">
+      <form action={rejectAction} className="flex-1">
+        <input type="hidden" name="requestId" value={requestId} />
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full rounded-[12px] border-2 border-[#e5e7eb] py-2.5 text-sm font-bold text-[#6b7280] transition active:scale-95 disabled:opacity-50"
+        >
+          반려
+        </button>
+        {rejectState.message && !rejectState.ok && (
+          <p className="mt-1 text-xs text-red-600">{rejectState.message}</p>
+        )}
+      </form>
+      <form action={approveAction} className="flex-1">
+        <input type="hidden" name="requestId" value={requestId} />
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full rounded-[12px] bg-[#1a0533] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
+        >
+          {approvePending ? "처리 중…" : "승인"}
+        </button>
+        {approveState.message && !approveState.ok && (
+          <p className="mt-1 text-xs text-red-600">{approveState.message}</p>
+        )}
+      </form>
+    </div>
+  );
+}
