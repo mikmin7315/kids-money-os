@@ -160,8 +160,13 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* C-I-02: 이자 미리보기 */}
         {policy && summary.wallet.balance > 0 && (
           <>
-            <KidSectionTitle>이자 미리보기 📈</KidSectionTitle>
-            <div className="mb-8 mt-3 overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+            <div className="mb-3 flex items-center justify-between">
+              <KidSectionTitle>이자 미리보기 📈</KidSectionTitle>
+              <Link href={`${base}/interest`} style={{ fontSize: 14, fontWeight: 700, color: "#7c3aed" }}>
+                자세히 <ArrowRight className="inline h-3.5 w-3.5" />
+              </Link>
+            </div>
+            <div className="mb-8 mt-0 overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
               <div
                 className="px-5 py-4"
                 style={{ background: "linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)" }}

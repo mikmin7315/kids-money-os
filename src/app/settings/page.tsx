@@ -96,9 +96,19 @@ export default async function SettingsPage() {
         ) : (
           <EmptyState icon={UserPlus} title="첫 아이를 등록해주세요" description="아이 프로필을 등록하면 용돈, 이자, 미리쓰기 규칙을 설정할 수 있어요." />
         )}
-        <SettingsForm title="아이 프로필 추가" description="새 아이의 금융 생활을 시작해요." icon={UserPlus} defaultOpen={!hasChildren}>
-          <ChildCreateForm />
-        </SettingsForm>
+        <Link
+          href="/children/new"
+          className="monari-card mt-3 flex min-h-16 items-center gap-3 px-4 py-3 transition active:scale-[0.99]"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-plus-bg)] text-[var(--monari-hero)]">
+            <UserPlus size={19} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필 추가</span>
+            <span className="mt-0.5 block text-xs leading-5 text-[var(--monari-ink-muted)]">새 아이의 금융 생활을 시작해요.</span>
+          </span>
+          <ChevronRight size={18} className="shrink-0 text-[var(--monari-hero)]" />
+        </Link>
       </section>
 
       {/* 빠른 설정 바로가기 */}
