@@ -53,13 +53,45 @@ supabase/
 
 ```
 master          ← stable, PR merge 대상
-  └─ feature/design-system     ← Codex 담당
-  └─ feature/notifications     ← Codex 담당
-  └─ feature/...
+  └─ feature/claude-*     ← Claude Code 작업 브랜치
+  └─ feature/codex-*      ← Codex 작업 브랜치
 ```
 
-- **Codex**: 디자인 시스템, UI 개선, 복잡한 비즈니스 로직
-- **Codex**: 반복적 기능 구현, 테스트 작성, 타입 개선
+- **Claude Code**: 디자인 시스템, 새 페이지 라우트, 복잡한 비즈니스 로직, Supabase 마이그레이션 설계
+- **Codex**: 반복적 CRUD 액션, 삭제/수정 기능, TypeScript 타입 보강, 테스트 작성
+
+---
+
+## Codex 작업 요청 목록
+
+`feature/codex-crud` 브랜치에서 작업 후 master로 PR 올려주세요.
+
+### 1. 삭제 서버 액션 (`src/actions/management.ts`에 추가)
+
+```typescript
+deleteAllowanceRuleAction(ruleId: string): Promise<ActionResult<void>>
+deleteInterestPolicyAction(policyId: string): Promise<ActionResult<void>>
+deleteBehaviorRuleAction(ruleId: string): Promise<ActionResult<void>>
+toggleBehaviorRuleAction(ruleId: string, isActive: boolean): Promise<ActionResult<void>>
+```
+
+패턴: `requireParentSession()` → `isDemoMode()` 체크 → Supabase delete → `revalidatePath("/settings")`
+
+### 2. 삭제 UI (`src/components/finance/management-forms.tsx`)
+
+용돈 규칙·이자 정책·행동 약속 각 리스트 아이템에 휴지통 버튼 추가.
+삭제 전 `window.confirm` 또는 인라인 confirm 상태로 확인 받기.
+
+### 3. 타입 보강 (`src/lib/types.ts`)
+
+- `BorrowRequest`에 `repaidAt?: string` 추가
+- `AllowanceRule`에 `deletedAt?: string` 추가 (soft delete 고려)
+
+### 4. 코드 규칙
+
+- 서버 액션은 `requireParentSession()` 필수, `auth.user` null guard 필수
+- `isDemoMode()` true일 때 mock 성공 리턴 (UI 테스트 가능하게)
+- `revalidatePath("/settings")` 호출로 캐시 무효화
 
 ## 개발 명령어
 

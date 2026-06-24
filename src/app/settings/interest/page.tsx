@@ -23,7 +23,7 @@ export default async function InterestSettingPage() {
   const hasChildren = bundle.children.length > 0;
 
   return (
-    <MobileAppShell title="이자 설정" subtitle="P-I-01">
+    <MobileAppShell title="이자 설정" subtitle="이자율 정책 관리">
       <Link
         href="/settings"
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"

@@ -1,4 +1,5 @@
 import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
+import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components/finance/delete-rule-button";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import Link from "next/link";
@@ -29,15 +30,15 @@ export default async function BehaviorsPage() {
       {/* Active rules */}
       <section className="mb-4">
         <SectionTitle>현재 약속 목록</SectionTitle>
-        {activeRules.length === 0 ? (
+        {bundle.behaviorRules.length === 0 ? (
           <div className="monari-card mt-3 px-4 py-5 text-center">
             <p className="text-[14px] font-700 text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
             <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
           </div>
         ) : (
           <div className="space-y-3 mt-3">
-            {activeRules.map((rule) => (
-              <div key={rule.id} className="monari-card p-5">
+            {bundle.behaviorRules.map((rule) => (
+              <div key={rule.id} className="monari-card p-5" style={{ opacity: rule.isActive ? 1 : 0.55 }}>
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex-1">
                     <p className="text-[16px] font-800 text-[var(--monari-ink)] leading-tight">{rule.title}</p>
@@ -45,9 +46,20 @@ export default async function BehaviorsPage() {
                       <p className="mt-1.5 text-[13px] text-[var(--monari-ink-soft)]">{rule.description}</p>
                     )}
                   </div>
-                  <span className={`shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <ToggleBehaviorRuleButton ruleId={rule.id} isActive={rule.isActive} label={rule.title} />
+                    <DeleteBehaviorRuleButton ruleId={rule.id} label={rule.title} />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap mb-3">
+                  <span className={`inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
                     {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                   </span>
+                  {!rule.isActive && (
+                    <span className="inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[#f3f4f6] text-[#9ca3af]">
+                      비활성
+                    </span>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <MetricBox label="약속 보상" value={formatWon(rule.rewardAmount)} />

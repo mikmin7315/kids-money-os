@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 import { AllowanceRuleForm } from "@/components/finance/management-forms";
+import { DeleteAllowanceRuleButton } from "@/components/finance/delete-rule-button";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -17,7 +18,7 @@ export default async function AllowancePage() {
   const hasChildren = bundle.children.length > 0;
 
   return (
-    <MobileAppShell title="정기 용돈 설정" subtitle="P-13">
+    <MobileAppShell title="정기 용돈 설정" subtitle="용돈 규칙 관리">
       {/* 뒤로가기 */}
       <Link
         href="/settings"
@@ -73,7 +74,10 @@ export default async function AllowancePage() {
                       <p className="mt-0.5 text-xs text-[var(--monari-ink-muted)]">{cycle}</p>
                     </div>
                   </div>
-                  <p className="text-base font-black text-[#059669]">{formatWon(rule.amount)}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-base font-black text-[#059669]">{formatWon(rule.amount)}</p>
+                    <DeleteAllowanceRuleButton ruleId={rule.id} label={rule.title} />
+                  </div>
                 </div>
               );
             })}

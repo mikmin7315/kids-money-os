@@ -1,9 +1,10 @@
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Wallet } from "lucide-react";
 import Link from "next/link";
 import { GiveAllowanceForm } from "@/components/finance/give-allowance-form";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
+import { getParentWalletAction } from "@/actions/parent-wallet";
 import { formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,11 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
   const auth = await requireParentSession();
   if (!auth.user) redirect("/login");
 
-  const [bundle, dashboard] = await Promise.all([getAppDataBundle(), getDashboardView()]);
+  const [bundle, dashboard, parentWallet] = await Promise.all([
+    getAppDataBundle(),
+    getDashboardView(),
+    getParentWalletAction().catch(() => null),
+  ]);
   const child = bundle.children.find((c) => c.id === id);
   const summary = dashboard.children.find((c) => c.child.id === id);
   if (!child || !summary) notFound();
@@ -53,18 +58,37 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
           </div>
         </div>
 
-        {/* 빠른 금액 안내 */}
+        {/* 부모 지갑 잔액 */}
+        {parentWallet !== null && (
+          <div className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wallet className="h-4 w-4 text-[#7c3aed]" />
+                <p className="text-sm font-bold text-[#374151]">내 지갑 잔액</p>
+              </div>
+              <Link href="/settings/wallet" className="text-xs font-bold text-[#7c3aed]">충전 →</Link>
+            </div>
+            <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "#dc2626" : "#1a0533" }}>
+              {formatWon(parentWallet.balance)}
+            </p>
+            {parentWallet.balance === 0 && (
+              <p className="mt-1 text-xs font-bold text-[#dc2626]">잔액이 없어요. 충전 후 용돈을 지급할 수 있어요.</p>
+            )}
+          </div>
+        )}
+
+        {/* 이번 달 현황 */}
         <div className="mb-6 rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="mb-3 text-xs font-bold text-[var(--monari-ink-muted)]">이번 달 지급 현황</p>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-[14px] bg-[#f0fdf4] p-3">
-              <p className="text-[11px] font-semibold text-[#059669]">받은 용돈</p>
+              <p className="text-xs font-semibold text-[#059669]">받은 용돈</p>
               <p className="mt-1 text-base font-black text-[#065f46]">
                 {formatWon(summary.monthReport.totalAllowance)}
               </p>
             </div>
             <div className="rounded-[14px] bg-[#f5f3ff] p-3">
-              <p className="text-[11px] font-semibold text-[var(--monari-hero)]">이번 달 이자</p>
+              <p className="text-xs font-semibold text-[var(--monari-hero)]">이번 달 이자</p>
               <p className="mt-1 text-base font-black text-[#4c1d95]">
                 {formatWon(summary.monthReport.totalInterest)}
               </p>
