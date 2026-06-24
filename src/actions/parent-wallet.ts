@@ -31,14 +31,8 @@ export async function getParentWalletAction(): Promise<ParentWallet> {
     .maybeSingle();
 
   if (!data) {
-    // 최초 접근 시 생성
-    const { data: created } = await supabase
-      .from("parent_wallets")
-      .insert({ parent_id: auth.user.id, balance: 0 })
-      .select("balance, bank_name, account_number, account_holder")
-      .single();
     return {
-      balance: created?.balance ?? 0,
+      balance: 0,
       bankName: null,
       accountNumber: null,
       accountHolder: null,
@@ -75,12 +69,11 @@ export async function saveParentBankAccountAction(
 
   if (!auth.user) return { ok: false, message: "로그인이 필요해요." };
   const supabase = await getSupabaseServerClient();
-  const { error } = await supabase
-    .from("parent_wallets")
-    .upsert(
-      { parent_id: auth.user.id, bank_name: bankName, account_number: accountNumber, account_holder: accountHolder },
-      { onConflict: "parent_id" },
-    );
+  const { error } = await supabase.rpc("save_parent_bank_account", {
+    p_bank_name: bankName,
+    p_account_number: accountNumber,
+    p_account_holder: accountHolder,
+  });
 
   if (error) return { ok: false, message: "저장 중 오류가 발생했어요." };
   revalidatePath("/settings/wallet");
@@ -88,7 +81,7 @@ export async function saveParentBankAccountAction(
   return { ok: true, message: "계좌 정보가 저장되었어요." };
 }
 
-// 수동 충전 (실제 이체 확인 후 관리자가 처리하는 방식 or 데모용 즉시 충전)
+// 실제 이체 확인 전에는 잔액을 변경하지 않고 충전 요청만 생성한다.
 export async function chargeParentWalletAction(
   _prev: ChargeResult,
   formData: FormData,
@@ -102,65 +95,21 @@ export async function chargeParentWalletAction(
   if (isDemoMode()) {
     revalidatePath("/");
     revalidatePath("/settings/wallet");
-    return { ok: true, message: `${amount.toLocaleString()}원이 충전되었어요. (데모 모드)` };
+    return { ok: true, message: `${amount.toLocaleString()}원 충전 요청이 접수되었어요. (데모 모드)` };
   }
 
   if (!auth.user) return { ok: false, message: "로그인이 필요해요." };
   const supabase = await getSupabaseServerClient();
 
-  // 충전 내역 기록
-  await supabase.from("parent_wallet_charges").insert({
+  const { error } = await supabase.from("parent_wallet_charges").insert({
     parent_id: auth.user.id,
     amount,
     method: "bank_transfer",
-    status: "paid",
+    status: "pending",
   });
 
-  // 잔액 증가 (원자적 업데이트)
-  const { error } = await supabase.rpc("increment_parent_wallet_balance", {
-    p_parent_id: auth.user.id,
-    p_amount: amount,
-  }).single();
+  if (error) return { ok: false, message: "충전 요청을 접수하지 못했어요. 잠시 후 다시 시도해주세요." };
 
-  if (error) {
-    // RPC 없으면 일반 upsert (race condition 가능하지만 MVP 수준)
-    const { data: wallet } = await supabase
-      .from("parent_wallets")
-      .select("balance")
-      .eq("parent_id", auth.user.id)
-      .maybeSingle();
-
-    await supabase
-      .from("parent_wallets")
-      .upsert({ parent_id: auth.user.id, balance: (wallet?.balance ?? 0) + amount }, { onConflict: "parent_id" });
-  }
-
-  revalidatePath("/");
   revalidatePath("/settings/wallet");
-  return { ok: true, message: `${amount.toLocaleString()}원이 충전되었어요.` };
-}
-
-// 용돈 지급 시 부모 잔액 차감
-export async function deductParentWalletAction(amount: number): Promise<{ ok: boolean }> {
-  if (isDemoMode()) return { ok: true };
-
-  const auth = await requireParentSession();
-  if (!auth.user) return { ok: false };
-  const supabase = await getSupabaseServerClient();
-
-  const { data: wallet } = await supabase
-    .from("parent_wallets")
-    .select("balance")
-    .eq("parent_id", auth.user.id)
-    .maybeSingle();
-
-  const current = wallet?.balance ?? 0;
-  if (current < amount) return { ok: false };
-
-  await supabase
-    .from("parent_wallets")
-    .update({ balance: current - amount })
-    .eq("parent_id", auth.user.id);
-
-  return { ok: true };
+  return { ok: true, message: `${amount.toLocaleString()}원 충전 요청이 접수되었어요. 이체 확인 후 잔액에 반영돼요.` };
 }

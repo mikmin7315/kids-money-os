@@ -60,7 +60,7 @@ export function DeleteInterestPolicyButton({ policyId, label }: PolicyDeleteProp
 }
 
 export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProps) {
-  const [state, action, pending] = useActionState(toggleBehaviorRuleAction, { ok: false, message: "" });
+  const [, action, pending] = useActionState(toggleBehaviorRuleAction, { ok: false, message: "" });
 
   return (
     <form action={action} className="flex items-center gap-2">
@@ -69,6 +69,7 @@ export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProp
       <button
         type="submit"
         disabled={pending}
+        aria-label={`${label} ${isActive ? "비활성화" : "활성화"}`}
         className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-1.5 text-xs font-bold transition active:scale-95"
         style={{
           background: isActive ? "#f0fdf4" : "#f3f4f6",

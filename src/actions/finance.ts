@@ -610,15 +610,35 @@ export async function giveAllowanceForm(
   if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
   if (amount > MAX_MONEY_AMOUNT) return { ok: false, message: "최대 1억원까지 지급할 수 있어요." };
 
-  // 부모 지갑 잔액 차감 (데모 모드에서는 항상 성공)
-  const { deductParentWalletAction } = await import("@/actions/parent-wallet");
-  const deduct = await deductParentWalletAction(amount);
-  if (!deduct.ok) return { ok: false, message: "내 지갑 잔액이 부족해요. 충전 후 다시 시도해주세요." };
-
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
-  const result = await createMoneyTransactionAction({ childId, date: today, type: "allowance", amount, memo });
-  if (!result.ok) return { ok: false, message: result.error ?? "지급에 실패했어요." };
-  return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "로그인이 필요합니다." };
+
+  if (isDemoMode()) return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase.rpc("give_allowance_from_parent_wallet", {
+      p_child_id: childId,
+      p_amount: amount,
+      p_memo: memo,
+      p_tx_date: today,
+    });
+    if (error) throw error;
+    if (!data) return { ok: false, message: "용돈 지급 결과를 확인하지 못했어요." };
+
+    revalidatePath("/");
+    revalidatePath("/records");
+    revalidatePath("/settings/wallet");
+    revalidatePath(`/child/${childId}`);
+    return { ok: true, message: `${amount.toLocaleString()}원을 줬어요! 🎉` };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message.includes("Insufficient parent wallet balance")) {
+      return { ok: false, message: "내 지갑 잔액이 부족해요. 충전 후 다시 시도해주세요." };
+    }
+    return { ok: false, message: "용돈 지급에 실패했어요. 잠시 후 다시 시도해주세요." };
+  }
 }
 
 export async function confirmInterestRateAction(
@@ -626,10 +646,7 @@ export async function confirmInterestRateAction(
   formData: FormData,
 ): Promise<{ ok: boolean; message: string }> {
   const childId = readString(formData, "childId");
-  const rate = Number(formData.get("rate"));
-
   if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
-  if (isNaN(rate) || rate < 0 || rate > 100) return { ok: false, message: "이자율이 올바르지 않아요." };
 
   try {
     const auth = await requireParentSession();
@@ -639,20 +656,19 @@ export async function confirmInterestRateAction(
     const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
     const monthKey = today.slice(0, 7);
 
-    // wallet_snapshots에 confirmed_at 기록 (없으면 interest_rate_events로 대체)
-    const { error } = await supabase
-      .from("wallet_snapshots")
-      .update({ confirmed_month: monthKey })
-      .eq("child_id", childId);
-
-    if (error) {
-      // confirmed_month 컬럼이 없을 수 있음 — 그래도 성공 처리
-      console.warn("confirmInterestRate:", error.message);
+    const { data: rawConfirmation, error } = await supabase
+      .rpc("confirm_interest_rate", { p_child_id: childId, p_month: monthKey })
+      .single();
+    if (error) throw error;
+    const confirmation = rawConfirmation as { confirmed_rate?: number } | null;
+    if (confirmation?.confirmed_rate == null) {
+      return { ok: false, message: "확정할 이자율을 찾지 못했어요." };
     }
 
     revalidatePath("/");
     revalidatePath("/settings");
-    return { ok: true, message: `${rate}% 이자율로 이번 달 약속을 확정했어요! 🔒` };
+    revalidatePath(`/child/${childId}`);
+    return { ok: true, message: `${Number(confirmation.confirmed_rate)}% 이자율로 이번 달 약속을 확정했어요! 🔒` };
   } catch {
     return { ok: false, message: "확정에 실패했어요. 다시 시도해주세요." };
   }

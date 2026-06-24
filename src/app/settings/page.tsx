@@ -5,7 +5,6 @@ import { SessionCard } from "@/components/auth/session-card";
 import {
   AllowanceRuleForm,
   BorrowConditionsForm,
-  ChildCreateForm,
   ChildPinForm,
   InterestPolicyForm,
 } from "@/components/finance/management-forms";

@@ -96,7 +96,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
       <div className="detail-info-box">
         <p className="detail-info-title">💡 남긴 돈이란?</p>
         <p className="detail-info-body">
-          받은 용돈에서 쓴 돈을 빼고 남은 게 "남긴 돈"이에요.
+          받은 용돈에서 쓴 돈을 빼고 남은 게 <q>남긴 돈</q>이에요.
           이 남긴 돈에 이자가 붙어요. 많이 남길수록 이자도 더 많이 생겨요!
         </p>
       </div>

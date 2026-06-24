@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
-import { getAppDataBundle, getDashboardView } from "@/lib/data";
+import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";

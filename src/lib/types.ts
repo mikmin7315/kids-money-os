@@ -77,6 +77,7 @@ export type AllowanceRule = {
   dayOfMonth?: number;
   isActive: boolean;
   createdAt: string;
+  deletedAt?: string;
 };
 
 export type Wallet = {
@@ -112,6 +113,7 @@ export type BorrowRequest = {
   installmentCount?: number;
   interestRate: number;
   createdAt: string;
+  repaidAt?: string;
 };
 
 export type BorrowRepayment = {

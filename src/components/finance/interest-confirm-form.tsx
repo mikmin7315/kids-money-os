@@ -8,11 +8,9 @@ const initial = { ok: false, message: "" };
 export function InterestConfirmForm({
   childId,
   rate,
-  estimated,
 }: {
   childId: string;
   rate: number;
-  estimated: number;
 }) {
   const [state, action, pending] = useActionState(confirmInterestRateAction, initial);
 
@@ -35,7 +33,6 @@ export function InterestConfirmForm({
   return (
     <form action={action} className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       <input type="hidden" name="childId" value={childId} />
-      <input type="hidden" name="rate" value={rate} />
 
       <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 4 }}>이 이자율로 확정할까요?</p>
       <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 16 }}>

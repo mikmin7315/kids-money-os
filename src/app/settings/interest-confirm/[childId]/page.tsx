@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Lock } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
@@ -108,7 +108,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
         </div>
 
         {/* 확정 폼 */}
-        <InterestConfirmForm childId={childId} rate={rate} estimated={estimated} />
+        <InterestConfirmForm childId={childId} rate={rate} />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import {
   InlineBehaviorDecisionForm,
   InlineBorrowDecisionForm,
 } from "@/components/finance/action-forms";
+import Image from "next/image";
 import Link from "next/link";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
@@ -64,9 +65,12 @@ export default async function ApprovalsPage() {
                       {(log as { photo_url?: string; photo_taken_at?: string }).photo_url && (
                         <div className="mt-3 overflow-hidden rounded-[14px]">
                           <div className="relative">
-                            <img
-                              src={(log as { photo_url?: string }).photo_url}
+                            <Image
+                              src={(log as { photo_url?: string }).photo_url!}
                               alt="약속 인증 사진"
+                              width={800}
+                              height={448}
+                              unoptimized
                               className="w-full max-h-56 object-cover"
                             />
                             {(log as { photo_taken_at?: string }).photo_taken_at && (

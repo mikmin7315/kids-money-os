@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Camera, X } from "lucide-react";
+import Image from "next/image";
 import {
   FormState,
   submitBehaviorApprovalForm,
@@ -125,7 +126,14 @@ export function ChildBehaviorCheckForm({
               <div className="px-4 pb-3">
                 {photo ? (
                   <div className="relative overflow-hidden rounded-[14px]">
-                    <img src={photo.preview} alt="첨부 사진" className="w-full max-h-48 object-cover" />
+                    <Image
+                      src={photo.preview}
+                      alt="첨부 사진"
+                      width={800}
+                      height={384}
+                      unoptimized
+                      className="w-full max-h-48 object-cover"
+                    />
                     <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-700 text-white">
                       📅 {formatStamp(photo.takenAt)}
                     </div>

@@ -19,7 +19,7 @@ export default async function ParentWalletPage() {
 
       <p className="detail-eyebrow">내 지갑</p>
       <h1 className="detail-title">💳 부모 지갑</h1>
-      <p className="detail-subtitle">충전 후 아이에게 용돈을 지급할 수 있어요</p>
+      <p className="detail-subtitle">이체 확인 후 반영된 잔액으로 아이에게 용돈을 지급할 수 있어요</p>
 
       {/* 잔액 카드 */}
       <div className="detail-hero">
@@ -65,7 +65,7 @@ export default async function ParentWalletPage() {
       <div className="detail-info-box">
         <p className="detail-info-title">💡 충전 방법</p>
         <p className="detail-info-body">
-          아래 계좌로 이체 후 금액을 입력하고 충전 확인 버튼을 눌러주세요.<br />
+          아래 계좌로 이체 후 금액을 입력하고 충전 요청 버튼을 눌러주세요.<br />
           <strong style={{ color: "#5b21b6" }}>카카오뱅크 3333-01-0000000 (모나리)</strong><br />
           이체 메모에 가입 이메일을 적어주시면 빠르게 확인돼요.
         </p>

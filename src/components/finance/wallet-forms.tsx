@@ -15,7 +15,7 @@ export function WalletChargeForm() {
     return (
       <div className="py-6 text-center">
         <p style={{ fontSize: 40, marginBottom: 10 }}>💸</p>
-        <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>충전 완료!</p>
+        <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>충전 요청 완료!</p>
         <p style={{ fontSize: 14, fontWeight: 500, color: "#6b7280", marginTop: 6 }}>{state.message}</p>
         <button
           onClick={() => window.location.reload()}
@@ -80,7 +80,7 @@ export function WalletChargeForm() {
         disabled={pending}
         className="monari-btn-primary w-full"
       >
-        {pending ? "처리 중..." : "충전 확인"}
+        {pending ? "처리 중..." : "충전 요청"}
       </button>
     </form>
   );

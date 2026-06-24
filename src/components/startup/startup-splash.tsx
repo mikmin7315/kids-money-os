@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { Capacitor } from "@capacitor/core";
 
-const EMOJIS = ["🌟", "🐷", "💰", "✨", "🎉", "🪙", "⭐"];
-
 export function StartupSplash() {
   const [leaving, setLeaving] = useState(false);
   const [hidden, setHidden] = useState(false);
