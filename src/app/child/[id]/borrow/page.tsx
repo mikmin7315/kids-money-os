@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import { BorrowRequestQuickForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -24,47 +26,76 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
   if (!child || !summary) notFound();
 
   const activeBorrows = bundle.borrowRequests.filter(
-    (r) => r.childId === id && (r.status === "approved" || r.status === "partial")
+    (r) => r.childId === id && (r.status === "approved" || r.status === "partial"),
   );
   const pendingBorrows = bundle.borrowRequests.filter(
-    (r) => r.childId === id && r.status === "pending"
+    (r) => r.childId === id && r.status === "pending",
   );
+  const totalActive = activeBorrows.length + pendingBorrows.length;
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <div className="mb-6">
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
-        <p className="mt-2" style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>
-          부모님이 허락하면 용돈 전에 미리 쓸 수 있어요
-        </p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
+          <p className="mt-2" style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>
+            부모님이 허락하면 용돈 전에 미리 쓸 수 있어요
+          </p>
+        </div>
+        {totalActive > 0 && (
+          <Link
+            href={`/child/${id}/borrow-status`}
+            className="flex items-center gap-1 rounded-[12px] bg-[#fecdd3] px-3 py-2 text-xs font-bold text-[#be123c] transition active:scale-[0.97]"
+          >
+            현황 보기 <ArrowRight size={13} />
+          </Link>
+        )}
       </div>
 
-      {/* 대기 중인 요청 */}
-      {pendingBorrows.length > 0 && (
-        <div className="mb-4 rounded-[20px] bg-[#fef3c7] p-4">
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>⏳ 부모님 확인 기다리는 중 ({pendingBorrows.length}건)</p>
-          {pendingBorrows.map((r) => (
-            <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#b45309" }}>
-              {formatWon(r.requestedAmount)} — {r.purpose}
-            </p>
-          ))}
-        </div>
+      {/* 진행 중 요약 배너 */}
+      {totalActive > 0 && (
+        <Link href={`/child/${id}/borrow-status`} className="mb-5 block">
+          <div className="rounded-[20px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            {pendingBorrows.length > 0 && (
+              <div className="bg-[#fef3c7] px-5 py-4">
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>⏳ 부모님 확인 기다리는 중</p>
+                {pendingBorrows.map((r) => (
+                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#b45309" }}>
+                    {formatWon(r.requestedAmount)} — {r.purpose}
+                  </p>
+                ))}
+              </div>
+            )}
+            {activeBorrows.length > 0 && (
+              <div className="bg-[#fecdd3] px-5 py-4">
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#9f1239" }}>📋 갚는 중 ({activeBorrows.length}건)</p>
+                {activeBorrows.map((r) => (
+                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#be123c" }}>
+                    {formatWon(r.requestedAmount)} — {r.purpose}
+                  </p>
+                ))}
+                <p className="mt-2 flex items-center gap-1 text-xs font-bold text-[#be123c]">
+                  자세한 현황 보기 <ArrowRight size={12} />
+                </p>
+              </div>
+            )}
+          </div>
+        </Link>
       )}
 
-      {/* 상환 중인 건 */}
-      {activeBorrows.length > 0 && (
-        <div className="mb-4 rounded-[20px] bg-[#fecdd3] p-4">
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#9f1239" }}>📋 갚는 중 ({activeBorrows.length}건)</p>
-          {activeBorrows.map((r) => (
-            <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#be123c" }}>
-              {formatWon(r.requestedAmount)} — {r.purpose}
-            </p>
-          ))}
-        </div>
-      )}
-
+      {/* 새 요청 폼 */}
+      <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>새 미리쓰기 요청</p>
       <div className="rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
         <BorrowRequestQuickForm childId={id} />
+      </div>
+
+      {/* 안내 */}
+      <div className="mt-5 rounded-[20px] bg-[#f5f3ff] p-4">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "#5b21b6", marginBottom: 6 }}>💡 미리쓰기란?</p>
+        <p style={{ fontSize: 13, color: "#7c3aed", lineHeight: 1.7 }}>
+          아직 받지 않은 용돈을 먼저 쓰고 나중에 갚는 거예요.
+          부모님이 승인하면 잔액에 추가되고, 다음 용돈에서 조금씩 갚게 돼요.
+        </p>
       </div>
     </main>
   );
