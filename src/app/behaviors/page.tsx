@@ -63,7 +63,11 @@ export default async function BehaviorsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <MetricBox label="약속 보상" value={formatWon(rule.rewardAmount)} />
-                  <MetricBox label="이자율 변화" value={`+${formatPercent(rule.interestDelta)}`} />
+                  <MetricBox
+                    label="다음 달 이자율"
+                    value={rule.interestDelta !== 0 ? `+${formatPercent(rule.interestDelta)}` : "—"}
+                    sub={rule.ruleCategory === "recurring" ? `${rule.monthlyTargetRate}% 달성 시` : "한 번 달성 시"}
+                  />
                 </div>
               </div>
             ))}
@@ -129,11 +133,12 @@ function StatItem({ label, value, unit = "건", color }: { label: string; value:
   );
 }
 
-function MetricBox({ label, value }: { label: string; value: string }) {
+function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="rounded-[18px] bg-[#f5f3ff] p-3">
       <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
       <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
+      {sub && <p className="mt-0.5 text-[11px] text-[#6d28d9]/50">{sub}</p>}
     </div>
   );
 }

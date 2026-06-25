@@ -193,6 +193,8 @@ export async function createBehaviorRuleAction(input: {
   description: string;
   rewardAmount: number;
   interestDelta: number;
+  ruleCategory: "recurring" | "monthly_goal";
+  monthlyTargetRate: number;
   requiresParentApproval: boolean;
 }): Promise<ActionResult<{ id: string }>> {
   const auth = await requireParentSession();
@@ -212,6 +214,8 @@ export async function createBehaviorRuleAction(input: {
         description: input.description,
         reward_amount: input.rewardAmount,
         interest_delta: input.interestDelta,
+        rule_category: input.ruleCategory,
+        monthly_target_rate: input.monthlyTargetRate,
         requires_parent_approval: input.requiresParentApproval,
         is_active: true,
       })
@@ -537,6 +541,8 @@ export async function createBehaviorRuleForm(
   const description = readString(formData, "description");
   const rewardAmount = Number(readString(formData, "rewardAmount"));
   const interestDelta = Number(readString(formData, "interestDelta"));
+  const ruleCategory = readString(formData, "ruleCategory") as "recurring" | "monthly_goal";
+  const monthlyTargetRate = Math.min(100, Math.max(1, Number(readString(formData, "monthlyTargetRate") || "80")));
   const requiresParentApproval = formData.get("requiresParentApproval") === "on";
 
   if (!title || !Number.isFinite(rewardAmount) || !Number.isFinite(interestDelta)) {
@@ -548,6 +554,8 @@ export async function createBehaviorRuleForm(
     description,
     rewardAmount,
     interestDelta,
+    ruleCategory: ruleCategory === "monthly_goal" ? "monthly_goal" : "recurring",
+    monthlyTargetRate,
     requiresParentApproval,
   });
 

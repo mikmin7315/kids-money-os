@@ -9,17 +9,14 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
-
-  // Only allow POST
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
 
-  // Cron secret validation — prevents arbitrary callers from triggering settlement
+  // Cron secret validation
   const cronSecret = Deno.env.get("CRON_SECRET");
   if (cronSecret) {
     const incoming = req.headers.get("x-cron-secret") ?? "";
-    // Timing-safe comparison
     const enc = new TextEncoder();
     const a = enc.encode(incoming.padEnd(64));
     const b = enc.encode(cronSecret.padEnd(64));
@@ -47,6 +44,9 @@ Deno.serve(async (req) => {
   const firstDay = `${monthKey}-01`;
   const lastDay = new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
 
+  // Next month's first day (when rate adjustment takes effect)
+  const nextMonthFirstDay = new Date(Date.UTC(year, month, 1)).toISOString().slice(0, 10);
+
   const { data: children, error: childrenErr } = await supabase
     .from("children")
     .select("id, birth_year, parent_id");
@@ -72,11 +72,17 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (existingScore) continue;
 
-    const [walletRes, policyRes, logsRes] = await Promise.all([
+    const [walletRes, policyRes, rulesRes, logsRes] = await Promise.all([
       supabase.from("wallet_snapshots").select("*").eq("child_id", child.id).maybeSingle(),
       supabase.from("interest_policies").select("*").eq("child_id", child.id).maybeSingle(),
-      supabase.from("behavior_logs")
-        .select("status")
+      supabase
+        .from("behavior_rules")
+        .select("id, title, interest_delta, rule_category, monthly_target_rate")
+        .eq("parent_id", child.parent_id)
+        .eq("is_active", true),
+      supabase
+        .from("behavior_logs")
+        .select("behavior_rule_id, status")
         .eq("child_id", child.id)
         .gte("behavior_date", firstDay)
         .lte("behavior_date", lastDay),
@@ -86,21 +92,47 @@ Deno.serve(async (req) => {
     const policy = policyRes.data;
     if (!wallet || !policy) continue;
 
+    const rules = rulesRes.data ?? [];
     const logs = logsRes.data ?? [];
+
     const totalAttempts = logs.length;
-    const successCount = logs.filter((l) => l.status === "completed" || l.status === "approved").length;
+    const successCount = logs.filter((l) => l.status === "approved").length;
     const computedScore = totalAttempts > 0 ? (successCount / totalAttempts) * 100 : 0;
 
-    const scoreDelta = computedScore - 50;
-    const rateAdjustment = Math.round((scoreDelta / 10) * 0.1 * 100) / 100;
+    // Per-rule achievement → compute net rate adjustment for NEXT month
+    let totalRateDelta = 0;
+    const achievedRules: string[] = [];
+
+    for (const rule of rules) {
+      const ruleLogs = logs.filter((l) => l.behavior_rule_id === rule.id);
+      const approvedCount = ruleLogs.filter((l) => l.status === "approved").length;
+
+      let achieved = false;
+      if (rule.rule_category === "monthly_goal") {
+        achieved = approvedCount >= 1;
+      } else {
+        const targetRate = rule.monthly_target_rate ?? 80;
+        const ruleTotal = ruleLogs.length;
+        const rate = ruleTotal > 0 ? (approvedCount / ruleTotal) * 100 : 0;
+        achieved = rate >= targetRate;
+      }
+
+      if (achieved && rule.interest_delta !== 0) {
+        totalRateDelta += rule.interest_delta;
+        achievedRules.push(rule.title);
+      }
+    }
+
+    const currentRate = wallet.current_interest_rate;
+    const roundedDelta = Math.round(totalRateDelta * 100) / 100;
     const newRate = Math.min(
       policy.max_interest_rate,
-      Math.max(policy.min_interest_rate, wallet.current_interest_rate + rateAdjustment),
+      Math.max(policy.min_interest_rate, currentRate + roundedDelta),
     );
 
     const periodRate = policy.settlement_cycle === "monthly"
-      ? wallet.current_interest_rate / 100 / 12
-      : wallet.current_interest_rate / 100 / 52;
+      ? currentRate / 100 / 12
+      : currentRate / 100 / 52;
     const interestAmount = Math.round(wallet.savings_balance * periodRate);
 
     let stepFailed = false;
@@ -112,7 +144,7 @@ Deno.serve(async (req) => {
       total_attempts: totalAttempts,
       success_count: successCount,
       computed_score: computedScore,
-      rate_adjustment: rateAdjustment,
+      rate_adjustment: roundedDelta,
     }, { onConflict: "child_id,year,month" });
     if (scoreErr) {
       failures.push({ childId: child.id, step: "behavior_scores", error: scoreErr.message });
@@ -135,13 +167,18 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (!stepFailed && rateAdjustment !== 0) {
+    // Rate adjustment effective NEXT month
+    if (!stepFailed && roundedDelta !== 0) {
+      const reason = achievedRules.length > 0
+        ? `${year}년 ${month}월 약속 달성: ${achievedRules.join(", ")} → 다음 달 이자율 ${roundedDelta > 0 ? "+" : ""}${roundedDelta}%p 반영`
+        : `${year}년 ${month}월 달성 약속 없음`;
+
       const { error: rateErr } = await supabase.from("interest_rate_events").insert({
         child_id: child.id,
-        rate_delta: rateAdjustment,
+        rate_delta: roundedDelta,
         applied_rate: newRate,
-        reason: `${year}년 ${month}월 행동 점수 기반 이자율 조정 (성공률 ${computedScore.toFixed(0)}%)`,
-        effective_date: lastDay,
+        reason,
+        effective_date: nextMonthFirstDay,
       });
       if (rateErr) {
         failures.push({ childId: child.id, step: "interest_rate_events", error: rateErr.message });
@@ -177,13 +214,19 @@ Deno.serve(async (req) => {
       continue;
     }
 
+    const rateMsg = roundedDelta > 0
+      ? `이자율 +${roundedDelta}%p → 다음 달 ${newRate}%`
+      : roundedDelta < 0
+      ? `이자율 ${roundedDelta}%p → 다음 달 ${newRate}%`
+      : "이자율 변동 없음";
+
     await supabase.from("notifications").insert({
       parent_id: child.parent_id,
       child_id: child.id,
       target: "parent",
       type: "monthly_settlement",
       title: `${year}년 ${month}월 이자 정산 완료`,
-      body: `행동 점수 ${computedScore.toFixed(0)}%, 이자 ${interestAmount.toLocaleString()}원 지급, 이자율 ${newRate}%로 조정됩니다.`,
+      body: `이자 ${interestAmount.toLocaleString()}원 지급. ${rateMsg}.`,
     });
     await supabase.from("notifications").insert({
       parent_id: child.parent_id,
@@ -191,7 +234,7 @@ Deno.serve(async (req) => {
       target: "child",
       type: "monthly_settlement",
       title: `${year}년 ${month}월 이자가 들어왔어요!`,
-      body: `이번 달 행동 점수 ${computedScore.toFixed(0)}점으로 이자 ${interestAmount.toLocaleString()}원을 받았어요.`,
+      body: `이자 ${interestAmount.toLocaleString()}원을 받았어요. ${rateMsg}.`,
     });
 
     results.push({
@@ -199,9 +242,11 @@ Deno.serve(async (req) => {
       birthYear: child.birth_year,
       interestAmount,
       computedScore,
-      rateAdjustment,
+      rateAdjustment: roundedDelta,
+      achievedRulesCount: achievedRules.length,
       savingsBalance: wallet.savings_balance,
-      currentRate: newRate,
+      currentRate,
+      nextRate: newRate,
     });
   }
 
@@ -216,13 +261,12 @@ Deno.serve(async (req) => {
 
   type BandAccum = { scores: number[]; rates: number[]; savingsBalances: number[]; count: number };
   const bands = new Map<string, BandAccum>();
-
   for (const r of results) {
     const band = ageBand(r.birthYear);
     if (!bands.has(band)) bands.set(band, { scores: [], rates: [], savingsBalances: [], count: 0 });
     const b = bands.get(band)!;
     b.scores.push(r.computedScore);
-    b.rates.push(r.currentRate);
+    b.rates.push(r.nextRate);
     b.savingsBalances.push(r.savingsBalance);
     b.count++;
   }
