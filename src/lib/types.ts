@@ -32,6 +32,8 @@ export type ChildProfile = {
   createdAt: string;
 };
 
+export type BehaviorRuleCategory = "recurring" | "monthly_goal";
+
 export type BehaviorRule = {
   id: string;
   parentId: string;
@@ -39,6 +41,8 @@ export type BehaviorRule = {
   description: string;
   rewardAmount: number;
   interestDelta: number;
+  ruleCategory: BehaviorRuleCategory;
+  monthlyTargetRate: number;
   requiresParentApproval: boolean;
   isActive: boolean;
   createdAt: string;
