@@ -113,6 +113,9 @@ try {
     "interest_rate_confirmations",
     "cash_spend_requests",
     "allowance_executions",
+    // P1
+    "settlement_runs",
+    "settlement_child_runs",
   ];
   const requiredColumns = {
     profiles: ["consent_version", "consent_at"],
@@ -123,6 +126,8 @@ try {
     borrow_requests: ["repayment_mode", "installment_count", "interest_rate", "approved_by_parent"],
     borrow_repayments: ["borrow_request_id", "due_date", "amount", "paid_amount", "status"],
     notifications: ["parent_id", "child_id", "target", "type", "title", "body", "is_read", "created_at"],
+    // P1
+    parent_wallet_charges: ["reviewed_by", "balance_before", "balance_after"],
   };
   const requiredRpcs = [
     "approve_behavior_log",
@@ -143,6 +148,8 @@ try {
     "process_scheduled_allowances",
     "update_child",
     "delete_child",
+    // P1
+    "run_monthly_settlement",
   ];
 
   for (const table of requiredTables) {

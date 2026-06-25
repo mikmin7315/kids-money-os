@@ -252,6 +252,35 @@ begin
     end;
   end loop;
 
+  -- peer_stats 집계: 연령대별 평균 행동점수/이자율/저축잔액
+  insert into public.peer_stats (year, month, age_group, avg_behavior_score, avg_savings_rate, avg_interest_rate, sample_count)
+  select
+    p_year,
+    p_month,
+    case
+      when (p_year - c.birth_year) <= 9  then '7-9'
+      when (p_year - c.birth_year) <= 12 then '10-12'
+      else '13-15'
+    end as age_group,
+    round(avg(bs.computed_score)::numeric, 2)             as avg_behavior_score,
+    round(avg(ws.savings_balance)::numeric, 2)            as avg_savings_rate,
+    round(avg(ws.current_interest_rate)::numeric, 2)      as avg_interest_rate,
+    count(*)                                              as sample_count
+  from public.settlement_child_runs scr
+  join public.children c on c.id = scr.child_id
+  left join public.behavior_scores bs
+    on bs.child_id = scr.child_id and bs.year = p_year and bs.month = p_month
+  left join public.wallet_snapshots ws on ws.child_id = scr.child_id
+  where scr.run_id = v_run_id
+    and scr.status = 'success'
+    and c.deleted_at is null
+  group by age_group
+  on conflict (year, month, age_group) do update
+    set avg_behavior_score = excluded.avg_behavior_score,
+        avg_savings_rate   = excluded.avg_savings_rate,
+        avg_interest_rate  = excluded.avg_interest_rate,
+        sample_count       = excluded.sample_count;
+
   update public.settlement_runs
   set status = case when v_failure_total = 0 then 'success'
                     when v_success_total = 0 then 'failed'

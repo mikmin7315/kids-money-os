@@ -77,3 +77,24 @@ select
   count(*) filter (where role = 'admin') as admin_count,
   count(*) filter (where role = 'parent') as parent_count
 from public.profiles;
+
+-- P1: settlement_runs / settlement_child_runs 테이블 확인
+select
+  to_regclass('public.settlement_runs') is not null as has_settlement_runs,
+  to_regclass('public.settlement_child_runs') is not null as has_settlement_child_runs,
+  to_regprocedure('public.run_monthly_settlement(integer,integer)') is not null as has_run_monthly_settlement_rpc;
+
+-- P1: parent_wallet_charges 감사 컬럼 확인
+select
+  (select count(*) from information_schema.columns
+   where table_name = 'parent_wallet_charges' and column_name = 'reviewed_by') > 0 as has_reviewed_by,
+  (select count(*) from information_schema.columns
+   where table_name = 'parent_wallet_charges' and column_name = 'balance_before') > 0 as has_balance_before,
+  (select count(*) from information_schema.columns
+   where table_name = 'parent_wallet_charges' and column_name = 'balance_after') > 0 as has_balance_after;
+
+-- P1: children RLS 3-policy 분리 확인
+select
+  exists (select 1 from pg_policies where tablename = 'children' and policyname = 'children_select_by_parent') as has_children_select_policy,
+  exists (select 1 from pg_policies where tablename = 'children' and policyname = 'children_insert_by_parent') as has_children_insert_policy,
+  exists (select 1 from pg_policies where tablename = 'children' and policyname = 'children_update_by_parent') as has_children_update_policy;
