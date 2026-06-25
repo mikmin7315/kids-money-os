@@ -107,6 +107,12 @@ try {
     "monthly_reports",
     "peer_stats",
     "notifications",
+    // P0 migrations
+    "parent_wallets",
+    "parent_wallet_charges",
+    "interest_rate_confirmations",
+    "cash_spend_requests",
+    "allowance_executions",
   ];
   const requiredColumns = {
     profiles: ["consent_version", "consent_at"],
@@ -123,6 +129,14 @@ try {
     "consume_child_pin_attempt",
     "change_profile_role",
     "get_app_data_bundle",
+    // P0 migrations
+    "save_parent_bank_account",
+    "give_allowance_from_parent_wallet",
+    "confirm_interest_rate",
+    "approve_cash_spend",
+    "reject_cash_spend",
+    "approve_parent_wallet_charge",
+    "reject_parent_wallet_charge",
   ];
 
   for (const table of requiredTables) {

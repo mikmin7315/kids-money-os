@@ -45,8 +45,7 @@ Deno.serve(async (req) => {
   const lastDay = new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
 
   // Next month's first day (when rate adjustment takes effect)
-  const nextMonthKst = new Date(Date.UTC(year, month, 1));
-  const nextMonthFirstDay = nextMonthKst.toISOString().slice(0, 10);
+  const nextMonthFirstDay = new Date(Date.UTC(year, month, 1)).toISOString().slice(0, 10);
 
   const { data: children, error: childrenErr } = await supabase
     .from("children")
@@ -63,7 +62,7 @@ Deno.serve(async (req) => {
   const failures = [];
 
   for (const child of children ?? []) {
-    // Idempotency
+    // Idempotency: skip if already settled for this target month
     const { data: existingScore } = await supabase
       .from("behavior_scores")
       .select("id")
@@ -96,7 +95,6 @@ Deno.serve(async (req) => {
     const rules = rulesRes.data ?? [];
     const logs = logsRes.data ?? [];
 
-    // Overall success stats for behavior_scores
     const totalAttempts = logs.length;
     const successCount = logs.filter((l) => l.status === "approved").length;
     const computedScore = totalAttempts > 0 ? (successCount / totalAttempts) * 100 : 0;
@@ -111,10 +109,8 @@ Deno.serve(async (req) => {
 
       let achieved = false;
       if (rule.rule_category === "monthly_goal") {
-        // One approval in the month = achieved
         achieved = approvedCount >= 1;
       } else {
-        // recurring: approval rate must meet monthly_target_rate
         const targetRate = rule.monthly_target_rate ?? 80;
         const ruleTotal = ruleLogs.length;
         const rate = ruleTotal > 0 ? (approvedCount / ruleTotal) * 100 : 0;
@@ -134,7 +130,6 @@ Deno.serve(async (req) => {
       Math.max(policy.min_interest_rate, currentRate + roundedDelta),
     );
 
-    // Savings interest based on THIS month's confirmed rate
     const periodRate = policy.settlement_cycle === "monthly"
       ? currentRate / 100 / 12
       : currentRate / 100 / 52;
@@ -172,7 +167,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Rate adjustment for NEXT month (effective_date = next month's first day)
+    // Rate adjustment effective NEXT month
     if (!stepFailed && roundedDelta !== 0) {
       const reason = achievedRules.length > 0
         ? `${year}년 ${month}월 약속 달성: ${achievedRules.join(", ")} → 다음 달 이자율 ${roundedDelta > 0 ? "+" : ""}${roundedDelta}%p 반영`
