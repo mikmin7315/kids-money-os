@@ -154,6 +154,11 @@ export function SignInForm() {
         {pending ? "로그인하는 중..." : "로그인"}
       </button>
       <StatusText state={state} />
+      <p className="text-center text-[13px] text-[var(--monari-ink-muted)]">
+        <Link href="/login/reset" className="font-700 text-[var(--monari-primary)]">
+          비밀번호를 잊어버렸어요
+        </Link>
+      </p>
     </form>
   );
 }

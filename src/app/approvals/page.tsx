@@ -2,6 +2,7 @@ import {
   InlineBehaviorDecisionForm,
   InlineBorrowDecisionForm,
   InlineCashSpendDecisionForm,
+  InlineRepayInstallmentForm,
 } from "@/components/finance/action-forms";
 import Image from "next/image";
 import Link from "next/link";
@@ -223,9 +224,17 @@ export default async function ApprovalsPage() {
                         <span>상환 진행</span>
                         <span>{paidCount}/{schedules.length}회</span>
                       </div>
-                      <div className="monari-progress-track">
+                      <div className="monari-progress-track mb-3">
                         <div className="monari-progress-fill" style={{ width: `${progress}%` }} />
                       </div>
+                      {schedules.filter((s) => s.status !== "paid").slice(0, 1).map((s) => (
+                        <div key={s.id} className="border-t border-[var(--monari-line)] pt-3">
+                          <p className="text-[12px] text-[var(--monari-ink-muted)] mb-2">
+                            다음 상환: {s.dueDate} · {formatWon(s.amount)}
+                          </p>
+                          <InlineRepayInstallmentForm repaymentId={s.id} amount={s.amount} />
+                        </div>
+                      ))}
                     </>
                   )}
                 </div>

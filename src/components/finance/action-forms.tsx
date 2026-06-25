@@ -17,6 +17,7 @@ import {
   submitTransactionForm,
   approveCashSpendAction,
   rejectCashSpendAction,
+  repayBorrowInstallmentAction,
 } from "@/actions/finance";
 import { BehaviorRule, ChildProfile } from "@/lib/types";
 import { formatWon } from "@/lib/format";
@@ -623,5 +624,25 @@ export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }
         )}
       </form>
     </div>
+  );
+}
+
+export function InlineRepayInstallmentForm({ repaymentId, amount }: { repaymentId: string; amount: number }) {
+  const [state, action, pending] = useActionState(repayBorrowInstallmentAction, { ok: false, message: "" });
+
+  if (state.ok) return <p className="text-sm font-bold text-[#059669]">✓ 상환 완료</p>;
+
+  return (
+    <form action={action}>
+      <input type="hidden" name="repaymentId" value={repaymentId} />
+      {state.message && !state.ok && <p className="mb-2 text-xs text-red-600">{state.message}</p>}
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full rounded-[12px] bg-[#059669] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
+      >
+        {pending ? "처리 중…" : `상환하기`}
+      </button>
+    </form>
   );
 }
