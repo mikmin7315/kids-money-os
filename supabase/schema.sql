@@ -570,9 +570,19 @@ alter table public.peer_stats enable row level security;
 create policy "profiles_own" on public.profiles
   for all using (auth.uid() = id);
 
--- children: parent owns rows
-create policy "children_by_parent" on public.children
-  for all using (parent_id = auth.uid());
+-- children: select는 소프트 삭제 제외, insert/update는 별도 정책
+create policy "children_select_by_parent" on public.children
+  for select to authenticated
+  using (parent_id = auth.uid() and deleted_at is null);
+
+create policy "children_insert_by_parent" on public.children
+  for insert to authenticated
+  with check (parent_id = auth.uid());
+
+create policy "children_update_by_parent" on public.children
+  for update to authenticated
+  using (parent_id = auth.uid() and deleted_at is null)
+  with check (parent_id = auth.uid());
 
 -- behavior_rules: parent owns rows
 create policy "behavior_rules_by_parent" on public.behavior_rules

@@ -19,6 +19,14 @@ export function formatCompact(value: number) {
   }).format(value);
 }
 
+/** 계좌번호 마스킹: 마지막 4자리만 표시 (예: ****-****-1234) */
+export function maskAccountNumber(accountNumber: string | null): string {
+  if (!accountNumber) return "미등록";
+  const digits = accountNumber.replace(/\D/g, "");
+  const last4 = digits.slice(-4);
+  return `****${last4}`;
+}
+
 export function formatDateLabel(date: string) {
   return new Intl.DateTimeFormat("ko-KR", {
     month: "long",
