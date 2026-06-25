@@ -698,3 +698,81 @@ async function parentOwnsChild(
   if (error) throw error;
   return data != null;
 }
+
+// ────────────────────────────────────────────────────────────
+// 아이 수정 / 삭제
+// ────────────────────────────────────────────────────────────
+
+export async function updateChildAction(input: {
+  childId: string;
+  name: string;
+  nickname: string;
+  birthYear: number;
+}): Promise<ActionResult<void>> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
+
+  if (isDemoMode()) return { ok: true };
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase.rpc("update_child", {
+      p_child_id: input.childId,
+      p_name: input.name,
+      p_nickname: input.nickname || input.name,
+      p_birth_year: input.birthYear,
+    });
+    if (error) throw error;
+    revalidatePath("/settings");
+    revalidatePath("/");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "아이 정보 수정 실패" };
+  }
+}
+
+export async function deleteChildAction(childId: string): Promise<ActionResult<void>> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
+
+  if (isDemoMode()) return { ok: true };
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase.rpc("delete_child", { p_child_id: childId });
+    if (error) throw error;
+    revalidatePath("/settings");
+    revalidatePath("/");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "아이 삭제 실패" };
+  }
+}
+
+export async function updateChildForm(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const childId = readString(formData, "childId");
+  const name = readString(formData, "name");
+  const nickname = readString(formData, "nickname");
+  const birthYear = Number(readString(formData, "birthYear"));
+
+  if (!childId || !name || !Number.isFinite(birthYear)) {
+    return { ok: false, message: "필수 항목을 입력해주세요." };
+  }
+
+  const result = await updateChildAction({ childId, name, nickname, birthYear });
+  return result.ok ? { ok: true, message: "아이 정보를 수정했어요." } : { ok: false, message: result.error ?? "수정 실패" };
+}
+
+export async function deleteChildForm(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const childId = readString(formData, "childId");
+  if (!childId) return { ok: false, message: "아이 ID가 없습니다." };
+
+  const result = await deleteChildAction(childId);
+  return result.ok ? { ok: true, message: "아이를 삭제했어요." } : { ok: false, message: result.error ?? "삭제 실패" };
+}

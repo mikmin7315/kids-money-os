@@ -825,3 +825,28 @@ async function validateTransactionLimits(
   if (type === "unsave" && amount > savings) return "저금한 금액이 부족합니다.";
   return null;
 }
+
+// ────────────────────────────────────────────────────────────
+// 미리쓰기 상환
+// ────────────────────────────────────────────────────────────
+
+export async function repayBorrowInstallmentAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const repaymentId = String(formData.get("repaymentId") ?? "").trim();
+  if (!repaymentId) return { ok: false, message: "상환 ID가 없습니다." };
+
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, message: "부모 인증이 필요해요." };
+
+  if (isDemoMode()) return { ok: true, message: "상환 완료 (데모)" };
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase.rpc("repay_borrow_installment", { p_repayment_id: repaymentId });
+  if (error) return { ok: false, message: error.message.includes("not found") ? "상환 정보를 찾을 수 없어요." : "상환 처리에 실패했어요." };
+
+  revalidatePath("/approvals");
+  revalidatePath("/");
+  return { ok: true, message: "상환 완료했어요." };
+}
