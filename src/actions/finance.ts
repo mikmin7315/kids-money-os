@@ -262,7 +262,7 @@ export async function createBorrowRequestAction(input: {
     const supabase = await getSupabaseServerClient();
     const { data: conditions, error: conditionsError } = await supabase
       .from("borrow_conditions")
-      .select("max_amount, requires_purpose")
+      .select("max_amount, requires_purpose, auto_approve_below")
       .eq("child_id", input.childId)
       .maybeSingle();
     if (conditionsError) throw conditionsError;
@@ -273,6 +273,11 @@ export async function createBorrowRequestAction(input: {
     if ((conditions?.requires_purpose ?? true) && !input.purpose.trim()) {
       return { ok: false, error: "미리쓰기 목적을 입력해주세요." };
     }
+
+    // auto_approve_below 이하면 즉시 자동 승인
+    const autoApproveBelow = Number(conditions?.auto_approve_below ?? 0);
+    const shouldAutoApprove = autoApproveBelow > 0 && input.requestedAmount <= autoApproveBelow;
+
     const { data, error } = await supabase
       .from("borrow_requests")
       .insert({
@@ -288,6 +293,31 @@ export async function createBorrowRequestAction(input: {
       .single();
 
     if (error) throw error;
+
+    if (shouldAutoApprove) {
+      // 자동 승인: approve_borrow_request RPC 호출 (상환 스케줄 생성 포함)
+      const { error: approveErr } = await supabase.rpc("approve_borrow_request", {
+        p_borrow_request_id: data.id,
+        p_approval_date: new Date().toISOString().slice(0, 10),
+      });
+      if (!approveErr) {
+        const parentId2 = await getParentIdForChild(input.childId);
+        if (parentId2) {
+          await insertNotification({
+            parentId: parentId2,
+            childId: input.childId,
+            target: "parent",
+            type: "borrow_auto_approved",
+            title: "미리쓰기 자동 승인됨",
+            body: `${input.requestedAmount.toLocaleString()}원 미리쓰기가 자동 승인 기준(${autoApproveBelow.toLocaleString()}원 이하)으로 자동 승인됐어요.`,
+          });
+        }
+        revalidatePath("/approvals");
+        revalidatePath(`/child/${input.childId}`);
+        return { ok: true, data: { id: String(data.id) } };
+      }
+      // 자동 승인 실패 시 pending 상태로 부모 알림 발송 (아래로 fall-through)
+    }
 
     const parentId2 = await getParentIdForChild(input.childId);
     if (parentId2) {

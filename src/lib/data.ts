@@ -15,6 +15,7 @@ import {
 } from "@/lib/mock-data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import {
+  AllowanceExecution,
   AllowanceRule,
   BehaviorLog,
   BehaviorRule,
@@ -41,6 +42,7 @@ export type AppDataBundle = {
   interestPolicies: InterestPolicy[];
   walletSnapshots: Wallet[];
   cashSpendRequests: CashSpendRequest[];
+  allowanceExecutions: AllowanceExecution[];
 };
 
 export async function getDashboardView(): Promise<DashboardData> {
@@ -84,14 +86,37 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
   const mappedInterestPolicies = (rows.interest_policies ?? []).map(mapInterestPolicy);
   const mappedWalletSnapshots = (rows.wallet_snapshots ?? []).map(mapWalletSnapshot);
 
-  // cash_spend_requests is not in the RPC — fetch separately
-  const { data: cashRows } = await supabase
-    .from("cash_spend_requests")
-    .select("id,child_id,amount,spend_date,memo,status,reviewed_by,reviewed_at,rejection_reason,created_at")
-    .in("child_id", mappedChildren.map((c) => c.id))
-    .order("created_at", { ascending: false })
-    .limit(100);
-  const mappedCashRequests = (cashRows ?? []).map(mapCashSpendRequest);
+  // cash_spend_requests, allowance_executions: fetch separately
+  const childIds = mappedChildren.map((c) => c.id);
+  const [cashResult, execResult] = await Promise.all([
+    supabase
+      .from("cash_spend_requests")
+      .select("id,child_id,amount,spend_date,memo,status,reviewed_by,reviewed_at,rejection_reason,created_at")
+      .in("child_id", childIds)
+      .order("created_at", { ascending: false })
+      .limit(100),
+    childIds.length > 0
+      ? supabase
+          .from("allowance_executions")
+          .select("id,allowance_rule_id,scheduled_date,status,failure_reason,executed_at")
+          .in("allowance_rule_id",
+            (rows.allowance_rules ?? []).map((r) => (r as Record<string, unknown>).id as string))
+          .order("scheduled_date", { ascending: false })
+          .limit(60)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const mappedCashRequests = (cashResult.data ?? []).map(mapCashSpendRequest);
+  const mappedExecutions = ((execResult.data ?? []) as Record<string, unknown>[]).map(
+    (r): AllowanceExecution => ({
+      id: String(r.id),
+      allowanceRuleId: String(r.allowance_rule_id),
+      scheduledDate: String(r.scheduled_date),
+      status: r.status as AllowanceExecution["status"],
+      failureReason: r.failure_reason ? String(r.failure_reason) : null,
+      executedAt: r.executed_at ? String(r.executed_at) : null,
+    })
+  );
 
   return {
     parent,
@@ -105,6 +130,7 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
     interestPolicies: mappedInterestPolicies,
     walletSnapshots: mappedWalletSnapshots,
     cashSpendRequests: mappedCashRequests,
+    allowanceExecutions: mappedExecutions,
   };
 });
 
@@ -167,6 +193,7 @@ function getMockBundle(): AppDataBundle {
     interestPolicies,
     walletSnapshots: [],
     cashSpendRequests: [],
+    allowanceExecutions: [],
   };
 }
 
