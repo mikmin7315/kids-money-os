@@ -18,7 +18,6 @@ import {
   AllowanceRule,
   BehaviorLog,
   BehaviorRule,
-  BehaviorRuleCategory,
   BorrowRepayment,
   BorrowRequest,
   CashSpendRequest,

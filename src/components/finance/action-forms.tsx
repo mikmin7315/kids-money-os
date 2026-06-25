@@ -641,7 +641,7 @@ export function InlineRepayInstallmentForm({ repaymentId, amount }: { repaymentI
         disabled={pending}
         className="w-full rounded-[12px] bg-[#059669] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
       >
-        {pending ? "처리 중…" : `상환하기`}
+        {pending ? "처리 중…" : `${formatWon(amount)} 상환하기`}
       </button>
     </form>
   );

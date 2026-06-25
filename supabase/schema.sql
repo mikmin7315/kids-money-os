@@ -32,7 +32,8 @@ create table if not exists public.children (
   pin_code text,
   pin_failed_attempts integer not null default 0 check (pin_failed_attempts >= 0),
   pin_locked_until timestamptz,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  deleted_at timestamptz                                    -- 소프트 삭제 (delete_child RPC)
 );
 
 create table if not exists public.behavior_rules (
@@ -44,7 +45,11 @@ create table if not exists public.behavior_rules (
   interest_delta numeric(5,2) not null default 0,
   requires_parent_approval boolean not null default false,
   is_active boolean not null default true,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  rule_category text not null default 'recurring'
+    check (rule_category in ('recurring', 'monthly_goal')),
+  monthly_target_rate integer not null default 80
+    check (monthly_target_rate between 1 and 100)
 );
 
 create table if not exists public.behavior_logs (
@@ -54,6 +59,7 @@ create table if not exists public.behavior_logs (
   behavior_date date not null,
   status public.behavior_log_status not null default 'pending',
   memo text,
+  photo_path text,                                          -- private bucket 경로 (signed URL로 조회)
   approved_by uuid references public.profiles(id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -527,7 +533,7 @@ as $$
   select jsonb_build_object(
     'children', coalesce((
       select jsonb_agg(row_to_json(c) order by c.created_at)
-      from (select id, parent_id, name, nickname, birth_year, created_at from public.children) c
+      from (select id, parent_id, name, nickname, birth_year, created_at from public.children where deleted_at is null) c
     ), '[]'::jsonb),
     'behavior_rules', coalesce((select jsonb_agg(row_to_json(r) order by r.created_at) from public.behavior_rules r), '[]'::jsonb),
     'behavior_logs', coalesce((select jsonb_agg(row_to_json(l) order by l.behavior_date desc) from public.behavior_logs l), '[]'::jsonb),
