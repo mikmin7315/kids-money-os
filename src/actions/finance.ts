@@ -26,7 +26,7 @@ export async function createBehaviorLogAction(input: {
   behaviorRuleId: string;
   date: string;
   memo?: string;
-  photoUrl?: string;
+  photoPath?: string;
   photoTakenAt?: string;
 }): Promise<ActionResult<{ id: string }>> {
   const { isParent, isChild } = await requireChildOrParentAccess(input.childId);
@@ -55,7 +55,7 @@ export async function createBehaviorLogAction(input: {
         behavior_date: input.date,
         status: "pending",
         memo: input.memo ?? "",
-        photo_url: input.photoUrl ?? null,
+        photo_path: input.photoPath ?? null,
         photo_taken_at: input.photoTakenAt ?? null,
       })
       .select("id")
@@ -469,18 +469,18 @@ export async function submitBehaviorLogForm(_: FormState, formData: FormData): P
   }
 
   const photoFile = formData.get("photoFile") as File | null;
-  let photoUrl: string | undefined;
+  let photoPath: string | undefined;
   let photoTakenAt: string | undefined;
 
   if (photoFile && photoFile.size > 0) {
     const uploadResult = await uploadBehaviorPhoto(photoFile, childId);
     if (uploadResult.ok) {
-      photoUrl = uploadResult.url;
+      photoPath = uploadResult.path;
       photoTakenAt = readOptionalString(formData, "photoTakenAt") ?? new Date().toISOString();
     }
   }
 
-  const result = await createBehaviorLogAction({ childId, behaviorRuleId, date, memo, photoUrl, photoTakenAt });
+  const result = await createBehaviorLogAction({ childId, behaviorRuleId, date, memo, photoPath, photoTakenAt });
   return result.ok
     ? { ok: true, message: "약속을 기록했어요! 부모님이 확인해줄 거예요 🎉" }
     : { ok: false, message: result.error ?? "행동 기록 실패." };

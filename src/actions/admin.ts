@@ -116,7 +116,8 @@ export async function approveWalletChargeAction(
     return { ok: true, message: "승인했어요. (데모)" };
   }
 
-  const supabase = await getSupabaseAdminClient();
+  // RPC uses auth.uid() to verify admin role — must use server client (user JWT), not service role
+  const supabase = await getSupabaseServerClient();
   const { error } = await supabase.rpc("approve_parent_wallet_charge", { p_charge_id: chargeId });
   if (error) return { ok: false, message: error.message.includes("Admin only") ? "관리자 권한이 필요해요." : "승인에 실패했어요." };
 
@@ -140,7 +141,7 @@ export async function rejectWalletChargeAction(
     return { ok: true, message: "반려했어요. (데모)" };
   }
 
-  const supabase = await getSupabaseAdminClient();
+  const supabase = await getSupabaseServerClient();
   const { error } = await supabase.rpc("reject_parent_wallet_charge", { p_charge_id: chargeId });
   if (error) return { ok: false, message: "반려에 실패했어요." };
 
