@@ -29,16 +29,19 @@ begin
   select balance into v_balance_before from public.parent_wallets
   where parent_id = v_charge.parent_id for update;
 
-  update public.parent_wallets
-  set balance = balance + v_charge.amount
-  where parent_id = v_charge.parent_id;
+  -- 지갑 row가 없을 수 있으므로 insert on conflict로 생성/증액
+  insert into public.parent_wallets (parent_id, balance)
+  values (v_charge.parent_id, v_charge.amount)
+  on conflict (parent_id) do update
+    set balance = parent_wallets.balance + v_charge.amount,
+        updated_at = now();
 
   update public.parent_wallet_charges
   set status = 'paid',
       reviewed_by = auth.uid(),
       reviewed_at = now(),
-      balance_before = v_balance_before,
-      balance_after = v_balance_before + v_charge.amount
+      balance_before = coalesce(v_balance_before, 0),
+      balance_after = coalesce(v_balance_before, 0) + v_charge.amount
   where id = p_charge_id;
 end;
 $$;
