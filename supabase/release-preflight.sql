@@ -35,6 +35,23 @@ select exists (
   select 1 from pg_trigger where tgname = 'lock_child_wallet_before_tx'
 ) as has_wallet_lock_trigger;
 
+-- P0 나머지 기능 RPC 확인
+select
+  to_regprocedure('public.repay_borrow_installment(uuid)') is not null as has_repay_borrow_rpc,
+  to_regprocedure('public.process_scheduled_allowances(date)') is not null as has_scheduled_allowances_rpc,
+  to_regprocedure('public.update_child(uuid,text,text,integer)') is not null as has_update_child_rpc,
+  to_regprocedure('public.delete_child(uuid)') is not null as has_delete_child_rpc;
+
+-- 스키마 컬럼 확인
+select
+  (select count(*) from information_schema.columns where table_name='children' and column_name='deleted_at') > 0 as has_children_deleted_at,
+  (select count(*) from information_schema.columns where table_name='behavior_logs' and column_name='photo_path') > 0 as has_behavior_logs_photo_path,
+  (select count(*) from information_schema.columns where table_name='behavior_rules' and column_name='rule_category') > 0 as has_rule_category,
+  (select count(*) from information_schema.columns where table_name='behavior_rules' and column_name='monthly_target_rate') > 0 as has_monthly_target_rate;
+
+-- behavior-photos 버킷 private 확인
+select name, public as is_public from storage.buckets where name = 'behavior-photos';
+
 select exists (
   select 1 from pg_publication where pubname = 'supabase_realtime'
 ) as has_supabase_realtime_publication;

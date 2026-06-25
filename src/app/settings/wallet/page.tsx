@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 import { getParentWalletAction } from "@/actions/parent-wallet";
 import { WalletChargeForm, BankAccountForm } from "@/components/finance/wallet-forms";
-import { formatWon } from "@/lib/format";
+import { formatWon, maskAccountNumber } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +27,7 @@ export default async function ParentWalletPage() {
         <p className="detail-kpi">{formatWon(wallet.balance)}</p>
         {wallet.bankName && (
           <p className="detail-kpi-sub">
-            {wallet.bankName} {wallet.accountNumber}
+            {wallet.bankName} {maskAccountNumber(wallet.accountNumber)}
           </p>
         )}
       </div>

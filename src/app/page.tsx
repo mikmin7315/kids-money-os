@@ -12,7 +12,7 @@ import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { getParentWalletAction } from "@/actions/parent-wallet";
-import { formatWon, formatWonParts } from "@/lib/format";
+import { formatWon, formatWonParts, maskAccountNumber } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -131,7 +131,7 @@ export default async function HomePage() {
                 </Link>
                 {parentWallet?.bankName && (
                   <p className="text-[11px] font-600 text-[#9ca3af]">
-                    {parentWallet.bankName} {parentWallet.accountNumber}
+                    {parentWallet.bankName} {maskAccountNumber(parentWallet.accountNumber)}
                   </p>
                 )}
               </div>

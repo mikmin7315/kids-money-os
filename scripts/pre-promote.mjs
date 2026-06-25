@@ -116,8 +116,9 @@ try {
   ];
   const requiredColumns = {
     profiles: ["consent_version", "consent_at"],
-    children: ["pin_failed_attempts", "pin_locked_until"],
-    behavior_logs: ["behavior_rule_id", "status", "approved_by"],
+    children: ["pin_failed_attempts", "pin_locked_until", "deleted_at"],
+    behavior_logs: ["behavior_rule_id", "status", "approved_by", "photo_path"],
+    behavior_rules: ["rule_category", "monthly_target_rate"],
     money_transactions: ["related_behavior_log_id", "related_borrow_request_id", "created_by"],
     borrow_requests: ["repayment_mode", "installment_count", "interest_rate", "approved_by_parent"],
     borrow_repayments: ["borrow_request_id", "due_date", "amount", "paid_amount", "status"],
@@ -137,6 +138,11 @@ try {
     "reject_cash_spend",
     "approve_parent_wallet_charge",
     "reject_parent_wallet_charge",
+    // P0 나머지 기능
+    "repay_borrow_installment",
+    "process_scheduled_allowances",
+    "update_child",
+    "delete_child",
   ];
 
   for (const table of requiredTables) {
