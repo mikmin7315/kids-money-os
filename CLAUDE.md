@@ -117,6 +117,8 @@ npm run lint     # 린트
 7. `p0_remaining_features.sql` — repay/process_allowances/update_child/delete_child
 8. `p0_hardening.sql` — get_app_data_bundle/children RLS 분리
 9. `cron.sql` — 크론 등록 (pg_cron/pg_net 활성화 후)
+10. `p1_settlement_runs.sql` — settlement_runs/settlement_child_runs + run_monthly_settlement RPC
+11. `p1_charge_audit_log.sql` — parent_wallet_charges 감사 컬럼 + approve/reject RPC 업데이트
 
 ## 코드 규칙
 

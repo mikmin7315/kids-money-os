@@ -872,3 +872,80 @@ $$;
 
 revoke all on function public.change_profile_role(uuid, public.app_role) from public, anon;
 grant execute on function public.change_profile_role(uuid, public.app_role) to authenticated;
+
+-- ============================================================
+-- 부모 지갑 (add_parent_wallet.sql)
+-- ============================================================
+create table if not exists public.parent_wallets (
+  parent_id uuid primary key references public.profiles(id) on delete cascade,
+  balance   integer not null default 0 check (balance >= 0),
+  bank_name text,
+  account_number text,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.parent_wallet_charges (
+  id            uuid primary key default gen_random_uuid(),
+  parent_id     uuid not null references public.profiles(id) on delete cascade,
+  amount        bigint not null check (amount > 0),
+  method        text not null default 'card',
+  payment_id    text,
+  status        text not null default 'pending',
+  reviewed_by   uuid references public.profiles(id),
+  reviewed_at   timestamptz,
+  rejection_reason text,
+  balance_before integer,
+  balance_after  integer,
+  created_at    timestamptz not null default now()
+);
+
+alter table public.parent_wallets enable row level security;
+alter table public.parent_wallet_charges enable row level security;
+
+create policy "parent_wallet_owner" on public.parent_wallets
+  for all to authenticated
+  using (parent_id = auth.uid()) with check (parent_id = auth.uid());
+
+create policy "parent_charges_owner" on public.parent_wallet_charges
+  for all to authenticated
+  using (parent_id = auth.uid()) with check (parent_id = auth.uid());
+
+-- ============================================================
+-- 월말 정산 실행 이력 (p1_settlement_runs.sql)
+-- ============================================================
+create table if not exists public.settlement_runs (
+  id           uuid primary key default gen_random_uuid(),
+  year         integer not null,
+  month        integer not null,
+  status       text not null default 'pending'
+    check (status in ('pending', 'running', 'success', 'partial', 'failed')),
+  started_at   timestamptz not null default now(),
+  completed_at timestamptz,
+  success_count integer not null default 0,
+  failure_count integer not null default 0,
+  unique (year, month)
+);
+
+create table if not exists public.settlement_child_runs (
+  id             uuid primary key default gen_random_uuid(),
+  run_id         uuid not null references public.settlement_runs(id) on delete cascade,
+  child_id       uuid not null references public.children(id),
+  status         text not null default 'pending'
+    check (status in ('pending', 'success', 'failed', 'skipped')),
+  interest_amount  integer,
+  rate_adjustment  numeric(5,2),
+  failure_reason   text,
+  processed_at     timestamptz,
+  unique (run_id, child_id)
+);
+
+alter table public.settlement_runs enable row level security;
+alter table public.settlement_child_runs enable row level security;
+
+create policy "settlement_runs_admin" on public.settlement_runs
+  for select to authenticated
+  using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+
+create policy "settlement_child_runs_admin" on public.settlement_child_runs
+  for select to authenticated
+  using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-react";
+import { AlertCircle, ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 import { AllowanceRuleForm } from "@/components/finance/management-forms";
 import { DeleteAllowanceRuleButton } from "@/components/finance/delete-rule-button";
@@ -94,6 +94,42 @@ export default async function AllowancePage() {
           <li>• 즉시 지급은 아이 통장 페이지에서 할 수 있어요</li>
         </ul>
       </div>
+
+      {/* 실패 내역 */}
+      {bundle.allowanceExecutions.filter((e) => e.status === "failed").length > 0 && (
+        <section className="mb-6">
+          <p className="mb-3 text-sm font-extrabold text-[#991b1b]">⚠️ 미지급 내역</p>
+          <div className="space-y-2">
+            {bundle.allowanceExecutions
+              .filter((e) => e.status === "failed")
+              .slice(0, 10)
+              .map((exec) => {
+                const rule = bundle.allowanceRules.find((r) => r.id === exec.allowanceRuleId);
+                const child = bundle.children.find((c) => c.id === rule?.childId);
+                return (
+                  <div key={exec.id} className="flex items-start gap-3 rounded-[16px] border border-[#fecaca] bg-[#fff1f2] p-4">
+                    <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#dc2626]" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[13px] font-700 text-[#991b1b]">
+                        {child?.name} · {rule?.title ?? "삭제된 규칙"} · {exec.scheduledDate}
+                      </p>
+                      <p className="mt-0.5 text-[12px] text-[#b91c1c]">
+                        {exec.failureReason ?? "알 수 없는 오류"}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+          <div className="mt-3 rounded-[14px] bg-[#fef2f2] px-4 py-3">
+            <p className="text-[12px] text-[#b91c1c]">
+              💳 부모 지갑 잔액이 부족해 지급되지 않은 경우,{" "}
+              <Link href="/settings/wallet" className="font-700 underline">지갑을 충전</Link>하면
+              다음 지급일에 자동으로 처리돼요.
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* 폼 */}
       {!hasChildren ? (

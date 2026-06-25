@@ -199,6 +199,15 @@ export type PeerStat = {
   createdAt: string;
 };
 
+export type AllowanceExecution = {
+  id: string;
+  allowanceRuleId: string;
+  scheduledDate: string;
+  status: "pending" | "success" | "failed" | "skipped";
+  failureReason: string | null;
+  executedAt: string | null;
+};
+
 export type ActivityItem = {
   id: string;
   childId: string;
