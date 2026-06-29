@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
+import { CancelBorrowButton } from "@/components/child/cancel-borrow-button";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +80,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                 <p style={{ fontSize: 12, color: "#d97706", marginTop: 4 }}>
                   요청일 {r.createdAt.slice(0, 10).replace(/-/g, ".")}
                 </p>
+                <CancelBorrowButton borrowRequestId={r.id} />
               </div>
             </div>
           ))}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -49,11 +50,19 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <div className="mb-5">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>이자</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
-          📈 이자 미리보기
-        </h1>
+      <div className="mb-5 flex items-start justify-between gap-2">
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>이자</p>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+            📈 이자 미리보기
+          </h1>
+        </div>
+        <Link
+          href={`/child/${id}/interest-received`}
+          className="mt-1 shrink-0 rounded-[12px] bg-[#ede9fe] px-3 py-2 text-xs font-bold text-[#5b21b6]"
+        >
+          받은 이자 내역 →
+        </Link>
       </div>
 
       {/* 이자 미리보기 히어로 */}
