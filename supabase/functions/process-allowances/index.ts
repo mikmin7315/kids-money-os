@@ -5,6 +5,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
 };
 
+function getSecret(primaryName: string, fallbackName: string): string {
+  return Deno.env.get(primaryName) ?? Deno.env.get(fallbackName) ?? "";
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -13,7 +17,7 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
 
-  const cronSecret = Deno.env.get("CRON_SECRET");
+  const cronSecret = getSecret("CRON_SECRET", "cron_secret");
   if (cronSecret) {
     const incoming = req.headers.get("x-cron-secret") ?? "";
     const enc = new TextEncoder();
@@ -26,12 +30,19 @@ Deno.serve(async (req) => {
     }
   }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-  );
+  const supabaseUrl = getSecret("SUPABASE_URL", "supabase_url");
+  const serviceRoleKey = getSecret("SUPABASE_SERVICE_ROLE_KEY", "supabase_service_role_key");
 
-  // KST 기준 오늘 날짜
+  if (!supabaseUrl || !serviceRoleKey) {
+    return new Response(JSON.stringify({ ok: false, error: "Missing Supabase function secrets." }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  // Today's date in KST.
   const nowKst = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const targetDate = nowKst.toISOString().slice(0, 10);
 
@@ -46,7 +57,7 @@ Deno.serve(async (req) => {
     });
   }
 
-  // 실패 건이 있으면 부모 알림
+  // Notify parents when scheduled allowance processing has failures.
   const result = data as { success: number; skipped: number; failed: number; errors: unknown[] };
   if (result.failed > 0) {
     const { data: failedExecs } = await supabase

@@ -5,8 +5,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
 };
 
+function getSecret(primaryName: string, fallbackName: string): string {
+  return Deno.env.get(primaryName) ?? Deno.env.get(fallbackName) ?? "";
+}
+
 function verifyCronSecret(req: Request): boolean {
-  const cronSecret = Deno.env.get("CRON_SECRET");
+  const cronSecret = getSecret("CRON_SECRET", "cron_secret");
   if (!cronSecret) return true;
   const incoming = req.headers.get("x-cron-secret") ?? "";
   if (incoming.length !== cronSecret.length) return false;
@@ -23,12 +27,19 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   if (!verifyCronSecret(req)) return new Response("Unauthorized", { status: 401, headers: corsHeaders });
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-  );
+  const supabaseUrl = getSecret("SUPABASE_URL", "supabase_url");
+  const serviceRoleKey = getSecret("SUPABASE_SERVICE_ROLE_KEY", "supabase_service_role_key");
 
-  // Target = previous month in KST
+  if (!supabaseUrl || !serviceRoleKey) {
+    return new Response(JSON.stringify({ ok: false, error: "Missing Supabase function secrets." }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  // Target = previous month in KST.
   const nowKst = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const year = nowKst.getUTCMonth() === 0 ? nowKst.getUTCFullYear() - 1 : nowKst.getUTCFullYear();
   const month = nowKst.getUTCMonth() === 0 ? 12 : nowKst.getUTCMonth();
