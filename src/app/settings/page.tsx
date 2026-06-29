@@ -56,6 +56,19 @@ export default async function SettingsPage() {
       </section>
 
       <section className="mb-7">
+        <SectionTitle>공동 보호자</SectionTitle>
+        <div className="mt-3 space-y-2">
+          <Link href="/settings/guardians" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <div>
+              <span className="text-sm font-bold text-[var(--monari-ink)]">보호자 초대 및 권한 관리</span>
+              <p className="text-xs text-[var(--monari-ink-muted)]">배우자나 다른 보호자와 함께 관리해요</p>
+            </div>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+        </div>
+      </section>
+
+      <section className="mb-7">
         <SectionTitle>고객지원</SectionTitle>
         <div className="mt-3 space-y-2">
           <Link href="/announcements" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
