@@ -180,6 +180,14 @@ export default async function AdminDashboardPage() {
           <div className="space-y-3">
             <MenuCard href="/admin/cards" title="카드 목록" description="전체 아이 카드 상태·한도·활성 여부를 조회합니다." badge="A-C-01" />
             <MenuCard href="/admin/cards/logs" title="카드 연동 로그" description="파트너사 연동 요청/응답·에러 로그를 확인합니다." badge="A-C-03" />
+            <MenuCard href="/admin/merchant-categories" title="가맹점/카테고리 매핑" description="카드 거래 가맹점 패턴별 카테고리를 관리합니다." badge="A-23" />
+          </div>
+        </Section>
+
+        <Section title="자금 운영">
+          <div className="space-y-3">
+            <MenuCard href="/admin/balance-verification" title="잔액 검증" description="원장 합계와 지갑 스냅샷을 비교해 불일치를 찾아냅니다." badge="A-07B/C" />
+            <MenuCard href="/admin/cash-corrections" title="현금 정정/정책" description="현금 거래를 수동으로 정정하고 정정 정책을 관리합니다." badge="A-13" />
           </div>
         </Section>
 
