@@ -109,10 +109,12 @@ export default async function AdminChildrenPage() {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={r.id} className={`${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}>
+                  <tr key={r.id} className={`cursor-pointer hover:bg-[#fafafa] ${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}>
                     <td className="px-4 py-3">
-                      <p className="font-semibold text-[var(--color-text)]">{r.name}</p>
-                      <p className="text-[11px] text-[var(--color-muted)]">{r.nickname} · {r.birth_year}년생</p>
+                      <Link href={`/admin/children/${r.id}`} className="block">
+                        <p className="font-semibold text-[var(--color-text)]">{r.name}</p>
+                        <p className="text-[11px] text-[var(--color-muted)]">{r.nickname} · {r.birth_year}년생</p>
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-[var(--color-muted)]">{r.parent_name}</td>
                     <td className="px-4 py-3 text-right tabular-nums font-semibold">{formatWon(r.balance)}</td>

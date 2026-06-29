@@ -187,6 +187,36 @@ export default async function AdminDashboardPage() {
               badge="A-14"
             />
             <MenuCard
+              href="/admin/transactions"
+              title="전체 거래내역"
+              description="모든 아이의 거래 기록을 유형별로 조회합니다."
+              badge="A-05"
+            />
+            <MenuCard
+              href="/admin/borrows"
+              title="미리쓰기 관리"
+              description="전체 미리쓰기 요청 상태를 확인하고 관리합니다."
+              badge="A-06"
+            />
+            <MenuCard
+              href="/admin/behaviors"
+              title="행동약속 조회"
+              description="약속별 달성률과 최근 행동 기록을 확인합니다."
+              badge="A-08"
+            />
+            <MenuCard
+              href="/admin/interest-policies"
+              title="이자율 전체 조회"
+              description="아이별 기본/현재 이자율과 확정 상태를 조회합니다."
+              badge="A-09"
+            />
+            <MenuCard
+              href="/admin/inquiries"
+              title="문의 관리"
+              description="사용자 문의를 확인하고 답변을 등록합니다."
+              badge="A-CS-01"
+            />
+            <MenuCard
               href="/admin/roles"
               title="역할 관리"
               description="사용자 계정을 parent 또는 admin으로 변경합니다."
