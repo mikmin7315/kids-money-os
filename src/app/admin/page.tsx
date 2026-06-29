@@ -154,98 +154,40 @@ export default async function AdminDashboardPage() {
           </Surface>
         </Section>
 
-        <Section title="관리 메뉴">
+        <Section title="계정 관리">
           <div className="space-y-3">
-            <MenuCard
-              href="/admin/announcements"
-              title="공지/점검 관리"
-              description="공지사항과 점검 안내를 작성하고 게시합니다."
-              badge="A-N-01"
-            />
-            <MenuCard
-              href="/admin/parents"
-              title="부모 계정 목록"
-              description="전체 부모 계정 · 아이 수 · 지갑 잔액을 한 번에 확인합니다."
-              badge="A-02L"
-            />
-            <MenuCard
-              href="/admin/children"
-              title="아이 계정 목록"
-              description="전체 아이 계정 · 잔액 · 저금 · 이자율 현황을 확인합니다."
-              badge="A-03L"
-            />
-            <MenuCard
-              href="/admin/settlement"
-              title="정산 결과 / 배치 로그"
-              description="월별 이자 정산 결과와 아이별 성공/실패 내역을 확인합니다."
-              badge="A-I-04"
-            />
-            <MenuCard
-              href="/admin/allowance-log"
-              title="용돈 배치 로그"
-              description="정기 용돈 실행 이력 및 미지급 실패 내역을 확인합니다."
-              badge="A-14"
-            />
-            <MenuCard
-              href="/admin/transactions"
-              title="전체 거래내역"
-              description="모든 아이의 거래 기록을 유형별로 조회합니다."
-              badge="A-05"
-            />
-            <MenuCard
-              href="/admin/borrows"
-              title="미리쓰기 관리"
-              description="전체 미리쓰기 요청 상태를 확인하고 관리합니다."
-              badge="A-06"
-            />
-            <MenuCard
-              href="/admin/behaviors"
-              title="행동약속 조회"
-              description="약속별 달성률과 최근 행동 기록을 확인합니다."
-              badge="A-08"
-            />
-            <MenuCard
-              href="/admin/interest-policies"
-              title="이자율 전체 조회"
-              description="아이별 기본/현재 이자율과 확정 상태를 조회합니다."
-              badge="A-09"
-            />
-            <MenuCard
-              href="/admin/inquiries"
-              title="문의 관리"
-              description="사용자 문의를 확인하고 답변을 등록합니다."
-              badge="A-CS-01"
-            />
-            <MenuCard
-              href="/admin/roles"
-              title="역할 관리"
-              description="사용자 계정을 parent 또는 admin으로 변경합니다."
-              badge="RBAC"
-            />
-            <MenuCard
-              href="/admin/wallet-charges"
-              title="충전 요청 관리"
-              description="부모 지갑 충전 요청을 확인하고 승인합니다."
-              badge="A-W-01"
-            />
-            <MenuCard
-              href="/approvals"
-              title="승인 대기 보기"
-              description="부모 화면에서 약속과 미리쓰기 요청을 처리합니다."
-              badge="승인"
-            />
-            <MenuCard
-              href="/admin/inquiries"
-              title="문의 관리"
-              description="사용자 문의를 확인하고 답변을 등록합니다."
-              badge="A-CS-01"
-            />
-            <MenuCard
-              href="/"
-              title="부모 대시보드"
-              description="일반 사용자 홈 화면으로 이동합니다."
-              badge="홈"
-            />
+            <MenuCard href="/admin/parents" title="부모 계정 목록" description="전체 부모 계정 · 아이 수 · 지갑 잔액을 한 번에 확인합니다." badge="A-02L" />
+            <MenuCard href="/admin/children" title="아이 계정 목록" description="전체 아이 계정 · 잔액 · 저금 · 이자율 현황을 확인합니다." badge="A-03L" />
+            <MenuCard href="/admin/roles" title="역할 관리" description="사용자 계정을 parent 또는 admin으로 변경합니다." badge="RBAC" />
+          </div>
+        </Section>
+
+        <Section title="운영 관리">
+          <div className="space-y-3">
+            <MenuCard href="/admin/reports" title="시스템 리포트" description="이달 전체 통계 · 용돈 · 이자 · 달성률을 한눈에 확인합니다." badge="A-20" />
+            <MenuCard href="/admin/approvals" title="승인 대기 현황" description="전체 사용자의 약속·미리쓰기 승인 대기 건수를 조회합니다." badge="A-12" />
+            <MenuCard href="/admin/transactions" title="전체 거래내역" description="모든 아이의 거래 기록을 유형별로 조회합니다." badge="A-05" />
+            <MenuCard href="/admin/borrows" title="미리쓰기 관리" description="전체 미리쓰기 요청 상태를 확인하고 관리합니다." badge="A-06" />
+            <MenuCard href="/admin/behaviors" title="행동약속 조회" description="약속별 달성률과 최근 행동 기록을 확인합니다." badge="A-08" />
+            <MenuCard href="/admin/interest-policies" title="이자율 전체 조회" description="아이별 기본/현재 이자율과 확정 상태를 조회합니다." badge="A-09" />
+            <MenuCard href="/admin/settlement" title="정산 결과" description="월별 이자 정산 결과와 아이별 성공/실패 내역을 확인합니다." badge="A-S-01" />
+            <MenuCard href="/admin/allowance-log" title="용돈 배치 로그" description="정기 용돈 실행 이력 및 미지급 실패 내역을 확인합니다." badge="A-14" />
+            <MenuCard href="/admin/wallet-charges" title="충전 요청 관리" description="부모 지갑 충전 요청을 확인하고 승인합니다." badge="A-W-01" />
+          </div>
+        </Section>
+
+        <Section title="콘텐츠 관리">
+          <div className="space-y-3">
+            <MenuCard href="/admin/announcements" title="공지/점검 관리" description="공지사항과 점검 안내를 작성하고 게시합니다." badge="A-N-01" />
+            <MenuCard href="/admin/inquiries" title="문의 관리" description="사용자 문의를 확인하고 답변을 등록합니다." badge="A-CS-01" />
+            <MenuCard href="/admin/terms" title="약관 관리" description="이용약관·개인정보처리방침 버전을 관리하고 활성화합니다." badge="A-T-01" />
+          </div>
+        </Section>
+
+        <Section title="바로가기">
+          <div className="space-y-3">
+            <MenuCard href="/approvals" title="부모 승인함" description="약속과 미리쓰기 요청을 직접 처리합니다." badge="승인" />
+            <MenuCard href="/" title="부모 대시보드" description="일반 사용자 홈 화면으로 이동합니다." badge="홈" />
           </div>
         </Section>
 
