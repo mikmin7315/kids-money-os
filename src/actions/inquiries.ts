@@ -1,10 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireParentSession } from "@/lib/auth";
-import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { getSupabaseAdminClient } from "@/lib/supabase/server";
-import { requireAdminSession } from "@/lib/auth";
+import { requireParentSession, requireAdminSession } from "@/lib/auth";
+import { getSupabaseServerClient, getSupabaseAdminClient } from "@/lib/supabase/server";
 
 export type InquiryFormState = { ok: boolean; message: string };
 
@@ -54,7 +52,7 @@ export async function replyInquiryAction(
     admin_reply: reply,
     admin_note: note || null,
     status,
-    replied_by: auth.user.id,
+    replied_by: auth.user!.id,
     replied_at: new Date().toISOString(),
   }).eq("id", id);
   if (error) return { ok: false, message: "답변 등록에 실패했어요." };
