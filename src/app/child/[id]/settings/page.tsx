@@ -102,16 +102,22 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      {/* 부모에게 알려주기 */}
+      {/* 부모에게 알려주기 / 문의 (C-14) */}
       <div className="mb-6 rounded-[20px] bg-[#fef3c7] p-4">
         <div className="flex items-center gap-2 mb-2">
           <MessageCircle size={16} color="#d97706" />
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#92400e" }}>부모님께 알려주기</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#92400e" }}>운영팀에 물어보기</p>
         </div>
-        <p style={{ fontSize: 13, color: "#b45309", lineHeight: 1.7 }}>
-          궁금한 게 있거나 약속을 바꾸고 싶으면 부모님께 직접 말해요!
-          앱에서 설정은 부모님만 바꿀 수 있어요.
+        <p style={{ fontSize: 13, color: "#b45309", lineHeight: 1.7, marginBottom: 10 }}>
+          앱 사용 중 궁금한 점이 있으면 운영팀에 직접 물어볼 수 있어요!
         </p>
+        <Link
+          href={`/child/${id}/inquiries`}
+          className="flex items-center justify-center gap-2 rounded-[12px] bg-[#d97706] px-4 py-2.5"
+        >
+          <MessageCircle size={14} color="white" />
+          <span style={{ fontSize: 13, fontWeight: 800, color: "white" }}>문의하기</span>
+        </Link>
       </div>
 
       {/* 앱 나가기 */}
