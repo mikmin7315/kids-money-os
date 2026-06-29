@@ -45,7 +45,7 @@ create table if not exists public.card_transactions (
     check (status in ('approved','declined','cancelled','reversed')),
   approved_at timestamptz not null default now(),
   raw_payload jsonb,
-  money_transaction_id uuid references public.transactions(id) on delete set null,
+  money_transaction_id uuid,
   created_at timestamptz not null default now()
 );
 
