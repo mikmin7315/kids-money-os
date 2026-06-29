@@ -1,0 +1,109 @@
+import Link from "next/link";
+import { AppHeader } from "@/components/layout/app-header";
+import { MobileShell, PageContainer } from "@/components/ui/primitives";
+import { requireParentSession } from "@/lib/auth";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+export const dynamic = "force-dynamic";
+
+const STATUS_STEPS = [
+  { key: "initiated", label: "신청 접수", desc: "카드 신청이 접수됐어요." },
+  { key: "submitted", label: "서류 제출", desc: "파트너사에 서류를 제출했어요." },
+  { key: "reviewing", label: "심사 중", desc: "파트너사에서 심사 중이에요." },
+  { key: "approved", label: "심사 완료", desc: "카드 발급이 승인됐어요." },
+  { key: "issued", label: "카드 발급", desc: "카드가 발급됐어요." },
+  { key: "delivery", label: "배송 중", desc: "카드가 배송 중이에요." },
+];
+
+const STATUS_ORDER: Record<string, number> = {
+  initiated: 0, submitted: 1, reviewing: 2, approved: 3, issued: 4, delivery: 5,
+};
+
+export default async function CardStatusPage() {
+  const auth = await requireParentSession();
+  const supabase = await getSupabaseServerClient();
+
+  const { data } = await supabase
+    .from("card_applications")
+    .select("id, status, partner, child_id, created_at, updated_at, children(name)")
+    .eq("parent_id", auth.user!.id)
+    .not("status", "in", '("cancelled","rejected")')
+    .order("created_at", { ascending: false });
+
+  const apps = (data ?? []).map((r) => {
+    const child = Array.isArray(r.children) ? r.children[0] : r.children;
+    return { ...r, child_name: String(child?.name ?? "-") };
+  });
+
+  return (
+    <PageContainer>
+      <MobileShell>
+        <AppHeader eyebrow="카드" title="신청 현황" />
+
+        {apps.length === 0 && (
+          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-12 text-center">
+            <p style={{ fontSize: 32, marginBottom: 8 }}>💳</p>
+            <p className="text-sm font-semibold text-[var(--color-muted)]">신청 내역이 없어요.</p>
+            <Link href="/cards/apply" className="mt-3 inline-block text-sm font-bold text-[var(--color-accent)]">
+              카드 신청하기 →
+            </Link>
+          </div>
+        )}
+
+        {apps.map((app) => {
+          const currentStep = STATUS_ORDER[app.status] ?? 0;
+          return (
+            <div key={app.id} className="mb-5 rounded-[16px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-extrabold text-[var(--color-text)]">{app.child_name} 카드</p>
+                  <p className="text-[11px] text-[var(--color-muted)]">신청일: {app.created_at.slice(0, 10)}</p>
+                </div>
+                <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                  app.status === "delivery" ? "bg-[#d1fae5] text-[#065f46]" :
+                  app.status === "rejected" ? "bg-[#fee2e2] text-[#991b1b]" :
+                  "bg-[#ede9fe] text-[#5b21b6]"
+                }`}>
+                  {STATUS_STEPS.find(s => s.key === app.status)?.label ?? app.status}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {STATUS_STEPS.map((step, i) => {
+                  const done = i <= currentStep;
+                  const active = i === currentStep;
+                  return (
+                    <div key={step.key} className="flex items-start gap-3">
+                      <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                        done ? "bg-[#7c3aed] text-white" : "bg-[#f3f4f6] text-[#9ca3af]"
+                      }`}>
+                        {done ? "✓" : i + 1}
+                      </div>
+                      <div>
+                        <p className={`text-xs font-bold ${active ? "text-[#7c3aed]" : done ? "text-[var(--color-text)]" : "text-[var(--color-muted)]"}`}>
+                          {step.label}
+                        </p>
+                        {active && <p className="text-[11px] text-[var(--color-muted)]">{step.desc}</p>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4 border-t border-[var(--color-border)] pt-3">
+                <p className="text-[11px] text-[var(--color-muted)]">
+                  문의가 있으신가요?{" "}
+                  <Link href="/inquiries" className="font-bold text-[var(--color-accent)]">고객센터 문의하기</Link>
+                </p>
+              </div>
+            </div>
+          );
+        })}
+
+        <div className="mt-4">
+          <Link href="/cards" className="text-sm font-bold text-[var(--color-accent)]">← 카드 관리로</Link>
+        </div>
+      </MobileShell>
+    </PageContainer>
+  );
+}

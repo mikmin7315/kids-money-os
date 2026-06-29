@@ -176,6 +176,13 @@ export default async function AdminDashboardPage() {
           </div>
         </Section>
 
+        <Section title="카드 운영">
+          <div className="space-y-3">
+            <MenuCard href="/admin/cards" title="카드 목록" description="전체 아이 카드 상태·한도·활성 여부를 조회합니다." badge="A-C-01" />
+            <MenuCard href="/admin/cards/logs" title="카드 연동 로그" description="파트너사 연동 요청/응답·에러 로그를 확인합니다." badge="A-C-03" />
+          </div>
+        </Section>
+
         <Section title="콘텐츠 관리">
           <div className="space-y-3">
             <MenuCard href="/admin/announcements" title="공지/점검 관리" description="공지사항과 점검 안내를 작성하고 게시합니다." badge="A-N-01" />
