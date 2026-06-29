@@ -119,6 +119,7 @@ npm run lint     # 린트
 9. `cron.sql` — 크론 등록 (pg_cron/pg_net 활성화 후)
 10. `p1_settlement_runs.sql` — settlement_runs/settlement_child_runs + run_monthly_settlement RPC
 11. `p1_charge_audit_log.sql` — parent_wallet_charges 감사 컬럼 + approve/reject RPC 업데이트
+12. `announcements.sql` — announcements/announcement_reads 테이블 (공지/점검 시스템)
 
 ## 코드 규칙
 
