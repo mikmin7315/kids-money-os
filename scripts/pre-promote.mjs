@@ -123,7 +123,7 @@ try {
     behavior_logs: ["behavior_rule_id", "status", "approved_by", "photo_path"],
     behavior_rules: ["rule_category", "monthly_target_rate"],
     money_transactions: ["related_behavior_log_id", "related_borrow_request_id", "created_by"],
-    borrow_requests: ["repayment_mode", "installment_count", "interest_rate", "approved_by_parent"],
+    borrow_requests: ["repayment_mode", "installment_count", "interest_rate", "approved_by_parent", "repaid_at"],
     borrow_repayments: ["borrow_request_id", "due_date", "amount", "paid_amount", "status"],
     notifications: ["parent_id", "child_id", "target", "type", "title", "body", "is_read", "created_at"],
     // P1

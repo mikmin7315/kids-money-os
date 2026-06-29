@@ -45,6 +45,7 @@ select
 -- 스키마 컬럼 확인
 select
   (select count(*) from information_schema.columns where table_name='children' and column_name='deleted_at') > 0 as has_children_deleted_at,
+  (select count(*) from information_schema.columns where table_name='borrow_requests' and column_name='repaid_at') > 0 as has_borrow_requests_repaid_at,
   (select count(*) from information_schema.columns where table_name='behavior_logs' and column_name='photo_path') > 0 as has_behavior_logs_photo_path,
   (select count(*) from information_schema.columns where table_name='behavior_rules' and column_name='rule_category') > 0 as has_rule_category,
   (select count(*) from information_schema.columns where table_name='behavior_rules' and column_name='monthly_target_rate') > 0 as has_monthly_target_rate;
