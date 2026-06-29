@@ -69,6 +69,19 @@ export default async function SettingsPage() {
       </section>
 
       <section className="mb-7">
+        <SectionTitle>알림</SectionTitle>
+        <div className="mt-3 space-y-2">
+          <Link href="/settings/notifications" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <div>
+              <span className="text-sm font-bold text-[var(--monari-ink)]">알림 상세 설정</span>
+              <p className="text-xs text-[var(--monari-ink-muted)]">받고 싶은 알림 종류를 선택해요</p>
+            </div>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+        </div>
+      </section>
+
+      <section className="mb-7">
         <SectionTitle>고객지원</SectionTitle>
         <div className="mt-3 space-y-2">
           <Link href="/announcements" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">

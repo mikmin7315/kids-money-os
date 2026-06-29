@@ -68,6 +68,14 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
           <p style={{ fontSize: 13, fontWeight: 800, color: "#1a0533" }}>약속 기록</p>
           <p style={{ fontSize: 11, color: "#9ca3af" }}>지킨 약속 히스토리</p>
         </Link>
+        <Link
+          href={`/child/${id}/notification-settings`}
+          className="flex flex-col gap-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+        >
+          <span style={{ fontSize: 28 }}>🔔</span>
+          <p style={{ fontSize: 13, fontWeight: 800, color: "#1a0533" }}>알림 설정</p>
+          <p style={{ fontSize: 11, color: "#9ca3af" }}>받고 싶은 알림 선택</p>
+        </Link>
       </div>
 
       {/* 용어 사전 */}
