@@ -157,6 +157,36 @@ export default async function AdminDashboardPage() {
         <Section title="관리 메뉴">
           <div className="space-y-3">
             <MenuCard
+              href="/admin/announcements"
+              title="공지/점검 관리"
+              description="공지사항과 점검 안내를 작성하고 게시합니다."
+              badge="A-N-01"
+            />
+            <MenuCard
+              href="/admin/parents"
+              title="부모 계정 목록"
+              description="전체 부모 계정 · 아이 수 · 지갑 잔액을 한 번에 확인합니다."
+              badge="A-02L"
+            />
+            <MenuCard
+              href="/admin/children"
+              title="아이 계정 목록"
+              description="전체 아이 계정 · 잔액 · 저금 · 이자율 현황을 확인합니다."
+              badge="A-03L"
+            />
+            <MenuCard
+              href="/admin/settlement"
+              title="정산 결과 / 배치 로그"
+              description="월별 이자 정산 결과와 아이별 성공/실패 내역을 확인합니다."
+              badge="A-I-04"
+            />
+            <MenuCard
+              href="/admin/allowance-log"
+              title="용돈 배치 로그"
+              description="정기 용돈 실행 이력 및 미지급 실패 내역을 확인합니다."
+              badge="A-14"
+            />
+            <MenuCard
               href="/admin/roles"
               title="역할 관리"
               description="사용자 계정을 parent 또는 admin으로 변경합니다."
