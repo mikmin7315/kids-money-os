@@ -114,24 +114,28 @@ export default function SupportPage() {
           ))}
         </div>
 
-        {/* 이메일 문의 */}
+        {/* 인앱 문의 */}
         <div className="mt-8 rounded-[20px] bg-[#ede9fe] p-5">
           <p style={{ fontSize: 15, fontWeight: 800, color: "#4c1d95", marginBottom: 6 }}>
-            📧 직접 문의하기
+            💬 직접 문의하기
           </p>
           <p style={{ fontSize: 13, color: "#7c3aed", lineHeight: 1.7 }}>
-            FAQ에서 해결되지 않은 문제는 이메일로 문의해주세요.
-            계정 관련 문의에는 가입 이메일이나 휴대폰 번호를 함께 적어주세요.
+            FAQ에서 해결되지 않은 문제는 앱 내 문의 기능을 이용해주세요.
+            운영팀이 직접 확인하고 빠르게 답변드릴게요.
           </p>
-          {supportEmail ? (
+          <Link
+            href="/inquiries"
+            className="mt-4 block w-full rounded-[14px] bg-[#7c3aed] py-3.5 text-center text-sm font-extrabold text-white transition active:scale-[0.97]"
+          >
+            문의 작성하기
+          </Link>
+          {supportEmail && (
             <a
               href={`mailto:${supportEmail}`}
-              className="mt-4 block w-full rounded-[14px] bg-[#7c3aed] py-3.5 text-center text-sm font-extrabold text-white transition active:scale-[0.97]"
+              className="mt-2 block w-full rounded-[14px] border border-[#7c3aed] py-3 text-center text-sm font-bold text-[#7c3aed] transition active:scale-[0.97]"
             >
-              {supportEmail}로 문의하기
+              이메일로 문의하기
             </a>
-          ) : (
-            <p className="mt-3 text-sm font-bold text-[#7c3aed]">앱 내 설정 화면에서 문의해주세요.</p>
           )}
         </div>
       </div>

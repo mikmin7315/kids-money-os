@@ -56,6 +56,24 @@ export default async function SettingsPage() {
       </section>
 
       <section className="mb-7">
+        <SectionTitle>고객지원</SectionTitle>
+        <div className="mt-3 space-y-2">
+          <Link href="/announcements" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="text-sm font-bold text-[var(--monari-ink)]">공지사항</span>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+          <Link href="/inquiries" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="text-sm font-bold text-[var(--monari-ink)]">문의하기</span>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+          <Link href="/support" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="text-sm font-bold text-[var(--monari-ink)]">자주 묻는 질문 (FAQ)</span>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+        </div>
+      </section>
+
+      <section className="mb-7">
         <SectionTitle>아이 프로필</SectionTitle>
         {hasChildren ? (
           <div className="mt-3 space-y-3">
