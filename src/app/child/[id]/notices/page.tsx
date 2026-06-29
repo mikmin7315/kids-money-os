@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";

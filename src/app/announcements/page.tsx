@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
