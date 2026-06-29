@@ -167,6 +167,7 @@ create table if not exists public.borrow_requests (
   repayment_mode public.repayment_mode not null default 'next_allowance',
   installment_count integer,
   interest_rate numeric(5,2) not null default 0,
+  repaid_at timestamptz,
   created_at timestamptz not null default now()
 );
 
