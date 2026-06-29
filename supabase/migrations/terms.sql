@@ -17,16 +17,25 @@ create table if not exists public.terms (
 alter table public.terms enable row level security;
 
 -- 모든 인증 사용자가 활성 약관 읽기 가능
-create policy "terms_read_active" on public.terms
-  for select to authenticated
-  using (is_active = true);
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'terms' and policyname = 'terms_read_active') then
+    create policy "terms_read_active" on public.terms
+      for select to authenticated
+      using (is_active = true);
+  end if;
+end $$;
 
 -- 어드민만 전체 관리 가능
-create policy "terms_admin_all" on public.terms
-  for all to authenticated
-  using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'))
-  with check (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'terms' and policyname = 'terms_admin_all') then
+    create policy "terms_admin_all" on public.terms
+      for all to authenticated
+      using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'))
+      with check (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+  end if;
+end $$;
 
+drop trigger if exists terms_updated_at on public.terms;
 create trigger terms_updated_at
   before update on public.terms
   for each row execute function public.set_updated_at();
