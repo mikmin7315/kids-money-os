@@ -175,6 +175,12 @@ export default async function AdminDashboardPage() {
               badge="승인"
             />
             <MenuCard
+              href="/admin/inquiries"
+              title="문의 관리"
+              description="사용자 문의를 확인하고 답변을 등록합니다."
+              badge="A-CS-01"
+            />
+            <MenuCard
               href="/"
               title="부모 대시보드"
               description="일반 사용자 홈 화면으로 이동합니다."
