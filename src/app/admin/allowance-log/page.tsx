@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
+import { RetryAllowanceButton } from "@/components/admin/retry-allowance-button";
 import { requireAdminSession } from "@/lib/auth";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
@@ -128,6 +129,7 @@ export default async function AdminAllowanceLogPage() {
                   {r.failure_reason && (
                     <p className="mt-2 text-xs text-[#dc2626]">{r.failure_reason}</p>
                   )}
+                  <RetryAllowanceButton scheduledDate={r.scheduled_date} />
                 </div>
               ))}
             </div>
