@@ -192,6 +192,13 @@ export default async function AdminDashboardPage() {
           </div>
         </Section>
 
+        <Section title="알림 관리">
+          <div className="space-y-3">
+            <MenuCard href="/admin/notification-templates" title="알림 템플릿 관리" description="알림 종류별 제목·본문 템플릿을 관리합니다." badge="A-16" />
+            <MenuCard href="/admin/notification-logs" title="알림 발송 로그" description="전체 발송된 알림 이력을 조회합니다." badge="A-17" />
+          </div>
+        </Section>
+
         <Section title="보안 / 감사">
           <div className="space-y-3">
             <MenuCard href="/admin/audit-logs" title="관리자 행동 로그" description="어드민 작업 이력·변경 전후값을 조회합니다." badge="A-AU-01" />
