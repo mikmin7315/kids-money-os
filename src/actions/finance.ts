@@ -787,6 +787,41 @@ export async function rejectCashSpendAction(
   return { ok: true, message: "현금 사용을 반려했어요." };
 }
 
+// ────────────────────────────────────────────────────────────
+// 미리쓰기 요청 취소 (아이 본인 또는 부모만 가능, pending 상태만)
+// ────────────────────────────────────────────────────────────
+
+export async function cancelBorrowRequestAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const borrowRequestId = String(formData.get("borrowRequestId") ?? "").trim();
+  if (!borrowRequestId) return { ok: false, message: "미리쓰기 ID가 없습니다." };
+
+  if (isDemoMode()) return { ok: true, message: "취소 완료 (데모)" };
+
+  const bundle = await getAppDataBundle();
+  const request = bundle.borrowRequests.find((r) => r.id === borrowRequestId);
+  if (!request) return { ok: false, message: "미리쓰기 요청을 찾을 수 없습니다." };
+  if (request.status !== "pending") return { ok: false, message: "대기 중인 요청만 취소할 수 있어요." };
+
+  const access = await requireChildOrParentAccess(request.childId);
+  if (!access.isParent && !access.isChild) return { ok: false, message: "권한이 없습니다." };
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("borrow_requests")
+    .update({ status: "cancelled" })
+    .eq("id", borrowRequestId)
+    .eq("status", "pending");
+  if (error) return { ok: false, message: "취소 처리에 실패했어요." };
+
+  revalidatePath(`/child/${request.childId}/borrow-status`);
+  revalidatePath(`/child/${request.childId}`);
+  revalidatePath("/approvals");
+  return { ok: true, message: "미리쓰기 요청을 취소했어요." };
+}
+
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";

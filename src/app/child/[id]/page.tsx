@@ -14,16 +14,19 @@ import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { estimateInterest } from "@/lib/finance";
 import { formatWon, formatWonParts } from "@/lib/format";
 import type { BehaviorLog } from "@/lib/types";
+import { getAmountMasked } from "@/actions/child-prefs";
+import { AmountMaskToggle } from "@/components/child/amount-mask-toggle";
 
 export const dynamic = "force-dynamic";
 
 export default async function ChildHomePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requireAppConsent();
-  const [childMode, bundle, dashboard] = await Promise.all([
+  const [childMode, bundle, dashboard, masked] = await Promise.all([
     getChildModeContext(),
     getAppDataBundle(),
     getDashboardView(),
+    getAmountMasked(),
   ]);
 
   const isParentOrAdmin =
@@ -75,20 +78,25 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             </Link>
           ) : <span className="h-11 w-11" />}
           <p style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{child.name}의 통장 💰</p>
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f59e0b] shadow-[0_4px_14px_rgba(245,158,11,0.4)]"
-            style={{ fontSize: 18, fontWeight: 900, color: "white" }}>
-            {child.name[0]}
-          </div>
+          <AmountMaskToggle childId={id} masked={masked} />
         </header>
 
         {/* 잔액 */}
         <div className="relative text-center mb-6">
           <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 6 }}>내 돈</p>
           <Link href={`${base}/balance`} className="flex items-end justify-center gap-1 leading-none transition active:opacity-80">
-            <span className="tabular-nums text-white" style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em" }}>
-              {formatWonParts(summary.wallet.balance).amount}
-            </span>
-            <span className="mb-3" style={{ fontSize: 26, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>원</span>
+            {masked ? (
+              <span className="tabular-nums text-white" style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em" }}>
+                ••••
+              </span>
+            ) : (
+              <>
+                <span className="tabular-nums text-white" style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em" }}>
+                  {formatWonParts(summary.wallet.balance).amount}
+                </span>
+                <span className="mb-3" style={{ fontSize: 26, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>원</span>
+              </>
+            )}
           </Link>
           <div className="mt-4 flex justify-center gap-2 flex-wrap">
             {summary.wallet.currentInterestRate > 0 && (
@@ -159,10 +167,10 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 이번 달 흐름 */}
         <KidSectionTitle>이번 달 흐름</KidSectionTitle>
         <div className="mb-8 mt-3 grid grid-cols-2 gap-3">
-          <FlowCard icon={<Landmark />} label="받은 용돈" value={formatWon(totalAllowance)} tone="violet" />
-          <FlowCard icon={<TrendingUp />} label="이자" value={formatWon(totalInterest)} tone="green" />
-          <FlowCard icon={<PiggyBank />} label="저금" value={formatWon(totalSave)} tone="blue" />
-          <FlowCard icon={<ReceiptText />} label="사용" value={formatWon(totalSpend)} tone="orange" />
+          <FlowCard icon={<Landmark />} label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} tone="violet" />
+          <FlowCard icon={<TrendingUp />} label="이자" value={masked ? "••••" : formatWon(totalInterest)} tone="green" />
+          <FlowCard icon={<PiggyBank />} label="저금" value={masked ? "••••" : formatWon(totalSave)} tone="blue" />
+          <FlowCard icon={<ReceiptText />} label="사용" value={masked ? "••••" : formatWon(totalSpend)} tone="orange" />
         </div>
 
         {/* C-I-02: 이자 미리보기 */}
