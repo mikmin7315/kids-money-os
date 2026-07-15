@@ -110,6 +110,13 @@
   --monari-shadow-lift: 0 2px 16px rgba(0, 0, 0, 0.06);
   --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.06);
   --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.07);
+
+  /* ── Child banking UI (spend/save CTAs) ── */
+  --child-spend: #C66B3D;
+  --child-spend-hover: #A85930;
+  --child-save: #10367D;
+  --child-surface: #EBEBEB;
 
   /* ── Status solid chips (light mode) ── */
   --status-success-solid: #d1fae5;
@@ -180,6 +187,11 @@
     --shadow-soft: var(--monari-shadow-soft);
     --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.32);
     --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.40);
+    --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.32);
+    --child-spend: #e58c5a;
+    --child-spend-hover: #d4743f;
+    --child-save: #5b8ee6;
+    --child-surface: rgba(255, 255, 255, 0.08);
     /* Status solid chips (dark mode) */
     --status-success-solid: rgba(52, 211, 153, 0.14);
     --status-success-solid-text: #6ee7b7;

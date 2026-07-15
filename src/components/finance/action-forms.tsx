@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { useActionState } from "react";
@@ -50,7 +50,7 @@ export function ChildBehaviorCheckForm({
 
   if (behaviorRules.length === 0) {
     return (
-      <p className="py-4 text-center text-[14px] text-[rgba(43,43,43,0.55)]">
+      <p className="py-4 text-center text-[14px] text-[var(--monari-ink-soft)]">
         아직 약속이 없어요. 부모님과 함께 만들어봐요.
       </p>
     );
@@ -84,15 +84,15 @@ export function ChildBehaviorCheckForm({
         const needsApproval = rule.requiresParentApproval;
 
         return (
-          <div key={rule.id} className={`rounded-[16px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"}`}
+          <div key={rule.id} className={`rounded-[16px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[var(--monari-surface-soft)]"}`}
             style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}>
 
             <div className="flex items-center gap-3 px-4 py-3.5">
               <div className="min-w-0 flex-1">
-                <p className={`truncate text-[15px] font-semibold ${isDone || isPending ? "text-[rgba(43,43,43,0.50)]" : "text-[#2B2B2B]"}`}>
+                <p className={`truncate text-[15px] font-semibold ${isDone || isPending ? "text-[var(--monari-ink-muted)]" : "text-[var(--monari-ink)]"}`}>
                   {rule.title}
                 </p>
-                <p className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[rgba(43,43,43,0.50)]">
+                <p className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[var(--monari-ink-muted)]">
                   +{formatWon(rule.rewardAmount)} 보상
                   {needsApproval && !isDone && !isPending && (
                     <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-700 text-[var(--monari-pending)]">부모 확인 필요</span>
@@ -100,7 +100,7 @@ export function ChildBehaviorCheckForm({
                 </p>
               </div>
               {isDone ? (
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2F7D57]/12 text-[#2F7D57]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--monari-done)]/12 text-[var(--monari-done)]">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                     <path d="M4 9.5L7.5 13L14 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -152,7 +152,7 @@ export function ChildBehaviorCheckForm({
                   <button
                     type="button"
                     onClick={() => { setSelectedRuleId(rule.id); fileInputRef.current?.click(); }}
-                    className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[rgba(43,43,43,0.15)] py-3 text-[13px] font-600 text-[rgba(43,43,43,0.45)] transition active:bg-[rgba(43,43,43,0.04)]"
+                    className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[var(--monari-line-strong)] py-3 text-[13px] font-600 text-[var(--monari-ink-muted)] transition active:bg-[var(--monari-line)]"
                   >
                     <Camera className="h-4 w-4" />
                     사진으로 증명하기 (선택)
@@ -195,20 +195,20 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
 
       {/* Purpose */}
       <div>
-        <label className="mb-2 block text-[13px] font-semibold text-[rgba(43,43,43,0.65)]">
+        <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           무엇을 사고 싶어?
         </label>
         <input
           name="purpose"
           type="text"
           placeholder="예: 문구점에서 필통 사고 싶어요"
-          className="w-full rounded-[16px] border border-[rgba(43,43,43,0.10)] bg-[#EBEBEB] px-4 py-3 text-[14px] text-[#2B2B2B] outline-none placeholder:text-[rgba(43,43,43,0.38)] focus:border-[#C66B3D]"
+          className="w-full rounded-[16px] border border-[var(--monari-line-strong)] bg-[var(--child-surface)] px-4 py-3 text-[14px] text-[var(--monari-ink)] outline-none placeholder:text-[var(--monari-ink-muted)] focus:border-[var(--child-spend)]"
         />
       </div>
 
       {/* Amount presets */}
       <div>
-        <label className="mb-2 block text-[13px] font-semibold text-[rgba(43,43,43,0.65)]">
+        <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           얼마가 필요해?
         </label>
         <div className="grid grid-cols-4 gap-2">
@@ -219,8 +219,8 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
               onClick={() => { setAmount(a); setShowCustom(false); }}
               className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] ${
                 amount === a && !showCustom
-                  ? "bg-[#C66B3D] text-white"
-                  : "bg-[#EBEBEB] text-[#2B2B2B]"
+                  ? "bg-[var(--child-spend)] text-white"
+                  : "bg-[var(--child-surface)] text-[var(--monari-ink)]"
               }`}
             >
               {formatWon(a)}
@@ -230,7 +230,7 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
         <button
           type="button"
           onClick={() => setShowCustom((v) => !v)}
-          className="mt-2 text-[12px] font-medium text-[rgba(43,43,43,0.50)] underline underline-offset-2"
+          className="mt-2 text-[12px] font-medium text-[var(--monari-ink-muted)] underline underline-offset-2"
         >
           직접 입력
         </button>
@@ -241,14 +241,14 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
             step="100"
             value={amount}
             onChange={(e) => setAmount(Math.max(100, Number(e.target.value)))}
-            className="mt-2 w-full rounded-[16px] border-2 border-[#C66B3D] bg-[#EBEBEB] px-4 py-3 text-[15px] font-bold text-[#2B2B2B] outline-none"
+            className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-spend)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
           />
         )}
       </div>
 
       {/* Info note */}
       <div className="rounded-[14px] bg-[rgba(16,54,125,0.06)] px-4 py-3">
-        <p className="text-[12px] leading-relaxed text-[rgba(43,43,43,0.55)]">
+        <p className="text-[12px] leading-relaxed text-[var(--monari-ink-soft)]">
           부모님이 확인한 뒤 허락하면 다음 용돈에서 갚게 돼.
         </p>
       </div>
@@ -280,7 +280,7 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
             지금 쓸 수 있는 돈이 없어 저금할 수 없어요.
           </p>
         )}
-        <label className="mb-2 block text-[13px] font-semibold text-[rgba(43,43,43,0.65)]">
+        <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           얼마를 저축할까?
         </label>
         <div className="grid grid-cols-4 gap-2">
@@ -292,8 +292,8 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
               onClick={() => { setAmount(a); setShowCustom(false); }}
               className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-[35%] ${
                 amount === a && !showCustom
-                  ? "bg-[#10367D] text-white"
-                  : "bg-[#EBEBEB] text-[#2B2B2B]"
+                  ? "bg-[var(--child-save)] text-white"
+                  : "bg-[var(--child-surface)] text-[var(--monari-ink)]"
               }`}
             >
               {formatWon(a)}
@@ -303,7 +303,7 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
         <button
           type="button"
           onClick={() => setShowCustom((v) => !v)}
-          className="mt-2 text-[12px] font-medium text-[rgba(43,43,43,0.50)] underline underline-offset-2"
+          className="mt-2 text-[12px] font-medium text-[var(--monari-ink-muted)] underline underline-offset-2"
         >
           직접 입력
         </button>
@@ -315,7 +315,7 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
             step="100"
             value={amount}
             onChange={(e) => setAmount(Math.min(Math.max(100, Number(e.target.value)), Math.max(100, availableBalance)))}
-            className="mt-2 w-full rounded-[16px] border-2 border-[#10367D] bg-[#EBEBEB] px-4 py-3 text-[15px] font-bold text-[#2B2B2B] outline-none"
+            className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
           />
         )}
       </div>
@@ -484,7 +484,7 @@ function ChildPlayButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="mt-1 w-full rounded-[16px] bg-[#C66B3D] py-4 text-[15px] font-bold text-white transition hover:bg-[#A85930] active:scale-[0.98] disabled:opacity-60"
+      className="mt-1 w-full rounded-[16px] bg-[var(--child-spend)] py-4 text-[15px] font-bold text-white transition hover:bg-[var(--child-spend-hover)] active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>
@@ -513,7 +513,7 @@ function ChildSaveButton({ label, disabled }: { label: string; disabled: boolean
     <button
       type="submit"
       disabled={pending || disabled}
-      className="h-12 w-full rounded-[16px] bg-[#10367D] text-[15px] font-700 text-white transition active:scale-[0.98] disabled:opacity-60"
+      className="h-12 w-full rounded-[16px] bg-[var(--child-save)] text-[15px] font-700 text-white transition active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "저금하는 중..." : label}
     </button>
@@ -602,12 +602,12 @@ export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-[12px] border-2 border-[#e5e7eb] py-2.5 text-sm font-bold text-[var(--monari-ink-muted)] transition active:scale-95 disabled:opacity-50"
+          className="w-full rounded-[12px] border-2 border-[var(--monari-line-strong)] py-2.5 text-sm font-bold text-[var(--monari-ink-muted)] transition active:scale-95 disabled:opacity-50"
         >
           반려
         </button>
         {rejectState.message && !rejectState.ok && (
-          <p className="mt-1 text-xs text-red-600">{rejectState.message}</p>
+          <p className="mt-1 text-xs text-[var(--monari-minus)]">{rejectState.message}</p>
         )}
       </form>
       <form action={approveAction} className="flex-1">
@@ -615,12 +615,12 @@ export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-[12px] bg-[#1a0533] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
+          className="w-full rounded-[12px] bg-[var(--monari-hero)] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
         >
           {approvePending ? "처리 중…" : "승인"}
         </button>
         {approveState.message && !approveState.ok && (
-          <p className="mt-1 text-xs text-red-600">{approveState.message}</p>
+          <p className="mt-1 text-xs text-[var(--monari-minus)]">{approveState.message}</p>
         )}
       </form>
     </div>
@@ -635,11 +635,11 @@ export function InlineRepayInstallmentForm({ repaymentId, amount }: { repaymentI
   return (
     <form action={action}>
       <input type="hidden" name="repaymentId" value={repaymentId} />
-      {state.message && !state.ok && <p className="mb-2 text-xs text-red-600">{state.message}</p>}
+      {state.message && !state.ok && <p className="mb-2 text-xs text-[var(--monari-minus)]">{state.message}</p>}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-[12px] bg-[#059669] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
+        className="w-full rounded-[12px] bg-[var(--monari-done)] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
       >
         {pending ? "처리 중…" : `${formatWon(amount)} 상환하기`}
       </button>

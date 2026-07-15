@@ -52,7 +52,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-bold transition ${
                 primary?.child.id === c.child.id
                   ? "bg-[var(--monari-hero)] text-white"
-                  : "bg-white text-[var(--monari-ink-muted)] shadow-[0_1px_4px_rgba(0,0,0,0.08)]"
+                  : "bg-[var(--monari-surface)] text-[var(--monari-ink-muted)] shadow-[0_1px_4px_rgba(0,0,0,0.08)]"
               }`}
             >
               {String(c.child.name)}

@@ -1,4 +1,4 @@
-﻿interface ChildProgressSectionProps {
+interface ChildProgressSectionProps {
   promiseTotal: number;
   promiseDone: number;
   savingGoalProgress: number;
@@ -14,7 +14,7 @@ export function ChildProgressSection({
 
   return (
     <section>
-      <h2 className="mb-3 text-[18px] font-bold text-[#2B2B2B]">진행 상황</h2>
+      <h2 className="mb-3 text-[18px] font-bold text-[var(--monari-ink)]">진행 상황</h2>
       <div className="space-y-3">
         <ProgressCard
           title="약속 진행"
@@ -56,17 +56,17 @@ function ProgressCard({
 
   return (
     <div
-      className="rounded-[24px] bg-white px-5 py-4"
-      style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
+      className="rounded-[24px] bg-[var(--monari-surface)] px-5 py-4"
+      style={{ boxShadow: "var(--monari-shadow-lg)" }}
     >
       <div className="flex items-baseline justify-between gap-2">
-        <p className="text-[14px] font-bold text-[#2B2B2B]">{title}</p>
-        <p className="text-[13px] font-semibold text-[rgba(43,43,43,0.72)]">{valueLine}</p>
+        <p className="text-[14px] font-bold text-[var(--monari-ink)]">{title}</p>
+        <p className="text-[13px] font-semibold text-[var(--monari-ink-soft)]">{valueLine}</p>
       </div>
 
-      <div className="mt-3 h-[7px] overflow-hidden rounded-full bg-[rgba(43,43,43,0.08)]">
+      <div className="mt-3 h-[7px] overflow-hidden rounded-full bg-[var(--monari-line)]">
         <div
-          className="h-full rounded-full bg-[#C66B3D] transition-all duration-500"
+          className="h-full rounded-full bg-[var(--child-spend)] transition-all duration-500"
           style={{ width: `${clampedProgress}%` }}
           role="progressbar"
           aria-valuenow={clampedProgress}
@@ -76,7 +76,7 @@ function ProgressCard({
       </div>
 
       {helperText && (
-        <p className="mt-2 text-[12px] font-medium text-[rgba(43,43,43,0.55)]">{helperText}</p>
+        <p className="mt-2 text-[12px] font-medium text-[var(--monari-ink-soft)]">{helperText}</p>
       )}
     </div>
   );

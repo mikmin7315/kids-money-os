@@ -17,7 +17,7 @@ function ToggleRow({
 }) {
   const [, formAction, pending] = useActionState(action, { ok: false, message: "" });
   return (
-    <form action={formAction} className="flex items-center justify-between rounded-[14px] bg-white px-4 py-3 shadow-[var(--monari-shadow-md)]">
+    <form action={formAction} className="flex items-center justify-between rounded-[14px] bg-[var(--monari-surface)] px-4 py-3 shadow-[var(--monari-shadow-md)]">
       <input type="hidden" name="notif_type" value={notifType} />
       <input type="hidden" name="enabled" value={String(!enabled)} />
       <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }}>{label}</p>
@@ -25,7 +25,7 @@ function ToggleRow({
         type="submit"
         disabled={pending}
         className="relative h-6 w-11 rounded-full transition disabled:opacity-50"
-        style={{ backgroundColor: enabled ? "var(--monari-hero)" : "#e5e7eb" }}
+        style={{ backgroundColor: enabled ? "var(--monari-hero)" : "var(--monari-line-strong)" }}
       >
         <span
           className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition"

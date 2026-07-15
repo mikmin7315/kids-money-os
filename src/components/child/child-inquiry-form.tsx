@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useActionState } from "react";
 import { submitInquiryAction } from "@/actions/inquiries";
@@ -23,7 +23,7 @@ export function ChildInquiryForm() {
       <div className="rounded-[24px] bg-[var(--status-success-solid)] p-5 text-center">
         <p style={{ fontSize: 32, marginBottom: 8 }}>✅</p>
         <p style={{ fontSize: 15, fontWeight: 800, color: "var(--status-success-solid-text)" }}>문의가 접수됐어요!</p>
-        <p className="mt-1" style={{ fontSize: 12, color: "#047857" }}>빠르게 답변드릴게요 🙏</p>
+        <p className="mt-1" style={{ fontSize: 12, color: "var(--monari-done)" }}>빠르게 답변드릴게요 🙏</p>
       </div>
     );
   }

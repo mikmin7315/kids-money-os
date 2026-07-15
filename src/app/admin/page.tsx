@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer, Section, Surface, Badge } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -84,7 +84,7 @@ export default async function AdminDashboardPage() {
             </div>
 
             {loadError ? (
-              <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+              <p className="mt-4 rounded-2xl bg-[var(--status-danger-solid)] px-4 py-3 text-sm font-semibold text-[var(--status-danger-solid-text)]">
                 운영 데이터를 불러오지 못했습니다. 환경변수와 Supabase service role 설정을 확인하세요.
               </p>
             ) : (
