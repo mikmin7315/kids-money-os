@@ -40,7 +40,7 @@ export default function ChildPinPage({ params }: { params: Promise<{ id: string 
                 <PinInput name="pin" autoFocus />
                 <PinSubmitButton />
                 {state.message && !state.ok && (
-                  <p className="text-center text-sm font-medium text-rose-600">{state.message}</p>
+                  <p className="text-center text-sm font-medium text-[var(--monari-minus)]">{state.message}</p>
                 )}
               </form>
             </Surface>
