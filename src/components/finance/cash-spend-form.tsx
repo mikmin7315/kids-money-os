@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useState } from "react";
 import { cashSpendAction } from "@/actions/finance";
@@ -19,7 +19,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
         <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>{state.message}</p>
         <button
           onClick={() => window.history.back()}
-          className="mt-6 w-full rounded-[18px] bg-[#f3f0ff] py-4 text-base font-extrabold text-[#7c3aed]"
+          className="mt-6 w-full rounded-[18px] bg-[#f3f0ff] py-4 text-base font-extrabold text-[var(--monari-hero)]"
         >
           돌아가기
         </button>
@@ -42,9 +42,9 @@ export function CashSpendForm({ childId }: { childId: string }) {
               onClick={() => setAmount(String(q))}
               className="rounded-[12px] border-2 px-4 py-2 text-sm font-bold transition"
               style={{
-                borderColor: amount === String(q) ? "#7c3aed" : "#e5e7eb",
-                background: amount === String(q) ? "#ede9fe" : "#fff",
-                color: amount === String(q) ? "#7c3aed" : "#6b7280",
+                borderColor: amount === String(q) ? "var(--monari-hero)" : "#e5e7eb",
+                background: amount === String(q) ? "var(--monari-hero-lo)" : "#fff",
+                color: amount === String(q) ? "var(--monari-hero)" : "#6b7280",
               }}
             >
               {q.toLocaleString()}원
@@ -58,7 +58,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
           placeholder="직접 입력 (원)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[#7c3aed]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
           min="1"
           required
         />
@@ -71,7 +71,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
           name="date"
           type="date"
           defaultValue={new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date())}
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[#7c3aed]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
           required
         />
       </div>
@@ -83,7 +83,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
           name="memo"
           type="text"
           placeholder="예: 편의점 간식, 급식비"
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base text-[#1a0533] outline-none focus:border-[#7c3aed]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
           maxLength={50}
         />
       </div>

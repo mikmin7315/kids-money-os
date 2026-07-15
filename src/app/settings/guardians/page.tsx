@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
@@ -42,9 +42,9 @@ export default async function GuardiansPage() {
       <MobileShell>
         <AppHeader eyebrow="설정" title="공동 보호자 관리" />
 
-        <div className="mb-5 rounded-[16px] bg-[#ede9fe] p-4">
-          <p className="text-sm font-bold text-[#5b21b6]">공동 보호자란?</p>
-          <p className="mt-1 text-xs text-[#6d28d9]">
+        <div className="mb-5 rounded-[16px] bg-[var(--monari-hero-lo)] p-4">
+          <p className="text-sm font-bold text-[var(--monari-hero)]">공동 보호자란?</p>
+          <p className="mt-1 text-xs text-[var(--monari-hero)]">
             배우자나 다른 보호자를 초대해 아이 계정을 함께 관리할 수 있어요.
             권한은 아이별로 세밀하게 조정 가능합니다.
           </p>

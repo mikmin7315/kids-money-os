@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ChildCreateForm } from "@/components/finance/management-forms";
@@ -46,7 +46,7 @@ export default async function AddChildPage() {
           <p className="mb-3 text-xs font-bold text-[var(--monari-ink-muted)]">등록 후 할 수 있는 것</p>
           <div className="space-y-2.5">
             {[
-              { step: "1", text: "아이 모드 PIN 설정 — 아이 전용 화면 접근", color: "#7c3aed" },
+              { step: "1", text: "아이 모드 PIN 설정 — 아이 전용 화면 접근", color: "var(--monari-hero)" },
               { step: "2", text: "정기 용돈 규칙 설정 — 매주·매월 자동 지급", color: "#059669" },
               { step: "3", text: "이자율 설정 — 약속 달성에 따라 이자 변화", color: "#d97706" },
             ].map(({ step, text, color }) => (

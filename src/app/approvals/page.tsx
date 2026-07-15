@@ -1,4 +1,4 @@
-import {
+﻿import {
   InlineBehaviorDecisionForm,
   InlineBorrowDecisionForm,
   InlineCashSpendDecisionForm,
@@ -31,7 +31,7 @@ export default async function ApprovalsPage() {
     <MobileAppShell title={headline} subtitle="승인 센터">
       <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
         <div className="grid grid-cols-4 divide-x divide-[#f3f4f6]">
-          <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="#7c3aed" />
+          <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
           <StatItem label="현금 대기" value={pendingCashRequests.length} color="#dc2626" />
           <StatItem label="미리쓰기" value={pendingBorrows.length} color="#d97706" />
           <StatItem label="상환 중" value={activeBorrows.length} color="#059669" />
@@ -258,9 +258,9 @@ function StatItem({ label, value, color }: { label: string; value: number; color
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] bg-[#f5f3ff] p-4">
-      <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
-      <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 18, fontWeight: 800 }}>{value}</p>
+    <div className="rounded-[18px] bg-[var(--monari-hero-lo)] p-4">
+      <p className="text-[12px] text-[var(--monari-hero)]/60" style={{ fontWeight: 600 }}>{label}</p>
+      <p className="mt-1 text-[var(--monari-hero)]" style={{ fontSize: 18, fontWeight: 800 }}>{value}</p>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { BorrowRequestQuickForm } from "@/components/finance/action-forms";
@@ -90,9 +90,9 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
       </div>
 
       {/* 안내 */}
-      <div className="mt-5 rounded-[20px] bg-[#f5f3ff] p-4">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#5b21b6", marginBottom: 6 }}>💡 미리쓰기란?</p>
-        <p style={{ fontSize: 13, color: "#7c3aed", lineHeight: 1.7 }}>
+      <div className="mt-5 rounded-[20px] bg-[var(--monari-hero-lo)] p-4">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginBottom: 6 }}>💡 미리쓰기란?</p>
+        <p style={{ fontSize: 13, color: "var(--monari-hero)", lineHeight: 1.7 }}>
           아직 받지 않은 용돈을 먼저 쓰고 나중에 갚는 거예요.
           부모님이 승인하면 잔액에 추가되고, 다음 용돈에서 조금씩 갚게 돼요.
         </p>

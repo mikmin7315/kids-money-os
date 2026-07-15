@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
   ArrowLeft,
@@ -180,7 +180,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           <>
             <div className="mb-3 flex items-center justify-between">
               <KidSectionTitle>이자 미리보기 📈</KidSectionTitle>
-              <Link href={`${base}/interest`} style={{ fontSize: 14, fontWeight: 700, color: "#7c3aed" }}>
+              <Link href={`${base}/interest`} style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-hero)" }}>
                 자세히 <ArrowRight className="inline h-3.5 w-3.5" />
               </Link>
             </div>
@@ -206,7 +206,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 </div>
                 <div className="flex items-center justify-between px-5 py-3">
                   <p style={{ fontSize: 13, color: "#9ca3af", fontWeight: 600 }}>현재 이자율</p>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "#7c3aed" }}>{summary.wallet.currentInterestRate}%</p>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>{summary.wallet.currentInterestRate}%</p>
                 </div>
                 <div className="px-5 py-3">
                   <p style={{ fontSize: 12, color: "#fcd34d", fontWeight: 600 }}>
@@ -221,7 +221,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 최근 내역 */}
         <div className="mb-3 flex items-center justify-between">
           <KidSectionTitle>최근 내역</KidSectionTitle>
-          <Link href={`${base}/records`} prefetch={false} style={{ fontSize: 14, fontWeight: 700, color: "#7c3aed" }}>
+          <Link href={`${base}/records`} prefetch={false} style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-hero)" }}>
             전체 보기 <ArrowRight className="inline h-3.5 w-3.5" />
           </Link>
         </div>
@@ -261,7 +261,7 @@ function KidSectionTitle({ children }: { children: React.ReactNode }) {
 
 function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: string; tone: "violet" | "green" | "blue" | "orange" }) {
   const tones = {
-    violet: { bg: "#ede9fe", icon: "#6d28d9", text: "#4c1d95" },
+    violet: { bg: "var(--monari-hero-lo)", icon: "var(--monari-hero)", text: "var(--monari-hero)" },
     green:  { bg: "#a7f3d0", icon: "#065f46", text: "#065f46" },
     blue:   { bg: "#bfdbfe", icon: "#1d4ed8", text: "#1e40af" },
     orange: { bg: "#fecdd3", icon: "#9f1239", text: "#9f1239" },

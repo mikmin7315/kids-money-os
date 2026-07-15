@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -34,7 +34,7 @@ export default async function AdminReleaseControlsPage() {
                   <p className="font-mono text-xs font-bold text-[var(--color-text)]">{c.key}</p>
                   {c.description && <p className="text-[11px] text-[var(--color-muted)]">{c.description}</p>}
                 </div>
-                <span className="font-mono text-xs font-bold text-[#7c3aed]">
+                <span className="font-mono text-xs font-bold text-[var(--monari-hero)]">
                   {JSON.stringify(c.value)}
                 </span>
               </div>

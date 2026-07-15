@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
@@ -30,13 +30,13 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href="/inquiries" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href="/inquiries" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 문의 내역
       </Link>
 
       <div className="mb-5">
         <div className="flex items-center gap-2 mb-2">
-          <span className="rounded-full bg-[#ede9fe] px-2 py-0.5 text-xs font-bold text-[#5b21b6]">
+          <span className="rounded-full bg-[var(--monari-hero-lo)] px-2 py-0.5 text-xs font-bold text-[var(--monari-hero)]">
             {CATEGORY_LABEL[String(q.category)] ?? String(q.category)}
           </span>
           <span style={{ fontSize: 12, color: "#9ca3af" }}>
@@ -58,8 +58,8 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
 
       {/* 답변 */}
       {q.admin_reply ? (
-        <div className="rounded-[20px] border-l-4 border-[#7c3aed] bg-[#f5f3ff] p-5">
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#5b21b6", marginBottom: 8 }}>
+        <div className="rounded-[20px] border-l-4 border-[var(--monari-hero)] bg-[var(--monari-hero-lo)] p-5">
+          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-hero)", marginBottom: 8 }}>
             📩 운영팀 답변 · {String(q.replied_at ?? "").slice(0, 10).replace(/-/g, ".")}
           </p>
           <p style={{ fontSize: 15, lineHeight: 1.75, color: "#374151", whiteSpace: "pre-wrap" }}>

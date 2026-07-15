@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -92,7 +92,7 @@ export default async function InquiriesPage() {
         )}
 
         <div className="mt-6">
-          <Link href="/support" className="text-sm font-bold text-[#7c3aed]">FAQ 보기 →</Link>
+          <Link href="/support" className="text-sm font-bold text-[var(--monari-hero)]">FAQ 보기 →</Link>
         </div>
       </section>
     </main>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -59,7 +59,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
         </div>
         <Link
           href={`/child/${id}/interest-received`}
-          className="mt-1 shrink-0 rounded-[12px] bg-[#ede9fe] px-3 py-2 text-xs font-bold text-[#5b21b6]"
+          className="mt-1 shrink-0 rounded-[12px] bg-[var(--monari-hero-lo)] px-3 py-2 text-xs font-bold text-[var(--monari-hero)]"
         >
           받은 이자 내역 →
         </Link>
@@ -103,7 +103,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
             label="기본 이자율"
             value={policy ? formatPercent(policy.baseInterestRate) : "설정 전"}
             desc="부모님이 정해준 기본값"
-            color="#7c3aed"
+            color="var(--monari-hero)"
           />
           {behaviorBonus > 0 && (
             <CalcRow
@@ -122,8 +122,8 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
               bold
             />
           </div>
-          <div className="rounded-[14px] bg-[#f5f3ff] px-4 py-3">
-            <p style={{ fontSize: 12, fontWeight: 600, color: "#5b21b6" }}>
+          <div className="rounded-[14px] bg-[var(--monari-hero-lo)] px-4 py-3">
+            <p style={{ fontSize: 12, fontWeight: 600, color: "var(--monari-hero)" }}>
               💡 약속을 더 지키면 이자율이 최대 {policy ? formatPercent(policy.maxInterestRate) : "—"}까지 올라가요!
             </p>
           </div>

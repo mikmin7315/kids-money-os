@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { CheckCircle2, House, PiggyBank, Settings, WalletCards } from "lucide-react";
 import Link from "next/link";
@@ -57,7 +57,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
                   style={{
                     fontSize: 13,
                     fontWeight: active ? 800 : 600,
-                    color: active ? "#5b21b6" : "#9ca3af",
+                    color: active ? "var(--monari-hero)" : "#9ca3af",
                     letterSpacing: "-0.02em",
                   }}
                 >

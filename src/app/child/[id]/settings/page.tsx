@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, HelpCircle, LogOut, MessageCircle } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -39,7 +39,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 돌아가기
       </Link>
 
@@ -81,14 +81,14 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       {/* 용어 사전 */}
       <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div className="mb-4 flex items-center gap-2">
-          <BookOpen size={18} color="#7c3aed" />
+          <BookOpen size={18} color="var(--monari-hero)" />
           <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533" }}>용어 사전</p>
         </div>
         <div className="space-y-3">
           {TERMS.map(({ word, emoji, desc }) => (
-            <div key={word} className="rounded-[14px] bg-[#f5f3ff] px-4 py-3">
-              <p style={{ fontSize: 14, fontWeight: 800, color: "#5b21b6" }}>{emoji} {word}</p>
-              <p style={{ fontSize: 13, color: "#7c3aed", marginTop: 4, lineHeight: 1.6 }}>{desc}</p>
+            <div key={word} className="rounded-[14px] bg-[var(--monari-hero-lo)] px-4 py-3">
+              <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>{emoji} {word}</p>
+              <p style={{ fontSize: 13, color: "var(--monari-hero)", marginTop: 4, lineHeight: 1.6 }}>{desc}</p>
             </div>
           ))}
         </div>
@@ -97,7 +97,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       {/* 자주 묻는 질문 */}
       <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div className="mb-4 flex items-center gap-2">
-          <HelpCircle size={18} color="#7c3aed" />
+          <HelpCircle size={18} color="var(--monari-hero)" />
           <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533" }}>자주 묻는 질문</p>
         </div>
         <div className="space-y-4">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { approveWalletChargeAction, rejectWalletChargeAction } from "@/actions/admin";
@@ -33,7 +33,7 @@ export function AdminWalletChargeActions({ chargeId }: { chargeId: string }) {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-[12px] bg-[#7c3aed] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
+            className="w-full rounded-[12px] bg-[var(--monari-hero)] py-2.5 text-sm font-bold text-white transition active:scale-95 disabled:opacity-50"
           >
             {approvePending ? "처리 중…" : "충전 승인"}
           </button>

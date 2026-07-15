@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getNotificationPreferencesAction, toggleParentNotificationAction } from "@/actions/notification-settings";
 import { NotificationToggleList } from "@/components/notifications/notification-toggle-list";
@@ -16,7 +16,7 @@ export default async function ParentNotificationSettingsPage() {
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href="/settings" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href="/settings" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 돌아가기
       </Link>
 

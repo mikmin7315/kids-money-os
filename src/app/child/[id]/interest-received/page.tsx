@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -42,7 +42,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/interest`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href={`/child/${id}/interest`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 이자 미리보기로
       </Link>
 

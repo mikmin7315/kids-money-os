@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import {
@@ -19,7 +19,7 @@ export function WalletChargeForm() {
         <p style={{ fontSize: 14, fontWeight: 500, color: "#6b7280", marginTop: 6 }}>{state.message}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-5 w-full rounded-[14px] bg-[#7c3aed] py-3.5 text-sm font-extrabold text-white"
+          className="mt-5 w-full rounded-[14px] bg-[var(--monari-hero)] py-3.5 text-sm font-extrabold text-white"
         >
           확인
         </button>
@@ -37,7 +37,7 @@ export function WalletChargeForm() {
             <button
               key={amt}
               type="button"
-              className="rounded-[12px] bg-[#f5f3ff] py-2.5 text-center text-sm font-bold text-[#7c3aed] transition active:scale-[0.95]"
+              className="rounded-[12px] bg-[var(--monari-hero-lo)] py-2.5 text-center text-sm font-bold text-[var(--monari-hero)] transition active:scale-[0.95]"
               onClick={() => {
                 const el = document.getElementById("charge-amount") as HTMLInputElement;
                 if (el) el.value = String(amt);

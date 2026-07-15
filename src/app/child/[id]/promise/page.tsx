@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import { ChildBehaviorCheckForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -57,7 +57,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         </div>
         <a
           href={`/child/${id}/history`}
-          style={{ fontSize: 13, fontWeight: 700, color: "#7c3aed", marginTop: 6, whiteSpace: "nowrap" }}
+          style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginTop: 6, whiteSpace: "nowrap" }}
         >
           기록 보기 →
         </a>
@@ -71,14 +71,14 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         >
           <div className="flex items-center justify-between">
             <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "#5b21b6", opacity: 0.7 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "var(--monari-hero)", opacity: 0.7 }}>
                 {allDone ? "오늘 모두 완료! 🎉" : "오늘 약속"}
               </p>
-              <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#064e3b" : "#4c1d95", letterSpacing: "-0.03em" }}>
+              <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#064e3b" : "var(--monari-hero)", letterSpacing: "-0.03em" }}>
                 {todayDone}/{todayTotal}개 완료
               </p>
               {streak > 0 && (
-                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "#7c3aed" }}>
+                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "var(--monari-hero)" }}>
                   🔥 {streak}일 연속 달성 중!
                 </p>
               )}
@@ -94,7 +94,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
             <div key={label} className="flex flex-col items-center gap-1.5">
-              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "#7c3aed" : "#d1d5db" }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "var(--monari-hero)" : "#d1d5db" }}>
                 {["일", "월", "화", "수", "목", "금", "토"][new Date(
                   // label은 날짜 숫자(day)
                   today.slice(0, 8) + String(label).padStart(2, "0")

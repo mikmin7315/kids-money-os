@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { InterestPolicyForm } from "@/components/finance/management-forms";
@@ -51,9 +51,9 @@ export default async function InterestSettingPage() {
       </section>
 
       {/* 이자 구조 설명 */}
-      <div className="mb-6 rounded-[18px] bg-[#ede9fe] p-4">
-        <p className="text-xs font-bold text-[#4c1d95]">📊 이자는 어떻게 계산되나요?</p>
-        <div className="mt-2 space-y-1.5 text-xs leading-5 text-[#5b21b6]">
+      <div className="mb-6 rounded-[18px] bg-[var(--monari-hero-lo)] p-4">
+        <p className="text-xs font-bold text-[var(--monari-hero)]">📊 이자는 어떻게 계산되나요?</p>
+        <div className="mt-2 space-y-1.5 text-xs leading-5 text-[var(--monari-hero)]">
           <p>• <b>기본 이자율</b>로 시작해요</p>
           <p>• 행동 약속을 지킬 때마다 이자율이 올라가요</p>
           <p>• 최소·최대 범위 안에서만 움직여요</p>
@@ -91,7 +91,7 @@ export default async function InterestSettingPage() {
                   className="flex items-center justify-between rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ede9fe] text-[var(--monari-hero)]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
                       <TrendingUp size={18} />
                     </span>
                     <div>

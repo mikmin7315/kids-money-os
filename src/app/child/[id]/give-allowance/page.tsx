@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, Wallet } from "lucide-react";
 import Link from "next/link";
 import { GiveAllowanceForm } from "@/components/finance/give-allowance-form";
@@ -63,10 +63,10 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
           <div className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wallet className="h-4 w-4 text-[#7c3aed]" />
+                <Wallet className="h-4 w-4 text-[var(--monari-hero)]" />
                 <p className="text-sm font-bold text-[#374151]">내 지갑 잔액</p>
               </div>
-              <Link href="/settings/wallet" className="text-xs font-bold text-[#7c3aed]">충전 →</Link>
+              <Link href="/settings/wallet" className="text-xs font-bold text-[var(--monari-hero)]">충전 →</Link>
             </div>
             <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "#dc2626" : "#1a0533" }}>
               {formatWon(parentWallet.balance)}
@@ -87,9 +87,9 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
                 {formatWon(summary.monthReport.totalAllowance)}
               </p>
             </div>
-            <div className="rounded-[14px] bg-[#f5f3ff] p-3">
+            <div className="rounded-[14px] bg-[var(--monari-hero-lo)] p-3">
               <p className="text-xs font-semibold text-[var(--monari-hero)]">이번 달 이자</p>
-              <p className="mt-1 text-base font-black text-[#4c1d95]">
+              <p className="mt-1 text-base font-black text-[var(--monari-hero)]">
                 {formatWon(summary.monthReport.totalInterest)}
               </p>
             </div>

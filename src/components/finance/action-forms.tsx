@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { useActionState } from "react";
@@ -499,7 +499,7 @@ function BehaviorSubmitButton({ ruleId, photo }: { ruleId: string; photo?: File 
       name="behaviorRuleId"
       value={ruleId}
       disabled={pending}
-      className="h-12 shrink-0 rounded-2xl bg-[#7c3aed] px-5 text-[14px] font-bold text-white transition active:scale-[0.96] disabled:opacity-60"
+      className="h-12 shrink-0 rounded-2xl bg-[var(--monari-hero)] px-5 text-[14px] font-bold text-white transition active:scale-[0.96] disabled:opacity-60"
       style={{ boxShadow: "0 4px 14px rgba(124,58,237,0.35)" }}
     >
       {pending ? "확인 중..." : photo ? "사진과 함께 했어요!" : "했어요"}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { getSupportEmail } from "@/lib/public-info";
 
@@ -56,7 +56,7 @@ export default function SupportPage() {
       <div className="px-4 pb-16 pt-12">
         {/* 헤더 */}
         <div className="mb-8">
-          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", color: "#7c3aed" }}>SUPPORT</p>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", color: "var(--monari-hero)" }}>SUPPORT</p>
           <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em", marginTop: 6 }}>
             고객지원
           </h1>
@@ -88,7 +88,7 @@ export default function SupportPage() {
         <div className="space-y-6">
           {FAQS.map(({ category, items }) => (
             <div key={category}>
-              <p style={{ fontSize: 13, fontWeight: 800, color: "#7c3aed", marginBottom: 10 }}>
+              <p style={{ fontSize: 13, fontWeight: 800, color: "var(--monari-hero)", marginBottom: 10 }}>
                 {category}
               </p>
               <div className="space-y-2">
@@ -115,24 +115,24 @@ export default function SupportPage() {
         </div>
 
         {/* 인앱 문의 */}
-        <div className="mt-8 rounded-[20px] bg-[#ede9fe] p-5">
-          <p style={{ fontSize: 15, fontWeight: 800, color: "#4c1d95", marginBottom: 6 }}>
+        <div className="mt-8 rounded-[20px] bg-[var(--monari-hero-lo)] p-5">
+          <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-hero)", marginBottom: 6 }}>
             💬 직접 문의하기
           </p>
-          <p style={{ fontSize: 13, color: "#7c3aed", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 13, color: "var(--monari-hero)", lineHeight: 1.7 }}>
             FAQ에서 해결되지 않은 문제는 앱 내 문의 기능을 이용해주세요.
             운영팀이 직접 확인하고 빠르게 답변드릴게요.
           </p>
           <Link
             href="/inquiries"
-            className="mt-4 block w-full rounded-[14px] bg-[#7c3aed] py-3.5 text-center text-sm font-extrabold text-white transition active:scale-[0.97]"
+            className="mt-4 block w-full rounded-[14px] bg-[var(--monari-hero)] py-3.5 text-center text-sm font-extrabold text-white transition active:scale-[0.97]"
           >
             문의 작성하기
           </Link>
           {supportEmail && (
             <a
               href={`mailto:${supportEmail}`}
-              className="mt-2 block w-full rounded-[14px] border border-[#7c3aed] py-3 text-center text-sm font-bold text-[#7c3aed] transition active:scale-[0.97]"
+              className="mt-2 block w-full rounded-[14px] border border-[var(--monari-hero)] py-3 text-center text-sm font-bold text-[var(--monari-hero)] transition active:scale-[0.97]"
             >
               이메일로 문의하기
             </a>

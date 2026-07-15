@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -23,7 +23,7 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
     <main className="px-4 pb-36 pt-8">
       <Link
         href={`/child/${id}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"
       >
         <ArrowLeft size={16} /> 돌아가기
       </Link>

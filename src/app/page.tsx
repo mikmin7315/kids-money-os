@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   ArrowRight,
   CircleDollarSign,
@@ -95,7 +95,7 @@ export default async function HomePage() {
               <Link
                 href={totalPending > 0 ? "/approvals" : "/behaviors"}
                 className="flex h-13 items-center justify-center rounded-[16px] bg-white transition active:scale-[0.97]"
-                style={{ color: "#6d28d9", fontSize: 15, fontWeight: 800 }}
+                style={{ color: "var(--monari-hero)", fontSize: 15, fontWeight: 800 }}
               >
                 {totalPending > 0 ? `${totalPending}건 확인` : "약속 만들기"}
               </Link>
@@ -114,7 +114,7 @@ export default async function HomePage() {
             <Link
               href="/settings"
               className="mt-4 inline-flex items-center gap-1.5 rounded-[14px] bg-white px-5 py-2.5 text-[15px] transition active:scale-[0.97]"
-              style={{ color: "#6d28d9", fontWeight: 800 }}
+              style={{ color: "var(--monari-hero)", fontWeight: 800 }}
             >
               지금 시작하기 <ArrowRight className="h-4 w-4" />
             </Link>
@@ -136,7 +136,7 @@ export default async function HomePage() {
               <div className="flex flex-col gap-2 items-end">
                 <Link
                   href="/settings/wallet"
-                  className="flex items-center gap-1.5 rounded-[12px] bg-[#7c3aed] px-4 py-2 text-sm font-extrabold text-white transition active:scale-[0.97]"
+                  className="flex items-center gap-1.5 rounded-[12px] bg-[var(--monari-hero)] px-4 py-2 text-sm font-extrabold text-white transition active:scale-[0.97]"
                 >
                   <Wallet className="h-4 w-4" /> 충전하기
                 </Link>
@@ -163,7 +163,7 @@ export default async function HomePage() {
       {/* ── 아이 통장 바로가기 ── */}
       {dashboard.children.length > 0 ? (
         <section className="mb-4">
-          <SectionLabel action={<Link href="/child-mode" className="text-[13px] font-700 text-[#7c3aed]">아이 모드 시작</Link>}>
+          <SectionLabel action={<Link href="/child-mode" className="text-[13px] font-700 text-[var(--monari-hero)]">아이 모드 시작</Link>}>
             아이 통장
           </SectionLabel>
           <div className="mt-2.5 space-y-2.5">
@@ -176,12 +176,12 @@ export default async function HomePage() {
                   href={`/child/${summary.child.id}`}
                   className="flex items-center gap-4 p-4 transition active:scale-[0.99]"
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-[#7c3aed] text-[20px] font-800 text-white shadow-[0_4px_12px_rgba(124,58,237,0.30)]">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-[var(--monari-hero)] text-[20px] font-800 text-white shadow-[0_4px_12px_rgba(124,58,237,0.30)]">
                     {summary.child.name[0]}
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-[17px] font-700 text-[#1a0533]">{summary.child.name}</p>
-                    <p className="mt-0.5 text-[13px] font-500 text-[#7c3aed]/60">
+                    <p className="mt-0.5 text-[13px] font-500 text-[var(--monari-hero)]/60">
                       저축 {formatWon(summary.wallet.savingsBalance)}
                     </p>
                   </div>
@@ -189,7 +189,7 @@ export default async function HomePage() {
                     <p className="text-[20px] font-800 tracking-[-0.02em] text-[#1a0533]">
                       {formatWon(summary.wallet.balance)}
                     </p>
-                    <p className="mt-0.5 text-[12px] font-600 text-[#7c3aed] flex items-center justify-end gap-0.5">
+                    <p className="mt-0.5 text-[12px] font-600 text-[var(--monari-hero)] flex items-center justify-end gap-0.5">
                       열기 <ArrowRight className="h-3 w-3" />
                     </p>
                   </div>
@@ -229,7 +229,7 @@ export default async function HomePage() {
           <div className="mt-2.5 grid grid-cols-2 gap-2.5">
 
             {/* 받은 용돈 — 전폭 */}
-            <div className="col-span-2 rounded-[20px] bg-[#7c3aed] p-5 text-white">
+            <div className="col-span-2 rounded-[20px] bg-[var(--monari-hero)] p-5 text-white">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[12px] font-600 text-white/60 mb-1.5">이번 달 용돈</p>
@@ -269,11 +269,11 @@ export default async function HomePage() {
             <div className="col-span-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[14px] font-700 text-[#374151]">저축 비율</p>
-                <strong className="text-[20px] font-900 text-[#7c3aed]">{monthlyGoal}%</strong>
+                <strong className="text-[20px] font-900 text-[var(--monari-hero)]">{monthlyGoal}%</strong>
               </div>
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#ede9fe]">
+              <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--monari-hero-lo)]">
                 <div
-                  className="h-full rounded-full bg-[#7c3aed] transition-all"
+                  className="h-full rounded-full bg-[var(--monari-hero)] transition-all"
                   style={{ width: `${monthlyGoal}%` }}
                 />
               </div>
@@ -285,7 +285,7 @@ export default async function HomePage() {
 
       {/* ── 최근 금융 활동 ── */}
       <section className="mb-5">
-        <SectionLabel action={<Link href="/records" className="text-[13px] font-700 text-[#7c3aed]">전체 보기</Link>}>
+        <SectionLabel action={<Link href="/records" className="text-[13px] font-700 text-[var(--monari-hero)]">전체 보기</Link>}>
           최근 활동
         </SectionLabel>
         <div className="mt-2.5 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
@@ -343,7 +343,7 @@ function RecentRow({ href, title, sub, value, kind, isLast }: {
       href={href}
       className={`flex items-center gap-3 px-4 py-3.5 transition active:bg-[#faf5ff] ${!isLast ? "border-b border-[#f3f4f6]" : ""}`}
     >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[#f5f3ff] text-[#7c3aed]">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0 flex-1">

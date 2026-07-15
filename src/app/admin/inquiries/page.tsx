@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -109,8 +109,8 @@ export default async function AdminInquiriesPage({
               <p className="text-sm text-[var(--color-text)] whitespace-pre-wrap">{selected.body}</p>
             </div>
             {selected.admin_reply && (
-              <div className="mb-4 rounded-[10px] bg-[#f5f3ff] p-3">
-                <p className="text-xs font-semibold text-[#5b21b6] mb-1">기존 답변</p>
+              <div className="mb-4 rounded-[10px] bg-[var(--monari-hero-lo)] p-3">
+                <p className="text-xs font-semibold text-[var(--monari-hero)] mb-1">기존 답변</p>
                 <p className="text-sm text-[var(--color-text)] whitespace-pre-wrap">{selected.admin_reply}</p>
               </div>
             )}
@@ -134,7 +134,7 @@ export default async function AdminInquiriesPage({
                   <Link
                     key={r.id}
                     href={`/admin/inquiries?id=${r.id}`}
-                    className={`block rounded-[14px] border px-4 py-3 transition ${isSelected ? "border-[var(--color-accent)] bg-[#f5f3ff]" : "border-[var(--color-border)] bg-white"}`}
+                    className={`block rounded-[14px] border px-4 py-3 transition ${isSelected ? "border-[var(--color-accent)] bg-[var(--monari-hero-lo)]" : "border-[var(--color-border)] bg-white"}`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -17,7 +17,7 @@ type Announcement = {
 };
 
 const TYPE_STYLE: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  notice:      { icon: <Bell size={14} />,   label: "공지",  color: "bg-[#ede9fe] text-[#5b21b6]" },
+  notice:      { icon: <Bell size={14} />,   label: "공지",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
   maintenance: { icon: <Wrench size={14} />, label: "점검",  color: "bg-[#fef3c7] text-[#92400e]" },
   update:      { icon: <Zap size={14} />,    label: "업데이트", color: "bg-[#d1fae5] text-[#065f46]" },
 };

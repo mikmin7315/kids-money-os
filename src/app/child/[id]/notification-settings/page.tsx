@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getNotificationPreferencesAction, toggleChildNotificationAction } from "@/actions/notification-settings";
@@ -27,7 +27,7 @@ export default async function ChildNotificationSettingsPage({ params }: { params
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/settings`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href={`/child/${id}/settings`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 돌아가기
       </Link>
 
