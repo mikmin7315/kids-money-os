@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 
 export default async function OnboardingCompletePage() {
@@ -39,7 +39,7 @@ export default async function OnboardingCompletePage() {
         </Link>
         <Link
           href="/"
-          className="block w-full rounded-[16px] border border-[#e5e7eb] bg-white py-4 text-[16px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
+          className="block w-full rounded-[16px] border border-[var(--monari-line-strong)] bg-[var(--monari-surface)] py-4 text-[16px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
         >
           홈으로 가기
         </Link>
@@ -55,7 +55,7 @@ export default async function OnboardingCompletePage() {
           <Link
             key={href}
             href={href}
-            className="flex items-start gap-3 rounded-[14px] bg-white p-4 shadow-[var(--monari-shadow-card)] transition active:scale-[0.98]"
+            className="flex items-start gap-3 rounded-[14px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-card)] transition active:scale-[0.98]"
           >
             <span style={{ fontSize: 24, lineHeight: 1 }}>{emoji}</span>
             <div>
