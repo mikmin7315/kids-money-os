@@ -17,9 +17,9 @@ type Announcement = {
 };
 
 const TYPE_STYLE: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  notice:      { icon: <Bell size={14} />,   label: "°øÁö",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
-  maintenance: { icon: <Wrench size={14} />, label: "Á¡°Ë",  color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
-  update:      { icon: <Zap size={14} />,    label: "¾÷µ¥ÀÌÆ®", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
+  notice:      { icon: <Bell size={14} />,   label: "ê³µì§€",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
+  maintenance: { icon: <Wrench size={14} />, label: "ì ê²€",  color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  update:      { icon: <Zap size={14} />,    label: "ì—…ë°ì´íŠ¸", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
 };
 
 async function loadAnnouncements(): Promise<Announcement[]> {
@@ -48,15 +48,15 @@ export default async function AnnouncementsPage() {
       <div className="mb-6">
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>Monari</p>
         <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
-          ?? °øÁö»çÇ×
+          ?? ê³µì§€ì‚¬í•­
         </h1>
       </div>
 
       {announcements.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>??</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>°øÁö»çÇ×ÀÌ ¾ø¾î¿ä</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>ÇöÀç ÁøÇà ÁßÀÎ °øÁö³ª Á¡°Ë ¾È³»°¡ ¾ø¾î¿ä.</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>ê³µì§€ì‚¬í•­ì´ ì—†ì–´ìš”</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ê³µì§€ë‚˜ ì ê²€ ì•ˆë‚´ê°€ ì—†ì–´ìš”.</p>
         </div>
       ) : (
         <div className="space-y-3">

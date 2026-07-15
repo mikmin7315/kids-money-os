@@ -14,7 +14,7 @@ function getKstMonthRange() {
   const month = kst.getUTCMonth();
   const start = new Date(Date.UTC(year, month, 1) - 9 * 60 * 60 * 1000).toISOString();
   const end = new Date(Date.UTC(year, month + 1, 1) - 9 * 60 * 60 * 1000).toISOString();
-  return { start, end, label: `${year}³â ${month + 1}¿ù` };
+  return { start, end, label: `${year}ë…„ ${month + 1}ì›”` };
 }
 
 async function loadStats() {
@@ -70,23 +70,23 @@ export default async function AdminReportsPage() {
   return (
     <PageContainer>
       <MobileShell>
-        <AppHeader eyebrow="Admin ¡¤ ¸®Æ÷Æ®" title="½Ã½ºÅÛ ÀüÃ¼ ¸®Æ÷Æ®" />
+        <AppHeader eyebrow="Admin Â· ë¦¬í¬íŠ¸" title="ì‹œìŠ¤í…œ ì „ì²´ ë¦¬í¬íŠ¸" />
 
         {!s.ok && (
-          <div className="mb-4 rounded-[12px] bg-red-50 px-4 py-3 text-sm text-red-700">µ¥ÀÌÅÍ¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù.</div>
+          <div className="mb-4 rounded-[12px] bg-red-50 px-4 py-3 text-sm text-red-700">ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.</div>
         )}
 
-        <p className="mb-4 text-sm font-semibold text-[var(--color-muted)]">{s.label} ±âÁØ Áı°è</p>
+        <p className="mb-4 text-sm font-semibold text-[var(--color-muted)]">{s.label} ê¸°ì¤€ ì§‘ê³„</p>
 
-        {/* ÀüÃ¼ ÇöÈ² */}
+        {/* ì „ì²´ í˜„í™© */}
         <section className="mb-5">
-          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">¾ÆÀÌ ÅëÀå ÀüÃ¼ ÇöÈ²</p>
+          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ì•„ì´ í†µì¥ ì „ì²´ í˜„í™©</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: "È°¼º ¾ÆÀÌ", value: `${s.totalChildren}¸í`, color: "text-[var(--color-text)]" },
-              { label: "Æò±Õ ÀÌÀÚÀ²", value: `${s.avgRate}%`, color: "text-[var(--monari-hero)]" },
-              { label: "ÃÑ ÀÜ¾×", value: formatWon(s.totalBalance), color: "text-[var(--monari-done)]" },
-              { label: "ÃÑ Àú±İ", value: formatWon(s.totalSavings), color: "text-[var(--status-info-solid-text)]" },
+              { label: "í™œì„± ì•„ì´", value: `${s.totalChildren}ëª…`, color: "text-[var(--color-text)]" },
+              { label: "í‰ê·  ì´ììœ¨", value: `${s.avgRate}%`, color: "text-[var(--monari-hero)]" },
+              { label: "ì´ ì”ì•¡", value: formatWon(s.totalBalance), color: "text-[var(--monari-done)]" },
+              { label: "ì´ ì €ê¸ˆ", value: formatWon(s.totalSavings), color: "text-[var(--status-info-solid-text)]" },
             ].map(({ label, value, color }) => (
               <div key={label} className="rounded-[12px] bg-white p-4 shadow-[var(--monari-shadow-sm)]">
                 <p className="text-[11px] font-semibold text-[var(--color-muted)]">{label}</p>
@@ -96,15 +96,15 @@ export default async function AdminReportsPage() {
           </div>
         </section>
 
-        {/* ÀÌ´Ş È°µ¿ */}
+        {/* ì´ë‹¬ í™œë™ */}
         <section className="mb-5">
-          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ÀÌ´Ş È°µ¿</p>
+          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ì´ë‹¬ í™œë™</p>
           <div className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)] space-y-3">
             {[
-              { label: "ÃÑ °Å·¡ °Ç¼ö", value: `${s.txCount}°Ç` },
-              { label: "¿ëµ· Áö±Ş ÃÑ¾×", value: formatWon(s.totalAllowance) },
-              { label: "ÀÌÀÚ Áö±Ş ÃÑ¾×", value: formatWon(s.totalInterest) },
-              { label: "Çàµ¿ ¾à¼Ó ´Ş¼º·ü", value: `${s.behaviorRate}% (${s.behaviorTotal}°Ç)` },
+              { label: "ì´ ê±°ë˜ ê±´ìˆ˜", value: `${s.txCount}ê±´` },
+              { label: "ìš©ëˆ ì§€ê¸‰ ì´ì•¡", value: formatWon(s.totalAllowance) },
+              { label: "ì´ì ì§€ê¸‰ ì´ì•¡", value: formatWon(s.totalInterest) },
+              { label: "í–‰ë™ ì•½ì† ë‹¬ì„±ë¥ ", value: `${s.behaviorRate}% (${s.behaviorTotal}ê±´)` },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between">
                 <span className="text-sm text-[var(--color-muted)]">{label}</span>
@@ -114,29 +114,29 @@ export default async function AdminReportsPage() {
           </div>
         </section>
 
-        {/* ¿î¿µ ´ë±â ÇöÈ² */}
+        {/* ìš´ì˜ ëŒ€ê¸° í˜„í™© */}
         <section className="mb-5">
-          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">¿î¿µ ´ë±â ÇöÈ²</p>
+          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ìš´ì˜ ëŒ€ê¸° í˜„í™©</p>
           <div className="grid grid-cols-2 gap-3">
             <Link href="/admin/approvals" className="rounded-[12px] bg-white p-4 shadow-[var(--monari-shadow-sm)] transition active:scale-[0.97]">
-              <p className="text-[11px] font-semibold text-[var(--color-muted)]">½ÂÀÎ ´ë±â</p>
+              <p className="text-[11px] font-semibold text-[var(--color-muted)]">ìŠ¹ì¸ ëŒ€ê¸°</p>
               <p className={`mt-1 text-2xl font-black ${s.pendingBorrows > 0 ? "text-[var(--monari-primary-strong)]" : "text-[var(--monari-done)]"}`}>{s.pendingBorrows}</p>
-              <p className="text-[10px] text-[var(--color-muted)]">¹Ì¸®¾²±â °Ç</p>
+              <p className="text-[10px] text-[var(--color-muted)]">ë¯¸ë¦¬ì“°ê¸° ê±´</p>
             </Link>
             <Link href="/admin/inquiries" className="rounded-[12px] bg-white p-4 shadow-[var(--monari-shadow-sm)] transition active:scale-[0.97]">
-              <p className="text-[11px] font-semibold text-[var(--color-muted)]">¹Ì´äº¯ ¹®ÀÇ</p>
+              <p className="text-[11px] font-semibold text-[var(--color-muted)]">ë¯¸ë‹µë³€ ë¬¸ì˜</p>
               <p className={`mt-1 text-2xl font-black ${s.pendingInquiries > 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>{s.pendingInquiries}</p>
-              <p className="text-[10px] text-[var(--color-muted)]">°Ç</p>
+              <p className="text-[10px] text-[var(--color-muted)]">ê±´</p>
             </Link>
           </div>
         </section>
 
-        {/* ÀÌ´Ş Çàµ¿ ´Ş¼º·ü ¹Ù */}
+        {/* ì´ë‹¬ í–‰ë™ ë‹¬ì„±ë¥  ë°” */}
         <section className="mb-5">
-          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ÀÌ´Ş Çàµ¿ ¾à¼Ó ´Ş¼º·ü</p>
+          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">ì´ë‹¬ í–‰ë™ ì•½ì† ë‹¬ì„±ë¥ </p>
           <div className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-[var(--color-muted)]">ÀüÃ¼ ¾ÆÀÌ Æò±Õ</span>
+              <span className="text-sm text-[var(--color-muted)]">ì „ì²´ ì•„ì´ í‰ê· </span>
               <span className="text-lg font-black text-[var(--monari-hero)]">{s.behaviorRate}%</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-[var(--monari-surface-soft)]">
@@ -145,14 +145,14 @@ export default async function AdminReportsPage() {
                 style={{ width: `${Math.min(s.behaviorRate, 100)}%` }}
               />
             </div>
-            <p className="mt-2 text-[11px] text-[var(--color-muted)]">ÃÑ {s.behaviorTotal}°Ç ±â·Ï</p>
+            <p className="mt-2 text-[11px] text-[var(--color-muted)]">ì´ {s.behaviorTotal}ê±´ ê¸°ë¡</p>
           </div>
         </section>
 
         <div className="mt-4 space-y-2">
-          <Link href="/admin/transactions" className="block text-sm font-bold text-[var(--color-accent)]">°Å·¡³»¿ª »ó¼¼ ¡æ</Link>
-          <Link href="/admin/settlement" className="block text-sm font-bold text-[var(--color-accent)]">Á¤»ê °á°ú ¡æ</Link>
-          <Link href="/admin" className="block text-sm font-bold text-[var(--color-accent)]">¡ç ´ë½Ãº¸µå·Î</Link>
+          <Link href="/admin/transactions" className="block text-sm font-bold text-[var(--color-accent)]">ê±°ë˜ë‚´ì—­ ìƒì„¸ â†’</Link>
+          <Link href="/admin/settlement" className="block text-sm font-bold text-[var(--color-accent)]">ì •ì‚° ê²°ê³¼ â†’</Link>
+          <Link href="/admin" className="block text-sm font-bold text-[var(--color-accent)]">â† ëŒ€ì‹œë³´ë“œë¡œ</Link>
         </div>
       </MobileShell>
     </PageContainer>
