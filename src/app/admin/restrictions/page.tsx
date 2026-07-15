@@ -38,7 +38,7 @@ export default async function AdminRestrictionsPage() {
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">새 이용 제한</p>
           <AddRestrictionForm
             parents={(parentsRes.data ?? []).map((p) => ({ id: p.id, email: String(p.email ?? "") }))}
-            children={(childrenRes.data ?? []).map((c) => ({ id: c.id, name: String(c.name ?? "") }))}
+            childOptions={(childrenRes.data ?? []).map((c) => ({ id: c.id, name: String(c.name ?? "") }))}
           />
         </section>
 

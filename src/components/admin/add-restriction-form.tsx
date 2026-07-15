@@ -7,10 +7,11 @@ type State = { ok: boolean; message: string };
 const initial: State = { ok: false, message: "" };
 
 export function AddRestrictionForm({
-  parents, children,
+  parents,
+  childOptions,
 }: {
   parents: { id: string; email: string }[];
-  children: { id: string; name: string }[];
+  childOptions: { id: string; name: string }[];
 }) {
   const [state, formAction, pending] = useActionState(addRestrictionAction, initial);
 
@@ -31,7 +32,7 @@ export function AddRestrictionForm({
           <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">아이 계정</label>
           <select name="child_id" className="w-full rounded-[10px] border border-[var(--color-border)] px-2 py-2 text-xs">
             <option value="">선택 안 함</option>
-            {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {childOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
       </div>

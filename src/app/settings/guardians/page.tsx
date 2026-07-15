@@ -12,7 +12,7 @@ export default async function GuardiansPage() {
   const auth = await requireParentSession();
   const supabase = await getSupabaseServerClient();
 
-  const [inviteRes, guardianRes, childrenRes] = await Promise.all([
+  const [inviteRes, guardianRes] = await Promise.all([
     supabase
       .from("guardian_invites")
       .select("id, email, status, expires_at, created_at")
@@ -24,11 +24,6 @@ export default async function GuardiansPage() {
       .select("id, guardian_id, child_id, can_give_allowance, can_approve_behavior, can_approve_borrow, can_change_settings, can_invite_guardian, profiles!child_guardians_guardian_id_fkey(email), children(name)")
       .eq("invited_by", auth.user!.id)
       .order("created_at", { ascending: false }),
-    supabase
-      .from("children")
-      .select("id, name")
-      .eq("parent_id", auth.user!.id)
-      .is("deleted_at", null),
   ]);
 
   const invites = (inviteRes.data ?? []).map((i) => ({

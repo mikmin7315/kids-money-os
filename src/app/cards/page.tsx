@@ -5,7 +5,6 @@ import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
 import { CardToggleForm } from "@/components/cards/card-toggle-form";
-import { CardLimitsForm } from "@/components/cards/card-limits-form";
 
 export const dynamic = "force-dynamic";
 
