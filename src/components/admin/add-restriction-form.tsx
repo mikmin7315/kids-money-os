@@ -54,7 +54,7 @@ export function AddRestrictionForm({
         <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">사유 *</label>
         <input name="reason" required maxLength={200} placeholder="제한 사유를 입력해주세요" className="w-full rounded-[10px] border border-[var(--color-border)] px-3 py-2 text-sm" />
       </div>
-      <button type="submit" disabled={pending} className="w-full rounded-[10px] bg-[#dc2626] py-2.5 text-sm font-bold text-white disabled:opacity-50">
+      <button type="submit" disabled={pending} className="w-full rounded-[10px] bg-[var(--monari-minus)] py-2.5 text-sm font-bold text-white disabled:opacity-50">
         {pending ? "적용 중..." : "이용 제한 적용"}
       </button>
     </form>

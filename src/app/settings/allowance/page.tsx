@@ -1,4 +1,4 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { AlertCircle, ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 import { AllowanceRuleForm } from "@/components/finance/management-forms";
@@ -121,7 +121,7 @@ export default async function AllowancePage() {
                 );
               })}
           </div>
-          <div className="mt-3 rounded-[14px] bg-[#fef2f2] px-4 py-3">
+          <div className="mt-3 rounded-[14px] bg-[var(--status-danger-solid)] px-4 py-3">
             <p className="text-[12px] text-[var(--monari-minus)]">
               💳 부모 지갑 잔액이 부족해 지급되지 않은 경우,{" "}
               <Link href="/settings/wallet" className="font-700 underline">지갑을 충전</Link>하면

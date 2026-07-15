@@ -111,7 +111,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
                 <div key={rule.id} className="flex items-center gap-3">
                   <span
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px]"
-                    style={{ background: isDone ? "#d1fae5" : isWaiting ? "#fef3c7" : "#f3f4f6" }}
+                    style={{ background: isDone ? "var(--status-success-solid)" : isWaiting ? "var(--status-pending-solid)" : "var(--monari-surface-soft)" }}
                   >
                     {isDone ? (
                       <CheckCircle2 size={18} color="var(--monari-done)" />

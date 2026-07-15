@@ -77,7 +77,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
         </div>
         <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 6 }}>나간 돈</p>
-          <p style={{ fontSize: 22, fontWeight: 900, color: "#be123c", letterSpacing: "-0.02em" }} className="tabular-nums">
+          <p style={{ fontSize: 22, fontWeight: 900, color: "var(--status-rose-solid-text)", letterSpacing: "-0.02em" }} className="tabular-nums">
             -{formatWon(totalOut)}
           </p>
         </div>

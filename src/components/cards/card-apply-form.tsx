@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useActionState } from "react";
 import { applyCardAction } from "@/actions/cards";
@@ -14,7 +14,7 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
       <div className="rounded-[16px] bg-[var(--status-success-solid)] px-5 py-8 text-center">
         <p style={{ fontSize: 32, marginBottom: 8 }}>🎉</p>
         <p className="text-sm font-bold text-[var(--status-success-solid-text)]">신청이 접수됐어요!</p>
-        <p className="mt-1 text-xs text-[#047857]">카드 발급 완료 시 알림을 보내드릴게요.</p>
+        <p className="mt-1 text-xs text-[var(--monari-done)]">카드 발급 완료 시 알림을 보내드릴게요.</p>
       </div>
     );
   }

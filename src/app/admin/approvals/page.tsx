@@ -55,19 +55,19 @@ export default async function AdminApprovalsPage() {
   return (
     <PageContainer>
       <MobileShell>
-        <AppHeader eyebrow="Admin ¡¤ ½ÂÀÎ" title="½ÂÀÎ ´ë±â °ü¸®" />
+        <AppHeader eyebrow="Admin ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" title="ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" />
 
         <div className="mb-4 grid grid-cols-2 gap-3">
           <div className="rounded-[12px] bg-white p-3 text-center shadow-[var(--monari-shadow-sm)]">
-            <p className="text-[10px] font-semibold text-[var(--color-muted)]">Çàµ¿ ¾à¼Ó ´ë±â</p>
+            <p className="text-[10px] font-semibold text-[var(--color-muted)]">ï¿½àµ¿ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½</p>
             <p className={`mt-1 text-lg font-black ${behaviorLogs.length > 0 ? "text-[var(--monari-primary-strong)]" : "text-[var(--monari-done)]"}`}>
-              {behaviorLogs.length}°Ç
+              {behaviorLogs.length}ï¿½ï¿½
             </p>
           </div>
           <div className="rounded-[12px] bg-white p-3 text-center shadow-[var(--monari-shadow-sm)]">
-            <p className="text-[10px] font-semibold text-[var(--color-muted)]">¹Ì¸®¾²±â ´ë±â</p>
+            <p className="text-[10px] font-semibold text-[var(--color-muted)]">ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½</p>
             <p className={`mt-1 text-lg font-black ${borrows.length > 0 ? "text-[var(--monari-primary-strong)]" : "text-[var(--monari-done)]"}`}>
-              {borrows.length}°Ç
+              {borrows.length}ï¿½ï¿½
             </p>
           </div>
         </div>
@@ -75,29 +75,29 @@ export default async function AdminApprovalsPage() {
         {totalPending === 0 && (
           <div className="rounded-[16px] bg-[var(--status-success-solid)] px-5 py-10 text-center">
             <p style={{ fontSize: 36, marginBottom: 8 }}>?</p>
-            <p className="text-sm font-bold text-[var(--status-success-solid-text)]">¸ðµç ½ÂÀÎ Ã³¸® ¿Ï·á!</p>
-            <p className="mt-1 text-xs text-[var(--monari-done)]">´ë±â ÁßÀÎ Ç×¸ñÀÌ ¾ø¾î¿ä.</p>
+            <p className="text-sm font-bold text-[var(--status-success-solid-text)]">ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½Ï·ï¿½!</p>
+            <p className="mt-1 text-xs text-[var(--monari-done)]">ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.</p>
           </div>
         )}
 
         {behaviorLogs.length > 0 && (
           <section className="mb-5">
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">
-              Çàµ¿ ¾à¼Ó ½ÂÀÎ ´ë±â <span className="text-[var(--monari-primary-strong)]">({behaviorLogs.length})</span>
+              ï¿½àµ¿ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ <span className="text-[var(--monari-primary-strong)]">({behaviorLogs.length})</span>
             </p>
             <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {behaviorLogs.map((b) => (
                 <div key={b.id} className="flex items-center justify-between px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-[var(--color-text)]">{b.rule_name}</p>
-                    <p className="text-[11px] text-[var(--color-muted)]">{b.child_name} ¡¤ {b.logged_at.slice(0, 10)}</p>
+                    <p className="text-[11px] text-[var(--color-muted)]">{b.child_name} ï¿½ï¿½ {b.logged_at.slice(0, 10)}</p>
                   </div>
-                  <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[11px] font-bold text-[var(--status-pending-solid-text)]">½ÂÀÎ ´ë±â</span>
+                  <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[11px] font-bold text-[var(--status-pending-solid-text)]">ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½</span>
                 </div>
               ))}
             </div>
             <p className="mt-2 text-xs text-[var(--color-muted)]">
-              * Çàµ¿ ¾à¼Ó ½ÂÀÎÀº °¢ ºÎ¸ð È­¸é ¡æ <Link href="/approvals" className="font-bold text-[var(--color-accent)]">½ÂÀÎÇÔ</Link>¿¡¼­ Ã³¸®µË´Ï´Ù.
+              * ï¿½àµ¿ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î¸ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ <Link href="/approvals" className="font-bold text-[var(--color-accent)]">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</Link>ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ë´Ï´ï¿½.
             </p>
           </section>
         )}
@@ -105,26 +105,26 @@ export default async function AdminApprovalsPage() {
         {borrows.length > 0 && (
           <section className="mb-5">
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">
-              ¹Ì¸®¾²±â ½ÂÀÎ ´ë±â <span className="text-[var(--monari-primary-strong)]">({borrows.length})</span>
+              ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ <span className="text-[var(--monari-primary-strong)]">({borrows.length})</span>
             </p>
             <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {borrows.map((b) => (
                 <div key={b.id} className="flex items-start justify-between px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-[var(--color-text)]">{b.purpose || "¸ñÀû ¾øÀ½"}</p>
+                    <p className="text-sm font-semibold text-[var(--color-text)]">{b.purpose || "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"}</p>
                     <p className="text-[11px] text-[var(--color-muted)]">
-                      {b.child_name} ¡¤ {b.installments}È¸ ¡¤ {b.created_at.slice(0, 10)}
+                      {b.child_name} ï¿½ï¿½ {b.installments}È¸ ï¿½ï¿½ {b.created_at.slice(0, 10)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="tabular-nums text-sm font-bold">{formatWon(b.amount)}</p>
-                    <span className="text-[11px] font-bold text-[var(--monari-primary-strong)]">´ë±â</span>
+                    <span className="text-[11px] font-bold text-[var(--monari-primary-strong)]">ï¿½ï¿½ï¿½</span>
                   </div>
                 </div>
               ))}
             </div>
             <p className="mt-2 text-xs text-[var(--color-muted)]">
-              * ¹Ì¸®¾²±â ½ÂÀÎÀº °¢ ºÎ¸ð È­¸é ¡æ <Link href="/approvals" className="font-bold text-[var(--color-accent)]">½ÂÀÎÇÔ</Link>¿¡¼­ Ã³¸®µË´Ï´Ù.
+              * ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î¸ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ <Link href="/approvals" className="font-bold text-[var(--color-accent)]">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</Link>ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ë´Ï´ï¿½.
             </p>
           </section>
         )}
@@ -134,12 +134,12 @@ export default async function AdminApprovalsPage() {
             href="/approvals"
             className="block w-full rounded-[14px] border border-[var(--color-accent)] py-3 text-center text-sm font-bold text-[var(--color-accent)] transition active:scale-[0.97]"
           >
-            ºÎ¸ð ½ÂÀÎÇÔÀ¸·Î ÀÌµ¿ ¡æ
+            ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½
           </Link>
         </div>
 
         <div className="mt-4">
-          <Link href="/admin" className="text-sm font-bold text-[var(--color-accent)]">¡ç ´ë½Ãº¸µå·Î</Link>
+          <Link href="/admin" className="text-sm font-bold text-[var(--color-accent)]">ï¿½ï¿½ ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½</Link>
         </div>
       </MobileShell>
     </PageContainer>
