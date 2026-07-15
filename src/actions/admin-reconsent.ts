@@ -46,7 +46,7 @@ export async function updateCampaignStatusAction(
   _prev: ReconsentFormState,
   formData: FormData,
 ): Promise<ReconsentFormState> {
-  const auth = await requireAdminSession();
+  await requireAdminSession();
   const id = String(formData.get("campaign_id") ?? "");
   const status = String(formData.get("status") ?? "");
   if (!["draft", "active", "ended"].includes(status)) return { ok: false, message: "잘못된 상태입니다." };
