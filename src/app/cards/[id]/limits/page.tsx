@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
@@ -36,7 +36,7 @@ export default async function CardLimitsPage({ params }: { params: Promise<{ id:
           />
         </div>
 
-        <div className="rounded-[16px] bg-[#f9fafb] p-4 text-xs text-[var(--color-muted)]">
+        <div className="rounded-[16px] bg-[var(--monari-surface-soft)] p-4 text-xs text-[var(--color-muted)]">
           <p>• 일 한도는 월 한도를 초과할 수 없어요.</p>
           <p>• 한도 변경은 즉시 적용됩니다.</p>
           <p>• 잔액 부족 시 결제가 거절돼요.</p>

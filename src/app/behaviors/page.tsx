@@ -20,7 +20,7 @@ export default async function BehaviorsPage() {
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
       <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
+        <div className="grid grid-cols-3 divide-x divide-[var(--monari-line)]">
           <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
           <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
           <StatItem label="확인 필요" value={reviewRules} unit="개" color="#d97706" />
@@ -56,7 +56,7 @@ export default async function BehaviorsPage() {
                     {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                   </span>
                   {!rule.isActive && (
-                    <span className="inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[#f3f4f6] text-[#9ca3af]">
+                    <span className="inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
                       비활성
                     </span>
                   )}
@@ -127,7 +127,7 @@ export default async function BehaviorsPage() {
 function StatItem({ label, value, unit = "건", color }: { label: string; value: number; unit?: string; color: string }) {
   return (
     <div className="flex flex-col items-center py-5 gap-1.5">
-      <p style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>{label}</p>
+      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--monari-ink-muted)" }}>{label}</p>
       <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}{unit}</p>
     </div>
   );

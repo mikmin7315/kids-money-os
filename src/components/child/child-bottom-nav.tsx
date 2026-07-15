@@ -57,7 +57,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
                   style={{
                     fontSize: 13,
                     fontWeight: active ? 800 : 600,
-                    color: active ? "var(--monari-hero)" : "#9ca3af",
+                    color: active ? "var(--monari-hero)" : "var(--monari-ink-muted)",
                     letterSpacing: "-0.02em",
                   }}
                 >

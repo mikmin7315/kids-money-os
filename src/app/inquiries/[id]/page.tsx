@@ -39,19 +39,19 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <span className="rounded-full bg-[var(--monari-hero-lo)] px-2 py-0.5 text-xs font-bold text-[var(--monari-hero)]">
             {CATEGORY_LABEL[String(q.category)] ?? String(q.category)}
           </span>
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>
+          <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>
             {STATUS_LABEL[String(q.status)] ?? String(q.status)} · {String(q.created_at ?? "").slice(0, 10).replace(/-/g, ".")}
           </span>
         </div>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.02em" }}>
           {String(q.title)}
         </h1>
       </div>
 
       {/* 문의 내용 */}
       <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 8 }}>문의 내용</p>
-        <p style={{ fontSize: 15, lineHeight: 1.75, color: "#374151", whiteSpace: "pre-wrap" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 8 }}>문의 내용</p>
+        <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(q.body)}
         </p>
       </div>
@@ -62,13 +62,13 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-hero)", marginBottom: 8 }}>
             📩 운영팀 답변 · {String(q.replied_at ?? "").slice(0, 10).replace(/-/g, ".")}
           </p>
-          <p style={{ fontSize: 15, lineHeight: 1.75, color: "#374151", whiteSpace: "pre-wrap" }}>
+          <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
             {String(q.admin_reply)}
           </p>
         </div>
       ) : (
-        <div className="rounded-[20px] bg-[#f9fafb] p-5 text-center">
-          <p style={{ fontSize: 14, color: "#9ca3af" }}>
+        <div className="rounded-[20px] bg-[var(--monari-surface-soft)] p-5 text-center">
+          <p style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
             아직 답변이 작성되지 않았어요. 빠르게 도움을 드릴게요 🙏
           </p>
         </div>

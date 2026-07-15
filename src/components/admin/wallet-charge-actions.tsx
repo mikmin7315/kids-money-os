@@ -8,7 +8,7 @@ export function AdminWalletChargeActions({ chargeId }: { chargeId: string }) {
   const [rejectState, rejectAction, rejectPending] = useActionState(rejectWalletChargeAction, { ok: false, message: "" });
 
   if (approveState.ok) return <p className="text-sm font-bold text-[#059669]">✓ 충전 승인 완료</p>;
-  if (rejectState.ok) return <p className="text-sm font-bold text-[#9ca3af]">반려 완료</p>;
+  if (rejectState.ok) return <p className="text-sm font-bold text-[var(--monari-ink-muted)]">반려 완료</p>;
 
   const pending = approvePending || rejectPending;
 
@@ -23,7 +23,7 @@ export function AdminWalletChargeActions({ chargeId }: { chargeId: string }) {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-[12px] border-2 border-[#e5e7eb] py-2.5 text-sm font-bold text-[#6b7280] transition active:scale-95 disabled:opacity-50"
+            className="w-full rounded-[12px] border-2 border-[#e5e7eb] py-2.5 text-sm font-bold text-[var(--monari-ink-muted)] transition active:scale-95 disabled:opacity-50"
           >
             반려
           </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { Trash2, ToggleLeft, ToggleRight } from "lucide-react";
@@ -73,7 +73,7 @@ export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProp
         className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-1.5 text-xs font-bold transition active:scale-95"
         style={{
           background: isActive ? "#f0fdf4" : "#f3f4f6",
-          color: isActive ? "#059669" : "#9ca3af",
+          color: isActive ? "#059669" : "var(--monari-ink-muted)",
         }}
         title={isActive ? "비활성화" : "활성화"}
       >
@@ -89,7 +89,7 @@ export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProp
 export function DeleteBehaviorRuleButton({ ruleId, label }: DeleteProps) {
   const [state, action, pending] = useActionState(deleteBehaviorRuleAction, { ok: false, message: "" });
 
-  if (state.ok) return <span className="text-xs font-bold text-[#6b7280]">삭제됨</span>;
+  if (state.ok) return <span className="text-xs font-bold text-[var(--monari-ink-muted)]">삭제됨</span>;
 
   return (
     <form action={action}>

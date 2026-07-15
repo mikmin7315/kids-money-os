@@ -86,7 +86,7 @@ export default async function AdminChildrenPage() {
             { label: "총 잔액", value: formatWon(totalBalance) },
             { label: "총 저금", value: formatWon(totalSavings) },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+            <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
               <p className="mt-1 text-sm font-bold text-[var(--color-text)]">{value}</p>
             </div>
@@ -99,7 +99,7 @@ export default async function AdminChildrenPage() {
           ) : (
             <table className="w-full min-w-[480px] text-sm">
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[#f9fafb] text-left text-xs font-semibold text-[var(--color-muted)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--monari-surface-soft)] text-left text-xs font-semibold text-[var(--color-muted)]">
                   <th className="px-4 py-3">이름</th>
                   <th className="px-4 py-3">부모</th>
                   <th className="px-4 py-3 text-right">잔액</th>

@@ -86,7 +86,7 @@ export default async function AdminBehaviorsPage() {
                   <p className="text-sm font-semibold text-[var(--color-text)]">{s.name}</p>
                   <span className="text-sm font-black text-[var(--monari-hero)]">{s.rate}%</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-[#f3f4f6]">
+                <div className="h-1.5 w-full rounded-full bg-[var(--monari-surface-soft)]">
                   <div className="h-1.5 rounded-full bg-[var(--monari-hero)]" style={{ width: `${s.rate}%` }} />
                 </div>
                 <p className="mt-1 text-[10px] text-[var(--color-muted)]">{s.achieved}/{s.total}회 달성</p>

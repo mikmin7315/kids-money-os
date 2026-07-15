@@ -46,8 +46,8 @@ export default async function AnnouncementsPage() {
   return (
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>Monari</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>Monari</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           📢 공지사항
         </h1>
       </div>
@@ -55,8 +55,8 @@ export default async function AnnouncementsPage() {
       {announcements.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>📭</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>공지사항이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>현재 진행 중인 공지나 점검 안내가 없어요.</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>공지사항이 없어요</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>현재 진행 중인 공지나 점검 안내가 없어요.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -73,12 +73,12 @@ export default async function AnnouncementsPage() {
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>
                       {st.icon}{st.label}
                     </span>
-                    <span style={{ fontSize: 11, color: "#9ca3af" }}>
+                    <span style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>
                       {a.created_at.slice(0, 10).replace(/-/g, ".")}
                     </span>
                   </div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }} className="truncate">{a.title}</p>
-                  <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 2 }} className="truncate">{a.body}</p>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">{a.title}</p>
+                  <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", marginTop: 2 }} className="truncate">{a.body}</p>
                 </div>
                 <ChevronRight size={16} className="mt-1 shrink-0 text-[#d1d5db]" />
               </Link>

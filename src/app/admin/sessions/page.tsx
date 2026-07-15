@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { ForceLogoutButton } from "@/components/admin/force-logout-button";
 import { requireAdminSession } from "@/lib/auth";
@@ -48,7 +48,7 @@ async function loadSessions(): Promise<{ rows: SessionRow[]; error?: string }> {
 
 const ROLE_STYLE: Record<string, string> = {
   admin: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]",
-  parent: "bg-[#f3f4f6] text-[#374151]",
+  parent: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]",
 };
 
 export default async function AdminSessionsPage() {
@@ -69,11 +69,11 @@ export default async function AdminSessionsPage() {
         {error && <div className="mb-4 rounded-[12px] bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
         <div className="mb-4 grid grid-cols-2 gap-3">
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">전체 사용자</p>
             <p className="mt-1 text-lg font-black text-[var(--color-text)]">{rows.length}</p>
           </div>
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">어드민</p>
             <p className="mt-1 text-lg font-black text-[var(--monari-hero)]">{rows.filter((r) => r.role === "admin").length}</p>
           </div>

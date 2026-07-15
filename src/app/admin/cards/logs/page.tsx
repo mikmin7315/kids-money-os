@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -36,7 +36,7 @@ export default async function AdminCardLogsPage() {
         </div>
 
         {logs.length === 0 ? (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
         ) : (
           <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (
@@ -46,7 +46,7 @@ export default async function AdminCardLogsPage() {
                   <div className="flex items-center gap-2">
                     {l.retried && <span className="text-[10px] text-[#d97706]">재처리</span>}
                     <span className={`text-xs font-bold ${
-                      !l.status_code ? "text-[#6b7280]" :
+                      !l.status_code ? "text-[var(--monari-ink-muted)]" :
                       l.status_code < 300 ? "text-[#059669]" : "text-[#dc2626]"
                     }`}>
                       {l.status_code ?? "—"}

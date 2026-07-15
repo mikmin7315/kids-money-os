@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
@@ -83,7 +83,7 @@ export default async function CardStatusPage() {
         ))}
 
         {apps.length === 0 && failedApps.length === 0 && (
-          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-12 text-center">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-12 text-center">
             <p style={{ fontSize: 32, marginBottom: 8 }}>💳</p>
             <p className="text-sm font-semibold text-[var(--color-muted)]">신청 내역이 없어요.</p>
             <Link href="/cards/apply" className="mt-3 inline-block text-sm font-bold text-[var(--color-accent)]">
@@ -117,7 +117,7 @@ export default async function CardStatusPage() {
                   return (
                     <div key={step.key} className="flex items-start gap-3">
                       <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                        done ? "bg-[var(--monari-hero)] text-white" : "bg-[#f3f4f6] text-[#9ca3af]"
+                        done ? "bg-[var(--monari-hero)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
                       }`}>
                         {done ? "✓" : i + 1}
                       </div>

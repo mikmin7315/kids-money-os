@@ -21,10 +21,10 @@ export default async function ParentNotificationSettingsPage() {
       </Link>
 
       <div className="mb-6">
-        <h1 style={{ fontSize: 24, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           🔔 알림 설정
         </h1>
-        <p className="mt-1" style={{ fontSize: 13, color: "#9ca3af" }}>
+        <p className="mt-1" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>
           받고 싶은 알림 종류를 선택하세요.
         </p>
       </div>

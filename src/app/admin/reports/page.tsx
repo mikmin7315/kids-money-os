@@ -139,7 +139,7 @@ export default async function AdminReportsPage() {
               <span className="text-sm text-[var(--color-muted)]">전체 아이 평균</span>
               <span className="text-lg font-black text-[var(--monari-hero)]">{s.behaviorRate}%</span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-[#f3f4f6]">
+            <div className="h-2.5 w-full rounded-full bg-[var(--monari-surface-soft)]">
               <div
                 className="h-2.5 rounded-full bg-[var(--monari-hero)] transition-all"
                 style={{ width: `${Math.min(s.behaviorRate, 100)}%` }}

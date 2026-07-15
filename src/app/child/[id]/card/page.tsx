@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getChildModeContext } from "@/lib/auth";
@@ -71,7 +71,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
             {/* 최근 내역 */}
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">최근 사용</p>
             {(txs ?? []).length === 0 ? (
-              <div className="rounded-[16px] bg-[#f9fafb] py-8 text-center text-sm text-[var(--color-muted)]">
+              <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-8 text-center text-sm text-[var(--color-muted)]">
                 아직 사용 내역이 없어요.
               </div>
             ) : (
@@ -82,7 +82,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
                       <p className="text-sm font-semibold">{t.merchant_name || "가맹점"}</p>
                       <p className="text-[11px] text-[var(--color-muted)]">{String(t.approved_at ?? "").slice(0, 10)}</p>
                     </div>
-                    <p className={`tabular-nums text-sm font-bold ${t.status === "approved" ? "text-[#dc2626]" : "text-[#6b7280]"}`}>
+                    <p className={`tabular-nums text-sm font-bold ${t.status === "approved" ? "text-[#dc2626]" : "text-[var(--monari-ink-muted)]"}`}>
                       {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
                     </p>
                   </div>

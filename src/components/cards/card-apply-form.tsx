@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { applyCardAction } from "@/actions/cards";
@@ -36,7 +36,7 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
         </select>
       </div>
 
-      <div className="rounded-[10px] bg-[#f9fafb] p-3 text-xs text-[var(--color-muted)]">
+      <div className="rounded-[10px] bg-[var(--monari-surface-soft)] p-3 text-xs text-[var(--color-muted)]">
         신청 전 <span className="font-bold text-[var(--color-text)]">서비스 이용약관</span> 및{" "}
         <span className="font-bold text-[var(--color-text)]">개인정보 처리방침</span>에 동의하는 것으로 간주됩니다.
       </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
@@ -12,7 +12,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_COLOR: Record<string, string> = {
   approved: "text-[#059669]", declined: "text-[#dc2626]",
-  cancelled: "text-[#6b7280]", reversed: "text-[#2563eb]",
+  cancelled: "text-[var(--monari-ink-muted)]", reversed: "text-[#2563eb]",
 };
 
 export default async function CardTransactionsPage({ searchParams }: { searchParams: Promise<{ child?: string }> }) {
@@ -68,7 +68,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
             <Link
               href="/cards/transactions"
               className={`flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                !selectedChildId ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6] text-[var(--color-text)]"
+                !selectedChildId ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-text)]"
               }`}
             >
               전체
@@ -78,7 +78,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
                 key={c.id}
                 href={`/cards/transactions?child=${c.id}`}
                 className={`flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                  selectedChildId === c.id ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6] text-[var(--color-text)]"
+                  selectedChildId === c.id ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-text)]"
                 }`}
               >
                 {c.name}
@@ -88,7 +88,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
         )}
 
         {txList.length === 0 ? (
-          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-12 text-center">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-12 text-center">
             <p className="text-sm text-[var(--color-muted)]">카드 사용 내역이 없어요.</p>
           </div>
         ) : (

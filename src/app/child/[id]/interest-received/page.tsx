@@ -47,8 +47,8 @@ export default async function InterestReceivedPage({ params }: { params: Promise
       </Link>
 
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>{child.name}의 이자</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>{child.name}의 이자</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           🎁 받은 이자 내역
         </h1>
       </div>
@@ -85,8 +85,8 @@ export default async function InterestReceivedPage({ params }: { params: Promise
       {months.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>아직 받은 이자가 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>아직 받은 이자가 없어요</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
             매달 1일에 남긴 돈에 이자가 붙어요. 돈을 잘 모아봐요!
           </p>
         </div>
@@ -96,8 +96,8 @@ export default async function InterestReceivedPage({ params }: { params: Promise
             const [y, m] = month.split("-");
             return (
               <div key={month} className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-                <div className="flex items-center justify-between border-b border-[#f3f4f6] px-5 py-3">
-                  <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533" }}>
+                <div className="flex items-center justify-between border-b border-[var(--monari-line)] px-5 py-3">
+                  <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>
                     {y}년 {m}월
                   </p>
                   <p className="tabular-nums" style={{ fontSize: 16, fontWeight: 900, color: "#059669" }}>
@@ -107,11 +107,11 @@ export default async function InterestReceivedPage({ params }: { params: Promise
                 {items.map((tx) => (
                   <div key={tx.id} className="flex items-center justify-between px-5 py-3 border-b border-[#f9fafb] last:border-0">
                     <div>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-soft)" }}>
                         {tx.date.slice(5).replace("-", "월 ")}일 이자
                       </p>
                       {tx.memo && (
-                        <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>{tx.memo}</p>
+                        <p style={{ fontSize: 11, color: "var(--monari-ink-muted)", marginTop: 2 }}>{tx.memo}</p>
                       )}
                     </div>
                     <p className="tabular-nums" style={{ fontSize: 15, fontWeight: 800, color: "#059669" }}>

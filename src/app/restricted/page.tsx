@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getAuthContext } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -40,7 +40,7 @@ export default async function RestrictedPage() {
                 {TYPE_DESC[restriction.type] ?? "이용이 제한됐습니다."}
               </p>
               {restriction.reason && (
-                <div className="mt-3 rounded-[12px] bg-[#f9fafb] px-5 py-3">
+                <div className="mt-3 rounded-[12px] bg-[var(--monari-surface-soft)] px-5 py-3">
                   <p className="text-xs font-semibold text-[var(--color-muted)]">사유</p>
                   <p className="mt-1 text-sm text-[var(--color-text)]">{restriction.reason}</p>
                 </div>

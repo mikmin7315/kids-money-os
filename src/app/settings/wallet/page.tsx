@@ -47,7 +47,7 @@ export default async function ParentWalletPage() {
       <div className="detail-card">
         <div className="detail-card-head">
           <p className="detail-section-label">연결 계좌</p>
-          <p style={{ fontSize: 14, fontWeight: 500, color: "#6b7280", marginTop: 4 }}>
+          <p style={{ fontSize: 14, fontWeight: 500, color: "var(--monari-ink-muted)", marginTop: 4 }}>
             이체 확인 등 연락이 필요할 때 사용해요
           </p>
         </div>

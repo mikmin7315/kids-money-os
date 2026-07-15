@@ -57,10 +57,10 @@ export default function SupportPage() {
         {/* 헤더 */}
         <div className="mb-8">
           <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", color: "var(--monari-hero)" }}>SUPPORT</p>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em", marginTop: 6 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em", marginTop: 6 }}>
             고객지원
           </h1>
-          <p style={{ fontSize: 14, color: "#9ca3af", marginTop: 8, lineHeight: 1.7 }}>
+          <p style={{ fontSize: 14, color: "var(--monari-ink-muted)", marginTop: 8, lineHeight: 1.7 }}>
             궁금한 점은 아래 FAQ에서 확인하거나 이메일로 문의해주세요.
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function SupportPage() {
               className="flex items-center gap-2 rounded-[16px] bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition active:scale-[0.97]"
             >
               <span style={{ fontSize: 20 }}>{emoji}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{label}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-soft)" }}>{label}</span>
             </Link>
           ))}
         </div>
@@ -99,13 +99,13 @@ export default function SupportPage() {
                   >
                     <summary
                       className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4"
-                      style={{ fontSize: 14, fontWeight: 700, color: "#1a0533" }}
+                      style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }}
                     >
                       {q}
                       <span style={{ fontSize: 18, color: "#c4b5fd", flexShrink: 0 }}>+</span>
                     </summary>
-                    <div className="border-t border-[#f3f4f6] px-4 py-3.5">
-                      <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7 }}>{a}</p>
+                    <div className="border-t border-[var(--monari-line)] px-4 py-3.5">
+                      <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", lineHeight: 1.7 }}>{a}</p>
                     </div>
                   </details>
                 ))}

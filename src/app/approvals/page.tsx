@@ -30,7 +30,7 @@ export default async function ApprovalsPage() {
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
       <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div className="grid grid-cols-4 divide-x divide-[#f3f4f6]">
+        <div className="grid grid-cols-4 divide-x divide-[var(--monari-line)]">
           <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
           <StatItem label="현금 대기" value={pendingCashRequests.length} color="#dc2626" />
           <StatItem label="미리쓰기" value={pendingBorrows.length} color="#d97706" />
@@ -250,7 +250,7 @@ export default async function ApprovalsPage() {
 function StatItem({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="flex flex-col items-center py-5 gap-1.5">
-      <p style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>{label}</p>
+      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--monari-ink-muted)" }}>{label}</p>
       <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}건</p>
     </div>
   );

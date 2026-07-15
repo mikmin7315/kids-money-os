@@ -32,8 +32,8 @@ export default async function ChildNotificationSettingsPage({ params }: { params
       </Link>
 
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>{child.name}</p>
-        <h1 style={{ fontSize: 24, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>{child.name}</p>
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           🔔 알림 설정
         </h1>
       </div>

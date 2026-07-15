@@ -205,7 +205,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                       <span className="text-[var(--monari-ink-muted)]">{label}</span>
                       <span className="font-700 text-[var(--monari-ink)]">{value}%</span>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-[#f3f4f6]">
+                    <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
                       <div className={`h-2 rounded-full ${color}`} style={{ width: `${Math.min(value, 100)}%` }} />
                     </div>
                   </div>

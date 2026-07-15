@@ -79,7 +79,7 @@ export default async function AdminInterestPoliciesPage() {
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[#f9fafb] text-xs text-left font-semibold text-[var(--color-muted)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--monari-surface-soft)] text-xs text-left font-semibold text-[var(--color-muted)]">
                   <th className="px-4 py-3">아이</th>
                   <th className="px-4 py-3 text-right">기본</th>
                   <th className="px-4 py-3 text-right">현재</th>

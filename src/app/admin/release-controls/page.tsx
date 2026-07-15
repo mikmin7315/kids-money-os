@@ -44,7 +44,7 @@ export default async function AdminReleaseControlsPage() {
         </div>
 
         {configs.length === 0 && (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">
             설정이 없어요. DB migration을 먼저 실행해주세요.
           </div>
         )}

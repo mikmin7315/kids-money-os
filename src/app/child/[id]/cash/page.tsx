@@ -30,11 +30,11 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
 
       {/* 헤더 */}
       <div className="mb-5">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>현금 사용</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>현금 사용</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           💸 현금 썼어요
         </h1>
-        <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.6 }}>
+        <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)", lineHeight: 1.6 }}>
           현금으로 쓴 돈을 기록하면 남긴 돈이 정확해져요.
         </p>
       </div>

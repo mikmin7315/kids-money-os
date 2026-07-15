@@ -64,11 +64,11 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-[var(--monari-hero)]" />
-                <p className="text-sm font-bold text-[#374151]">내 지갑 잔액</p>
+                <p className="text-sm font-bold text-[var(--monari-ink-soft)]">내 지갑 잔액</p>
               </div>
               <Link href="/settings/wallet" className="text-xs font-bold text-[var(--monari-hero)]">충전 →</Link>
             </div>
-            <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "#dc2626" : "#1a0533" }}>
+            <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "#dc2626" : "var(--monari-ink)" }}>
               {formatWon(parentWallet.balance)}
             </p>
             {parentWallet.balance === 0 && (

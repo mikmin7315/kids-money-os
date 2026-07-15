@@ -128,8 +128,8 @@ export default async function HomePage() {
           <div className="rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4">
               <div>
-                <p className="text-[12px] font-700 text-[#9ca3af] mb-1">내 지갑 잔액</p>
-                <p className="text-[26px] font-900 tracking-[-0.03em] text-[#1a0533] tabular-nums">
+                <p className="text-[12px] font-700 text-[var(--monari-ink-muted)] mb-1">내 지갑 잔액</p>
+                <p className="text-[26px] font-900 tracking-[-0.03em] text-[var(--monari-ink)] tabular-nums">
                   {formatWon(parentWallet?.balance ?? 0)}
                 </p>
               </div>
@@ -141,14 +141,14 @@ export default async function HomePage() {
                   <Wallet className="h-4 w-4" /> 충전하기
                 </Link>
                 {parentWallet?.bankName && (
-                  <p className="text-[11px] font-600 text-[#9ca3af]">
+                  <p className="text-[11px] font-600 text-[var(--monari-ink-muted)]">
                     {parentWallet.bankName} {maskAccountNumber(parentWallet.accountNumber)}
                   </p>
                 )}
               </div>
             </div>
             {(parentWallet?.balance ?? 0) < monthlyTotal && (
-              <div className="border-t border-[#f3f4f6] bg-[#fef3c7] px-5 py-3">
+              <div className="border-t border-[var(--monari-line)] bg-[#fef3c7] px-5 py-3">
                 <p className="text-[13px] font-700 text-[#92400e]">
                   {(parentWallet?.balance ?? 0) === 0
                     ? "💡 지갑을 충전하면 아이에게 바로 용돈을 지급할 수 있어요"
@@ -180,13 +180,13 @@ export default async function HomePage() {
                     {summary.child.name[0]}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[17px] font-700 text-[#1a0533]">{summary.child.name}</p>
+                    <p className="text-[17px] font-700 text-[var(--monari-ink)]">{summary.child.name}</p>
                     <p className="mt-0.5 text-[13px] font-500 text-[var(--monari-hero)]/60">
                       저축 {formatWon(summary.wallet.savingsBalance)}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-[20px] font-800 tracking-[-0.02em] text-[#1a0533]">
+                    <p className="text-[20px] font-800 tracking-[-0.02em] text-[var(--monari-ink)]">
                       {formatWon(summary.wallet.balance)}
                     </p>
                     <p className="mt-0.5 text-[12px] font-600 text-[var(--monari-hero)] flex items-center justify-end gap-0.5">
@@ -216,8 +216,8 @@ export default async function HomePage() {
         </section>
       ) : (
         <div className="mb-4 rounded-[20px] bg-white p-5 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-          <p className="text-[16px] font-800 text-[#1a0533]">첫 아이 통장을 만들어주세요</p>
-          <p className="mt-1 mb-4 text-[14px] text-[#6b7280]">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
+          <p className="text-[16px] font-800 text-[var(--monari-ink)]">첫 아이 통장을 만들어주세요</p>
+          <p className="mt-1 mb-4 text-[14px] text-[var(--monari-ink-muted)]">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
           <Link href="/settings" className="monari-btn-primary w-full">아이 등록하기</Link>
         </div>
       )}
@@ -268,7 +268,7 @@ export default async function HomePage() {
             {/* 저축 비율 */}
             <div className="col-span-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[14px] font-700 text-[#374151]">저축 비율</p>
+                <p className="text-[14px] font-700 text-[var(--monari-ink-soft)]">저축 비율</p>
                 <strong className="text-[20px] font-900 text-[var(--monari-hero)]">{monthlyGoal}%</strong>
               </div>
               <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--monari-hero-lo)]">
@@ -304,8 +304,8 @@ export default async function HomePage() {
           ) : (
             <div className="py-12 text-center">
               <p className="text-[36px]">🌱</p>
-              <p className="mt-2.5 text-[16px] font-700 text-[#1a0533]">아직 활동이 없어요</p>
-              <p className="mt-1 text-[14px] text-[#9ca3af]">용돈을 주거나 약속을 만들어보세요</p>
+              <p className="mt-2.5 text-[16px] font-700 text-[var(--monari-ink)]">아직 활동이 없어요</p>
+              <p className="mt-1 text-[14px] text-[var(--monari-ink-muted)]">용돈을 주거나 약속을 만들어보세요</p>
             </div>
           )}
         </div>
@@ -314,8 +314,8 @@ export default async function HomePage() {
       {!auth.user && (
         <div className="mb-4 rounded-[20px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
           <div>
-            <p className="text-[14px] font-800 text-[#1a0533]">지금은 체험 모드예요</p>
-            <p className="mt-0.5 text-[13px] text-[#9ca3af]">로그인하면 가족 기록이 안전하게 저장됩니다.</p>
+            <p className="text-[14px] font-800 text-[var(--monari-ink)]">지금은 체험 모드예요</p>
+            <p className="mt-0.5 text-[13px] text-[var(--monari-ink-muted)]">로그인하면 가족 기록이 안전하게 저장됩니다.</p>
           </div>
           <Link href="/login" className="monari-btn-primary h-10 shrink-0 px-4 text-[13px]">로그인</Link>
         </div>
@@ -327,7 +327,7 @@ export default async function HomePage() {
 function SectionLabel({ children, action }: { children: React.ReactNode; action?: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between px-1">
-      <h2 className="text-[18px] font-800 text-[#1a0533]">{children}</h2>
+      <h2 className="text-[18px] font-800 text-[var(--monari-ink)]">{children}</h2>
       {action}
     </div>
   );
@@ -341,14 +341,14 @@ function RecentRow({ href, title, sub, value, kind, isLast }: {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 px-4 py-3.5 transition active:bg-[#faf5ff] ${!isLast ? "border-b border-[#f3f4f6]" : ""}`}
+      className={`flex items-center gap-3 px-4 py-3.5 transition active:bg-[#faf5ff] ${!isLast ? "border-b border-[var(--monari-line)]" : ""}`}
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[15px] font-700 text-[#1a0533]">{title}</p>
-        <p className="mt-0.5 text-[12px] text-[#9ca3af]">{sub}</p>
+        <p className="truncate text-[15px] font-700 text-[var(--monari-ink)]">{title}</p>
+        <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)]">{sub}</p>
       </div>
       <p className={`shrink-0 text-[15px] font-800 ${isNeg ? "text-[#be123c]" : "text-[#15803d]"}`}>{value}</p>
     </Link>

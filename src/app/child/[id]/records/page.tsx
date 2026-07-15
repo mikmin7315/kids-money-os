@@ -70,13 +70,13 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
 
       <div className="grid grid-cols-2 gap-3 mb-5">
         <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: "#9ca3af", marginBottom: 6 }}>들어온 돈</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 6 }}>들어온 돈</p>
           <p style={{ fontSize: 22, fontWeight: 900, color: "#059669", letterSpacing: "-0.02em" }} className="tabular-nums">
             +{formatWon(totalIn)}
           </p>
         </div>
         <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: "#9ca3af", marginBottom: 6 }}>나간 돈</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 6 }}>나간 돈</p>
           <p style={{ fontSize: 22, fontWeight: 900, color: "#be123c", letterSpacing: "-0.02em" }} className="tabular-nums">
             -{formatWon(totalOut)}
           </p>
@@ -86,8 +86,8 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
       {txs.length === 0 ? (
         <div className="detail-card" style={{ padding: "48px 20px", textAlign: "center" }}>
           <p style={{ fontSize: 52, marginBottom: 14 }}>🌱</p>
-          <p style={{ fontSize: 20, fontWeight: 800, color: "#1a0533" }}>아직 거래 내역이 없어요</p>
-          <p style={{ fontSize: 15, fontWeight: 500, color: "#9ca3af", marginTop: 8 }}>
+          <p style={{ fontSize: 20, fontWeight: 800, color: "var(--monari-ink)" }}>아직 거래 내역이 없어요</p>
+          <p style={{ fontSize: 15, fontWeight: 500, color: "var(--monari-ink-muted)", marginTop: 8 }}>
             용돈을 받거나 쓰면 여기서 확인할 수 있어요.
           </p>
         </div>
@@ -95,13 +95,13 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
         <div className="space-y-5">
           {dates.map((date) => (
             <div key={date}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af", marginBottom: 8 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 8 }}>
                 {relativeDate(date, today)} · {date.slice(5).replace("-", "월 ")}일
               </p>
               <div className="detail-card" style={{ marginBottom: 0 }}>
                 {grouped[date].map((tx, i) => {
                   const minus = MINUS_TYPES.includes(tx.type);
-                  const meta = TX_META[tx.type] ?? { emoji: "•", color: "#374151", bg: "#f3f4f6", label: tx.type };
+                  const meta = TX_META[tx.type] ?? { emoji: "•", color: "var(--monari-ink-soft)", bg: "#f3f4f6", label: tx.type };
                   return (
                     <div
                       key={tx.id}

@@ -35,10 +35,10 @@ export function ChildInquiryForm() {
       )}
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">무엇이 궁금해요?</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">무엇이 궁금해요?</label>
         <select
           name="category"
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm"
         >
           {CHILD_CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>{c.label}</option>
@@ -47,24 +47,24 @@ export function ChildInquiryForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">제목 *</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">제목 *</label>
         <input
           name="title"
           required
           maxLength={100}
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm"
           placeholder="짧게 써주세요"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">내용 *</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">내용 *</label>
         <textarea
           name="body"
           required
           rows={4}
           maxLength={1000}
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm resize-none"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm resize-none"
           placeholder="자세하게 설명해주세요!"
         />
       </div>

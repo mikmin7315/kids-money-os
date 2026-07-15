@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { ConsentCampaignCreateForm, CampaignStatusButton } from "@/components/admin/consent-campaign-form";
 import { requireAdminSession } from "@/lib/auth";
@@ -34,7 +34,7 @@ async function loadCampaigns(): Promise<{ rows: Campaign[]; error?: string }> {
 }
 
 const STATUS_STYLE: Record<string, string> = {
-  draft: "bg-[#f3f4f6] text-[#6b7280]",
+  draft: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
   active: "bg-[#d1fae5] text-[#065f46]",
   ended: "bg-[#fee2e2] text-[#991b1b]",
 };
@@ -65,7 +65,7 @@ export default async function ReconsentCampaignsPage() {
             { label: "진행 중", value: active.length, color: "text-[#059669]" },
             { label: "종료", value: rows.filter((r) => r.status === "ended").length },
           ].map(({ label, value, color }) => (
-            <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+            <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
               <p className={`mt-1 text-lg font-black ${color ?? "text-[var(--color-text)]"}`}>{value}</p>
             </div>

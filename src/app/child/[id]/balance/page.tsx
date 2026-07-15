@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -65,7 +65,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
           label="쓸 수 있는 돈"
           sub="지금 바로 쓸 수 있어요"
           value={formatWon(spendable)}
-          valueColor="#1a0533"
+          valueColor="var(--monari-ink)"
         />
         <BalanceRow
           emoji="🐷"
@@ -110,14 +110,14 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
           className="flex flex-col items-center gap-2.5 rounded-[20px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📒</span>
-          <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }}>거래 내역</p>
+          <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>거래 내역</p>
         </Link>
         <Link
           href={`/child/${id}/interest`}
           className="flex flex-col items-center gap-2.5 rounded-[20px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📈</span>
-          <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }}>이자 미리보기</p>
+          <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>이자 미리보기</p>
         </Link>
       </div>
     </div>

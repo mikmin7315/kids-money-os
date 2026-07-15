@@ -65,7 +65,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
               { label: "저금", value: formatWon(savings), color: "text-[#2563eb]" },
               { label: "이자율", value: `${rate}%`, color: "text-[var(--monari-hero)]" },
             ].map(({ label, value, color }) => (
-              <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+              <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
                 <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
                 <p className={`mt-1 text-sm font-black ${color}`}>{value}</p>
               </div>
@@ -124,7 +124,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
                     </div>
                     <div className="text-right">
                       <p className="tabular-nums text-sm font-bold">{formatWon(Number(b.amount))}</p>
-                      <span className={`text-[11px] font-bold ${b.status === "approved" ? "text-[#059669]" : b.status === "pending" ? "text-[#d97706]" : "text-[#6b7280]"}`}>
+                      <span className={`text-[11px] font-bold ${b.status === "approved" ? "text-[#059669]" : b.status === "pending" ? "text-[#d97706]" : "text-[var(--monari-ink-muted)]"}`}>
                         {b.status === "approved" ? "승인" : b.status === "pending" ? "대기" : b.status === "repaid" ? "완납" : b.status === "cancelled" ? "취소" : String(b.status)}
                       </span>
                     </div>

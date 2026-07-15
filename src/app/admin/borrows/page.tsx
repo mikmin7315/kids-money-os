@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -15,7 +15,7 @@ const STATUS_STYLE: Record<string, string> = {
   approved: "bg-[#dbeafe] text-[#1d4ed8]",
   rejected: "bg-[#fee2e2] text-[#dc2626]",
   repaid: "bg-[#d1fae5] text-[#065f46]",
-  cancelled: "bg-[#f3f4f6] text-[#6b7280]",
+  cancelled: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 
 type BorrowRow = {

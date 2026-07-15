@@ -36,10 +36,10 @@ export function InquirySubmitForm() {
       )}
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">문의 유형</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">문의 유형</label>
         <select
           name="category"
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>{c.label}</option>
@@ -48,24 +48,24 @@ export function InquirySubmitForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">제목 *</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">제목 *</label>
         <input
           name="title"
           required
           maxLength={100}
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm"
           placeholder="문의 제목을 입력해주세요"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-bold text-[#374151]">내용 *</label>
+        <label className="mb-1.5 block text-sm font-bold text-[var(--monari-ink-soft)]">내용 *</label>
         <textarea
           name="body"
           required
           rows={5}
           maxLength={2000}
-          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-sm resize-none"
+          className="w-full rounded-[12px] border border-[#e5e7eb] bg-[var(--monari-surface-soft)] px-3 py-2.5 text-sm resize-none"
           placeholder="문의 내용을 자세히 입력해주세요. 스크린샷이나 오류 메시지가 있다면 설명해주세요."
         />
       </div>

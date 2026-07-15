@@ -37,11 +37,11 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
         </Link>
 
         <div className="mb-2">
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af" }}>{child.name} · {monthKey.replace("-", "년 ")}월</p>
-          <h1 style={{ fontSize: 26, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em", marginTop: 4 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)" }}>{child.name} · {monthKey.replace("-", "년 ")}월</p>
+          <h1 style={{ fontSize: 26, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em", marginTop: 4 }}>
             🔒 이자 약속 확정
           </h1>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.7 }}>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)", lineHeight: 1.7 }}>
             확정하면 이번 달에는 이자율이 바뀌지 않아요. 아이에게 약속을 지켜요.
           </p>
         </div>
@@ -72,7 +72,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
         {/* 행동 약속 현황 */}
         {activeRules.length > 0 && (
           <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>이번 달 행동 약속 현황</p>
+            <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>이번 달 행동 약속 현황</p>
             <div className="space-y-3">
               {activeRules.map((rule) => {
                 const done = childLogs.some((l) => l.behaviorRuleId === rule.id);
@@ -84,7 +84,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
                     >
                       {done ? "✅" : "○"}
                     </span>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: done ? "#1a0533" : "#9ca3af", flex: 1 }} className="truncate">
+                    <p style={{ fontSize: 14, fontWeight: 600, color: done ? "var(--monari-ink)" : "var(--monari-ink-muted)", flex: 1 }} className="truncate">
                       {rule.title}
                     </p>
                     <p style={{ fontSize: 13, fontWeight: 700, color: done ? "#059669" : "#d1d5db" }}>

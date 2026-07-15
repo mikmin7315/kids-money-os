@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+﻿import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -53,8 +53,8 @@ export default async function InterestHistoryPage() {
       {rows.length === 0 ? (
         <div className="detail-card" style={{ padding: "48px 20px", textAlign: "center" }}>
           <p style={{ fontSize: 52, marginBottom: 14 }}>📭</p>
-          <p style={{ fontSize: 20, fontWeight: 800, color: "#1a0533" }}>아직 이자 기록이 없어요</p>
-          <p style={{ fontSize: 15, fontWeight: 500, color: "#9ca3af", marginTop: 8 }}>
+          <p style={{ fontSize: 20, fontWeight: 800, color: "var(--monari-ink)" }}>아직 이자 기록이 없어요</p>
+          <p style={{ fontSize: 15, fontWeight: 500, color: "var(--monari-ink-muted)", marginTop: 8 }}>
             매달 1일 정산 후 여기서 확인할 수 있어요.
           </p>
         </div>
@@ -64,7 +64,7 @@ export default async function InterestHistoryPage() {
             <div key={`${child?.id}-${month}`} className="detail-card" style={{ marginBottom: 0 }}>
               <div className="detail-row border-b-0">
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>
                     {child?.name} · {month.replace("-", "년 ")}월
                   </p>
                   <p className="detail-row-value" style={{ fontSize: 24, color: "#059669" }}>
@@ -79,7 +79,7 @@ export default async function InterestHistoryPage() {
               </div>
               {monthTxs.length > 1 && monthTxs.map((tx) => (
                 <div key={tx.id} className="detail-row" style={{ paddingTop: 12, paddingBottom: 12 }}>
-                  <p className="detail-row-label" style={{ fontSize: 14, color: "#9ca3af" }}>
+                  <p className="detail-row-label" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
                     {tx.date.slice(5).replace("-", "월 ")}일
                   </p>
                   <p className="detail-row-value" style={{ fontSize: 15, color: "#059669" }}>

@@ -52,8 +52,8 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
     <main className="px-4 pb-36 pt-8">
       <div className="mb-5 flex items-start justify-between gap-2">
         <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>이자</p>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>이자</p>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
             📈 이자 미리보기
           </h1>
         </div>
@@ -97,7 +97,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
 
       {/* 이자 계산 설명 */}
       <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>어떻게 계산돼요?</p>
+        <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>어떻게 계산돼요?</p>
         <div className="space-y-3">
           <CalcRow
             label="기본 이자율"
@@ -113,12 +113,12 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
               color="#059669"
             />
           )}
-          <div className="border-t border-[#f3f4f6] pt-3">
+          <div className="border-t border-[var(--monari-line)] pt-3">
             <CalcRow
               label="현재 이자율"
               value={formatPercent(rate)}
               desc="남긴 돈에 적용되는 이자율"
-              color="#1a0533"
+              color="var(--monari-ink)"
               bold
             />
           </div>
@@ -133,7 +133,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
       {/* 행동 약속 기여 */}
       {activeRules.length > 0 && (
         <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>약속별 이자 기여</p>
+          <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>약속별 이자 기여</p>
           <div className="space-y-2">
             {activeRules.map((rule) => {
               const done = childLogs.some((l) => l.behaviorRuleId === rule.id);
@@ -145,7 +145,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
                   >
                     {done ? "⭐" : "○"}
                   </span>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: done ? "#1a0533" : "#9ca3af", flex: 1 }} className="truncate">
+                  <p style={{ fontSize: 14, fontWeight: 600, color: done ? "var(--monari-ink)" : "var(--monari-ink-muted)", flex: 1 }} className="truncate">
                     {rule.title}
                   </p>
                   <p style={{ fontSize: 13, fontWeight: 700, color: done ? "#059669" : "#d1d5db" }}>
@@ -162,13 +162,13 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
       {interestTx.length > 0 && (
         <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <div className="mb-3 flex items-center justify-between">
-            <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533" }}>이번 달 받은 이자</p>
+            <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>이번 달 받은 이자</p>
             <p style={{ fontSize: 18, fontWeight: 900, color: "#059669" }}>+{formatWon(totalReceivedThisMonth)}</p>
           </div>
           <div className="space-y-2">
             {interestTx.map((tx) => (
               <div key={tx.id} className="flex items-center justify-between">
-                <p style={{ fontSize: 13, color: "#9ca3af" }}>{tx.date.slice(5).replace("-", "월 ")}일</p>
+                <p style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{tx.date.slice(5).replace("-", "월 ")}일</p>
                 <p style={{ fontSize: 14, fontWeight: 700, color: "#059669" }}>+{formatWon(tx.amount)}</p>
               </div>
             ))}
@@ -187,7 +187,7 @@ function CalcRow({
   return (
     <div className="flex items-center justify-between gap-2">
       <div>
-        <p style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: bold ? "#1a0533" : "#9ca3af" }}>{label}</p>
+        <p style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: bold ? "var(--monari-ink)" : "var(--monari-ink-muted)" }}>{label}</p>
         <p style={{ fontSize: 11, color: "#c4b5fd", marginTop: 1 }}>{desc}</p>
       </div>
       <p style={{ fontSize: 16, fontWeight: 800, color }}>{value}</p>

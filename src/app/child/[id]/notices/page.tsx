@@ -55,8 +55,8 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
       </Link>
 
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>{child.name}에게</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>{child.name}에게</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           📢 공지사항
         </h1>
       </div>
@@ -64,8 +64,8 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
       {notices.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>📭</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>공지사항이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>현재 새로운 공지가 없어요.</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>공지사항이 없어요</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>현재 새로운 공지가 없어요.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -74,11 +74,11 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
               <div className="flex items-start gap-3">
                 <span style={{ fontSize: 28 }}>{TYPE_EMOJI[a.type] ?? "📢"}</span>
                 <div className="flex-1 min-w-0">
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }}>{a.title}</p>
-                  <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 2 }}>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>{a.title}</p>
+                  <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", marginTop: 2 }}>
                     {a.created_at.slice(0, 10).replace(/-/g, ".")}
                   </p>
-                  <p style={{ fontSize: 14, color: "#374151", marginTop: 8, lineHeight: 1.65, whiteSpace: "pre-wrap" }}>
+                  <p style={{ fontSize: 14, color: "var(--monari-ink-soft)", marginTop: 8, lineHeight: 1.65, whiteSpace: "pre-wrap" }}>
                     {a.body}
                   </p>
                 </div>

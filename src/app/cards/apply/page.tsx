@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -60,7 +60,7 @@ export default async function CardApplyPage() {
         {children && children.length > 0 ? (
           <CardApplyForm childOptions={children} />
         ) : (
-          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-10 text-center">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-10 text-center">
             <p className="text-sm text-[var(--color-muted)]">아이 계정을 먼저 등록해주세요.</p>
             <Link href="/children/new" className="mt-3 inline-block text-sm font-bold text-[var(--color-accent)]">
               아이 추가하기 →

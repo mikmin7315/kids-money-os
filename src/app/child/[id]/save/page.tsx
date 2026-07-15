@@ -28,8 +28,8 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
   return (
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6">
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
-        <p className="mt-2" style={{ fontSize: 15, fontWeight: 600, color: "#9ca3af" }}>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
+        <p className="mt-2" style={{ fontSize: 15, fontWeight: 600, color: "var(--monari-ink-muted)" }}>
           지금 쓸 수 있는 돈 <span style={{ color: "var(--monari-hero)", fontWeight: 800 }}>{formatWon(summary.wallet.balance)}</span>
         </p>
       </div>
