@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getNotificationPreferencesAction, toggleChildNotificationAction } from "@/actions/notification-settings";
 import { NotificationToggleList } from "@/components/notifications/notification-toggle-list";
+import { NotificationPermissionBanner } from "@/components/notifications/notification-permission-banner";
 import { NOTIFICATION_TYPES } from "@/lib/notification-types";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -36,6 +37,8 @@ export default async function ChildNotificationSettingsPage({ params }: { params
           🔔 알림 설정
         </h1>
       </div>
+
+      <NotificationPermissionBanner />
 
       <NotificationToggleList
         items={childTypes.map((item) => ({ type: item.type, label: item.label }))}

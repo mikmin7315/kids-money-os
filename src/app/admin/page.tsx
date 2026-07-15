@@ -170,7 +170,7 @@ export default async function AdminDashboardPage() {
             <MenuCard href="/admin/borrows" title="미리쓰기 관리" description="전체 미리쓰기 요청 상태를 확인하고 관리합니다." badge="A-06" />
             <MenuCard href="/admin/behaviors" title="행동약속 조회" description="약속별 달성률과 최근 행동 기록을 확인합니다." badge="A-08" />
             <MenuCard href="/admin/interest-policies" title="이자율 전체 조회" description="아이별 기본/현재 이자율과 확정 상태를 조회합니다." badge="A-09" />
-            <MenuCard href="/admin/settlement" title="정산 결과" description="월별 이자 정산 결과와 아이별 성공/실패 내역을 확인합니다." badge="A-S-01" />
+            <MenuCard href="/admin/settlement" title="정산 결과" description="월별 이자 정산 결과와 아이별 성공/실패 내역을 확인합니다." badge="A-I-04" />
             <MenuCard href="/admin/allowance-log" title="용돈 배치 로그" description="정기 용돈 실행 이력 및 미지급 실패 내역을 확인합니다." badge="A-14" />
             <MenuCard href="/admin/wallet-charges" title="충전 요청 관리" description="부모 지갑 충전 요청을 확인하고 승인합니다." badge="A-W-01" />
           </div>
@@ -181,6 +181,7 @@ export default async function AdminDashboardPage() {
             <MenuCard href="/admin/cards" title="카드 목록" description="전체 아이 카드 상태·한도·활성 여부를 조회합니다." badge="A-C-01" />
             <MenuCard href="/admin/cards/logs" title="카드 연동 로그" description="파트너사 연동 요청/응답·에러 로그를 확인합니다." badge="A-C-03" />
             <MenuCard href="/admin/merchant-categories" title="가맹점/카테고리 매핑" description="카드 거래 가맹점 패턴별 카테고리를 관리합니다." badge="A-23" />
+            <MenuCard href="/admin/card-disputes" title="카드 분쟁 티켓" description="카드 거래 분쟁 접수·검토·처리 현황을 관리합니다." badge="A-22" />
           </div>
         </Section>
 
@@ -197,6 +198,7 @@ export default async function AdminDashboardPage() {
             <MenuCard href="/admin/inquiries" title="문의 관리" description="사용자 문의를 확인하고 답변을 등록합니다." badge="A-CS-01" />
             <MenuCard href="/admin/terms" title="약관 관리" description="이용약관·개인정보처리방침 버전을 관리하고 활성화합니다." badge="A-T-01" />
             <MenuCard href="/admin/consents" title="동의 이력 조회" description="사용자별 약관 동의 이력을 유형·버전별로 조회합니다." badge="A-T-02" />
+            <MenuCard href="/admin/reconsent-campaigns" title="재동의 캠페인" description="기존 동의자 대상 재동의 캠페인을 생성하고 운영합니다." badge="A-18" />
           </div>
         </Section>
 
@@ -210,6 +212,7 @@ export default async function AdminDashboardPage() {
         <Section title="보안 / 감사">
           <div className="space-y-3">
             <MenuCard href="/admin/audit-logs" title="관리자 행동 로그" description="어드민 작업 이력·변경 전후값을 조회합니다." badge="A-AU-01" />
+            <MenuCard href="/admin/sessions" title="세션 관리" description="활성 사용자 세션을 조회하고 강제 로그아웃을 실행합니다." badge="A-S-01" />
             <MenuCard href="/admin/restrictions" title="이용 제한 관리" description="계정·아이별 이용 제한 적용·해제합니다." badge="A-24" />
             <MenuCard href="/admin/deletion-requests" title="탈퇴/삭제 요청" description="회원 탈퇴 요청 처리 및 삭제 완료 처리합니다." badge="A-19" />
             <MenuCard href="/admin/release-controls" title="앱 설정 / 기능 플래그" description="점검 모드, 최소 버전, 기능 플래그를 실시간 조정합니다." badge="A-25" />

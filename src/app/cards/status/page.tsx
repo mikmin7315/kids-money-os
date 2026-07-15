@@ -23,14 +23,26 @@ export default async function CardStatusPage() {
   const auth = await requireParentSession();
   const supabase = await getSupabaseServerClient();
 
-  const { data } = await supabase
-    .from("card_applications")
-    .select("id, status, partner, child_id, created_at, updated_at, children(name)")
-    .eq("parent_id", auth.user!.id)
-    .not("status", "in", '("cancelled","rejected")')
-    .order("created_at", { ascending: false });
+  const [activeRes, failedRes] = await Promise.all([
+    supabase.from("card_applications")
+      .select("id, status, partner, child_id, created_at, updated_at, children(name)")
+      .eq("parent_id", auth.user!.id)
+      .not("status", "in", '("cancelled","rejected")')
+      .order("created_at", { ascending: false }),
+    supabase.from("card_applications")
+      .select("id, status, child_id, notes, created_at, children(name)")
+      .eq("parent_id", auth.user!.id)
+      .in("status", ["rejected"])
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
 
-  const apps = (data ?? []).map((r) => {
+  const apps = (activeRes.data ?? []).map((r) => {
+    const child = Array.isArray(r.children) ? r.children[0] : r.children;
+    return { ...r, child_name: String(child?.name ?? "-") };
+  });
+
+  const failedApps = (failedRes.data ?? []).map((r) => {
     const child = Array.isArray(r.children) ? r.children[0] : r.children;
     return { ...r, child_name: String(child?.name ?? "-") };
   });
@@ -40,7 +52,37 @@ export default async function CardStatusPage() {
       <MobileShell>
         <AppHeader eyebrow="카드" title="신청 현황" />
 
-        {apps.length === 0 && (
+        {/* P-20E: 연동 실패/반려 안내 */}
+        {failedApps.map((app) => (
+          <div key={app.id} className="mb-4 rounded-[16px] border border-[#fecaca] bg-[#fff1f2] p-5">
+            <div className="mb-3 flex items-center gap-3">
+              <span style={{ fontSize: 28 }}>⚠️</span>
+              <div>
+                <p className="text-sm font-extrabold text-[#991b1b]">{app.child_name} 카드 신청 실패</p>
+                <p className="text-[11px] text-[#b91c1c]">신청일: {app.created_at.slice(0, 10)}</p>
+              </div>
+            </div>
+            {app.notes && (
+              <p className="mb-3 text-xs text-[#dc2626]">실패 사유: {app.notes}</p>
+            )}
+            <div className="flex gap-2">
+              <Link
+                href="/cards/apply"
+                className="flex-1 rounded-[10px] bg-[#dc2626] py-2.5 text-center text-xs font-bold text-white"
+              >
+                다시 신청하기
+              </Link>
+              <Link
+                href="/inquiries"
+                className="flex-1 rounded-[10px] border border-[#fecaca] py-2.5 text-center text-xs font-bold text-[#991b1b]"
+              >
+                고객센터 문의
+              </Link>
+            </div>
+          </div>
+        ))}
+
+        {apps.length === 0 && failedApps.length === 0 && (
           <div className="rounded-[16px] bg-[#f9fafb] px-5 py-12 text-center">
             <p style={{ fontSize: 32, marginBottom: 8 }}>💳</p>
             <p className="text-sm font-semibold text-[var(--color-muted)]">신청 내역이 없어요.</p>
