@@ -47,7 +47,7 @@ async function loadSessions(): Promise<{ rows: SessionRow[]; error?: string }> {
 }
 
 const ROLE_STYLE: Record<string, string> = {
-  admin: "bg-[#ede9fe] text-[#5b21b6]",
+  admin: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]",
   parent: "bg-[#f3f4f6] text-[#374151]",
 };
 
@@ -75,7 +75,7 @@ export default async function AdminSessionsPage() {
           </div>
           <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">어드민</p>
-            <p className="mt-1 text-lg font-black text-[#5b21b6]">{rows.filter((r) => r.role === "admin").length}</p>
+            <p className="mt-1 text-lg font-black text-[var(--monari-hero)]">{rows.filter((r) => r.role === "admin").length}</p>
           </div>
         </div>
 
