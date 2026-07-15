@@ -104,7 +104,7 @@ export default async function CardStatusPage() {
                 <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
                   app.status === "delivery" ? "bg-[#d1fae5] text-[#065f46]" :
                   app.status === "rejected" ? "bg-[#fee2e2] text-[#991b1b]" :
-                  "bg-[#ede9fe] text-[#5b21b6]"
+                  "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]"
                 }`}>
                   {STATUS_STEPS.find(s => s.key === app.status)?.label ?? app.status}
                 </span>
@@ -117,12 +117,12 @@ export default async function CardStatusPage() {
                   return (
                     <div key={step.key} className="flex items-start gap-3">
                       <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                        done ? "bg-[#7c3aed] text-white" : "bg-[#f3f4f6] text-[#9ca3af]"
+                        done ? "bg-[var(--monari-hero)] text-white" : "bg-[#f3f4f6] text-[#9ca3af]"
                       }`}>
                         {done ? "✓" : i + 1}
                       </div>
                       <div>
-                        <p className={`text-xs font-bold ${active ? "text-[#7c3aed]" : done ? "text-[var(--color-text)]" : "text-[var(--color-muted)]"}`}>
+                        <p className={`text-xs font-bold ${active ? "text-[var(--monari-hero)]" : done ? "text-[var(--color-text)]" : "text-[var(--color-muted)]"}`}>
                           {step.label}
                         </p>
                         {active && <p className="text-[11px] text-[var(--color-muted)]">{step.desc}</p>}

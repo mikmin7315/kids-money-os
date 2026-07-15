@@ -60,10 +60,10 @@ export default async function CardsPage() {
 
         {/* 신청 대기 중 */}
         {appList.length > 0 && cardList.length === 0 && (
-          <div className="mb-4 rounded-[16px] bg-[#ede9fe] p-4">
-            <p className="text-sm font-bold text-[#5b21b6]">카드 신청 접수 완료</p>
-            <p className="mt-1 text-xs text-[#6d28d9]">발급 완료 후 여기에 카드 관리 화면이 나타나요.</p>
-            <Link href="/cards/status" className="mt-2 inline-block text-xs font-bold text-[#7c3aed]">
+          <div className="mb-4 rounded-[16px] bg-[var(--monari-hero-lo)] p-4">
+            <p className="text-sm font-bold text-[var(--monari-hero)]">카드 신청 접수 완료</p>
+            <p className="mt-1 text-xs text-[var(--monari-ink-soft)]">발급 완료 후 여기에 카드 관리 화면이 나타나요.</p>
+            <Link href="/cards/status" className="mt-2 inline-block text-xs font-bold text-[var(--monari-hero)]">
               신청 현황 보기 →
             </Link>
           </div>

@@ -4,6 +4,7 @@ import {
   CircleDollarSign,
   ClipboardList,
   ReceiptText,
+  Smartphone,
   TrendingDown,
   TrendingUp,
   Wallet,
@@ -27,6 +28,7 @@ export default async function HomePage() {
   const pendingBehaviors = bundle.behaviorLogs.filter((log) => log.status === "pending");
   const pendingBorrows = bundle.borrowRequests.filter((request) => request.status === "pending");
   const totalPending = pendingBehaviors.length + pendingBorrows.length;
+  const monthlyTotal = bundle.allowanceRules.filter((r) => r.isActive).reduce((s, r) => s + r.amount, 0);
   const primary = dashboard.children[0];
   const recentFeed = dashboard.activityFeed.slice(0, 3).map((item) => {
     const childName = dashboard.children.find((child) => child.child.id === item.childId)?.child.name;
@@ -41,7 +43,7 @@ export default async function HomePage() {
     : 0;
 
   return (
-    <MobileAppShell title={`안녕하세요, ${dashboard.parent.name.split(" ")[0]}님 👋`} subtitle="Monari">
+    <MobileAppShell title={`안녕하세요, ${dashboard.parent.name.split(" ")[0]}님 👋`} subtitle="Monari" pendingCount={totalPending}>
 
       {/* ── 히어로 카드 ── */}
       <section
@@ -107,7 +109,16 @@ export default async function HomePage() {
             </div>
           </>
         ) : (
-          <p className="relative mt-5 leading-snug text-white" style={{ fontSize: 24, fontWeight: 800 }}>아이 프로필을<br />등록해주세요</p>
+          <div className="relative mt-5">
+            <p className="leading-snug text-white" style={{ fontSize: 24, fontWeight: 800 }}>아이 프로필을<br />등록해주세요</p>
+            <Link
+              href="/settings"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-[14px] bg-white px-5 py-2.5 text-[15px] transition active:scale-[0.97]"
+              style={{ color: "#6d28d9", fontWeight: 800 }}
+            >
+              지금 시작하기 <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         )}
       </section>
 
@@ -136,10 +147,12 @@ export default async function HomePage() {
                 )}
               </div>
             </div>
-            {(parentWallet?.balance ?? 0) === 0 && (
+            {(parentWallet?.balance ?? 0) < monthlyTotal && (
               <div className="border-t border-[#f3f4f6] bg-[#fef3c7] px-5 py-3">
                 <p className="text-[13px] font-700 text-[#92400e]">
-                  💡 지갑을 충전하면 아이에게 바로 용돈을 지급할 수 있어요
+                  {(parentWallet?.balance ?? 0) === 0
+                    ? "💡 지갑을 충전하면 아이에게 바로 용돈을 지급할 수 있어요"
+                    : `💡 이번 달 예정 용돈(${formatWon(monthlyTotal)})보다 잔액이 부족해요`}
                 </p>
               </div>
             )}
@@ -181,13 +194,21 @@ export default async function HomePage() {
                     </p>
                   </div>
                 </Link>
-                <div className="border-t border-[#f3f4f6] px-4 py-2.5">
-                  <Link
-                    href={`/child/${summary.child.id}/give-allowance`}
-                    className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[#f0fdf4] py-2 text-sm font-extrabold text-[#059669] transition active:scale-[0.97]"
-                  >
-                    <CircleDollarSign className="h-4 w-4" /> 용돈 바로 주기
-                  </Link>
+                <div className="border-t border-[var(--monari-line)] px-4 py-2.5">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href={`/child/${summary.child.id}/give-allowance`}
+                      className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[#f0fdf4] py-2 text-sm font-extrabold text-[#059669] transition active:scale-[0.97]"
+                    >
+                      <CircleDollarSign className="h-4 w-4" /> 용돈 주기
+                    </Link>
+                    <Link
+                      href={`/child-pin/${summary.child.id}`}
+                      className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[var(--monari-surface-soft)] py-2 text-sm font-extrabold text-[var(--monari-hero)] transition active:scale-[0.97]"
+                    >
+                      <Smartphone className="h-4 w-4" /> 아이 모드
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

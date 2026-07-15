@@ -68,7 +68,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
     <>
       {/* ── 히어로 ── */}
       <section className="relative overflow-hidden px-5 pb-8 pt-[calc(20px+env(safe-area-inset-top))] text-white"
-        style={{ background: "linear-gradient(145deg, #5b21b6 0%, #7c3aed 55%, #9333ea 100%)" }}>
+        style={{ background: "linear-gradient(145deg, #b45309 0%, #d97706 50%, #f59e0b 100%)" }}>
         <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10" />
 
         <header className="relative flex items-center justify-between mb-8">
@@ -134,7 +134,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <Link href={`${base}/promise`}
               className="relative flex h-20 w-20 items-center justify-center rounded-full"
               style={{ background: `conic-gradient(#fbbf24 ${todayProgress * 3.6}deg, rgba(255,255,255,0.12) 0deg)` }}>
-              <span className="absolute inset-[7px] flex flex-col items-center justify-center rounded-full bg-[#4c1d95]">
+              <span className="absolute inset-[7px] flex flex-col items-center justify-center rounded-full bg-[#92400e]">
                 <strong style={{ fontSize: 22, fontWeight: 900, lineHeight: 1 }}>{todayDone}/{todayTotal}</strong>
                 <span style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>완료</span>
               </span>
@@ -142,23 +142,25 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           </div>
         </div>
 
-        <div className="relative grid grid-cols-2 gap-3">
-          <Link href={`${base}/promise`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white"
-            style={{ fontSize: 16, fontWeight: 800, color: "#5b21b6" }}>
-            <Check className="h-5 w-5" strokeWidth={3} /> 약속 체크
+        <div className="relative space-y-2">
+          <Link href={`${base}/promise`} className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[18px] bg-white transition active:scale-[0.97]"
+            style={{ fontSize: 17, fontWeight: 900, color: "#92400e" }}>
+            <Check className="h-5 w-5" strokeWidth={3} /> 약속 체크하기
           </Link>
-          <Link href={`${base}/save`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-[#f59e0b]"
-            style={{ fontSize: 16, fontWeight: 800, color: "white" }}>
-            <PiggyBank className="h-5 w-5" /> 저금하기
-          </Link>
-          <Link href={`${base}/promise-month`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white/80"
-            style={{ fontSize: 15, fontWeight: 800, color: "#5b21b6" }}>
-            🤝 이번 달 약속
-          </Link>
-          <Link href={`${base}/cash`} className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-white/80"
-            style={{ fontSize: 15, fontWeight: 800, color: "#b45309" }}>
-            💸 현금 기록
-          </Link>
+          <div className="grid grid-cols-3 gap-2">
+            <Link href={`${base}/save`} className="flex h-12 items-center justify-center gap-1 rounded-[16px] bg-white/20 transition active:scale-[0.97]"
+              style={{ fontSize: 14, fontWeight: 800, color: "white" }}>
+              <PiggyBank className="h-4 w-4" /> 저금
+            </Link>
+            <Link href={`${base}/promise-month`} className="flex h-12 items-center justify-center rounded-[16px] bg-white/20 transition active:scale-[0.97]"
+              style={{ fontSize: 14, fontWeight: 800, color: "white" }}>
+              이번 달
+            </Link>
+            <Link href={`${base}/cash`} className="flex h-12 items-center justify-center rounded-[16px] bg-white/20 transition active:scale-[0.97]"
+              style={{ fontSize: 14, fontWeight: 800, color: "white" }}>
+              현금
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -185,7 +187,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <div className="mb-8 mt-0 overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
               <div
                 className="px-5 py-4"
-                style={{ background: "linear-gradient(135deg,#7c3aed 0%,#a855f7 100%)" }}
+                style={{ background: "linear-gradient(135deg,#b45309 0%,#d97706 100%)" }}
               >
                 <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>
                   이대로면 이번 달
@@ -207,7 +209,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                   <p style={{ fontSize: 14, fontWeight: 800, color: "#7c3aed" }}>{summary.wallet.currentInterestRate}%</p>
                 </div>
                 <div className="px-5 py-3">
-                  <p style={{ fontSize: 12, color: "#c4b5fd", fontWeight: 600 }}>
+                  <p style={{ fontSize: 12, color: "#fcd34d", fontWeight: 600 }}>
                     💡 약속을 더 지키면 이자율이 올라가요!
                   </p>
                 </div>

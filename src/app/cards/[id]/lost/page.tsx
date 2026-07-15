@@ -33,9 +33,9 @@ export default async function CardLostPage({ params }: { params: Promise<{ id: s
             <p className="text-base font-extrabold text-[var(--color-text)]">분실 신고된 카드예요</p>
             <p className="mt-2 text-sm text-[var(--color-muted)]">분실 신고 후 카드는 사용이 중지됐어요.</p>
           </div>
-          <div className="mb-4 rounded-[16px] bg-[#f5f3ff] p-5">
-            <p className="mb-3 text-sm font-extrabold text-[#5b21b6]">📬 재발급 안내</p>
-            <ul className="space-y-2 text-[13px] text-[#7c3aed]">
+          <div className="mb-4 rounded-[16px] bg-[var(--monari-hero-lo)] p-5">
+            <p className="mb-3 text-sm font-extrabold text-[var(--monari-hero)]">📬 재발급 안내</p>
+            <ul className="space-y-2 text-[13px] text-[var(--monari-ink-soft)]">
               <li>• 재발급은 고객센터 문의를 통해 진행돼요.</li>
               <li>• 기존 카드 번호는 변경되며 새 카드가 발급돼요.</li>
               <li>• 재발급 소요 기간: 영업일 기준 3~5일</li>

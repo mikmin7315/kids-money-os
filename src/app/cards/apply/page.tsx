@@ -23,10 +23,10 @@ export default async function CardApplyPage() {
       <MobileShell>
         <AppHeader eyebrow="카드" title="아이 카드 신청" />
 
-        <div className="mb-5 rounded-[16px] bg-[#ede9fe] p-5">
+        <div className="mb-5 rounded-[16px] bg-[var(--monari-hero-lo)] p-5">
           <p style={{ fontSize: 32, textAlign: "center", marginBottom: 8 }}>💳</p>
-          <p className="text-center text-sm font-bold text-[#5b21b6]">Monari 아이 체크카드</p>
-          <p className="mt-2 text-center text-xs text-[#6d28d9]">
+          <p className="text-center text-sm font-bold text-[var(--monari-hero)]">Monari 아이 체크카드</p>
+          <p className="mt-2 text-center text-xs text-[var(--monari-ink-soft)]">
             아이의 Monari 통장과 연결된 체크카드로<br />실생활 금융 교육을 시작하세요.
           </p>
         </div>
@@ -42,7 +42,7 @@ export default async function CardApplyPage() {
               "현재 파트너사 연동 준비 중 (곧 출시)",
             ].map((t) => (
               <li key={t} className="flex items-start gap-2">
-                <span className="mt-0.5 text-[#7c3aed]">✓</span>
+                <span className="mt-0.5 text-[var(--monari-hero)]">✓</span>
                 <span>{t}</span>
               </li>
             ))}
