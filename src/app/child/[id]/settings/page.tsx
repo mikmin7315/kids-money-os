@@ -121,7 +121,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
         </p>
         <Link
           href={`/child/${id}/inquiries`}
-          className="flex items-center justify-center gap-2 rounded-[12px] bg-[#d97706] px-4 py-2.5"
+          className="flex items-center justify-center gap-2 rounded-[12px] bg-[var(--child-spend)] px-4 py-2.5"
         >
           <MessageCircle size={14} color="white" />
           <span style={{ fontSize: 13, fontWeight: 800, color: "white" }}>문의하기</span>
