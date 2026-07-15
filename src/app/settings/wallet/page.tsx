@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+﻿import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 import { getParentWalletAction } from "@/actions/parent-wallet";
@@ -66,7 +66,7 @@ export default async function ParentWalletPage() {
         <p className="detail-info-title">💡 충전 방법</p>
         <p className="detail-info-body">
           아래 계좌로 이체 후 금액을 입력하고 충전 요청 버튼을 눌러주세요.<br />
-          <strong style={{ color: "#5b21b6" }}>카카오뱅크 3333-01-0000000 (모나리)</strong><br />
+          <strong style={{ color: "var(--monari-hero)" }}>카카오뱅크 3333-01-0000000 (모나리)</strong><br />
           이체 메모에 가입 이메일을 적어주시면 빠르게 확인돼요.
         </p>
       </div>

@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Clock, Lock } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -42,7 +42,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
     <main className="px-4 pb-36 pt-8">
       <Link
         href={`/child/${id}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"
       >
         <ArrowLeft size={16} /> 돌아가기
       </Link>
@@ -148,15 +148,15 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
       )}
 
       {/* 약속 설명 */}
-      <div className="rounded-[20px] bg-[#f5f3ff] p-4">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#5b21b6", marginBottom: 6 }}>📌 약속이란?</p>
-        <p style={{ fontSize: 13, color: "#7c3aed", lineHeight: 1.7 }}>
+      <div className="rounded-[20px] bg-[var(--monari-hero-lo)] p-4">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginBottom: 6 }}>📌 약속이란?</p>
+        <p style={{ fontSize: 13, color: "var(--monari-hero)", lineHeight: 1.7 }}>
           부모님과 함께 정한 행동 약속을 지키면 이자율이 올라가요.
           이자율이 높을수록 남긴 돈에서 더 많은 이자가 생겨요.
         </p>
         <Link
           href={`/child/${id}/promise`}
-          className="mt-3 inline-block text-sm font-bold text-[#7c3aed]"
+          className="mt-3 inline-block text-sm font-bold text-[var(--monari-hero)]"
         >
           오늘 약속 체크하러 가기 →
         </Link>

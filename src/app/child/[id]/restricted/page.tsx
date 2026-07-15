@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getChildModeContext } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -33,9 +33,9 @@ export default async function ChildRestrictedPage({ params }: { params: Promise<
               {String(restriction.ends_at).slice(0, 10)}까지 제한돼요
             </p>
           )}
-          <div className="mt-8 rounded-[16px] bg-[#ede9fe] px-6 py-5">
-            <p className="text-sm font-bold text-[#5b21b6]">부모님께 물어보세요</p>
-            <p className="mt-1 text-xs text-[#6d28d9]">왜 막혀있는지 부모님께 여쭤봐요!</p>
+          <div className="mt-8 rounded-[16px] bg-[var(--monari-hero-lo)] px-6 py-5">
+            <p className="text-sm font-bold text-[var(--monari-hero)]">부모님께 물어보세요</p>
+            <p className="mt-1 text-xs text-[var(--monari-hero)]">왜 막혀있는지 부모님께 여쭤봐요!</p>
           </div>
           <Link
             href={`/child/${id}`}

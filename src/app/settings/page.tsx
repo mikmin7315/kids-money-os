@@ -1,4 +1,4 @@
-import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
+﻿import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
@@ -125,7 +125,7 @@ export default async function SettingsPage() {
                         <Link href={`/settings/children/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[#f3f4f6] px-3 text-xs font-bold text-[#374151]">
                           수정·삭제
                         </Link>
-                        <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[#f5f3ff] px-3 text-xs font-bold text-[#5b21b6]">
+                        <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-hero-lo)] px-3 text-xs font-bold text-[var(--monari-hero)]">
                           이자 확정 🔒
                         </Link>
                       </div>
@@ -175,10 +175,10 @@ export default async function SettingsPage() {
             <p className="text-sm font-extrabold text-[#065f46]">정기 용돈 설정</p>
             <p className="text-xs text-[#059669]/70">매주·매월 자동 지급</p>
           </Link>
-          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[20px] bg-[#ede9fe] p-4 transition active:scale-[0.97]">
+          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[20px] bg-[var(--monari-hero-lo)] p-4 transition active:scale-[0.97]">
             <PiggyBank size={22} className="text-[var(--monari-hero)]" />
-            <p className="text-sm font-extrabold text-[#4c1d95]">이자율 설정</p>
-            <p className="text-xs text-[#7c3aed]/70">약속 기반 이자 설정</p>
+            <p className="text-sm font-extrabold text-[var(--monari-hero)]">이자율 설정</p>
+            <p className="text-xs text-[var(--monari-hero)]/70">약속 기반 이자 설정</p>
           </Link>
           <Link href="/settings/interest-history" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
             <ReceiptText size={22} className="text-[#059669]" />

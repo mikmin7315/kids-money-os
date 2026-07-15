@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -84,10 +84,10 @@ export default async function AdminBehaviorsPage() {
               <div key={s.name} className="rounded-[12px] bg-white p-3 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-sm font-semibold text-[var(--color-text)]">{s.name}</p>
-                  <span className="text-sm font-black text-[#7c3aed]">{s.rate}%</span>
+                  <span className="text-sm font-black text-[var(--monari-hero)]">{s.rate}%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#f3f4f6]">
-                  <div className="h-1.5 rounded-full bg-[#7c3aed]" style={{ width: `${s.rate}%` }} />
+                  <div className="h-1.5 rounded-full bg-[var(--monari-hero)]" style={{ width: `${s.rate}%` }} />
                 </div>
                 <p className="mt-1 text-[10px] text-[var(--color-muted)]">{s.achieved}/{s.total}회 달성</p>
               </div>

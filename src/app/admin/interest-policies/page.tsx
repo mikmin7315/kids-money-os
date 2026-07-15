@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -68,7 +68,7 @@ export default async function AdminInterestPoliciesPage() {
           ].map(({ label, value }) => (
             <div key={label} className="rounded-[12px] bg-white p-3 text-center shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
-              <p className="mt-1 text-sm font-black text-[#7c3aed]">{value}</p>
+              <p className="mt-1 text-sm font-black text-[var(--monari-hero)]">{value}</p>
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Bell, Wrench, Zap } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
@@ -7,7 +7,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 const TYPE_INFO: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  notice:      { icon: <Bell size={16} />,   label: "공지",     color: "bg-[#ede9fe] text-[#5b21b6]" },
+  notice:      { icon: <Bell size={16} />,   label: "공지",     color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
   maintenance: { icon: <Wrench size={16} />, label: "점검 안내", color: "bg-[#fef3c7] text-[#92400e]" },
   update:      { icon: <Zap size={16} />,    label: "업데이트",  color: "bg-[#d1fae5] text-[#065f46]" },
 };
@@ -37,7 +37,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href="/announcements" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href="/announcements" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 공지 목록
       </Link>
 
@@ -62,7 +62,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
       </div>
 
       <div className="mt-6">
-        <Link href="/support" className="text-sm font-bold text-[#7c3aed]">문의하기 →</Link>
+        <Link href="/support" className="text-sm font-bold text-[var(--monari-hero)]">문의하기 →</Link>
       </div>
     </main>
   );

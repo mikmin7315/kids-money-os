@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -120,7 +120,7 @@ export default async function AdminChildrenPage() {
                     <td className="px-4 py-3 text-right tabular-nums font-semibold">{formatWon(r.balance)}</td>
                     <td className="px-4 py-3 text-right tabular-nums text-[var(--color-muted)]">{formatWon(r.savings_balance)}</td>
                     <td className="px-4 py-3 text-center">
-                      <span className="inline-block rounded-full bg-[#ede9fe] px-2 py-0.5 text-[11px] font-bold text-[#5b21b6]">
+                      <span className="inline-block rounded-full bg-[var(--monari-hero-lo)] px-2 py-0.5 text-[11px] font-bold text-[var(--monari-hero)]">
                         {r.interest_rate}%
                       </span>
                     </td>

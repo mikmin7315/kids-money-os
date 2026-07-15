@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -126,7 +126,7 @@ export function OnboardingCarousel() {
           {current > 0 && (
             <button
               onClick={prev}
-              className="flex-1 rounded-[18px] border-2 border-[#ede9fe] py-4 text-base font-extrabold text-[#7c3aed] transition active:scale-[0.97]"
+              className="flex-1 rounded-[18px] border-2 border-[var(--monari-hero-lo)] py-4 text-base font-extrabold text-[var(--monari-hero)] transition active:scale-[0.97]"
             >
               이전
             </button>
@@ -153,7 +153,7 @@ export function OnboardingCarousel() {
         {current === 0 && (
           <p className="mt-4 text-center text-xs text-[#9ca3af]">
             이미 계정이 있어요?{" "}
-            <Link href="/login" className="font-bold text-[#7c3aed]">
+            <Link href="/login" className="font-bold text-[var(--monari-hero)]">
               로그인하기
             </Link>
           </p>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
@@ -198,7 +198,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 {[
                   { label: "저축 비중", value: saveRatio, color: "bg-[#059669]" },
                   { label: "지출 비중", value: spendRatio, color: "bg-[#dc2626]" },
-                  { label: "약속 달성", value: Math.round(primary.monthReport.behaviorSuccessRate), color: "bg-[#7c3aed]" },
+                  { label: "약속 달성", value: Math.round(primary.monthReport.behaviorSuccessRate), color: "bg-[var(--monari-hero)]" },
                 ].map(({ label, value, color }) => (
                   <div key={label} className="mb-2">
                     <div className="flex justify-between text-[12px] mb-1">

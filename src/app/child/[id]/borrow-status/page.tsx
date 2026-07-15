@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -37,7 +37,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/borrow`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href={`/child/${id}/borrow`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 미리쓰기로
       </Link>
 
@@ -56,7 +56,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
           <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>미리쓰기를 모두 갚았어요. 잘 했어요!</p>
           <Link
             href={`/child/${id}/borrow`}
-            className="mt-5 block rounded-[14px] bg-[#7c3aed] py-3 text-sm font-extrabold text-white transition active:scale-[0.97]"
+            className="mt-5 block rounded-[14px] bg-[var(--monari-hero)] py-3 text-sm font-extrabold text-white transition active:scale-[0.97]"
           >
             새로 미리쓰기 요청하기
           </Link>
@@ -132,7 +132,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                 <div className="px-5 py-4">
                   <div className="flex items-center justify-between mb-2">
                     <p style={{ fontSize: 13, fontWeight: 700, color: "#6b7280" }}>상환 진행률</p>
-                    <p style={{ fontSize: 14, fontWeight: 800, color: "#7c3aed" }}>{paidRatio}%</p>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>{paidRatio}%</p>
                   </div>
                   <div className="h-3 rounded-full bg-[#f3f4f6] overflow-hidden">
                     <div

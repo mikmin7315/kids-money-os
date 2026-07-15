@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -12,7 +12,7 @@ const MINUS_TYPES: TransactionType[] = ["spend", "repay", "unsave"];
 
 const TX_META: Record<TransactionType, { label: string; emoji: string; color: string; bg: string }> = {
   allowance: { label: "용돈",      emoji: "💵", color: "#1d4ed8", bg: "#eff6ff" },
-  reward:    { label: "보상",      emoji: "🏅", color: "#7c3aed", bg: "#f5f3ff" },
+  reward:    { label: "보상",      emoji: "🏅", color: "var(--monari-hero)", bg: "var(--monari-hero-lo)" },
   interest:  { label: "이자",      emoji: "✨", color: "#059669", bg: "#f0fdf4" },
   save:      { label: "저금",      emoji: "🐷", color: "#2563eb", bg: "#eff6ff" },
   unsave:    { label: "저금 인출", emoji: "↩️", color: "#d97706", bg: "#fef3c7" },

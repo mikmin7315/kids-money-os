@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -47,7 +47,7 @@ export default async function AdminAuditLogsPage({ searchParams }: { searchParam
             {logs.map((l) => (
               <div key={l.id} className="px-4 py-3">
                 <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-[#ede9fe] px-2 py-0.5 text-[10px] font-bold text-[#5b21b6]">{l.action}</span>
+                  <span className="rounded-full bg-[var(--monari-hero-lo)] px-2 py-0.5 text-[10px] font-bold text-[var(--monari-hero)]">{l.action}</span>
                   <span className="text-[10px] text-[var(--color-muted)]">{String(l.created_at ?? "").slice(0, 16)}</span>
                 </div>
                 <p className="mt-1 text-xs text-[var(--color-muted)]">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -84,7 +84,7 @@ export default async function AdminReportsPage() {
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: "활성 아이", value: `${s.totalChildren}명`, color: "text-[var(--color-text)]" },
-              { label: "평균 이자율", value: `${s.avgRate}%`, color: "text-[#7c3aed]" },
+              { label: "평균 이자율", value: `${s.avgRate}%`, color: "text-[var(--monari-hero)]" },
               { label: "총 잔액", value: formatWon(s.totalBalance), color: "text-[#059669]" },
               { label: "총 저금", value: formatWon(s.totalSavings), color: "text-[#2563eb]" },
             ].map(({ label, value, color }) => (
@@ -137,11 +137,11 @@ export default async function AdminReportsPage() {
           <div className="rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-[var(--color-muted)]">전체 아이 평균</span>
-              <span className="text-lg font-black text-[#7c3aed]">{s.behaviorRate}%</span>
+              <span className="text-lg font-black text-[var(--monari-hero)]">{s.behaviorRate}%</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-[#f3f4f6]">
               <div
-                className="h-2.5 rounded-full bg-[#7c3aed] transition-all"
+                className="h-2.5 rounded-full bg-[var(--monari-hero)] transition-all"
                 style={{ width: `${Math.min(s.behaviorRate, 100)}%` }}
               />
             </div>

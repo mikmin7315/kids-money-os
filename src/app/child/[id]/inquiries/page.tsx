@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent, getAuthContext } from "@/lib/auth";
@@ -33,7 +33,7 @@ export default async function ChildInquiriesPage({ params }: { params: Promise<{
 
   return (
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/settings`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#7c3aed]">
+      <Link href={`/child/${id}/settings`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 설정으로
       </Link>
 
@@ -72,8 +72,8 @@ export default async function ChildInquiriesPage({ params }: { params: Promise<{
                   </div>
                   <p style={{ fontSize: 14, fontWeight: 700, color: "#1a0533" }}>{String(q.title)}</p>
                   {q.admin_reply && (
-                    <div className="mt-2 rounded-[10px] bg-[#f5f3ff] p-3">
-                      <p style={{ fontSize: 11, fontWeight: 600, color: "#5b21b6", marginBottom: 4 }}>운영팀 답변</p>
+                    <div className="mt-2 rounded-[10px] bg-[var(--monari-hero-lo)] p-3">
+                      <p style={{ fontSize: 11, fontWeight: 600, color: "var(--monari-hero)", marginBottom: 4 }}>운영팀 답변</p>
                       <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6 }}>{String(q.admin_reply)}</p>
                     </div>
                   )}

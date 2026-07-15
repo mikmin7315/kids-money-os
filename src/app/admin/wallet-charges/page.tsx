@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireAdminSession } from "@/lib/auth";
@@ -98,9 +98,9 @@ export default async function AdminWalletChargesPage() {
                   대기
                 </span>
               </div>
-              <div className="mb-4 rounded-[14px] bg-[#f5f3ff] p-3">
+              <div className="mb-4 rounded-[14px] bg-[var(--monari-hero-lo)] p-3">
                 <p className="text-xs font-semibold text-[var(--monari-hero)]">충전 요청 금액</p>
-                <p className="mt-1 text-xl font-black text-[#4c1d95]">{formatWon(charge.amount)}</p>
+                <p className="mt-1 text-xl font-black text-[var(--monari-hero)]">{formatWon(charge.amount)}</p>
                 <p className="mt-0.5 text-xs text-[var(--monari-ink-muted)]">{charge.method}</p>
               </div>
               <AdminWalletChargeActions chargeId={charge.id} />

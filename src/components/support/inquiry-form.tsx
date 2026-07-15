@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { submitInquiryAction } from "@/actions/inquiries";
@@ -73,7 +73,7 @@ export function InquirySubmitForm() {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-[14px] bg-[#7c3aed] py-3 text-base font-extrabold text-white transition active:scale-[0.97] disabled:opacity-50"
+        className="w-full rounded-[14px] bg-[var(--monari-hero)] py-3 text-base font-extrabold text-white transition active:scale-[0.97] disabled:opacity-50"
       >
         {pending ? "접수 중..." : "문의 제출하기"}
       </button>

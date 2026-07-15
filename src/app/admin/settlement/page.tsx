@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -138,7 +138,7 @@ export default async function AdminSettlementPage({
                   <Link
                     key={r.id}
                     href={`/admin/settlement?run=${r.id}`}
-                    className={`flex items-center justify-between rounded-[14px] border px-4 py-3 transition ${isSelected ? "border-[var(--color-accent)] bg-[#f5f3ff]" : "border-[var(--color-border)] bg-white"}`}
+                    className={`flex items-center justify-between rounded-[14px] border px-4 py-3 transition ${isSelected ? "border-[var(--color-accent)] bg-[var(--monari-hero-lo)]" : "border-[var(--color-border)] bg-white"}`}
                   >
                     <div>
                       <p className="font-bold text-[var(--color-text)]">

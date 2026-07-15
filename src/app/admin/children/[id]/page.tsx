@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
@@ -63,7 +63,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
             {[
               { label: "잔액", value: formatWon(balance), color: "text-[#059669]" },
               { label: "저금", value: formatWon(savings), color: "text-[#2563eb]" },
-              { label: "이자율", value: `${rate}%`, color: "text-[#7c3aed]" },
+              { label: "이자율", value: `${rate}%`, color: "text-[var(--monari-hero)]" },
             ].map(({ label, value, color }) => (
               <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
                 <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
@@ -174,7 +174,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
                   <div key={e.id} className="flex items-center justify-between px-4 py-3">
                     <p className="text-sm text-[var(--color-text)]">{String(e.reason ?? "-")}</p>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-[#7c3aed]">{Number(e.new_rate)}%</p>
+                      <p className="text-sm font-bold text-[var(--monari-hero)]">{Number(e.new_rate)}%</p>
                       <p className="text-[11px] text-[var(--color-muted)]">{String(e.created_at ?? "").slice(0, 10)}</p>
                     </div>
                   </div>

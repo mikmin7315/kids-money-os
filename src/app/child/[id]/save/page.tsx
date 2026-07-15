@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import { ChildSaveForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -30,7 +30,7 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
       <div className="mb-6">
         <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
         <p className="mt-2" style={{ fontSize: 15, fontWeight: 600, color: "#9ca3af" }}>
-          지금 쓸 수 있는 돈 <span style={{ color: "#7c3aed", fontWeight: 800 }}>{formatWon(summary.wallet.balance)}</span>
+          지금 쓸 수 있는 돈 <span style={{ color: "var(--monari-hero)", fontWeight: 800 }}>{formatWon(summary.wallet.balance)}</span>
         </p>
       </div>
 

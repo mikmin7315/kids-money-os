@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { confirmInterestRateAction } from "@/actions/finance";
@@ -22,7 +22,7 @@ export function InterestConfirmForm({
         <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>{state.message}</p>
         <a
           href="/settings"
-          className="mt-6 block w-full rounded-[18px] bg-[#f3f0ff] py-4 text-base font-extrabold text-[#7c3aed] text-center"
+          className="mt-6 block w-full rounded-[18px] bg-[#f3f0ff] py-4 text-base font-extrabold text-[var(--monari-hero)] text-center"
         >
           설정으로 돌아가기
         </a>

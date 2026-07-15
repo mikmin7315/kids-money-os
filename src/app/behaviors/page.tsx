@@ -1,4 +1,4 @@
-import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
+﻿import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
 import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components/finance/delete-rule-button";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
@@ -21,7 +21,7 @@ export default async function BehaviorsPage() {
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
       <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
         <div className="grid grid-cols-3 divide-x divide-[#f3f4f6]">
-          <StatItem label="전체 약속" value={activeRules.length} unit="개" color="#7c3aed" />
+          <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
           <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
           <StatItem label="확인 필요" value={reviewRules} unit="개" color="#d97706" />
         </div>
@@ -135,10 +135,10 @@ function StatItem({ label, value, unit = "건", color }: { label: string; value:
 
 function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-[18px] bg-[#f5f3ff] p-3">
-      <p className="text-[12px] text-[#6d28d9]/60" style={{ fontWeight: 600 }}>{label}</p>
-      <p className="mt-1 text-[#4c1d95]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
-      {sub && <p className="mt-0.5 text-[11px] text-[#6d28d9]/50">{sub}</p>}
+    <div className="rounded-[18px] bg-[var(--monari-hero-lo)] p-3">
+      <p className="text-[12px] text-[var(--monari-hero)]/60" style={{ fontWeight: 600 }}>{label}</p>
+      <p className="mt-1 text-[var(--monari-hero)]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
+      {sub && <p className="mt-0.5 text-[11px] text-[var(--monari-hero)]/50">{sub}</p>}
     </div>
   );
 }

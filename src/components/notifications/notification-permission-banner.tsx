@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -43,14 +43,14 @@ export function NotificationPermissionBanner() {
   }
 
   return (
-    <div className="mb-6 rounded-[16px] bg-[#ede9fe] px-4 py-4">
-      <p style={{ fontSize: 14, fontWeight: 800, color: "#5b21b6" }}>🔔 알림을 허용해주세요</p>
-      <p style={{ fontSize: 12, color: "#7c3aed", marginTop: 4, lineHeight: 1.65, marginBottom: 12 }}>
+    <div className="mb-6 rounded-[16px] bg-[var(--monari-hero-lo)] px-4 py-4">
+      <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>🔔 알림을 허용해주세요</p>
+      <p style={{ fontSize: 12, color: "var(--monari-hero)", marginTop: 4, lineHeight: 1.65, marginBottom: 12 }}>
         약속 승인, 상환 알림 등 중요한 소식을 바로 받을 수 있어요.
       </p>
       <button
         onClick={requestPermission}
-        className="w-full rounded-[10px] bg-[#7c3aed] py-2.5 text-sm font-bold text-white"
+        className="w-full rounded-[10px] bg-[var(--monari-hero)] py-2.5 text-sm font-bold text-white"
       >
         알림 허용하기
       </button>

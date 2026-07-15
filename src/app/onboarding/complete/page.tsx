@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 
 export default async function OnboardingCompletePage() {
@@ -33,7 +33,7 @@ export default async function OnboardingCompletePage() {
       <div className="mt-10 w-full max-w-xs space-y-3">
         <Link
           href="/settings"
-          className="block w-full rounded-[16px] bg-[#7c3aed] py-4 text-[16px] font-extrabold text-white transition active:scale-[0.97]"
+          className="block w-full rounded-[16px] bg-[var(--monari-hero)] py-4 text-[16px] font-extrabold text-white transition active:scale-[0.97]"
         >
           아이 등록하기
         </Link>
