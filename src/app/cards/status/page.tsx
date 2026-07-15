@@ -7,12 +7,12 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 const STATUS_STEPS = [
-  { key: "initiated", label: "½ÅÃ» Á¢¼ö", desc: "Ä«µå ½ÅÃ»ÀÌ Á¢¼öµÆ¾î¿ä." },
-  { key: "submitted", label: "¼­·ù Á¦Ãâ", desc: "ÆÄÆ®³Ê»ç¿¡ ¼­·ù¸¦ Á¦ÃâÇß¾î¿ä." },
-  { key: "reviewing", label: "½É»ç Áß", desc: "ÆÄÆ®³Ê»ç¿¡¼­ ½É»ç ÁßÀÌ¿¡¿ä." },
-  { key: "approved", label: "½É»ç ¿Ï·á", desc: "Ä«µå ¹ß±ŞÀÌ ½ÂÀÎµÆ¾î¿ä." },
-  { key: "issued", label: "Ä«µå ¹ß±Ş", desc: "Ä«µå°¡ ¹ß±ŞµÆ¾î¿ä." },
-  { key: "delivery", label: "¹è¼Û Áß", desc: "Ä«µå°¡ ¹è¼Û ÁßÀÌ¿¡¿ä." },
+  { key: "initiated", label: "ì‹ ì²­ ì ‘ìˆ˜", desc: "ì¹´ë“œ ì‹ ì²­ì´ ì ‘ìˆ˜ëì–´ìš”." },
+  { key: "submitted", label: "ì„œë¥˜ ì œì¶œ", desc: "íŒŒíŠ¸ë„ˆì‚¬ì— ì„œë¥˜ë¥¼ ì œì¶œí–ˆì–´ìš”." },
+  { key: "reviewing", label: "ì‹¬ì‚¬ ì¤‘", desc: "íŒŒíŠ¸ë„ˆì‚¬ì—ì„œ ì‹¬ì‚¬ ì¤‘ì´ì—ìš”." },
+  { key: "approved", label: "ì‹¬ì‚¬ ì™„ë£Œ", desc: "ì¹´ë“œ ë°œê¸‰ì´ ìŠ¹ì¸ëì–´ìš”." },
+  { key: "issued", label: "ì¹´ë“œ ë°œê¸‰", desc: "ì¹´ë“œê°€ ë°œê¸‰ëì–´ìš”." },
+  { key: "delivery", label: "ë°°ì†¡ ì¤‘", desc: "ì¹´ë“œê°€ ë°°ì†¡ ì¤‘ì´ì—ìš”." },
 ];
 
 const STATUS_ORDER: Record<string, number> = {
@@ -50,33 +50,33 @@ export default async function CardStatusPage() {
   return (
     <PageContainer>
       <MobileShell>
-        <AppHeader eyebrow="Ä«µå" title="½ÅÃ» ÇöÈ²" />
+        <AppHeader eyebrow="ì¹´ë“œ" title="ì‹ ì²­ í˜„í™©" />
 
-        {/* P-20E: ¿¬µ¿ ½ÇÆĞ/¹İ·Á ¾È³» */}
+        {/* P-20E: ì—°ë™ ì‹¤íŒ¨/ë°˜ë ¤ ì•ˆë‚´ */}
         {failedApps.map((app) => (
           <div key={app.id} className="mb-4 rounded-[16px] border border-[var(--status-danger-solid-text)]/30 bg-[var(--status-danger-solid)] p-5">
             <div className="mb-3 flex items-center gap-3">
               <span style={{ fontSize: 28 }}>??</span>
               <div>
-                <p className="text-sm font-extrabold text-[var(--status-danger-solid-text)]">{app.child_name} Ä«µå ½ÅÃ» ½ÇÆĞ</p>
-                <p className="text-[11px] text-[var(--monari-minus)]">½ÅÃ»ÀÏ: {app.created_at.slice(0, 10)}</p>
+                <p className="text-sm font-extrabold text-[var(--status-danger-solid-text)]">{app.child_name} ì¹´ë“œ ì‹ ì²­ ì‹¤íŒ¨</p>
+                <p className="text-[11px] text-[var(--monari-minus)]">ì‹ ì²­ì¼: {app.created_at.slice(0, 10)}</p>
               </div>
             </div>
             {app.notes && (
-              <p className="mb-3 text-xs text-[var(--monari-minus)]">½ÇÆĞ »çÀ¯: {app.notes}</p>
+              <p className="mb-3 text-xs text-[var(--monari-minus)]">ì‹¤íŒ¨ ì‚¬ìœ : {app.notes}</p>
             )}
             <div className="flex gap-2">
               <Link
                 href="/cards/apply"
                 className="flex-1 rounded-[10px] bg-[var(--monari-minus)] py-2.5 text-center text-xs font-bold text-white"
               >
-                ´Ù½Ã ½ÅÃ»ÇÏ±â
+                ë‹¤ì‹œ ì‹ ì²­í•˜ê¸°
               </Link>
               <Link
                 href="/inquiries"
                 className="flex-1 rounded-[10px] border border-[var(--status-danger-solid-text)]/30 py-2.5 text-center text-xs font-bold text-[var(--status-danger-solid-text)]"
               >
-                °í°´¼¾ÅÍ ¹®ÀÇ
+                ê³ ê°ì„¼í„° ë¬¸ì˜
               </Link>
             </div>
           </div>
@@ -85,9 +85,9 @@ export default async function CardStatusPage() {
         {apps.length === 0 && failedApps.length === 0 && (
           <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-12 text-center">
             <p style={{ fontSize: 32, marginBottom: 8 }}>??</p>
-            <p className="text-sm font-semibold text-[var(--color-muted)]">½ÅÃ» ³»¿ªÀÌ ¾ø¾î¿ä.</p>
+            <p className="text-sm font-semibold text-[var(--color-muted)]">ì‹ ì²­ ë‚´ì—­ì´ ì—†ì–´ìš”.</p>
             <Link href="/cards/apply" className="mt-3 inline-block text-sm font-bold text-[var(--color-accent)]">
-              Ä«µå ½ÅÃ»ÇÏ±â ¡æ
+              ì¹´ë“œ ì‹ ì²­í•˜ê¸° â†’
             </Link>
           </div>
         )}
@@ -98,8 +98,8 @@ export default async function CardStatusPage() {
             <div key={app.id} className="mb-5 rounded-[16px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-extrabold text-[var(--color-text)]">{app.child_name} Ä«µå</p>
-                  <p className="text-[11px] text-[var(--color-muted)]">½ÅÃ»ÀÏ: {app.created_at.slice(0, 10)}</p>
+                  <p className="text-sm font-extrabold text-[var(--color-text)]">{app.child_name} ì¹´ë“œ</p>
+                  <p className="text-[11px] text-[var(--color-muted)]">ì‹ ì²­ì¼: {app.created_at.slice(0, 10)}</p>
                 </div>
                 <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
                   app.status === "delivery" ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" :
@@ -134,8 +134,8 @@ export default async function CardStatusPage() {
 
               <div className="mt-4 border-t border-[var(--color-border)] pt-3">
                 <p className="text-[11px] text-[var(--color-muted)]">
-                  ¹®ÀÇ°¡ ÀÖÀ¸½Å°¡¿ä?{" "}
-                  <Link href="/inquiries" className="font-bold text-[var(--color-accent)]">°í°´¼¾ÅÍ ¹®ÀÇÇÏ±â</Link>
+                  ë¬¸ì˜ê°€ ìˆìœ¼ì‹ ê°€ìš”?{" "}
+                  <Link href="/inquiries" className="font-bold text-[var(--color-accent)]">ê³ ê°ì„¼í„° ë¬¸ì˜í•˜ê¸°</Link>
                 </p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default async function CardStatusPage() {
         })}
 
         <div className="mt-4">
-          <Link href="/cards" className="text-sm font-bold text-[var(--color-accent)]">¡ç Ä«µå °ü¸®·Î</Link>
+          <Link href="/cards" className="text-sm font-bold text-[var(--color-accent)]">â† ì¹´ë“œ ê´€ë¦¬ë¡œ</Link>
         </div>
       </MobileShell>
     </PageContainer>
