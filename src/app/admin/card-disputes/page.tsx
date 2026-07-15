@@ -19,9 +19,9 @@ type DisputeRow = {
 };
 
 const DISPUTE_STYLE: Record<string, string> = {
-  open: "bg-[#fee2e2] text-[#991b1b]",
-  reviewing: "bg-[#fef3c7] text-[#92400e]",
-  resolved: "bg-[#d1fae5] text-[#065f46]",
+  open: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
+  reviewing: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
+  resolved: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
   rejected: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 const DISPUTE_LABEL: Record<string, string> = {
@@ -72,7 +72,7 @@ export default async function AdminCardDisputesPage() {
         <div className="mb-4 grid grid-cols-2 gap-3">
           <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">처리 필요</p>
-            <p className={`mt-1 text-lg font-black ${open.length > 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>{open.length}</p>
+            <p className={`mt-1 text-lg font-black ${open.length > 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>{open.length}</p>
           </div>
           <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">전체</p>

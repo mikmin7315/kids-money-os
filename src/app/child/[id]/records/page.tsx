@@ -11,14 +11,14 @@ export const dynamic = "force-dynamic";
 const MINUS_TYPES: TransactionType[] = ["spend", "repay", "unsave"];
 
 const TX_META: Record<TransactionType, { label: string; emoji: string; color: string; bg: string }> = {
-  allowance: { label: "용돈",      emoji: "💵", color: "#1d4ed8", bg: "#eff6ff" },
-  reward:    { label: "보상",      emoji: "🏅", color: "var(--monari-hero)", bg: "var(--monari-hero-lo)" },
-  interest:  { label: "이자",      emoji: "✨", color: "#059669", bg: "#f0fdf4" },
-  save:      { label: "저금",      emoji: "🐷", color: "#2563eb", bg: "#eff6ff" },
-  unsave:    { label: "저금 인출", emoji: "↩️", color: "#d97706", bg: "#fef3c7" },
-  spend:     { label: "사용",      emoji: "🛍️", color: "#be123c", bg: "#fff1f2" },
-  borrow:    { label: "미리쓰기",  emoji: "🤝", color: "#9f1239", bg: "#fecdd3" },
-  repay:     { label: "상환",      emoji: "💳", color: "#7c2d12", bg: "#ffedd5" },
+  allowance: { label: "용돈",      emoji: "💵", color: "var(--status-info-solid-text)",    bg: "var(--status-info-solid)" },
+  reward:    { label: "보상",      emoji: "🏅", color: "var(--monari-hero)",               bg: "var(--monari-hero-lo)" },
+  interest:  { label: "이자",      emoji: "✨", color: "var(--monari-done)",               bg: "var(--status-success-solid)" },
+  save:      { label: "저금",      emoji: "🐷", color: "var(--status-info-solid-text)",    bg: "var(--status-info-solid)" },
+  unsave:    { label: "저금 인출", emoji: "↩️", color: "var(--monari-primary-strong)",     bg: "var(--status-pending-solid)" },
+  spend:     { label: "사용",      emoji: "🛍️", color: "var(--status-rose-solid-text)",    bg: "var(--status-rose-solid)" },
+  borrow:    { label: "미리쓰기",  emoji: "🤝", color: "var(--status-rose-solid-text)",    bg: "var(--status-rose-solid)" },
+  repay:     { label: "상환",      emoji: "💳", color: "var(--status-danger-solid-text)",  bg: "var(--status-pending-solid)" },
 };
 
 function txLabel(type: TransactionType, memo?: string) {
@@ -71,7 +71,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
       <div className="grid grid-cols-2 gap-3 mb-5">
         <div className="detail-card" style={{ marginBottom: 0, padding: "18px" }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 6 }}>들어온 돈</p>
-          <p style={{ fontSize: 22, fontWeight: 900, color: "#059669", letterSpacing: "-0.02em" }} className="tabular-nums">
+          <p style={{ fontSize: 22, fontWeight: 900, color: "var(--monari-done)", letterSpacing: "-0.02em" }} className="tabular-nums">
             +{formatWon(totalIn)}
           </p>
         </div>
@@ -120,7 +120,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
                       </div>
                       <p
                         className="detail-row-value tabular-nums"
-                        style={{ color: minus ? "#be123c" : "#059669" }}
+                        style={{ color: minus ? "#be123c" : "var(--monari-done)" }}
                       >
                         {minus ? "-" : "+"}{formatWon(tx.amount)}
                       </p>

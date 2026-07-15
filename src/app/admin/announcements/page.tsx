@@ -34,9 +34,9 @@ async function loadAnnouncements(): Promise<{ rows: Ann[]; error?: string }> {
 }
 
 const STATUS_STYLE: Record<string, string> = {
-  active: "bg-[#d1fae5] text-[#065f46]",
+  active: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
   draft:  "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
-  ended:  "bg-[#fee2e2] text-[#991b1b]",
+  ended:  "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
 };
 const STATUS_LABEL: Record<string, string> = { active: "게시 중", draft: "임시저장", ended: "종료" };
 

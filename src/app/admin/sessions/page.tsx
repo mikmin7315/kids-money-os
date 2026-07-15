@@ -60,8 +60,8 @@ export default async function AdminSessionsPage() {
       <MobileShell>
         <AppHeader eyebrow="Admin · 보안" title="세션 관리 (A-S-01)" />
 
-        <div className="mb-4 rounded-[12px] bg-[#fef3c7] px-4 py-3">
-          <p className="text-xs font-semibold text-[#92400e]">
+        <div className="mb-4 rounded-[12px] bg-[var(--status-pending-solid)] px-4 py-3">
+          <p className="text-xs font-semibold text-[var(--status-pending-solid-text)]">
             Supabase Auth 제약: 특정 기기 세션 목록은 조회 불가합니다. 강제 로그아웃은 해당 사용자의 모든 세션을 종료합니다.
           </p>
         </div>
@@ -95,7 +95,7 @@ export default async function AdminSessionsPage() {
                   </p>
                   <p className="text-[10px] text-[var(--color-muted)]">
                     가입: {row.created_at.slice(0, 10)}
-                    {row.banned_until && <span className="ml-2 font-bold text-[#dc2626]">이용 정지 중</span>}
+                    {row.banned_until && <span className="ml-2 font-bold text-[var(--monari-minus)]">이용 정지 중</span>}
                   </p>
                 </div>
                 <ForceLogoutButton userId={row.id} />

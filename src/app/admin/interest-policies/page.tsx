@@ -66,14 +66,14 @@ export default async function AdminInterestPoliciesPage() {
             { label: "평균 기본 이자율", value: `${avgBase}%` },
             { label: "평균 현재 이자율", value: `${avgCurrent}%` },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-[12px] bg-white p-3 text-center shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+            <div key={label} className="rounded-[12px] bg-white p-3 text-center shadow-[var(--monari-shadow-sm)]">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
               <p className="mt-1 text-sm font-black text-[var(--monari-hero)]">{value}</p>
             </div>
           ))}
         </div>
 
-        <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
           {rows.length === 0 ? (
             <p className="px-4 py-10 text-center text-sm text-[var(--color-muted)]">이자율 정책 없음</p>
           ) : (
@@ -96,15 +96,15 @@ export default async function AdminInterestPoliciesPage() {
                     </td>
                     <td className="px-4 py-3 text-right tabular-nums font-semibold">{r.base_interest_rate}%</td>
                     <td className="px-4 py-3 text-right">
-                      <span className={`tabular-nums font-bold ${r.current_rate > r.base_interest_rate ? "text-[#059669]" : r.current_rate < r.base_interest_rate ? "text-[#dc2626]" : "text-[var(--color-text)]"}`}>
+                      <span className={`tabular-nums font-bold ${r.current_rate > r.base_interest_rate ? "text-[var(--monari-done)]" : r.current_rate < r.base_interest_rate ? "text-[var(--monari-minus)]" : "text-[var(--color-text)]"}`}>
                         {r.current_rate}%
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
                       {r.confirmed ? (
-                        <span className="text-[11px] font-bold text-[#059669]">✓ {r.confirmed_at}</span>
+                        <span className="text-[11px] font-bold text-[var(--monari-done)]">✓ {r.confirmed_at}</span>
                       ) : (
-                        <span className="text-[11px] font-bold text-[#d97706]">미확정</span>
+                        <span className="text-[11px] font-bold text-[var(--monari-primary-strong)]">미확정</span>
                       )}
                     </td>
                   </tr>

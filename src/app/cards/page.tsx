@@ -71,7 +71,7 @@ export default async function CardsPage() {
 
         {/* 카드 목록 */}
         {cardList.map((card) => (
-          <div key={card.id} className="mb-4 rounded-[16px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div key={card.id} className="mb-4 rounded-[16px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
             <div className="mb-4 flex items-start justify-between">
               <div>
                 <p className="text-sm font-extrabold text-[var(--color-text)]">{card.child_name} 카드</p>
@@ -79,9 +79,9 @@ export default async function CardsPage() {
               </div>
               <div className="flex flex-col items-end gap-1">
                 <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                  card.status === "active" ? "bg-[#d1fae5] text-[#065f46]" :
-                  card.status === "frozen" ? "bg-[#dbeafe] text-[#1e40af]" :
-                  card.status === "lost" ? "bg-[#fee2e2] text-[#991b1b]" :
+                  card.status === "active" ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" :
+                  card.status === "frozen" ? "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]" :
+                  card.status === "lost" ? "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]" :
                   "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
                 }`}>
                   {card.status === "active" ? "정상" : card.status === "frozen" ? "일시정지" : card.status === "lost" ? "분실신고" : card.status}
@@ -113,7 +113,7 @@ export default async function CardsPage() {
               </Link>
               <Link
                 href={`/cards/${card.id}/lost`}
-                className="flex-1 rounded-[10px] border border-[#fee2e2] py-2 text-center text-xs font-bold text-[#dc2626]"
+                className="flex-1 rounded-[10px] border border-[#fee2e2] py-2 text-center text-xs font-bold text-[var(--monari-minus)]"
               >
                 분실 신고
               </Link>

@@ -19,11 +19,11 @@ export default async function BehaviorsPage() {
 
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
-      <div className="mb-4 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
         <div className="grid grid-cols-3 divide-x divide-[var(--monari-line)]">
           <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
-          <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
-          <StatItem label="확인 필요" value={reviewRules} unit="개" color="#d97706" />
+          <StatItem label="자동 완료" value={autoRules} unit="개" color="var(--monari-done)" />
+          <StatItem label="확인 필요" value={reviewRules} unit="개" color="var(--monari-primary-strong)" />
         </div>
       </div>
 

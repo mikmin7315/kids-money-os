@@ -40,9 +40,9 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* 안내 카드 */}
-      <div className="mb-5 rounded-[24px] bg-[#fef3c7] p-4">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>💡 이렇게 쓸 때 기록해요</p>
-        <ul className="mt-2 space-y-1" style={{ fontSize: 13, color: "#b45309" }}>
+      <div className="mb-5 rounded-[24px] bg-[var(--status-pending-solid)] p-4">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-pending-solid-text)" }}>💡 이렇게 쓸 때 기록해요</p>
+        <ul className="mt-2 space-y-1" style={{ fontSize: 13, color: "var(--monari-pending)" }}>
           <li>• 편의점에서 현금으로 살 때</li>
           <li>• 학교 급식비·현장학습비 낼 때</li>
           <li>• 용돈을 현금으로 받아서 쓸 때</li>
@@ -50,7 +50,7 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* 입력 폼 */}
-      <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
         <CashSpendForm childId={id} />
       </div>
     </main>

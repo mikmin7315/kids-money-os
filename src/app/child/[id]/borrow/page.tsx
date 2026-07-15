@@ -45,7 +45,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
         {totalActive > 0 && (
           <Link
             href={`/child/${id}/borrow-status`}
-            className="flex items-center gap-1 rounded-[12px] bg-[#fecdd3] px-3 py-2 text-xs font-bold text-[#be123c] transition active:scale-[0.97]"
+            className="flex items-center gap-1 rounded-[12px] bg-[var(--status-rose-solid)] px-3 py-2 text-xs font-bold text-[var(--status-rose-solid-text)] transition active:scale-[0.97]"
           >
             현황 보기 <ArrowRight size={13} />
           </Link>
@@ -55,26 +55,26 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
       {/* 진행 중 요약 배너 */}
       {totalActive > 0 && (
         <Link href={`/child/${id}/borrow-status`} className="mb-5 block">
-          <div className="rounded-[24px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] overflow-hidden shadow-[var(--monari-shadow-md)]">
             {pendingBorrows.length > 0 && (
-              <div className="bg-[#fef3c7] px-5 py-4">
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>⏳ 부모님 확인 기다리는 중</p>
+              <div className="bg-[var(--status-pending-solid)] px-5 py-4">
+                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-pending-solid-text)" }}>⏳ 부모님 확인 기다리는 중</p>
                 {pendingBorrows.map((r) => (
-                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#b45309" }}>
+                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-pending)" }}>
                     {formatWon(r.requestedAmount)} — {r.purpose}
                   </p>
                 ))}
               </div>
             )}
             {activeBorrows.length > 0 && (
-              <div className="bg-[#fecdd3] px-5 py-4">
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#9f1239" }}>📋 갚는 중 ({activeBorrows.length}건)</p>
+              <div className="bg-[var(--status-rose-solid)] px-5 py-4">
+                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-rose-solid-text)" }}>📋 갚는 중 ({activeBorrows.length}건)</p>
                 {activeBorrows.map((r) => (
-                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "#be123c" }}>
+                  <p key={r.id} className="mt-1 tabular-nums" style={{ fontSize: 18, fontWeight: 800, color: "var(--status-rose-solid-text)" }}>
                     {formatWon(r.requestedAmount)} — {r.purpose}
                   </p>
                 ))}
-                <p className="mt-2 flex items-center gap-1 text-xs font-bold text-[#be123c]">
+                <p className="mt-2 flex items-center gap-1 text-xs font-bold text-[var(--status-rose-solid-text)]">
                   자세한 현황 보기 <ArrowRight size={12} />
                 </p>
               </div>
@@ -85,7 +85,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
 
       {/* 새 요청 폼 */}
       <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>새 미리쓰기 요청</p>
-      <div className="rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)]">
         <BorrowRequestQuickForm childId={id} />
       </div>
 

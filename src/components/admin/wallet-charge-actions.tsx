@@ -7,7 +7,7 @@ export function AdminWalletChargeActions({ chargeId }: { chargeId: string }) {
   const [approveState, approveAction, approvePending] = useActionState(approveWalletChargeAction, { ok: false, message: "" });
   const [rejectState, rejectAction, rejectPending] = useActionState(rejectWalletChargeAction, { ok: false, message: "" });
 
-  if (approveState.ok) return <p className="text-sm font-bold text-[#059669]">✓ 충전 승인 완료</p>;
+  if (approveState.ok) return <p className="text-sm font-bold text-[var(--monari-done)]">✓ 충전 승인 완료</p>;
   if (rejectState.ok) return <p className="text-sm font-bold text-[var(--monari-ink-muted)]">반려 완료</p>;
 
   const pending = approvePending || rejectPending;

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { processDeletionAction } from "@/actions/admin-policy";
@@ -11,7 +11,7 @@ export function DeletionProcessForm({ requestId }: { requestId: string }) {
   return (
     <form action={formAction} className="flex gap-2">
       <input type="hidden" name="request_id" value={requestId} />
-      {state.message && <p className={`mr-2 self-center text-xs font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>}
+      {state.message && <p className={`mr-2 self-center text-xs font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>}
       <button type="submit" name="action" value="complete" disabled={pending}
         className="flex-1 rounded-[8px] bg-[#dc2626] py-2 text-xs font-bold text-white disabled:opacity-50">
         삭제 완료

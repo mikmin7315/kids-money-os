@@ -83,7 +83,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
 
       {/* 월별 이자 내역 */}
       {months.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
           <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>아직 받은 이자가 없어요</p>
           <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
@@ -95,12 +95,12 @@ export default async function InterestReceivedPage({ params }: { params: Promise
           {months.map(({ month, items, total }) => {
             const [y, m] = month.split("-");
             return (
-              <div key={month} className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div key={month} className="overflow-hidden rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)]">
                 <div className="flex items-center justify-between border-b border-[var(--monari-line)] px-5 py-3">
                   <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>
                     {y}년 {m}월
                   </p>
-                  <p className="tabular-nums" style={{ fontSize: 16, fontWeight: 900, color: "#059669" }}>
+                  <p className="tabular-nums" style={{ fontSize: 16, fontWeight: 900, color: "var(--monari-done)" }}>
                     +{formatWon(total)}
                   </p>
                 </div>
@@ -114,7 +114,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
                         <p style={{ fontSize: 11, color: "var(--monari-ink-muted)", marginTop: 2 }}>{tx.memo}</p>
                       )}
                     </div>
-                    <p className="tabular-nums" style={{ fontSize: 15, fontWeight: 800, color: "#059669" }}>
+                    <p className="tabular-nums" style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-done)" }}>
                       +{formatWon(tx.amount)}
                     </p>
                   </div>

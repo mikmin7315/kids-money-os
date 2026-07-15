@@ -19,12 +19,12 @@ export function CancelBorrowButton({ borrowRequestId }: { borrowRequestId: strin
     <form action={formAction} className="mt-3">
       <input type="hidden" name="borrowRequestId" value={borrowRequestId} />
       {state.message && !state.ok && (
-        <p className="mb-2 text-center text-xs text-[#dc2626]">{state.message}</p>
+        <p className="mb-2 text-center text-xs text-[var(--monari-minus)]">{state.message}</p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-[12px] border border-[#d97706] bg-transparent py-2.5 text-sm font-bold text-[#92400e] transition active:scale-[0.97] disabled:opacity-50"
+        className="w-full rounded-[12px] border border-[#d97706] bg-transparent py-2.5 text-sm font-bold text-[var(--status-pending-solid-text)] transition active:scale-[0.97] disabled:opacity-50"
       >
         {pending ? "취소 중..." : "요청 취소하기"}
       </button>

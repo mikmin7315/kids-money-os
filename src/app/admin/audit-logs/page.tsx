@@ -43,7 +43,7 @@ export default async function AdminAuditLogsPage({ searchParams }: { searchParam
         {logs.length === 0 ? (
           <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
         ) : (
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (
               <div key={l.id} className="px-4 py-3">
                 <div className="flex items-center justify-between">

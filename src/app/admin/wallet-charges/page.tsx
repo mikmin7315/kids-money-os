@@ -69,7 +69,7 @@ export default async function AdminWalletChargesPage() {
         <ArrowLeft size={16} /> 대시보드로
       </Link>
 
-      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
         <p className="text-sm font-bold text-[var(--monari-ink-muted)]">대기 중인 충전 요청</p>
         <p className="mt-1 text-3xl font-black text-[var(--monari-hero)]">{pending.length}건</p>
         <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">
@@ -78,14 +78,14 @@ export default async function AdminWalletChargesPage() {
       </div>
 
       {pending.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
           <p className="text-2xl">✅</p>
           <p className="mt-3 text-base font-extrabold text-[var(--monari-ink)]">대기 중인 충전 요청이 없어요</p>
         </div>
       ) : (
         <div className="space-y-3">
           {pending.map((charge) => (
-            <div key={charge.id} className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <div key={charge.id} className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
               <div className="mb-3 flex items-start justify-between">
                 <div>
                   <p className="text-sm font-extrabold text-[var(--monari-ink)]">{charge.parentName}</p>
@@ -94,7 +94,7 @@ export default async function AdminWalletChargesPage() {
                     {new Date(charge.createdAt).toLocaleString("ko-KR")}
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-[10px] bg-[#fef3c7] px-2.5 py-1 text-xs font-bold text-[#92400e]">
+                <span className="inline-flex items-center rounded-[10px] bg-[var(--status-pending-solid)] px-2.5 py-1 text-xs font-bold text-[var(--status-pending-solid-text)]">
                   대기
                 </span>
               </div>
@@ -128,16 +128,16 @@ export default async function AdminWalletChargesPage() {
                         {charge.reviewerName ? ` · ${charge.reviewerName}` : ""}
                       </p>
                       {isPaid && charge.balanceBefore != null && (
-                        <p className="mt-0.5 text-[11px] text-[#059669]">
+                        <p className="mt-0.5 text-[11px] text-[var(--monari-done)]">
                           잔액 {formatWon(charge.balanceBefore)} → {formatWon(charge.balanceAfter ?? 0)}
                         </p>
                       )}
                       {!isPaid && charge.rejectionReason && (
-                        <p className="mt-0.5 text-[11px] text-[#dc2626]">사유: {charge.rejectionReason}</p>
+                        <p className="mt-0.5 text-[11px] text-[var(--monari-minus)]">사유: {charge.rejectionReason}</p>
                       )}
                     </div>
                     <span className={`ml-2 shrink-0 rounded-[8px] px-2 py-1 text-[11px] font-700 ${
-                      isPaid ? "bg-[#d1fae5] text-[#065f46]" : "bg-[#fee2e2] text-[#991b1b]"
+                      isPaid ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" : "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]"
                     }`}>
                       {isPaid ? "승인" : "거절"}
                     </span>

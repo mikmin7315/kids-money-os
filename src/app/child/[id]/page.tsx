@@ -144,7 +144,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
         <div className="relative space-y-2">
           <Link href={`${base}/promise`} className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] bg-white transition active:scale-[0.97]"
-            style={{ fontSize: 17, fontWeight: 900, color: "#92400e" }}>
+            style={{ fontSize: 17, fontWeight: 900, color: "var(--status-pending-solid-text)" }}>
             <Check className="h-5 w-5" strokeWidth={3} /> 약속 체크하기
           </Link>
           <div className="grid grid-cols-3 gap-2">
@@ -184,7 +184,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 자세히 <ArrowRight className="inline h-3.5 w-3.5" />
               </Link>
             </div>
-            <div className="mb-8 mt-0 overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+            <div className="mb-8 mt-0 overflow-hidden rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)]">
               <div
                 className="px-5 py-4"
                 style={{ background: "linear-gradient(135deg,#b45309 0%,#d97706 100%)" }}
@@ -225,7 +225,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             전체 보기 <ArrowRight className="inline h-3.5 w-3.5" />
           </Link>
         </div>
-        <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+        <div className="overflow-hidden rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)]">
           {childTx.length === 0 ? (
             <p className="px-5 py-10 text-center" style={{ fontSize: 16, color: "var(--monari-ink-muted)" }}>아직 거래 내역이 없어요.</p>
           ) : (
@@ -239,7 +239,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                       <p className="truncate" style={{ fontSize: 16, fontWeight: 700, color: "var(--monari-ink)" }}>{txLabel(tx.type, tx.memo)}</p>
                       <p className="mt-0.5" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{relativeDate(tx.date, today)}</p>
                     </div>
-                    <p className="shrink-0 tabular-nums" style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", color: minus ? "var(--monari-ink)" : "#15803d" }}>
+                    <p className="shrink-0 tabular-nums" style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", color: minus ? "var(--monari-ink)" : "var(--monari-done)" }}>
                       {minus ? "-" : "+"}{formatWon(tx.amount)}
                     </p>
                   </li>
@@ -262,9 +262,9 @@ function KidSectionTitle({ children }: { children: React.ReactNode }) {
 function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: string; tone: "violet" | "green" | "blue" | "orange" }) {
   const tones = {
     violet: { bg: "var(--monari-hero-lo)", icon: "var(--monari-hero)", text: "var(--monari-hero)" },
-    green:  { bg: "#a7f3d0", icon: "#065f46", text: "#065f46" },
-    blue:   { bg: "#bfdbfe", icon: "#1d4ed8", text: "#1e40af" },
-    orange: { bg: "#fecdd3", icon: "#9f1239", text: "#9f1239" },
+    green:  { bg: "#a7f3d0", icon: "var(--status-success-solid-text)", text: "var(--status-success-solid-text)" },
+    blue:   { bg: "#bfdbfe", icon: "#1d4ed8", text: "var(--status-info-solid-text)" },
+    orange: { bg: "#fecdd3", icon: "var(--status-rose-solid-text)", text: "var(--status-rose-solid-text)" },
   };
   const t = tones[tone];
   return (

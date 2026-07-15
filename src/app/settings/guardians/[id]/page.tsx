@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
@@ -46,7 +46,7 @@ export default async function GuardianDetailPage({
       <MobileShell>
         <AppHeader eyebrow="설정 · 보호자" title="권한 설정" />
 
-        <div className="mb-5 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
           <p className="text-sm font-extrabold">{String(profile?.email ?? "-")}</p>
           <p className="text-[11px] text-[var(--color-muted)]">{String(child?.name ?? "-")} 담당 보호자</p>
         </div>

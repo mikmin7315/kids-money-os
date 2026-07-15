@@ -75,14 +75,14 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
                 아직 사용 내역이 없어요.
               </div>
             ) : (
-              <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+              <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
                 {(txs ?? []).map((t) => (
                   <div key={t.id} className="flex items-center justify-between px-4 py-3">
                     <div>
                       <p className="text-sm font-semibold">{t.merchant_name || "가맹점"}</p>
                       <p className="text-[11px] text-[var(--color-muted)]">{String(t.approved_at ?? "").slice(0, 10)}</p>
                     </div>
-                    <p className={`tabular-nums text-sm font-bold ${t.status === "approved" ? "text-[#dc2626]" : "text-[var(--monari-ink-muted)]"}`}>
+                    <p className={`tabular-nums text-sm font-bold ${t.status === "approved" ? "text-[var(--monari-minus)]" : "text-[var(--monari-ink-muted)]"}`}>
                       {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
                     </p>
                   </div>

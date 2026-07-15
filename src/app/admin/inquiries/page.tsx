@@ -23,9 +23,9 @@ const STATUS_LABEL: Record<string, string> = {
   pending: "접수됨", in_progress: "처리 중", resolved: "답변 완료", closed: "종료",
 };
 const STATUS_STYLE: Record<string, string> = {
-  pending:     "bg-[#fef3c7] text-[#92400e]",
-  in_progress: "bg-[#dbeafe] text-[#1d4ed8]",
-  resolved:    "bg-[#d1fae5] text-[#065f46]",
+  pending:     "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
+  in_progress: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]",
+  resolved:    "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
   closed:      "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 
@@ -86,8 +86,8 @@ export default async function AdminInquiriesPage({
         <div className="mb-4 grid grid-cols-3 gap-3">
           {[
             { label: "전체", value: rows.length, c: "" },
-            { label: "미처리", value: pending.length, c: "text-[#dc2626]" },
-            { label: "완료", value: rows.filter((r) => r.status === "resolved").length, c: "text-[#059669]" },
+            { label: "미처리", value: pending.length, c: "text-[var(--monari-minus)]" },
+            { label: "완료", value: rows.filter((r) => r.status === "resolved").length, c: "text-[var(--monari-done)]" },
           ].map(({ label, value, c }) => (
             <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>

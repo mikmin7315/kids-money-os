@@ -71,14 +71,14 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         >
           <div className="flex items-center justify-between">
             <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "var(--monari-hero)", opacity: 0.7 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "var(--status-success-solid-text)" : "var(--monari-hero)", opacity: 0.7 }}>
                 {allDone ? "오늘 모두 완료! 🎉" : "오늘 약속"}
               </p>
               <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#064e3b" : "var(--monari-hero)", letterSpacing: "-0.03em" }}>
                 {todayDone}/{todayTotal}개 완료
               </p>
               {streak > 0 && (
-                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#065f46" : "var(--monari-hero)" }}>
+                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "var(--status-success-solid-text)" : "var(--monari-hero)" }}>
                   🔥 {streak}일 연속 달성 중!
                 </p>
               )}
@@ -89,7 +89,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       )}
 
       {/* 주간 달성 캘린더 */}
-      <div className="mb-5 rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+      <div className="mb-5 rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)]">
         <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 12 }}>이번 주 기록</p>
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
@@ -117,14 +117,14 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
 
       {/* 약속 목록 */}
       {activeRules.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-lift)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
           <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>약속이 없어요</p>
           <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>부모님과 함께 새로운 약속을 만들어봐요!</p>
         </div>
       ) : (
         <>
-          <div className="rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)]">
             <ChildBehaviorCheckForm
               childId={id}
               behaviorRules={activeRules}
@@ -135,9 +135,9 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
 
           {/* 오늘 다 하면 받을 수 있는 보상 */}
           {totalReward > 0 && !allDone && (
-            <div className="mt-4 rounded-[24px] bg-[#fef3c7] p-4">
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>오늘 약속 다 하면</p>
-              <p className="mt-1" style={{ fontSize: 20, fontWeight: 900, color: "#b45309" }}>
+            <div className="mt-4 rounded-[24px] bg-[var(--status-pending-solid)] p-4">
+              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-pending-solid-text)" }}>오늘 약속 다 하면</p>
+              <p className="mt-1" style={{ fontSize: 20, fontWeight: 900, color: "var(--monari-pending)" }}>
                 💰 최대 {totalReward.toLocaleString()}원 보상!
               </p>
             </div>

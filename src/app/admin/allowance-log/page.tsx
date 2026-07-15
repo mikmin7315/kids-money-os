@@ -72,10 +72,10 @@ async function loadExecutions(): Promise<{ rows: ExecRow[]; error?: string }> {
 }
 
 const STATUS_STYLE: Record<string, string> = {
-  success: "bg-[#d1fae5] text-[#065f46]",
-  failed: "bg-[#fee2e2] text-[#991b1b]",
+  success: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
+  failed: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
   pending: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
-  skipped: "bg-[#fef3c7] text-[#92400e]",
+  skipped: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
 };
 
 export default async function AdminAllowanceLogPage() {
@@ -98,8 +98,8 @@ export default async function AdminAllowanceLogPage() {
         <div className="mb-5 grid grid-cols-3 gap-3">
           {[
             { label: "전체", value: rows.length, color: "text-[var(--color-text)]" },
-            { label: "성공", value: success.length, color: "text-[#059669]" },
-            { label: "실패", value: failed.length, color: "text-[#dc2626]" },
+            { label: "성공", value: success.length, color: "text-[var(--monari-done)]" },
+            { label: "실패", value: failed.length, color: "text-[var(--monari-minus)]" },
           ].map(({ label, value, color }) => (
             <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
@@ -111,23 +111,23 @@ export default async function AdminAllowanceLogPage() {
         {/* 실패 항목 먼저 표시 */}
         {failed.length > 0 && (
           <section className="mb-6">
-            <p className="mb-3 text-sm font-extrabold text-[#991b1b]">⚠️ 미지급 실패 내역</p>
+            <p className="mb-3 text-sm font-extrabold text-[var(--status-danger-solid-text)]">⚠️ 미지급 실패 내역</p>
             <div className="space-y-2">
               {failed.map((r) => (
-                <div key={r.id} className="rounded-[14px] border border-[#fecaca] bg-[#fff1f2] px-4 py-3">
+                <div key={r.id} className="rounded-[14px] border border-[var(--status-danger-solid-text)]/30 bg-[var(--status-danger-solid)] px-4 py-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-bold text-[#991b1b]">
+                      <p className="font-bold text-[var(--status-danger-solid-text)]">
                         {r.child_name} · {r.rule_title}
                       </p>
-                      <p className="text-xs text-[#b91c1c]">{r.scheduled_date}</p>
+                      <p className="text-xs text-[var(--monari-minus)]">{r.scheduled_date}</p>
                     </div>
-                    <p className="shrink-0 tabular-nums font-bold text-[#991b1b]">
+                    <p className="shrink-0 tabular-nums font-bold text-[var(--status-danger-solid-text)]">
                       {formatWon(r.amount)}
                     </p>
                   </div>
                   {r.failure_reason && (
-                    <p className="mt-2 text-xs text-[#dc2626]">{r.failure_reason}</p>
+                    <p className="mt-2 text-xs text-[var(--monari-minus)]">{r.failure_reason}</p>
                   )}
                   <RetryAllowanceButton scheduledDate={r.scheduled_date} />
                 </div>

@@ -96,7 +96,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 이자 계산 설명 */}
-      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
         <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>어떻게 계산돼요?</p>
         <div className="space-y-3">
           <CalcRow
@@ -110,7 +110,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
               label="약속 달성 보너스"
               value={`+${formatPercent(behaviorBonus)}`}
               desc={`${childLogs.length}개 약속 달성`}
-              color="#059669"
+              color="var(--monari-done)"
             />
           )}
           <div className="border-t border-[var(--monari-line)] pt-3">
@@ -132,7 +132,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
 
       {/* 행동 약속 기여 */}
       {activeRules.length > 0 && (
-        <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>약속별 이자 기여</p>
           <div className="space-y-2">
             {activeRules.map((rule) => {
@@ -141,14 +141,14 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
                 <div key={rule.id} className="flex items-center gap-3">
                   <span
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-base"
-                    style={{ background: done ? "#d1fae5" : "#f3f4f6" }}
+                    style={{ background: done ? "var(--status-success-solid)" : "var(--monari-surface-soft)" }}
                   >
                     {done ? "⭐" : "○"}
                   </span>
                   <p style={{ fontSize: 14, fontWeight: 600, color: done ? "var(--monari-ink)" : "var(--monari-ink-muted)", flex: 1 }} className="truncate">
                     {rule.title}
                   </p>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: done ? "#059669" : "#d1d5db" }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: done ? "var(--monari-done)" : "var(--monari-ink-muted)" }}>
                     {rule.interestDelta > 0 ? `+${formatPercent(rule.interestDelta)}` : "—"}
                   </p>
                 </div>
@@ -160,16 +160,16 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
 
       {/* 이번 달 받은 이자 */}
       {interestTx.length > 0 && (
-        <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <div className="mb-3 flex items-center justify-between">
             <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>이번 달 받은 이자</p>
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#059669" }}>+{formatWon(totalReceivedThisMonth)}</p>
+            <p style={{ fontSize: 18, fontWeight: 900, color: "var(--monari-done)" }}>+{formatWon(totalReceivedThisMonth)}</p>
           </div>
           <div className="space-y-2">
             {interestTx.map((tx) => (
               <div key={tx.id} className="flex items-center justify-between">
                 <p style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{tx.date.slice(5).replace("-", "월 ")}일</p>
-                <p style={{ fontSize: 14, fontWeight: 700, color: "#059669" }}>+{formatWon(tx.amount)}</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-done)" }}>+{formatWon(tx.amount)}</p>
               </div>
             ))}
           </div>

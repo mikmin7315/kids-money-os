@@ -17,7 +17,7 @@ function ToggleRow({
 }) {
   const [, formAction, pending] = useActionState(action, { ok: false, message: "" });
   return (
-    <form action={formAction} className="flex items-center justify-between rounded-[14px] bg-white px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <form action={formAction} className="flex items-center justify-between rounded-[14px] bg-white px-4 py-3 shadow-[var(--monari-shadow-md)]">
       <input type="hidden" name="notif_type" value={notifType} />
       <input type="hidden" name="enabled" value={String(!enabled)} />
       <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }}>{label}</p>

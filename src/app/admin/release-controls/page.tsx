@@ -19,14 +19,14 @@ export default async function AdminReleaseControlsPage() {
       <MobileShell>
         <AppHeader eyebrow="Admin · 릴리즈" title="앱 설정 / 기능 플래그" />
 
-        <div className="mb-4 rounded-[16px] bg-[#fef3c7] p-3">
-          <p className="text-xs font-bold text-[#92400e]">⚠️ 주의</p>
-          <p className="mt-0.5 text-xs text-[#92400e]">
+        <div className="mb-4 rounded-[16px] bg-[var(--status-pending-solid)] p-3">
+          <p className="text-xs font-bold text-[var(--status-pending-solid-text)]">⚠️ 주의</p>
+          <p className="mt-0.5 text-xs text-[var(--status-pending-solid-text)]">
             maintenance_mode를 true로 설정하면 모든 사용자 접근이 차단됩니다.
           </p>
         </div>
 
-        <div className="mb-5 rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+        <div className="mb-5 rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
           {configs.map((c) => (
             <div key={c.key} className="px-4 py-4">
               <div className="mb-2 flex items-start justify-between">

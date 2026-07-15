@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { liftRestrictionAction } from "@/actions/admin-policy";
@@ -11,8 +11,8 @@ export function LiftRestrictionButton({ restrictionId }: { restrictionId: string
   return (
     <form action={formAction}>
       <input type="hidden" name="restriction_id" value={restrictionId} />
-      {state.message && <p className={`mb-1 text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>}
-      <button type="submit" disabled={pending} className="rounded-[8px] bg-[#d1fae5] px-3 py-1.5 text-xs font-bold text-[#065f46] disabled:opacity-50">
+      {state.message && <p className={`mb-1 text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>}
+      <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--status-success-solid)] px-3 py-1.5 text-xs font-bold text-[var(--status-success-solid-text)] disabled:opacity-50">
         {pending ? "..." : "해제"}
       </button>
     </form>

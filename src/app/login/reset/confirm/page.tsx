@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -87,7 +87,7 @@ export default function ResetPasswordConfirmPage() {
             </div>
 
             {(status === "error") && (
-              <p className="rounded-[12px] bg-[#fff1f2] px-4 py-3 text-[13px] font-600 text-[#be123c]">
+              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-600 text-[var(--status-rose-solid-text)]">
                 {errorMsg}
               </p>
             )}

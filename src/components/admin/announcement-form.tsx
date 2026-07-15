@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { createAnnouncementAction } from "@/actions/announcements";
@@ -12,7 +12,7 @@ export function AnnouncementForm() {
   return (
     <form action={formAction} className="space-y-3 rounded-[16px] border border-[var(--color-border)] bg-white p-4">
       {state.message && (
-        <p className={`text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>
+        <p className={`text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
           {state.message}
         </p>
       )}

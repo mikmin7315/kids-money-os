@@ -25,36 +25,36 @@ export default async function AdminCardLogsPage() {
         <AppHeader eyebrow="Admin · 카드" title="카드 연동 로그" />
 
         <div className="mb-4 grid grid-cols-2 gap-3">
-          <div className="rounded-[12px] bg-white p-3 text-center shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[12px] bg-white p-3 text-center shadow-[var(--monari-shadow-sm)]">
             <p className="text-[10px] text-[var(--color-muted)]">최근 60건</p>
             <p className="mt-1 text-lg font-black">{logs.length}</p>
           </div>
-          <div className="rounded-[12px] bg-white p-3 text-center shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[12px] bg-white p-3 text-center shadow-[var(--monari-shadow-sm)]">
             <p className="text-[10px] text-[var(--color-muted)]">에러</p>
-            <p className={`mt-1 text-lg font-black ${errorCount > 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>{errorCount}</p>
+            <p className={`mt-1 text-lg font-black ${errorCount > 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>{errorCount}</p>
           </div>
         </div>
 
         {logs.length === 0 ? (
           <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
         ) : (
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (
               <div key={l.id} className="px-4 py-3">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold text-[var(--color-text)]">{l.event_type}</p>
                   <div className="flex items-center gap-2">
-                    {l.retried && <span className="text-[10px] text-[#d97706]">재처리</span>}
+                    {l.retried && <span className="text-[10px] text-[var(--monari-primary-strong)]">재처리</span>}
                     <span className={`text-xs font-bold ${
                       !l.status_code ? "text-[var(--monari-ink-muted)]" :
-                      l.status_code < 300 ? "text-[#059669]" : "text-[#dc2626]"
+                      l.status_code < 300 ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"
                     }`}>
                       {l.status_code ?? "—"}
                     </span>
                   </div>
                 </div>
                 {l.error_message && (
-                  <p className="mt-0.5 text-[11px] text-[#dc2626]">{l.error_message}</p>
+                  <p className="mt-0.5 text-[11px] text-[var(--monari-minus)]">{l.error_message}</p>
                 )}
                 <p className="text-[10px] text-[var(--color-muted)]">
                   {l.card_id?.slice(0, 8) ?? "-"} · {String(l.created_at ?? "").slice(0, 19)}

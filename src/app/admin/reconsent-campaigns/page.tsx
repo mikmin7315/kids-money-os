@@ -35,8 +35,8 @@ async function loadCampaigns(): Promise<{ rows: Campaign[]; error?: string }> {
 
 const STATUS_STYLE: Record<string, string> = {
   draft: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
-  active: "bg-[#d1fae5] text-[#065f46]",
-  ended: "bg-[#fee2e2] text-[#991b1b]",
+  active: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
+  ended: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
 };
 const STATUS_LABEL: Record<string, string> = { draft: "초안", active: "진행 중", ended: "종료" };
 
@@ -62,7 +62,7 @@ export default async function ReconsentCampaignsPage() {
         <div className="mb-4 grid grid-cols-3 gap-3">
           {[
             { label: "전체", value: rows.length },
-            { label: "진행 중", value: active.length, color: "text-[#059669]" },
+            { label: "진행 중", value: active.length, color: "text-[var(--monari-done)]" },
             { label: "종료", value: rows.filter((r) => r.status === "ended").length },
           ].map(({ label, value, color }) => (
             <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
@@ -96,7 +96,7 @@ export default async function ReconsentCampaignsPage() {
                       {row.description && <p className="mt-0.5 text-[11px] text-[var(--color-muted)]">{row.description}</p>}
                       <div className="mt-1.5 flex gap-3 text-[10px] text-[var(--color-muted)]">
                         <span>유예 {row.grace_period_days}일</span>
-                        {row.block_on_expire && <span className="font-bold text-[#dc2626]">만료 시 차단</span>}
+                        {row.block_on_expire && <span className="font-bold text-[var(--monari-minus)]">만료 시 차단</span>}
                         {row.started_at && <span>시작: {row.started_at.slice(0, 10)}</span>}
                         {row.ended_at && <span>종료: {row.ended_at.slice(0, 10)}</span>}
                       </div>

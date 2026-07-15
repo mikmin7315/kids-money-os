@@ -29,12 +29,12 @@ export default async function ApprovalsPage() {
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
-      <div className="mb-4 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
         <div className="grid grid-cols-4 divide-x divide-[var(--monari-line)]">
           <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
-          <StatItem label="현금 대기" value={pendingCashRequests.length} color="#dc2626" />
-          <StatItem label="미리쓰기" value={pendingBorrows.length} color="#d97706" />
-          <StatItem label="상환 중" value={activeBorrows.length} color="#059669" />
+          <StatItem label="현금 대기" value={pendingCashRequests.length} color="var(--monari-minus)" />
+          <StatItem label="미리쓰기" value={pendingBorrows.length} color="var(--monari-primary-strong)" />
+          <StatItem label="상환 중" value={activeBorrows.length} color="var(--monari-done)" />
         </div>
       </div>
 
@@ -133,7 +133,7 @@ export default async function ApprovalsPage() {
                       )}
                       <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">{req.spendDate}</p>
                     </div>
-                    <span className="shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[#fff1f2] text-[#be123c]">
+                    <span className="shrink-0 inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)]">
                       확인 대기
                     </span>
                   </div>

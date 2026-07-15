@@ -16,17 +16,17 @@ export function NotificationPermissionBanner() {
 
   if (permission === "granted") {
     return (
-      <div className="mb-6 flex items-center gap-3 rounded-[16px] bg-[#d1fae5] px-4 py-3">
+      <div className="mb-6 flex items-center gap-3 rounded-[16px] bg-[var(--status-success-solid)] px-4 py-3">
         <span style={{ fontSize: 20 }}>✅</span>
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#065f46" }}>알림이 허용되어 있어요.</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-success-solid-text)" }}>알림이 허용되어 있어요.</p>
       </div>
     );
   }
 
   if (permission === "denied") {
     return (
-      <div className="mb-6 rounded-[16px] bg-[#fee2e2] px-4 py-3">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#991b1b" }}>🔕 알림이 차단되어 있어요</p>
+      <div className="mb-6 rounded-[16px] bg-[var(--status-danger-solid)] px-4 py-3">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-danger-solid-text)" }}>🔕 알림이 차단되어 있어요</p>
         <p style={{ fontSize: 12, color: "#b91c1c", marginTop: 4, lineHeight: 1.6 }}>
           브라우저 설정 → 알림에서 이 사이트의 알림을 허용으로 변경해주세요.
         </p>

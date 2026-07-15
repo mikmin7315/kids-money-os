@@ -16,7 +16,7 @@ export function InterestConfirmForm({
 
   if (state.ok) {
     return (
-      <div className="rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
         <p style={{ fontSize: 48, marginBottom: 12 }}>🔒</p>
         <p style={{ fontSize: 20, fontWeight: 900, color: "var(--monari-ink)" }}>이자 약속 확정!</p>
         <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>{state.message}</p>
@@ -31,7 +31,7 @@ export function InterestConfirmForm({
   }
 
   return (
-    <form action={action} className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <form action={action} className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
       <input type="hidden" name="childId" value={childId} />
 
       <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 4 }}>이 이자율로 확정할까요?</p>

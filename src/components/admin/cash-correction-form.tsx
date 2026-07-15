@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { createCashCorrectionAction } from "@/actions/admin-ops";
@@ -28,7 +28,7 @@ export function CashCorrectionForm({ childOptions }: { childOptions: { id: strin
         className="w-full rounded-[8px] border border-[var(--color-border)] px-3 py-2 text-sm"
       />
       {state.message && (
-        <p className={`text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
       <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--color-accent)] py-2 text-sm font-bold text-white disabled:opacity-50">
         {pending ? "처리 중..." : "정정 처리"}

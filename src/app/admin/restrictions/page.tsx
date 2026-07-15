@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -44,14 +44,14 @@ export default async function AdminRestrictionsPage() {
 
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">
-            현재 활성 제한 <span className={active.length > 0 ? "text-[#dc2626]" : "text-[#059669]"}>({active.length})</span>
+            현재 활성 제한 <span className={active.length > 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}>({active.length})</span>
           </p>
           {active.length === 0 ? (
-            <div className="rounded-[16px] bg-[#d1fae5] py-8 text-center text-sm font-bold text-[#065f46]">
+            <div className="rounded-[16px] bg-[var(--status-success-solid)] py-8 text-center text-sm font-bold text-[var(--status-success-solid-text)]">
               활성 제한 없음 ✓
             </div>
           ) : (
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {active.map((r) => (
                 <div key={r.id} className="px-4 py-3">
                   <div className="flex items-start justify-between gap-3">
@@ -59,7 +59,7 @@ export default async function AdminRestrictionsPage() {
                       <p className="text-sm font-semibold">{r.target_label}</p>
                       <p className="text-[11px] text-[var(--color-muted)]">{r.reason}</p>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="rounded-full bg-[#fee2e2] px-2 py-0.5 text-[10px] font-bold text-[#991b1b]">
+                        <span className="rounded-full bg-[var(--status-danger-solid)] px-2 py-0.5 text-[10px] font-bold text-[var(--status-danger-solid-text)]">
                           {TYPE_LABEL[r.type] ?? r.type}
                         </span>
                         {r.ends_at && <span className="text-[10px] text-[var(--color-muted)]">~{String(r.ends_at).slice(0, 10)}</span>}

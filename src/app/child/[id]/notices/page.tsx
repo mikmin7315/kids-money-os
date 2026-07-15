@@ -62,7 +62,7 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
       </div>
 
       {notices.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>📭</p>
           <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>공지사항이 없어요</p>
           <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>현재 새로운 공지가 없어요.</p>
@@ -70,7 +70,7 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
       ) : (
         <div className="space-y-3">
           {notices.map((a) => (
-            <div key={a.id} className="rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <div key={a.id} className="rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
               <div className="flex items-start gap-3">
                 <span style={{ fontSize: 28 }}>{TYPE_EMOJI[a.type] ?? "📢"}</span>
                 <div className="flex-1 min-w-0">

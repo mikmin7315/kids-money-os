@@ -60,7 +60,7 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
 
         {/* 부모 지갑 잔액 */}
         {parentWallet !== null && (
-          <div className="mb-4 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="mb-4 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-[var(--monari-hero)]" />
@@ -68,22 +68,22 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
               </div>
               <Link href="/settings/wallet" className="text-xs font-bold text-[var(--monari-hero)]">충전 →</Link>
             </div>
-            <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "#dc2626" : "var(--monari-ink)" }}>
+            <p className="mt-2 text-xl font-black tabular-nums" style={{ color: parentWallet.balance === 0 ? "var(--monari-minus)" : "var(--monari-ink)" }}>
               {formatWon(parentWallet.balance)}
             </p>
             {parentWallet.balance === 0 && (
-              <p className="mt-1 text-xs font-bold text-[#dc2626]">잔액이 없어요. 충전 후 용돈을 지급할 수 있어요.</p>
+              <p className="mt-1 text-xs font-bold text-[var(--monari-minus)]">잔액이 없어요. 충전 후 용돈을 지급할 수 있어요.</p>
             )}
           </div>
         )}
 
         {/* 이번 달 현황 */}
-        <div className="mb-6 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-6 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
           <p className="mb-3 text-xs font-bold text-[var(--monari-ink-muted)]">이번 달 지급 현황</p>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-[14px] bg-[#f0fdf4] p-3">
-              <p className="text-xs font-semibold text-[#059669]">받은 용돈</p>
-              <p className="mt-1 text-base font-black text-[#065f46]">
+            <div className="rounded-[14px] bg-[var(--status-success-solid)] p-3">
+              <p className="text-xs font-semibold text-[var(--monari-done)]">받은 용돈</p>
+              <p className="mt-1 text-base font-black text-[var(--status-success-solid-text)]">
                 {formatWon(summary.monthReport.totalAllowance)}
               </p>
             </div>

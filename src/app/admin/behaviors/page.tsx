@@ -81,7 +81,7 @@ export default async function AdminBehaviorsPage() {
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">약속별 달성률 (전체)</p>
           <div className="space-y-2">
             {stats.map((s) => (
-              <div key={s.name} className="rounded-[12px] bg-white p-3 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+              <div key={s.name} className="rounded-[12px] bg-white p-3 shadow-[var(--monari-shadow-sm)]">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-sm font-semibold text-[var(--color-text)]">{s.name}</p>
                   <span className="text-sm font-black text-[var(--monari-hero)]">{s.rate}%</span>
@@ -98,7 +98,7 @@ export default async function AdminBehaviorsPage() {
         {/* 최근 기록 */}
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">최근 행동 기록 (최대 60건)</p>
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
             {rows.length === 0 ? (
               <p className="px-4 py-10 text-center text-sm text-[var(--color-muted)]">기록 없음</p>
             ) : (
@@ -111,11 +111,11 @@ export default async function AdminBehaviorsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       {r.approved !== null && (
-                        <span className={`text-[10px] font-bold ${r.approved ? "text-[#059669]" : "text-[#dc2626]"}`}>
+                        <span className={`text-[10px] font-bold ${r.approved ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
                           {r.approved ? "승인됨" : "거절됨"}
                         </span>
                       )}
-                      <span className={`text-[11px] font-bold ${r.achieved ? "text-[#059669]" : "text-[#dc2626]"}`}>
+                      <span className={`text-[11px] font-bold ${r.achieved ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
                         {r.achieved ? "✓ 달성" : "✗ 미달성"}
                       </span>
                     </div>

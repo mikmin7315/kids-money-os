@@ -57,12 +57,12 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
         )}
 
         {/* 기본 정보 */}
-        <section className="mb-5 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <section className="mb-5 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
           <p className="mb-3 text-xs font-semibold text-[var(--color-muted)]">기본 정보</p>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: "잔액", value: formatWon(balance), color: "text-[#059669]" },
-              { label: "저금", value: formatWon(savings), color: "text-[#2563eb]" },
+              { label: "잔액", value: formatWon(balance), color: "text-[var(--monari-done)]" },
+              { label: "저금", value: formatWon(savings), color: "text-[var(--status-info-solid-text)]" },
               { label: "이자율", value: `${rate}%`, color: "text-[var(--monari-hero)]" },
             ].map(({ label, value, color }) => (
               <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
@@ -81,7 +81,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
         {/* 최근 거래 */}
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">최근 거래 (최대 20건)</p>
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
             {(txRes.data ?? []).length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-[var(--color-muted)]">거래 내역 없음</p>
             ) : (
@@ -109,7 +109,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
         {/* 미리쓰기 */}
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">미리쓰기 요청</p>
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
             {(borrowRes.data ?? []).length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-[var(--color-muted)]">미리쓰기 없음</p>
             ) : (
@@ -124,7 +124,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
                     </div>
                     <div className="text-right">
                       <p className="tabular-nums text-sm font-bold">{formatWon(Number(b.amount))}</p>
-                      <span className={`text-[11px] font-bold ${b.status === "approved" ? "text-[#059669]" : b.status === "pending" ? "text-[#d97706]" : "text-[var(--monari-ink-muted)]"}`}>
+                      <span className={`text-[11px] font-bold ${b.status === "approved" ? "text-[var(--monari-done)]" : b.status === "pending" ? "text-[var(--monari-primary-strong)]" : "text-[var(--monari-ink-muted)]"}`}>
                         {b.status === "approved" ? "승인" : b.status === "pending" ? "대기" : b.status === "repaid" ? "완납" : b.status === "cancelled" ? "취소" : String(b.status)}
                       </span>
                     </div>
@@ -138,7 +138,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
         {/* 행동 약속 */}
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">최근 행동 기록</p>
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
             {(behaviorRes.data ?? []).length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-[var(--color-muted)]">행동 기록 없음</p>
             ) : (
@@ -149,7 +149,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
                     <div key={b.id} className="flex items-center justify-between px-4 py-3">
                       <p className="text-sm text-[var(--color-text)]">{rule?.name ?? "-"}</p>
                       <div className="flex items-center gap-2">
-                        <span className={`text-[11px] font-bold ${b.achieved ? "text-[#059669]" : "text-[#dc2626]"}`}>
+                        <span className={`text-[11px] font-bold ${b.achieved ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
                           {b.achieved ? "✓ 달성" : "✗ 미달성"}
                         </span>
                         <span className="text-[11px] text-[var(--color-muted)]">{String(b.logged_at ?? "").slice(0, 10)}</span>
@@ -165,7 +165,7 @@ export default async function AdminChildDetailPage({ params }: { params: Promise
         {/* 이자율 변동 */}
         <section className="mb-5">
           <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">이자율 변동 이력</p>
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
             {(interestRes.data ?? []).length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-[var(--color-muted)]">이자율 변동 없음</p>
             ) : (

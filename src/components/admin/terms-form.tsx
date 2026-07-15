@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { createTermsAction } from "@/actions/terms";
@@ -14,7 +14,7 @@ export function TermsCreateForm() {
       <p className="text-sm font-extrabold text-[var(--color-text)]">새 약관 등록</p>
 
       {state.message && (
-        <p className={`text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
 
       <div className="grid grid-cols-2 gap-3">

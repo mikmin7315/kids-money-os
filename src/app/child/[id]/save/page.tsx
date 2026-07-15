@@ -37,13 +37,13 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
       {totalSaved > 0 && (
         <div className="mb-4 rounded-[24px] bg-[#bfdbfe] p-4">
           <p style={{ fontSize: 13, fontWeight: 600, color: "#1e40af99" }}>이번 달 저금 총액</p>
-          <p className="mt-1 tabular-nums" style={{ fontSize: 24, fontWeight: 900, color: "#1e40af", letterSpacing: "-0.03em" }}>
+          <p className="mt-1 tabular-nums" style={{ fontSize: 24, fontWeight: 900, color: "var(--status-info-solid-text)", letterSpacing: "-0.03em" }}>
             {formatWon(totalSaved)}
           </p>
         </div>
       )}
 
-      <div className="rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)]">
         <ChildSaveForm childId={id} availableBalance={summary.wallet.balance} />
       </div>
     </main>

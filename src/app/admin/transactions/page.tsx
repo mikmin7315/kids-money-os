@@ -96,7 +96,7 @@ export default async function AdminTransactionsPage({
           ))}
         </div>
 
-        <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
           {rows.length === 0 ? (
             <p className="px-4 py-10 text-center text-sm text-[var(--color-muted)]">거래 내역이 없어요.</p>
           ) : (

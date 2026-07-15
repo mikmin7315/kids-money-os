@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { cancelInviteAction } from "@/actions/guardians";
@@ -14,7 +14,7 @@ export function CancelInviteButton({ inviteId }: { inviteId: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-[8px] border border-[#fee2e2] px-2 py-1 text-[11px] font-bold text-[#dc2626] disabled:opacity-50"
+        className="rounded-[8px] border border-[#fee2e2] px-2 py-1 text-[11px] font-bold text-[var(--monari-minus)] disabled:opacity-50"
       >
         취소
       </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { addMerchantMappingAction, deleteMerchantMappingAction } from "@/actions/admin-ops";
@@ -21,7 +21,7 @@ export function MerchantMappingAddForm() {
         className="w-full rounded-[8px] border border-[var(--color-border)] px-3 py-2 text-sm"
       />
       {state.message && (
-        <p className={`text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
       <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--color-accent)] py-2 text-sm font-bold text-white disabled:opacity-50">
         {pending ? "추가 중..." : "매핑 추가"}
@@ -35,8 +35,8 @@ export function MerchantMappingDeleteButton({ mappingId }: { mappingId: string }
   return (
     <form action={formAction}>
       <input type="hidden" name="mapping_id" value={mappingId} />
-      {state.message && !state.ok && <p className="mb-1 text-[10px] text-[#dc2626]">{state.message}</p>}
-      <button type="submit" disabled={pending} className="rounded-[8px] bg-[#fee2e2] px-2.5 py-1 text-[11px] font-bold text-[#991b1b] disabled:opacity-50">
+      {state.message && !state.ok && <p className="mb-1 text-[10px] text-[var(--monari-minus)]">{state.message}</p>}
+      <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--status-danger-solid)] px-2.5 py-1 text-[11px] font-bold text-[var(--status-danger-solid-text)] disabled:opacity-50">
         삭제
       </button>
     </form>

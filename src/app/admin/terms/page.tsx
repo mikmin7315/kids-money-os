@@ -45,13 +45,13 @@ export default async function AdminTermsPage() {
         {Object.entries(grouped).map(([type, items]) => (
           <section key={type} className="mb-5">
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">{TYPE_LABEL[type] ?? type}</p>
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {items.map((r) => (
                 <div key={r.id} className="px-4 py-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${r.is_active ? "bg-[#d1fae5] text-[#065f46]" : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${r.is_active ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"}`}>
                           {r.is_active ? "활성" : "비활성"}
                         </span>
                         <span className="text-[11px] font-bold text-[var(--color-muted)]">v{r.version}</span>

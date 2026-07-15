@@ -24,7 +24,7 @@ const steps = [
         { icon: "🎉", text: "이자 +100원 생김!" },
       ],
     },
-    accent: "#059669",
+    accent: "var(--monari-done)",
     bg: "#ecfdf5",
   },
   {
@@ -38,7 +38,7 @@ const steps = [
         { icon: "🧹", text: "방 청소하기 → 이자율 +1%" },
       ],
     },
-    accent: "#d97706",
+    accent: "var(--monari-primary-strong)",
     bg: "#fffbeb",
   },
   {
@@ -52,7 +52,7 @@ const steps = [
         { icon: "📅", text: "다음 용돈으로 꼭 갚아야 해" },
       ],
     },
-    accent: "#dc2626",
+    accent: "var(--monari-minus)",
     bg: "#fff1f2",
   },
   {

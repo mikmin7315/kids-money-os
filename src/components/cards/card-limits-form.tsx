@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { updateCardLimitsAction } from "@/actions/cards";
@@ -15,7 +15,7 @@ export function CardLimitsForm({ cardId, dailyLimit, monthlyLimit }: {
     <form action={formAction} className="space-y-4">
       <input type="hidden" name="card_id" value={cardId} />
       {state.message && (
-        <p className={`text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
       <div>
         <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">일 한도 (원)</label>

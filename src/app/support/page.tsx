@@ -76,7 +76,7 @@ export default function SupportPage() {
             <Link
               key={href}
               href={href}
-              className="flex items-center gap-2 rounded-[16px] bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition active:scale-[0.97]"
+              className="flex items-center gap-2 rounded-[16px] bg-white p-3.5 shadow-[var(--monari-shadow-card)] transition active:scale-[0.97]"
             >
               <span style={{ fontSize: 20 }}>{emoji}</span>
               <span style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-soft)" }}>{label}</span>
@@ -95,7 +95,7 @@ export default function SupportPage() {
                 {items.map(({ q, a }) => (
                   <details
                     key={q}
-                    className="overflow-hidden rounded-[16px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+                    className="overflow-hidden rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-card)]"
                   >
                     <summary
                       className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4"

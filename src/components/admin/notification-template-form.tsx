@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { updateNotificationTemplateAction } from "@/actions/notification-settings";
@@ -41,7 +41,7 @@ export function NotificationTemplateForm({
           사용 중
         </label>
         {state.message && (
-          <p className={`text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+          <p className={`text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
         )}
         <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--color-accent)] px-3 py-1.5 text-xs font-bold text-white disabled:opacity-50">
           {pending ? "..." : "저장"}

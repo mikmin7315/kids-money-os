@@ -8,9 +8,9 @@ import { ChildInquiryForm } from "@/components/child/child-inquiry-form";
 export const dynamic = "force-dynamic";
 
 const STATUS_STYLE: Record<string, { label: string; color: string }> = {
-  pending:     { label: "접수됨",   color: "bg-[#fef3c7] text-[#92400e]" },
-  in_progress: { label: "확인 중",  color: "bg-[#dbeafe] text-[#1d4ed8]" },
-  resolved:    { label: "답변 완료", color: "bg-[#d1fae5] text-[#065f46]" },
+  pending:     { label: "접수됨",   color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  in_progress: { label: "확인 중",  color: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]" },
+  resolved:    { label: "답변 완료", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
   closed:      { label: "완료",     color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
 };
 
@@ -55,7 +55,7 @@ export default async function ChildInquiriesPage({ params }: { params: Promise<{
       <section>
         <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>내가 보낸 문의</p>
         {inquiries.length === 0 ? (
-          <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
             <p style={{ fontSize: 32, marginBottom: 8 }}>📭</p>
             <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>아직 문의가 없어요</p>
             <p className="mt-1" style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>위에서 궁금한 점을 물어보세요!</p>
@@ -65,7 +65,7 @@ export default async function ChildInquiriesPage({ params }: { params: Promise<{
             {inquiries.map((q) => {
               const st = STATUS_STYLE[String(q.status)] ?? STATUS_STYLE.pending;
               return (
-                <div key={q.id} className="rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+                <div key={q.id} className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>{st.label}</span>
                     <span style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>{String(q.created_at ?? "").slice(0, 10).replace(/-/g, ".")}</span>

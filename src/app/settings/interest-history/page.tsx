@@ -67,12 +67,12 @@ export default async function InterestHistoryPage() {
                   <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>
                     {child?.name} · {month.replace("-", "년 ")}월
                   </p>
-                  <p className="detail-row-value" style={{ fontSize: 24, color: "#059669" }}>
+                  <p className="detail-row-value" style={{ fontSize: 24, color: "var(--monari-done)" }}>
                     +{formatWon(total)}
                   </p>
                 </div>
                 {rate !== undefined && (
-                  <span className="detail-tag" style={{ background: "#f0fdf4", color: "#059669" }}>
+                  <span className="detail-tag" style={{ background: "#f0fdf4", color: "var(--monari-done)" }}>
                     {formatPercent(rate)}
                   </span>
                 )}
@@ -82,7 +82,7 @@ export default async function InterestHistoryPage() {
                   <p className="detail-row-label" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
                     {tx.date.slice(5).replace("-", "월 ")}일
                   </p>
-                  <p className="detail-row-value" style={{ fontSize: 15, color: "#059669" }}>
+                  <p className="detail-row-value" style={{ fontSize: 15, color: "var(--monari-done)" }}>
                     +{formatWon(tx.amount)}
                   </p>
                 </div>

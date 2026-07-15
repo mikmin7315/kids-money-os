@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { activateTermsAction } from "@/actions/terms";
@@ -14,7 +14,7 @@ export function ActivateTermsButton({ id, type }: { id: string; type: string }) 
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="type" value={type} />
       {state.message && (
-        <p className={`mb-1 text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>
+        <p className={`mb-1 text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
           {state.message}
         </p>
       )}

@@ -11,9 +11,9 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
 
   if (state.ok) {
     return (
-      <div className="rounded-[16px] bg-[#d1fae5] px-5 py-8 text-center">
+      <div className="rounded-[16px] bg-[var(--status-success-solid)] px-5 py-8 text-center">
         <p style={{ fontSize: 32, marginBottom: 8 }}>🎉</p>
-        <p className="text-sm font-bold text-[#065f46]">신청이 접수됐어요!</p>
+        <p className="text-sm font-bold text-[var(--status-success-solid-text)]">신청이 접수됐어요!</p>
         <p className="mt-1 text-xs text-[#047857]">카드 발급 완료 시 알림을 보내드릴게요.</p>
       </div>
     );
@@ -24,7 +24,7 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
       <p className="text-sm font-extrabold text-[var(--color-text)]">카드 신청하기</p>
 
       {state.message && (
-        <p className="text-sm font-semibold text-[#dc2626]">{state.message}</p>
+        <p className="text-sm font-semibold text-[var(--monari-minus)]">{state.message}</p>
       )}
 
       <div>
