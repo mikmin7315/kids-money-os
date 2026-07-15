@@ -66,7 +66,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       {/* 상태 배너 */}
       {todayTotal > 0 && (
         <div
-          className="mb-5 rounded-[20px] p-4"
+          className="mb-5 rounded-[24px] p-4"
           style={{ background: allDone ? "linear-gradient(135deg,#a7f3d0,#6ee7b7)" : "linear-gradient(135deg,#ede9fe,#ddd6fe)" }}
         >
           <div className="flex items-center justify-between">
@@ -89,7 +89,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       )}
 
       {/* 주간 달성 캘린더 */}
-      <div className="mb-5 rounded-[20px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+      <div className="mb-5 rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
         <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 12 }}>이번 주 기록</p>
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
@@ -135,7 +135,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
 
           {/* 오늘 다 하면 받을 수 있는 보상 */}
           {totalReward > 0 && !allDone && (
-            <div className="mt-4 rounded-[20px] bg-[#fef3c7] p-4">
+            <div className="mt-4 rounded-[24px] bg-[#fef3c7] p-4">
               <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>오늘 약속 다 하면</p>
               <p className="mt-1" style={{ fontSize: 20, fontWeight: 900, color: "#b45309" }}>
                 💰 최대 {totalReward.toLocaleString()}원 보상!

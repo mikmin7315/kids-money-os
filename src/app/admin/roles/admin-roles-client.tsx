@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useEffect, useState } from "react";
 import { listProfilesAction, updateRoleForm, type AdminFormState } from "@/actions/admin";
@@ -94,7 +94,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         <select
           name="role"
           defaultValue={profile.role}
-          className="flex-1 rounded-[20px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-text)]"
+          className="flex-1 rounded-[24px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-text)]"
         >
           <option value="parent">parent</option>
           <option value="admin">admin</option>

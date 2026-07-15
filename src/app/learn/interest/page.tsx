@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -98,7 +98,7 @@ export default function LearnInterestPage() {
         </div>
 
         <div
-          className="mt-8 flex-1 rounded-[30px] border border-[var(--color-chip-border)] p-7 shadow-[var(--shadow-card)]"
+          className="mt-8 flex-1 rounded-[28px] border border-[var(--color-chip-border)] p-7 shadow-[var(--shadow-card)]"
           style={{
             background: `linear-gradient(180deg, rgba(255,255,255,0.65), ${current.bg})`,
           }}

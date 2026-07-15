@@ -84,7 +84,7 @@ export function ChildBehaviorCheckForm({
         const needsApproval = rule.requiresParentApproval;
 
         return (
-          <div key={rule.id} className={`rounded-[18px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"}`}
+          <div key={rule.id} className={`rounded-[16px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[#F0F0F0]"}`}
             style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}>
 
             <div className="flex items-center gap-3 px-4 py-3.5">
@@ -484,7 +484,7 @@ function ChildPlayButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="mt-1 w-full rounded-[18px] bg-[#C66B3D] py-4 text-[15px] font-bold text-white transition hover:bg-[#A85930] active:scale-[0.98] disabled:opacity-60"
+      className="mt-1 w-full rounded-[16px] bg-[#C66B3D] py-4 text-[15px] font-bold text-white transition hover:bg-[#A85930] active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "처리 중..." : label}
     </button>

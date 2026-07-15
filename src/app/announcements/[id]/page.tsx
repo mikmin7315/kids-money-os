@@ -55,7 +55,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
         </p>
       </div>
 
-      <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(a.body)}
         </p>

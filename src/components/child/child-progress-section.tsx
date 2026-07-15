@@ -1,4 +1,4 @@
-interface ChildProgressSectionProps {
+﻿interface ChildProgressSectionProps {
   promiseTotal: number;
   promiseDone: number;
   savingGoalProgress: number;
@@ -56,7 +56,7 @@ function ProgressCard({
 
   return (
     <div
-      className="rounded-[22px] bg-white px-5 py-4"
+      className="rounded-[24px] bg-white px-5 py-4"
       style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
     >
       <div className="flex items-baseline justify-between gap-2">

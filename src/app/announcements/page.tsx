@@ -66,7 +66,7 @@ export default async function AnnouncementsPage() {
               <Link
                 key={a.id}
                 href={`/announcements/${a.id}`}
-                className="flex items-start gap-3 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
+                className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">

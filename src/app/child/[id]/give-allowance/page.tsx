@@ -60,7 +60,7 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
 
         {/* 부모 지갑 잔액 */}
         {parentWallet !== null && (
-          <div className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="mb-4 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-[var(--monari-hero)]" />
@@ -78,7 +78,7 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
         )}
 
         {/* 이번 달 현황 */}
-        <div className="mb-6 rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-6 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="mb-3 text-xs font-bold text-[var(--monari-ink-muted)]">이번 달 지급 현황</p>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-[14px] bg-[#f0fdf4] p-3">

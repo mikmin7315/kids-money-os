@@ -115,7 +115,7 @@ export default function SupportPage() {
         </div>
 
         {/* 인앱 문의 */}
-        <div className="mt-8 rounded-[20px] bg-[var(--monari-hero-lo)] p-5">
+        <div className="mt-8 rounded-[24px] bg-[var(--monari-hero-lo)] p-5">
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-hero)", marginBottom: 6 }}>
             💬 직접 문의하기
           </p>

@@ -125,7 +125,7 @@ export default async function HomePage() {
       {/* ── 부모 지갑 ── */}
       {auth.user && (
         <section className="mb-4">
-          <div className="rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4">
               <div>
                 <p className="text-[12px] font-700 text-[var(--monari-ink-muted)] mb-1">내 지갑 잔액</p>
@@ -170,7 +170,7 @@ export default async function HomePage() {
             {dashboard.children.map((summary) => (
               <div
                 key={summary.child.id}
-                className="rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
+                className="rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
               >
                 <Link
                   href={`/child/${summary.child.id}`}
@@ -215,7 +215,7 @@ export default async function HomePage() {
           </div>
         </section>
       ) : (
-        <div className="mb-4 rounded-[20px] bg-white p-5 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+        <div className="mb-4 rounded-[24px] bg-white p-5 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
           <p className="text-[16px] font-800 text-[var(--monari-ink)]">첫 아이 통장을 만들어주세요</p>
           <p className="mt-1 mb-4 text-[14px] text-[var(--monari-ink-muted)]">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
           <Link href="/settings" className="monari-btn-primary w-full">아이 등록하기</Link>
@@ -229,7 +229,7 @@ export default async function HomePage() {
           <div className="mt-2.5 grid grid-cols-2 gap-2.5">
 
             {/* 받은 용돈 — 전폭 */}
-            <div className="col-span-2 rounded-[20px] bg-[var(--monari-hero)] p-5 text-white">
+            <div className="col-span-2 rounded-[24px] bg-[var(--monari-hero)] p-5 text-white">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[12px] font-600 text-white/60 mb-1.5">이번 달 용돈</p>
@@ -244,7 +244,7 @@ export default async function HomePage() {
             </div>
 
             {/* 지출 합계 */}
-            <div className="rounded-[20px] p-4" style={{ background: "#fecdd3" }}>
+            <div className="rounded-[24px] p-4" style={{ background: "#fecdd3" }}>
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-[12px] text-[#9f1239]" style={{ fontWeight: 700 }}>지출</p>
                 <TrendingDown className="h-4 w-4 text-[#e11d48]" />
@@ -255,7 +255,7 @@ export default async function HomePage() {
             </div>
 
             {/* 저축 금액 */}
-            <div className="rounded-[20px] p-4" style={{ background: "#a7f3d0" }}>
+            <div className="rounded-[24px] p-4" style={{ background: "#a7f3d0" }}>
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-[12px] text-[#065f46]" style={{ fontWeight: 700 }}>저축</p>
                 <TrendingUp className="h-4 w-4 text-[#059669]" />
@@ -266,7 +266,7 @@ export default async function HomePage() {
             </div>
 
             {/* 저축 비율 */}
-            <div className="col-span-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
+            <div className="col-span-2 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[14px] font-700 text-[var(--monari-ink-soft)]">저축 비율</p>
                 <strong className="text-[20px] font-900 text-[var(--monari-hero)]">{monthlyGoal}%</strong>
@@ -288,7 +288,7 @@ export default async function HomePage() {
         <SectionLabel action={<Link href="/records" className="text-[13px] font-700 text-[var(--monari-hero)]">전체 보기</Link>}>
           최근 활동
         </SectionLabel>
-        <div className="mt-2.5 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="mt-2.5 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
           {recentFeed.length > 0 ? (
             recentFeed.map((item, i) => (
               <RecentRow
@@ -312,7 +312,7 @@ export default async function HomePage() {
       </section>
 
       {!auth.user && (
-        <div className="mb-4 rounded-[20px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
+        <div className="mb-4 rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
           <div>
             <p className="text-[14px] font-800 text-[var(--monari-ink)]">지금은 체험 모드예요</p>
             <p className="mt-0.5 text-[13px] text-[var(--monari-ink-muted)]">로그인하면 가족 기록이 안전하게 저장됩니다.</p>

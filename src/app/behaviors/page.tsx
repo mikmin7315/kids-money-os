@@ -19,7 +19,7 @@ export default async function BehaviorsPage() {
 
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
-      <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="mb-4 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
         <div className="grid grid-cols-3 divide-x divide-[var(--monari-line)]">
           <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
           <StatItem label="자동 완료" value={autoRules} unit="개" color="#059669" />
@@ -135,7 +135,7 @@ function StatItem({ label, value, unit = "건", color }: { label: string; value:
 
 function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-[18px] bg-[var(--monari-hero-lo)] p-3">
+    <div className="rounded-[16px] bg-[var(--monari-hero-lo)] p-3">
       <p className="text-[12px] text-[var(--monari-hero)]/60" style={{ fontWeight: 600 }}>{label}</p>
       <p className="mt-1 text-[var(--monari-hero)]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
       {sub && <p className="mt-0.5 text-[11px] text-[var(--monari-hero)]/50">{sub}</p>}

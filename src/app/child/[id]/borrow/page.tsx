@@ -55,7 +55,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
       {/* 진행 중 요약 배너 */}
       {totalActive > 0 && (
         <Link href={`/child/${id}/borrow-status`} className="mb-5 block">
-          <div className="rounded-[20px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             {pendingBorrows.length > 0 && (
               <div className="bg-[#fef3c7] px-5 py-4">
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>⏳ 부모님 확인 기다리는 중</p>
@@ -90,7 +90,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
       </div>
 
       {/* 안내 */}
-      <div className="mt-5 rounded-[20px] bg-[var(--monari-hero-lo)] p-4">
+      <div className="mt-5 rounded-[24px] bg-[var(--monari-hero-lo)] p-4">
         <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginBottom: 6 }}>💡 미리쓰기란?</p>
         <p style={{ fontSize: 13, color: "var(--monari-hero)", lineHeight: 1.7 }}>
           아직 받지 않은 용돈을 먼저 쓰고 나중에 갚는 거예요.

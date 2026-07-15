@@ -143,7 +143,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="relative space-y-2">
-          <Link href={`${base}/promise`} className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[18px] bg-white transition active:scale-[0.97]"
+          <Link href={`${base}/promise`} className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] bg-white transition active:scale-[0.97]"
             style={{ fontSize: 17, fontWeight: 900, color: "#92400e" }}>
             <Check className="h-5 w-5" strokeWidth={3} /> 약속 체크하기
           </Link>
@@ -268,7 +268,7 @@ function FlowCard({ icon, label, value, tone }: { icon: React.ReactNode; label: 
   };
   const t = tones[tone];
   return (
-    <div className="min-w-0 rounded-[20px] p-4" style={{ background: t.bg }}>
+    <div className="min-w-0 rounded-[24px] p-4" style={{ background: t.bg }}>
       <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-white/60 [&>svg]:h-5 [&>svg]:w-5" style={{ color: t.icon }}>{icon}</span>
       <p className="mt-3" style={{ fontSize: 12, fontWeight: 600, color: t.text + "99" }}>{label}</p>
       <p className="mt-1 tabular-nums" style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.02em", color: t.text }}>{value}</p>

@@ -170,17 +170,17 @@ export default async function SettingsPage() {
       <section className="mb-7">
         <SectionTitle>빠른 설정</SectionTitle>
         <div className="mt-3 grid grid-cols-2 gap-3">
-          <Link href="/settings/allowance" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+          <Link href="/settings/allowance" className="flex flex-col gap-2 rounded-[24px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
             <CircleDollarSign size={22} className="text-[#059669]" />
             <p className="text-sm font-extrabold text-[#065f46]">정기 용돈 설정</p>
             <p className="text-xs text-[#059669]/70">매주·매월 자동 지급</p>
           </Link>
-          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[20px] bg-[var(--monari-hero-lo)] p-4 transition active:scale-[0.97]">
+          <Link href="/settings/interest" className="flex flex-col gap-2 rounded-[24px] bg-[var(--monari-hero-lo)] p-4 transition active:scale-[0.97]">
             <PiggyBank size={22} className="text-[var(--monari-hero)]" />
             <p className="text-sm font-extrabold text-[var(--monari-hero)]">이자율 설정</p>
             <p className="text-xs text-[var(--monari-hero)]/70">약속 기반 이자 설정</p>
           </Link>
-          <Link href="/settings/interest-history" className="flex flex-col gap-2 rounded-[20px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
+          <Link href="/settings/interest-history" className="flex flex-col gap-2 rounded-[24px] bg-[#f0fdf4] p-4 transition active:scale-[0.97]">
             <ReceiptText size={22} className="text-[#059669]" />
             <p className="text-sm font-extrabold text-[#065f46]">이자 지급 내역</p>
             <p className="text-xs text-[#059669]/70">월별 이자 기록 확인</p>

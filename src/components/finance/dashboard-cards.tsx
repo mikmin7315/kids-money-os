@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, TrendingUp } from "lucide-react";
 import { Badge, StatCard, Surface } from "@/components/ui/primitives";
 import { formatPercent, formatWon } from "@/lib/format";
@@ -68,7 +68,7 @@ export function TodaysBehaviorPanel({
         {items.map((item) => (
           <div
             key={`${item.title}-${item.status}`}
-            className="rounded-[22px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
+            className="rounded-[24px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -102,7 +102,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
         {items.slice(0, 8).map((item) => (
           <div
             key={item.id}
-            className="flex items-start gap-3 rounded-[22px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
+            className="flex items-start gap-3 rounded-[24px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4"
           >
             <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${accentClass(item.accent)}`} />
             <div className="min-w-0 flex-1">
@@ -124,7 +124,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
+    <div className="rounded-[24px] border border-[var(--border-soft)] bg-[var(--bg-surface-alt)] p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
       <p className="mt-3 font-display text-xl font-semibold text-[var(--text-primary)]">{value}</p>
     </div>

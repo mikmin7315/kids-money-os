@@ -1,4 +1,4 @@
-import { BehaviorLog, BehaviorRule } from "@/lib/types";
+﻿import { BehaviorLog, BehaviorRule } from "@/lib/types";
 import { ChildSectionHeader } from "./child-section-header";
 
 interface ChildStampGridProps {
@@ -21,7 +21,7 @@ export function ChildStampGrid({ logs, rules }: ChildStampGridProps) {
             <div
               key={log.id}
               className={[
-                "flex flex-col items-center gap-1.5 rounded-[18px] border p-3 text-center shadow-[var(--shadow-soft)]",
+                "flex flex-col items-center gap-1.5 rounded-[16px] border p-3 text-center shadow-[var(--shadow-soft)]",
                 done
                   ? "border-[var(--color-stamp-done)]/30 bg-[var(--color-stamp-done-bg)]"
                   : rejected

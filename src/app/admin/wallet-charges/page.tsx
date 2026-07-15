@@ -69,7 +69,7 @@ export default async function AdminWalletChargesPage() {
         <ArrowLeft size={16} /> 대시보드로
       </Link>
 
-      <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <p className="text-sm font-bold text-[var(--monari-ink-muted)]">대기 중인 충전 요청</p>
         <p className="mt-1 text-3xl font-black text-[var(--monari-hero)]">{pending.length}건</p>
         <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">
@@ -78,14 +78,14 @@ export default async function AdminWalletChargesPage() {
       </div>
 
       {pending.length === 0 ? (
-        <div className="rounded-[20px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="text-2xl">✅</p>
           <p className="mt-3 text-base font-extrabold text-[var(--monari-ink)]">대기 중인 충전 요청이 없어요</p>
         </div>
       ) : (
         <div className="space-y-3">
           {pending.map((charge) => (
-            <div key={charge.id} className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <div key={charge.id} className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
               <div className="mb-3 flex items-start justify-between">
                 <div>
                   <p className="text-sm font-extrabold text-[var(--monari-ink)]">{charge.parentName}</p>

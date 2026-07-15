@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer, Section, Surface, Badge } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -361,7 +361,7 @@ function StatChip({
         : "text-[var(--color-text)]";
 
   return (
-    <div className="rounded-[22px] border border-[rgba(87,70,49,0.08)] bg-white/70 p-3">
+    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-white/70 p-3">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
       <p className={`mt-2 font-display text-lg font-semibold ${toneClass}`}>{value}</p>
     </div>
