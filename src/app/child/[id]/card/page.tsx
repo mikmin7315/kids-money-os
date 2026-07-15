@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
-import { getChildModeContext, getAuthContext } from "@/lib/auth";
+import { getChildModeContext } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
 

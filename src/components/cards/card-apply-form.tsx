@@ -6,7 +6,7 @@ import { applyCardAction } from "@/actions/cards";
 type State = { ok: boolean; message: string };
 const initial: State = { ok: false, message: "" };
 
-export function CardApplyForm({ children }: { children: { id: string; name: string }[] }) {
+export function CardApplyForm({ childOptions }: { childOptions: { id: string; name: string }[] }) {
   const [state, formAction, pending] = useActionState(applyCardAction, initial);
 
   if (state.ok) {
@@ -30,7 +30,7 @@ export function CardApplyForm({ children }: { children: { id: string; name: stri
       <div>
         <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">아이 선택 *</label>
         <select name="child_id" className="w-full rounded-[10px] border border-[var(--color-border)] px-3 py-2 text-sm">
-          {children.map((c) => (
+          {childOptions.map((c) => (
             <option key={c.id} value={c.id}>{String(c.name)}</option>
           ))}
         </select>

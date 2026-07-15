@@ -58,7 +58,7 @@ export default async function CardApplyPage() {
         </section>
 
         {children && children.length > 0 ? (
-          <CardApplyForm children={children} />
+          <CardApplyForm childOptions={children} />
         ) : (
           <div className="rounded-[16px] bg-[#f9fafb] px-5 py-10 text-center">
             <p className="text-sm text-[var(--color-muted)]">아이 계정을 먼저 등록해주세요.</p>
