@@ -96,10 +96,10 @@ async function loadSettlement(runId?: string): Promise<{
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  success: { label: "성공", color: "bg-[#d1fae5] text-[#065f46]" },
-  partial: { label: "일부 실패", color: "bg-[#fef3c7] text-[#92400e]" },
-  failed: { label: "실패", color: "bg-[#fee2e2] text-[#991b1b]" },
-  running: { label: "실행 중", color: "bg-[#dbeafe] text-[#1d4ed8]" },
+  success: { label: "성공", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
+  partial: { label: "일부 실패", color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  failed: { label: "실패", color: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]" },
+  running: { label: "실행 중", color: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]" },
   pending: { label: "대기", color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
   skipped: { label: "건너뜀", color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
 };
@@ -179,7 +179,7 @@ export default async function AdminSettlementPage({
                         </span>
                       </div>
                       {cr.interest_amount !== null && (
-                        <p className="mt-1 text-sm text-[#059669] font-semibold">
+                        <p className="mt-1 text-sm text-[var(--monari-done)] font-semibold">
                           이자 +{formatWon(cr.interest_amount)}
                           {cr.rate_adjustment !== null && cr.rate_adjustment !== 0 && (
                             <span className="ml-2 text-[var(--color-muted)]">
@@ -189,7 +189,7 @@ export default async function AdminSettlementPage({
                         </p>
                       )}
                       {cr.failure_reason && (
-                        <p className="mt-1 text-xs text-[#dc2626]">{cr.failure_reason}</p>
+                        <p className="mt-1 text-xs text-[var(--monari-minus)]">{cr.failure_reason}</p>
                       )}
                     </div>
                   );

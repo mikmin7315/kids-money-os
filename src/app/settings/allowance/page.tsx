@@ -61,10 +61,10 @@ export default async function AllowancePage() {
               return (
                 <div
                   key={rule.id}
-                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d1fae5] text-[#059669]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-success-solid)] text-[var(--monari-done)]">
                       <CalendarDays size={18} />
                     </span>
                     <div>
@@ -75,7 +75,7 @@ export default async function AllowancePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <p className="text-base font-black text-[#059669]">{formatWon(rule.amount)}</p>
+                    <p className="text-base font-black text-[var(--monari-done)]">{formatWon(rule.amount)}</p>
                     <DeleteAllowanceRuleButton ruleId={rule.id} label={rule.title} />
                   </div>
                 </div>
@@ -86,9 +86,9 @@ export default async function AllowancePage() {
       )}
 
       {/* 안내 박스 */}
-      <div className="mb-6 rounded-[16px] bg-[#f0fdf4] p-4">
-        <p className="text-xs font-bold text-[#065f46]">💡 용돈은 어떻게 지급되나요?</p>
-        <ul className="mt-2 space-y-1 text-xs leading-5 text-[#059669]">
+      <div className="mb-6 rounded-[16px] bg-[var(--status-success-solid)] p-4">
+        <p className="text-xs font-bold text-[var(--status-success-solid-text)]">💡 용돈은 어떻게 지급되나요?</p>
+        <ul className="mt-2 space-y-1 text-xs leading-5 text-[var(--monari-done)]">
           <li>• 매주·매월 설정한 날에 자동으로 남긴 돈에 더해져요</li>
           <li>• 지급 후 아이에게 알림이 가요</li>
           <li>• 즉시 지급은 아이 통장 페이지에서 할 수 있어요</li>
@@ -98,7 +98,7 @@ export default async function AllowancePage() {
       {/* 실패 내역 */}
       {bundle.allowanceExecutions.filter((e) => e.status === "failed").length > 0 && (
         <section className="mb-6">
-          <p className="mb-3 text-sm font-extrabold text-[#991b1b]">⚠️ 미지급 내역</p>
+          <p className="mb-3 text-sm font-extrabold text-[var(--status-danger-solid-text)]">⚠️ 미지급 내역</p>
           <div className="space-y-2">
             {bundle.allowanceExecutions
               .filter((e) => e.status === "failed")
@@ -107,13 +107,13 @@ export default async function AllowancePage() {
                 const rule = bundle.allowanceRules.find((r) => r.id === exec.allowanceRuleId);
                 const child = bundle.children.find((c) => c.id === rule?.childId);
                 return (
-                  <div key={exec.id} className="flex items-start gap-3 rounded-[16px] border border-[#fecaca] bg-[#fff1f2] p-4">
-                    <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#dc2626]" />
+                  <div key={exec.id} className="flex items-start gap-3 rounded-[16px] border border-[var(--status-danger-solid-text)]/30 bg-[var(--status-danger-solid)] p-4">
+                    <AlertCircle size={18} className="mt-0.5 shrink-0 text-[var(--monari-minus)]" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-700 text-[#991b1b]">
+                      <p className="text-[13px] font-700 text-[var(--status-danger-solid-text)]">
                         {child?.name} · {rule?.title ?? "삭제된 규칙"} · {exec.scheduledDate}
                       </p>
-                      <p className="mt-0.5 text-[12px] text-[#b91c1c]">
+                      <p className="mt-0.5 text-[12px] text-[var(--monari-minus)]">
                         {exec.failureReason ?? "알 수 없는 오류"}
                       </p>
                     </div>
@@ -122,7 +122,7 @@ export default async function AllowancePage() {
               })}
           </div>
           <div className="mt-3 rounded-[14px] bg-[#fef2f2] px-4 py-3">
-            <p className="text-[12px] text-[#b91c1c]">
+            <p className="text-[12px] text-[var(--monari-minus)]">
               💳 부모 지갑 잔액이 부족해 지급되지 않은 경우,{" "}
               <Link href="/settings/wallet" className="font-700 underline">지갑을 충전</Link>하면
               다음 지급일에 자동으로 처리돼요.
@@ -133,7 +133,7 @@ export default async function AllowancePage() {
 
       {/* 폼 */}
       {!hasChildren ? (
-        <div className="rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
           <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={32} />
           <p className="text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
           <Link href="/settings" className="mt-3 inline-block text-sm font-bold text-[var(--monari-hero)]">
@@ -141,7 +141,7 @@ export default async function AllowancePage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">새 용돈 규칙 추가</p>
           <AllowanceRuleForm childOptions={bundle.children} />
         </div>

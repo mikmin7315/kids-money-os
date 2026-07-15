@@ -186,7 +186,7 @@ function NotificationCard({
       className={`w-full rounded-[24px] border p-4 text-left transition ${
         notification.isRead
           ? "border-[var(--monari-line)] bg-[var(--monari-surface-soft)] opacity-75"
-          : "border-[var(--monari-line-strong)] bg-white shadow-[var(--monari-shadow-card)]"
+          : "border-[var(--monari-line-strong)] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-card)]"
       }`}
       aria-label={`${notification.title}${notification.isRead ? "" : ", 읽지 않은 알림"}`}
     >

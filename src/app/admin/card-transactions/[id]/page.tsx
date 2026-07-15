@@ -11,9 +11,9 @@ export const dynamic = "force-dynamic";
 
 const DISPUTE_STYLE: Record<string, string> = {
   none: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
-  open: "bg-[#fee2e2] text-[#991b1b]",
-  reviewing: "bg-[#fef3c7] text-[#92400e]",
-  resolved: "bg-[#d1fae5] text-[#065f46]",
+  open: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
+  reviewing: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
+  resolved: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
   rejected: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 const DISPUTE_LABEL: Record<string, string> = {
@@ -43,7 +43,7 @@ export default async function AdminCardTransactionDetailPage({ params }: { param
       <MobileShell>
         <AppHeader eyebrow="Admin · A-21" title="카드 거래 상세" />
 
-        <section className="mb-5 rounded-[16px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <section className="mb-5 rounded-[16px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-base font-extrabold text-[var(--color-text)]">{tx.merchant_name || "가맹점 미상"}</p>
             <p className="tabular-nums text-base font-extrabold text-[var(--color-text)]">{formatWon(Number(tx.amount))}</p>

@@ -65,7 +65,7 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
               />
             </div>
             {updateState.message && (
-              <p className={`rounded-[12px] px-4 py-3 text-[13px] font-600 ${updateState.ok ? "bg-[#f0fdf4] text-[#166534]" : "bg-[#fff1f2] text-[#be123c]"}`}>
+              <p className={`rounded-[12px] px-4 py-3 text-[13px] font-600 ${updateState.ok ? "bg-[var(--status-success-solid)] text-[#166534]" : "bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)]"}`}>
                 {updateState.message}
               </p>
             )}
@@ -76,8 +76,8 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
         </div>
 
         {/* 삭제 */}
-        <div className="monari-card p-5 border border-[#fecaca]">
-          <h2 className="text-[15px] font-800 text-[#991b1b] mb-2">아이 삭제</h2>
+        <div className="monari-card p-5 border border-[var(--status-danger-solid-text)]/30">
+          <h2 className="text-[15px] font-800 text-[var(--status-danger-solid-text)] mb-2">아이 삭제</h2>
           <p className="text-[13px] text-[var(--monari-ink-muted)] mb-4">
             삭제하면 아이 모드에 접근할 수 없어요. 거래 내역은 보존됩니다.
           </p>
@@ -85,14 +85,14 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
-              className="w-full rounded-[14px] border-2 border-[#fca5a5] py-3 text-[14px] font-700 text-[#dc2626] transition active:scale-95"
+              className="w-full rounded-[14px] border-2 border-[var(--status-danger-solid-text)]/30 py-3 text-[14px] font-700 text-[var(--monari-minus)] transition active:scale-95"
             >
               아이 삭제
             </button>
           ) : (
             <form action={deleteAction} className="space-y-3">
               <input type="hidden" name="childId" value={childId} />
-              <p className="rounded-[12px] bg-[#fff1f2] px-4 py-3 text-[13px] font-600 text-[#be123c]">
+              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-600 text-[var(--status-rose-solid-text)]">
                 정말 삭제할까요? 이 작업은 되돌리기 어려워요.
               </p>
               {deleteState.message && !deleteState.ok && (

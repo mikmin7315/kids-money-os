@@ -103,7 +103,7 @@ export default async function AdminParentsPage() {
                       {formatWon(r.wallet_balance)}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${r.role === "admin" ? "bg-[#fef3c7] text-[#92400e]" : "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]"}`}>
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${r.role === "admin" ? "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" : "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]"}`}>
                         {r.role}
                       </span>
                     </td>

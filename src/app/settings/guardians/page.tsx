@@ -60,7 +60,7 @@ export default async function GuardiansPage() {
         {invites.length > 0 && (
           <section className="mb-5">
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">초대 현황</p>
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {invites.map((inv) => (
                 <div key={inv.id} className="flex items-center justify-between px-4 py-3">
                   <div>
@@ -71,9 +71,9 @@ export default async function GuardiansPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      inv.status === "accepted" ? "bg-[#d1fae5] text-[#065f46]" :
+                      inv.status === "accepted" ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" :
                       inv.expired ? "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" :
-                      "bg-[#fef3c7] text-[#92400e]"
+                      "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]"
                     }`}>
                       {inv.status === "accepted" ? "수락" : inv.expired ? "만료" : "대기"}
                     </span>
@@ -91,7 +91,7 @@ export default async function GuardiansPage() {
         {guardians.length > 0 && (
           <section className="mb-5">
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">등록된 보호자</p>
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {guardians.map((g) => (
                 <Link
                   key={g.id}

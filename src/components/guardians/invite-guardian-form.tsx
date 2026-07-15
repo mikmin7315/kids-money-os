@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { inviteGuardianAction } from "@/actions/guardians";
@@ -12,7 +12,7 @@ export function InviteGuardianForm() {
   return (
     <form action={formAction} className="rounded-[16px] border border-[var(--color-border)] bg-white p-4 space-y-3">
       {state.message && (
-        <p className={`text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
       <div>
         <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">이메일 주소</label>

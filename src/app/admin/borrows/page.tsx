@@ -11,10 +11,10 @@ const STATUS_LABEL: Record<string, string> = {
   pending: "대기", approved: "승인", rejected: "거절", repaid: "완납", cancelled: "취소",
 };
 const STATUS_STYLE: Record<string, string> = {
-  pending: "bg-[#fef3c7] text-[#92400e]",
-  approved: "bg-[#dbeafe] text-[#1d4ed8]",
-  rejected: "bg-[#fee2e2] text-[#dc2626]",
-  repaid: "bg-[#d1fae5] text-[#065f46]",
+  pending: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
+  approved: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]",
+  rejected: "bg-[var(--status-danger-solid)] text-[var(--monari-minus)]",
+  repaid: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
   cancelled: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 
@@ -82,7 +82,7 @@ export default async function AdminBorrowsPage({ searchParams }: { searchParams:
             <Link
               key={s}
               href={status === s ? "/admin/borrows" : `/admin/borrows?status=${s}`}
-              className={`rounded-[10px] p-2 text-center transition ${status === s ? "bg-[var(--color-accent)] text-white" : "bg-white shadow-[0_1px_6px_rgba(0,0,0,0.06)]"}`}
+              className={`rounded-[10px] p-2 text-center transition ${status === s ? "bg-[var(--color-accent)] text-white" : "bg-white shadow-[var(--monari-shadow-sm)]"}`}
             >
               <p className={`text-[10px] font-semibold ${status === s ? "text-white/80" : "text-[var(--color-muted)]"}`}>
                 {STATUS_LABEL[s]}
@@ -94,7 +94,7 @@ export default async function AdminBorrowsPage({ searchParams }: { searchParams:
           ))}
         </div>
 
-        <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden">
           {rows.length === 0 ? (
             <p className="px-4 py-10 text-center text-sm text-[var(--color-muted)]">해당하는 미리쓰기 없음</p>
           ) : (

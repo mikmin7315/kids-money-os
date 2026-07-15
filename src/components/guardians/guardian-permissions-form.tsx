@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useState } from "react";
 import { updateGuardianPermissionsAction, removeGuardianAction } from "@/actions/guardians";
@@ -25,7 +25,7 @@ export function GuardianPermissionsForm({
 
   return (
     <div className="space-y-4">
-      <form action={formAction} className="rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <form action={formAction} className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
         <input type="hidden" name="guardian_id" value={guardianId} />
         <input type="hidden" name="child_id" value={childId} />
         {(Object.keys(perms) as PermKey[]).map((k) => (
@@ -35,7 +35,7 @@ export function GuardianPermissionsForm({
         <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">권한 설정</p>
 
         {state.message && (
-          <p className={`mb-3 text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+          <p className={`mb-3 text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
         )}
 
         <div className="space-y-3">
@@ -70,12 +70,12 @@ export function GuardianPermissionsForm({
         <input type="hidden" name="guardian_id" value={guardianId} />
         <input type="hidden" name="child_id" value={childId} />
         {removeState.message && (
-          <p className="mb-2 text-sm font-semibold text-[#dc2626]">{removeState.message}</p>
+          <p className="mb-2 text-sm font-semibold text-[var(--monari-minus)]">{removeState.message}</p>
         )}
         <button
           type="submit"
           disabled={removePending}
-          className="w-full rounded-[10px] border border-[#dc2626] py-2.5 text-sm font-bold text-[#dc2626] disabled:opacity-50"
+          className="w-full rounded-[10px] border border-[#dc2626] py-2.5 text-sm font-bold text-[var(--monari-minus)] disabled:opacity-50"
         >
           {removePending ? "처리 중..." : "보호자 제거"}
         </button>

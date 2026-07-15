@@ -72,7 +72,7 @@ export function WalletChargeForm() {
       </div>
 
       {state.message && !state.ok && (
-        <p style={{ fontSize: 14, color: "#dc2626", fontWeight: 600 }}>{state.message}</p>
+        <p style={{ fontSize: 14, color: "var(--monari-minus)", fontWeight: 600 }}>{state.message}</p>
       )}
 
       <button
@@ -99,7 +99,7 @@ export function BankAccountForm({
 
   if (state.ok) {
     return (
-      <p style={{ fontSize: 15, fontWeight: 700, color: "#059669", padding: "12px 0" }}>
+      <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-done)", padding: "12px 0" }}>
         ✅ {state.message}
       </p>
     );
@@ -149,7 +149,7 @@ export function BankAccountForm({
       </div>
 
       {state.message && !state.ok && (
-        <p style={{ fontSize: 14, color: "#dc2626", fontWeight: 600 }}>{state.message}</p>
+        <p style={{ fontSize: 14, color: "var(--monari-minus)", fontWeight: 600 }}>{state.message}</p>
       )}
 
       <button type="submit" disabled={pending} className="monari-btn-primary w-full">

@@ -16,7 +16,7 @@ type ToggleProps = { ruleId: string; isActive: boolean; label: string };
 export function DeleteAllowanceRuleButton({ ruleId, label }: DeleteProps) {
   const [state, action, pending] = useActionState(deleteAllowanceRuleAction, { ok: false, message: "" });
 
-  if (state.ok) return <span className="text-xs font-bold text-[#059669]">삭제됨</span>;
+  if (state.ok) return <span className="text-xs font-bold text-[var(--monari-done)]">삭제됨</span>;
 
   return (
     <form action={action}>
@@ -27,7 +27,7 @@ export function DeleteAllowanceRuleButton({ ruleId, label }: DeleteProps) {
         onClick={(e) => {
           if (!window.confirm(`"${label}" 용돈 규칙을 삭제할까요?`)) e.preventDefault();
         }}
-        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#fff1f2] text-[#be123c] transition active:scale-90"
+        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)] transition active:scale-90"
         title="삭제"
       >
         <Trash2 size={15} />
@@ -39,7 +39,7 @@ export function DeleteAllowanceRuleButton({ ruleId, label }: DeleteProps) {
 export function DeleteInterestPolicyButton({ policyId, label }: PolicyDeleteProps) {
   const [state, action, pending] = useActionState(deleteInterestPolicyAction, { ok: false, message: "" });
 
-  if (state.ok) return <span className="text-xs font-bold text-[#059669]">삭제됨</span>;
+  if (state.ok) return <span className="text-xs font-bold text-[var(--monari-done)]">삭제됨</span>;
 
   return (
     <form action={action}>
@@ -50,7 +50,7 @@ export function DeleteInterestPolicyButton({ policyId, label }: PolicyDeleteProp
         onClick={(e) => {
           if (!window.confirm(`"${label}" 이자 정책을 삭제할까요?`)) e.preventDefault();
         }}
-        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#fff1f2] text-[#be123c] transition active:scale-90"
+        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)] transition active:scale-90"
         title="삭제"
       >
         <Trash2 size={15} />
@@ -73,7 +73,7 @@ export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProp
         className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-1.5 text-xs font-bold transition active:scale-95"
         style={{
           background: isActive ? "#f0fdf4" : "#f3f4f6",
-          color: isActive ? "#059669" : "var(--monari-ink-muted)",
+          color: isActive ? "var(--monari-done)" : "var(--monari-ink-muted)",
         }}
         title={isActive ? "비활성화" : "활성화"}
       >
@@ -100,7 +100,7 @@ export function DeleteBehaviorRuleButton({ ruleId, label }: DeleteProps) {
         onClick={(e) => {
           if (!window.confirm(`"${label}" 약속을 삭제할까요? 삭제하면 관련 기록도 사라져요.`)) e.preventDefault();
         }}
-        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#fff1f2] text-[#be123c] transition active:scale-90"
+        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)] transition active:scale-90"
         title="삭제"
       >
         <Trash2 size={15} />

@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 const TYPE_INFO: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
   notice:      { icon: <Bell size={16} />,   label: "공지",     color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
-  maintenance: { icon: <Wrench size={16} />, label: "점검 안내", color: "bg-[#fef3c7] text-[#92400e]" },
-  update:      { icon: <Zap size={16} />,    label: "업데이트",  color: "bg-[#d1fae5] text-[#065f46]" },
+  maintenance: { icon: <Wrench size={16} />, label: "점검 안내", color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  update:      { icon: <Zap size={16} />,    label: "업데이트",  color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
 };
 
 export default async function AnnouncementDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -55,7 +55,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
         </p>
       </div>
 
-      <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
         <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(a.body)}
         </p>

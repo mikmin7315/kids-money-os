@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { AppConfigForm } from "@/components/admin/app-config-form";
 import { CashCorrectionForm } from "@/components/admin/cash-correction-form";
@@ -75,7 +75,7 @@ export default async function CashCorrectionsPage() {
               <div key={c.id} className="rounded-[14px] border border-[var(--color-border)] px-4 py-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-bold text-[var(--color-text)]">{childMap.get(c.child_id) ?? "알 수 없음"}</p>
-                  <p className={`tabular-nums text-sm font-bold ${c.type === "spend" ? "text-[#dc2626]" : "text-[#059669]"}`}>
+                  <p className={`tabular-nums text-sm font-bold ${c.type === "spend" ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>
                     {c.type === "spend" ? "-" : "+"}{formatWon(c.amount)}
                   </p>
                 </div>

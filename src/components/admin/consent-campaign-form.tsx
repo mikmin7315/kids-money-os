@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { createConsentCampaignAction, updateCampaignStatusAction } from "@/actions/admin-reconsent";
@@ -31,7 +31,7 @@ export function ConsentCampaignCreateForm() {
         </label>
       </div>
       {state.message && (
-        <p className={`text-[11px] font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>
+        <p className={`text-[11px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>
       )}
       <button type="submit" disabled={pending} className="rounded-[8px] bg-[var(--color-accent)] py-2 text-sm font-bold text-white disabled:opacity-50">
         {pending ? "생성 중..." : "캠페인 생성"}
@@ -46,7 +46,7 @@ export function CampaignStatusButton({ campaignId, nextStatus, label }: { campai
     <form action={formAction}>
       <input type="hidden" name="campaign_id" value={campaignId} />
       <input type="hidden" name="status" value={nextStatus} />
-      {state.message && <p className={`mb-1 text-[10px] ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>{state.message}</p>}
+      {state.message && <p className={`mb-1 text-[10px] ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>}
       <button type="submit" disabled={pending}
         className="rounded-[8px] bg-[var(--color-accent)] px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-50">
         {pending ? "..." : label}

@@ -31,7 +31,7 @@ export default async function CardApplyPage() {
           </p>
         </div>
 
-        <section className="mb-5 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <section className="mb-5 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
           <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">서비스 안내</p>
           <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             {[
@@ -51,7 +51,7 @@ export default async function CardApplyPage() {
 
         <section className="mb-5 rounded-[16px] bg-[#fef9c3] p-4">
           <p className="text-xs font-bold text-[#854d0e]">⚠️ 현재 상태 안내</p>
-          <p className="mt-1 text-xs text-[#92400e]">
+          <p className="mt-1 text-xs text-[var(--status-pending-solid-text)]">
             카드 서비스는 현재 파트너사 연동 준비 중이에요.
             신청 접수는 가능하며, 연동 완료 후 순서대로 발급됩니다.
           </p>

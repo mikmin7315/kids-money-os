@@ -28,7 +28,7 @@ export default async function CardLimitsPage({ params }: { params: Promise<{ id:
       <MobileShell>
         <AppHeader eyebrow="카드" title={`${String(child?.name ?? "")} 한도 설정`} />
 
-        <div className="mb-5 rounded-[16px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[16px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <CardLimitsForm
             cardId={card.id}
             dailyLimit={Number(card.daily_limit)}

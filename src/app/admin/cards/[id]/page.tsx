@@ -41,12 +41,12 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
         <AppHeader eyebrow="Admin · 카드" title="카드 상세" />
 
         {/* 카드 기본 정보 */}
-        <section className="mb-4 rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <section className="mb-4 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-extrabold">{String(child?.name ?? "-")} 카드</p>
             <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
-              card.status === "active" ? "bg-[#d1fae5] text-[#065f46]" :
-              card.status === "lost" ? "bg-[#fee2e2] text-[#991b1b]" :
+              card.status === "active" ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" :
+              card.status === "lost" ? "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]" :
               "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
             }`}>{card.status}</span>
           </div>
@@ -73,7 +73,7 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
           {(txRes.data ?? []).length === 0 ? (
             <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-6 text-center text-sm text-[var(--color-muted)]">거래 내역 없음</div>
           ) : (
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {(txRes.data ?? []).map((t) => (
                 <div key={t.id} className="flex items-center justify-between px-4 py-3">
                   <div>
@@ -93,16 +93,16 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
           {(logRes.data ?? []).length === 0 ? (
             <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-6 text-center text-sm text-[var(--color-muted)]">로그 없음</div>
           ) : (
-            <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
               {(logRes.data ?? []).map((l) => (
                 <div key={l.id} className="px-4 py-3">
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-semibold">{l.event_type}</p>
-                    <span className={`text-xs font-bold ${l.status_code && l.status_code < 300 ? "text-[#059669]" : "text-[#dc2626]"}`}>
+                    <span className={`text-xs font-bold ${l.status_code && l.status_code < 300 ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
                       {l.status_code ?? "-"}
                     </span>
                   </div>
-                  {l.error_message && <p className="mt-1 text-[11px] text-[#dc2626]">{l.error_message}</p>}
+                  {l.error_message && <p className="mt-1 text-[11px] text-[var(--monari-minus)]">{l.error_message}</p>}
                   <p className="text-[10px] text-[var(--color-muted)]">{String(l.created_at ?? "").slice(0, 19)}</p>
                 </div>
               ))}

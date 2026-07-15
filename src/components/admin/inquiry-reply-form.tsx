@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { replyInquiryAction } from "@/actions/inquiries";
@@ -14,7 +14,7 @@ export function AdminInquiryReplyForm({ inquiryId }: { inquiryId: string }) {
       <input type="hidden" name="id" value={inquiryId} />
 
       {state.message && (
-        <p className={`text-sm font-semibold ${state.ok ? "text-[#059669]" : "text-[#dc2626]"}`}>
+        <p className={`text-sm font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
           {state.message}
         </p>
       )}

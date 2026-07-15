@@ -95,7 +95,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
 
       {/* 행동 약속 리스트 */}
       {activeRules.length > 0 ? (
-        <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>
             이번 달 행동 약속
           </p>
@@ -114,9 +114,9 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
                     style={{ background: isDone ? "#d1fae5" : isWaiting ? "#fef3c7" : "#f3f4f6" }}
                   >
                     {isDone ? (
-                      <CheckCircle2 size={18} color="#059669" />
+                      <CheckCircle2 size={18} color="var(--monari-done)" />
                     ) : isWaiting ? (
-                      <Clock size={18} color="#d97706" />
+                      <Clock size={18} color="var(--monari-primary-strong)" />
                     ) : (
                       <span style={{ fontSize: 16 }}>○</span>
                     )}
@@ -125,11 +125,11 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
                     <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">
                       {rule.title}
                     </p>
-                    <p style={{ fontSize: 12, color: isDone ? "#059669" : isWaiting ? "#d97706" : "var(--monari-ink-muted)", marginTop: 2 }}>
+                    <p style={{ fontSize: 12, color: isDone ? "var(--monari-done)" : isWaiting ? "var(--monari-primary-strong)" : "var(--monari-ink-muted)", marginTop: 2 }}>
                       {isDone ? "달성! 이자에 반영돼요 🎉" : isWaiting ? "부모님이 확인 중이에요" : "아직 기회가 있어요"}
                     </p>
                   </div>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: isDone ? "#059669" : "#d1d5db" }}>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: isDone ? "var(--monari-done)" : "#d1d5db" }}>
                     +{formatPercent(rule.interestDelta)}
                   </p>
                 </div>
@@ -138,7 +138,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
           </div>
         </div>
       ) : (
-        <div className="mb-5 rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 40, marginBottom: 10 }}>🌱</p>
           <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)" }}>행동 약속이 없어요</p>
           <p className="mt-2" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>

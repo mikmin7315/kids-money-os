@@ -1,4 +1,4 @@
-export interface ChildActivityItem {
+﻿export interface ChildActivityItem {
   id: string;
   title: string;
   dateLabel: string;
@@ -16,7 +16,7 @@ export function ChildActivityList({ items }: ChildActivityListProps) {
 
   return (
     <section
-      className="rounded-[24px] bg-white overflow-hidden mb-4"
+      className="rounded-[24px] bg-[var(--monari-surface)] overflow-hidden mb-4"
       style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
     >
       <div className="px-5 pt-5 pb-2">

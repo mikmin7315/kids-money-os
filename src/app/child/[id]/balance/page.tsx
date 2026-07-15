@@ -72,7 +72,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
           label="저금한 돈"
           sub="따로 모아두는 돈"
           value={formatWon(wallet.savingsBalance)}
-          valueColor="#1d4ed8"
+          valueColor="var(--status-info-solid-text)"
         />
         {activeBorrow && (
           <BalanceRow
@@ -80,7 +80,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
             label="갚아야 할 돈"
             sub="미리쓰기 남은 금액"
             value={`-${formatWon(wallet.borrowedBalance)}`}
-            valueColor="#d97706"
+            valueColor="var(--monari-primary-strong)"
           />
         )}
         <BalanceRow
@@ -88,7 +88,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
           label="예상 이자"
           sub={`이자율 ${wallet.currentInterestRate}% 적용`}
           value={`+${formatWon(estimated)}`}
-          valueColor="#059669"
+          valueColor="var(--monari-done)"
           bold
           last
         />
@@ -107,14 +107,14 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
       <div className="grid grid-cols-2 gap-3">
         <Link
           href={`/child/${id}/records`}
-          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[var(--monari-shadow-md)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📒</span>
           <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>거래 내역</p>
         </Link>
         <Link
           href={`/child/${id}/interest`}
-          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[var(--monari-shadow-md)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📈</span>
           <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>이자 미리보기</p>

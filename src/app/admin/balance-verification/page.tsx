@@ -78,7 +78,7 @@ export default async function BalanceVerificationPage() {
           </div>
           <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">불일치</p>
-            <p className={`mt-1 text-lg font-black ${mismatches.length > 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>{mismatches.length}</p>
+            <p className={`mt-1 text-lg font-black ${mismatches.length > 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>{mismatches.length}</p>
           </div>
         </div>
 
@@ -96,11 +96,11 @@ export default async function BalanceVerificationPage() {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={r.childId} className={`${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""} ${r.diff !== 0 ? "bg-[#fff1f2]" : ""}`}>
+                  <tr key={r.childId} className={`${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""} ${r.diff !== 0 ? "bg-[var(--status-danger-solid)]" : ""}`}>
                     <td className="px-4 py-3 font-semibold text-[var(--color-text)]">{r.childName}</td>
                     <td className="px-4 py-3 text-right tabular-nums">{formatWon(r.ledgerBalance)}</td>
                     <td className="px-4 py-3 text-right tabular-nums">{formatWon(r.snapshotBalance)}</td>
-                    <td className={`px-4 py-3 text-right tabular-nums font-bold ${r.diff !== 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>
+                    <td className={`px-4 py-3 text-right tabular-nums font-bold ${r.diff !== 0 ? "text-[var(--monari-minus)]" : "text-[var(--monari-done)]"}`}>
                       {r.diff === 0 ? "일치" : formatWon(r.diff)}
                     </td>
                   </tr>

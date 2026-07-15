@@ -95,7 +95,7 @@ export function ChildBehaviorCheckForm({
                 <p className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[rgba(43,43,43,0.50)]">
                   +{formatWon(rule.rewardAmount)} 보상
                   {needsApproval && !isDone && !isPending && (
-                    <span className="rounded-full bg-[#fef3c7] px-2 py-0.5 text-[10px] font-700 text-[#b45309]">부모 확인 필요</span>
+                    <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-700 text-[var(--monari-pending)]">부모 확인 필요</span>
                   )}
                 </p>
               </div>
@@ -590,7 +590,7 @@ export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }
   const [approveState, approveAction, approvePending] = useActionState(approveCashSpendAction, { ok: false, message: "" });
   const [rejectState, rejectAction, rejectPending] = useActionState(rejectCashSpendAction, { ok: false, message: "" });
 
-  if (approveState.ok) return <p className="text-sm font-bold text-[#059669]">✓ 승인했어요</p>;
+  if (approveState.ok) return <p className="text-sm font-bold text-[var(--monari-done)]">✓ 승인했어요</p>;
   if (rejectState.ok) return <p className="text-sm font-bold text-[var(--monari-ink-muted)]">반려했어요</p>;
 
   const pending = approvePending || rejectPending;
@@ -630,7 +630,7 @@ export function InlineCashSpendDecisionForm({ requestId }: { requestId: string }
 export function InlineRepayInstallmentForm({ repaymentId, amount }: { repaymentId: string; amount: number }) {
   const [state, action, pending] = useActionState(repayBorrowInstallmentAction, { ok: false, message: "" });
 
-  if (state.ok) return <p className="text-sm font-bold text-[#059669]">✓ 상환 완료</p>;
+  if (state.ok) return <p className="text-sm font-bold text-[var(--monari-done)]">✓ 상환 완료</p>;
 
   return (
     <form action={action}>

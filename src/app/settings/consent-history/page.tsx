@@ -32,7 +32,7 @@ export default async function ConsentHistoryPage() {
             동의 이력이 없어요.
           </div>
         ) : (
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (
               <div key={l.id} className="flex items-center justify-between px-4 py-3">
                 <div>

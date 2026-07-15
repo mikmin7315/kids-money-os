@@ -13,10 +13,10 @@ const STATUS_LABEL: Record<string, string> = {
   rejected: "반려",
 };
 const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
-  approved:  { bg: "#d1fae5", text: "#065f46" },
-  completed: { bg: "#dbeafe", text: "#1e40af" },
-  pending:   { bg: "#fef3c7", text: "#92400e" },
-  rejected:  { bg: "#fee2e2", text: "#991b1b" },
+  approved:  { bg: "var(--status-success-solid)", text: "var(--status-success-solid-text)" },
+  completed: { bg: "var(--status-info-solid)",    text: "var(--status-info-solid-text)" },
+  pending:   { bg: "var(--status-pending-solid)", text: "var(--status-pending-solid-text)" },
+  rejected:  { bg: "var(--status-danger-solid)",  text: "var(--status-danger-solid-text)" },
 };
 
 export default async function ChildHistoryPage({ params }: { params: Promise<{ id: string }> }) {
@@ -60,16 +60,16 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
           <p style={{ fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>{totalDone}번</p>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>약속을 지켰어요!</p>
         </div>
-        <div className="rounded-[24px] bg-[#fef3c7] p-4">
-          <p style={{ fontSize: 12, fontWeight: 600, color: "#92400e" }}>연속 달성</p>
-          <p style={{ fontSize: 32, fontWeight: 900, color: "#b45309", letterSpacing: "-0.03em" }}>🔥 {streak}일</p>
-          <p style={{ fontSize: 12, color: "#b45309", opacity: 0.7, marginTop: 2 }}>계속해봐요!</p>
+        <div className="rounded-[24px] bg-[var(--status-pending-solid)] p-4">
+          <p style={{ fontSize: 12, fontWeight: 600, color: "var(--status-pending-solid-text)" }}>연속 달성</p>
+          <p style={{ fontSize: 32, fontWeight: 900, color: "var(--monari-pending)", letterSpacing: "-0.03em" }}>🔥 {streak}일</p>
+          <p style={{ fontSize: 12, color: "var(--monari-pending)", opacity: 0.7, marginTop: 2 }}>계속해봐요!</p>
         </div>
       </div>
 
       {/* 날짜별 로그 */}
       {Object.keys(grouped).length === 0 ? (
-        <div className="rounded-[24px] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-10 text-center shadow-[var(--monari-shadow-lift)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
           <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>아직 기록이 없어요</p>
           <p style={{ fontSize: 14, color: "var(--monari-ink-muted)", marginTop: 6 }}>약속 탭에서 오늘 약속을 체크해봐요!</p>
@@ -81,7 +81,7 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
               <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 8 }}>
                 {date.slice(5).replace("-", "월 ")}일
               </p>
-              <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div className="overflow-hidden rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)]">
                 {dayLogs.map((log, i) => {
                   const rule = bundle.behaviorRules.find((r) => r.id === log.behaviorRuleId);
                   const style = STATUS_STYLE[log.status] ?? STATUS_STYLE.pending;
@@ -115,7 +115,7 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
                           {STATUS_LABEL[log.status] ?? log.status}
                         </span>
                         {rule?.rewardAmount && (rule.rewardAmount > 0) && (
-                          <p style={{ fontSize: 12, fontWeight: 700, color: "#059669", marginTop: 3 }}>
+                          <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-done)", marginTop: 3 }}>
                             +{formatWon(rule.rewardAmount)}
                           </p>
                         )}

@@ -1,4 +1,4 @@
-import { formatWon } from "@/lib/format";
+﻿import { formatWon } from "@/lib/format";
 
 interface ChildQuickStatsProps {
   weekSpend: number;
@@ -15,7 +15,7 @@ export function ChildQuickStats({
 }: ChildQuickStatsProps) {
   return (
     <section
-      className="rounded-[24px] bg-white overflow-hidden mb-4"
+      className="rounded-[24px] bg-[var(--monari-surface)] overflow-hidden mb-4"
       style={{ boxShadow: "0 8px 24px rgba(43,43,43,0.06)" }}
     >
       <div className="grid grid-cols-2 divide-x divide-[rgba(43,43,43,0.07)]">

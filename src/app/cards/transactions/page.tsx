@@ -11,7 +11,7 @@ const STATUS_LABEL: Record<string, string> = {
   approved: "승인", declined: "거절", cancelled: "취소", reversed: "환불",
 };
 const STATUS_COLOR: Record<string, string> = {
-  approved: "text-[#059669]", declined: "text-[#dc2626]",
+  approved: "text-[var(--monari-done)]", declined: "text-[var(--monari-minus)]",
   cancelled: "text-[var(--monari-ink-muted)]", reversed: "text-[#2563eb]",
 };
 
@@ -92,7 +92,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
             <p className="text-sm text-[var(--color-muted)]">카드 사용 내역이 없어요.</p>
           </div>
         ) : (
-          <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
             {txList.map((t) => (
               <div key={t.id} className="flex items-center justify-between px-4 py-3">
                 <div>

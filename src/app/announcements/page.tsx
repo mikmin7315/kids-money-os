@@ -1,4 +1,4 @@
-ï»¿import Link from "next/link";
+import Link from "next/link";
 import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -17,9 +17,9 @@ type Announcement = {
 };
 
 const TYPE_STYLE: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  notice:      { icon: <Bell size={14} />,   label: "ê³µì§€",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
-  maintenance: { icon: <Wrench size={14} />, label: "ì ê²€",  color: "bg-[#fef3c7] text-[#92400e]" },
-  update:      { icon: <Zap size={14} />,    label: "ì—…ë°ì´íŠ¸", color: "bg-[#d1fae5] text-[#065f46]" },
+  notice:      { icon: <Bell size={14} />,   label: "°øÁö",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
+  maintenance: { icon: <Wrench size={14} />, label: "Á¡°Ë",  color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  update:      { icon: <Zap size={14} />,    label: "¾÷µ¥ÀÌÆ®", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
 };
 
 async function loadAnnouncements(): Promise<Announcement[]> {
@@ -48,15 +48,15 @@ export default async function AnnouncementsPage() {
       <div className="mb-6">
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>Monari</p>
         <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
-          ğŸ“¢ ê³µì§€ì‚¬í•­
+          ?? °øÁö»çÇ×
         </h1>
       </div>
 
       {announcements.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <p style={{ fontSize: 48, marginBottom: 12 }}>ğŸ“­</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>ê³µì§€ì‚¬í•­ì´ ì—†ì–´ìš”</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ê³µì§€ë‚˜ ì ê²€ ì•ˆë‚´ê°€ ì—†ì–´ìš”.</p>
+        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
+          <p style={{ fontSize: 48, marginBottom: 12 }}>??</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>°øÁö»çÇ×ÀÌ ¾ø¾î¿ä</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>ÇöÀç ÁøÇà ÁßÀÎ °øÁö³ª Á¡°Ë ¾È³»°¡ ¾ø¾î¿ä.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -66,7 +66,7 @@ export default async function AnnouncementsPage() {
               <Link
                 key={a.id}
                 href={`/announcements/${a.id}`}
-                className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
+                className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-md)] transition active:scale-[0.98]"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
@@ -80,7 +80,7 @@ export default async function AnnouncementsPage() {
                   <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">{a.title}</p>
                   <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", marginTop: 2 }} className="truncate">{a.body}</p>
                 </div>
-                <ChevronRight size={16} className="mt-1 shrink-0 text-[#d1d5db]" />
+                <ChevronRight size={16} className="mt-1 shrink-0 text-[var(--monari-ink-muted)]" />
               </Link>
             );
           })}

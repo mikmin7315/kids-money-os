@@ -88,7 +88,7 @@ export default async function InterestSettingPage() {
               return (
                 <div
                   key={policy.id}
-                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]"
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
@@ -113,7 +113,7 @@ export default async function InterestSettingPage() {
 
       {/* 폼 */}
       {!hasChildren ? (
-        <div className="rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
           <TrendingUp className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={32} />
           <p className="text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
           <Link href="/settings" className="mt-3 inline-block text-sm font-bold text-[var(--monari-hero)]">
@@ -121,7 +121,7 @@ export default async function InterestSettingPage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
           <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">이자 정책 설정</p>
           <InterestPolicyForm childOptions={bundle.children} />
         </div>

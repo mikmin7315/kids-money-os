@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useActionState } from "react";
@@ -32,7 +32,7 @@ export function CardLostForm({ cardId, childName }: { cardId: string; childName:
         신고 즉시 카드가 정지되며<br />이후 결제가 불가능해요.
       </p>
       {state.message && (
-        <p className="mt-3 text-sm font-semibold text-[#dc2626]">{state.message}</p>
+        <p className="mt-3 text-sm font-semibold text-[var(--monari-minus)]">{state.message}</p>
       )}
       <form action={formAction} className="mt-6 w-full space-y-3">
         <input type="hidden" name="card_id" value={cardId} />

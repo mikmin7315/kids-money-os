@@ -8,10 +8,10 @@ import { DeletionProcessForm } from "@/components/admin/deletion-process-form";
 export const dynamic = "force-dynamic";
 
 const STATUS_COLOR: Record<string, string> = {
-  pending: "bg-[#fef3c7] text-[#92400e]",
-  processing: "bg-[#dbeafe] text-[#1e40af]",
-  completed: "bg-[#d1fae5] text-[#065f46]",
-  rejected: "bg-[#fee2e2] text-[#991b1b]",
+  pending: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]",
+  processing: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]",
+  completed: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
+  rejected: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
 };
 
 export default async function AdminDeletionRequestsPage() {
@@ -36,8 +36,8 @@ export default async function AdminDeletionRequestsPage() {
         <AppHeader eyebrow="Admin · 탈퇴" title="탈퇴/삭제 요청 관리" />
 
         {pending.length > 0 && (
-          <div className="mb-4 rounded-[16px] bg-[#fee2e2] px-4 py-3">
-            <p className="text-sm font-bold text-[#991b1b]">처리 대기 {pending.length}건</p>
+          <div className="mb-4 rounded-[16px] bg-[var(--status-danger-solid)] px-4 py-3">
+            <p className="text-sm font-bold text-[var(--status-danger-solid-text)]">처리 대기 {pending.length}건</p>
           </div>
         )}
 
@@ -46,7 +46,7 @@ export default async function AdminDeletionRequestsPage() {
         ) : (
           <div className="space-y-3">
             {requests.map((r) => (
-              <div key={r.id} className="rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div key={r.id} className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
                 <div className="mb-2 flex items-start justify-between">
                   <div>
                     <p className="text-sm font-semibold">{r.email}</p>

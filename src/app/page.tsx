@@ -125,7 +125,7 @@ export default async function HomePage() {
       {/* ── 부모 지갑 ── */}
       {auth.user && (
         <section className="mb-4">
-          <div className="rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4">
               <div>
                 <p className="text-[12px] font-700 text-[var(--monari-ink-muted)] mb-1">내 지갑 잔액</p>
@@ -148,8 +148,8 @@ export default async function HomePage() {
               </div>
             </div>
             {(parentWallet?.balance ?? 0) < monthlyTotal && (
-              <div className="border-t border-[var(--monari-line)] bg-[#fef3c7] px-5 py-3">
-                <p className="text-[13px] font-700 text-[#92400e]">
+              <div className="border-t border-[var(--monari-line)] bg-[var(--status-pending-solid)] px-5 py-3">
+                <p className="text-[13px] font-700 text-[var(--status-pending-solid-text)]">
                   {(parentWallet?.balance ?? 0) === 0
                     ? "💡 지갑을 충전하면 아이에게 바로 용돈을 지급할 수 있어요"
                     : `💡 이번 달 예정 용돈(${formatWon(monthlyTotal)})보다 잔액이 부족해요`}
@@ -170,7 +170,7 @@ export default async function HomePage() {
             {dashboard.children.map((summary) => (
               <div
                 key={summary.child.id}
-                className="rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
+                className="rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)]"
               >
                 <Link
                   href={`/child/${summary.child.id}`}
@@ -198,7 +198,7 @@ export default async function HomePage() {
                   <div className="grid grid-cols-2 gap-2">
                     <Link
                       href={`/child/${summary.child.id}/give-allowance`}
-                      className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[#f0fdf4] py-2 text-sm font-extrabold text-[#059669] transition active:scale-[0.97]"
+                      className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[var(--status-success-solid)] py-2 text-sm font-extrabold text-[var(--monari-done)] transition active:scale-[0.97]"
                     >
                       <CircleDollarSign className="h-4 w-4" /> 용돈 주기
                     </Link>
@@ -215,7 +215,7 @@ export default async function HomePage() {
           </div>
         </section>
       ) : (
-        <div className="mb-4 rounded-[24px] bg-white p-5 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+        <div className="mb-4 rounded-[24px] bg-white p-5 text-center shadow-[var(--monari-shadow-lift)]">
           <p className="text-[16px] font-800 text-[var(--monari-ink)]">첫 아이 통장을 만들어주세요</p>
           <p className="mt-1 mb-4 text-[14px] text-[var(--monari-ink-muted)]">용돈, 약속, 저축을 한곳에서 시작할 수 있어요.</p>
           <Link href="/settings" className="monari-btn-primary w-full">아이 등록하기</Link>
@@ -246,10 +246,10 @@ export default async function HomePage() {
             {/* 지출 합계 */}
             <div className="rounded-[24px] p-4" style={{ background: "#fecdd3" }}>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-[12px] text-[#9f1239]" style={{ fontWeight: 700 }}>지출</p>
+                <p className="text-[12px] text-[var(--status-rose-solid-text)]" style={{ fontWeight: 700 }}>지출</p>
                 <TrendingDown className="h-4 w-4 text-[#e11d48]" />
               </div>
-              <p className="leading-none tabular-nums text-[#9f1239]" style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em" }}>
+              <p className="leading-none tabular-nums text-[var(--status-rose-solid-text)]" style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em" }}>
                 {formatWon(primary.monthReport.totalSpend)}
               </p>
             </div>
@@ -257,10 +257,10 @@ export default async function HomePage() {
             {/* 저축 금액 */}
             <div className="rounded-[24px] p-4" style={{ background: "#a7f3d0" }}>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-[12px] text-[#065f46]" style={{ fontWeight: 700 }}>저축</p>
-                <TrendingUp className="h-4 w-4 text-[#059669]" />
+                <p className="text-[12px] text-[var(--status-success-solid-text)]" style={{ fontWeight: 700 }}>저축</p>
+                <TrendingUp className="h-4 w-4 text-[var(--monari-done)]" />
               </div>
-              <p className="leading-none tabular-nums text-[#065f46]" style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em" }}>
+              <p className="leading-none tabular-nums text-[var(--status-success-solid-text)]" style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em" }}>
                 {formatWon(primary.monthReport.totalSave)}
               </p>
             </div>
@@ -288,7 +288,7 @@ export default async function HomePage() {
         <SectionLabel action={<Link href="/records" className="text-[13px] font-700 text-[var(--monari-hero)]">전체 보기</Link>}>
           최근 활동
         </SectionLabel>
-        <div className="mt-2.5 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="mt-2.5 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
           {recentFeed.length > 0 ? (
             recentFeed.map((item, i) => (
               <RecentRow
@@ -312,7 +312,7 @@ export default async function HomePage() {
       </section>
 
       {!auth.user && (
-        <div className="mb-4 rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
+        <div className="mb-4 rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)] flex items-center justify-between gap-4">
           <div>
             <p className="text-[14px] font-800 text-[var(--monari-ink)]">지금은 체험 모드예요</p>
             <p className="mt-0.5 text-[13px] text-[var(--monari-ink-muted)]">로그인하면 가족 기록이 안전하게 저장됩니다.</p>
@@ -350,7 +350,7 @@ function RecentRow({ href, title, sub, value, kind, isLast }: {
         <p className="truncate text-[15px] font-700 text-[var(--monari-ink)]">{title}</p>
         <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)]">{sub}</p>
       </div>
-      <p className={`shrink-0 text-[15px] font-800 ${isNeg ? "text-[#be123c]" : "text-[#15803d]"}`}>{value}</p>
+      <p className={`shrink-0 text-[15px] font-800 ${isNeg ? "text-[var(--status-rose-solid-text)]" : "text-[var(--monari-done)]"}`}>{value}</p>
     </Link>
   );
 }

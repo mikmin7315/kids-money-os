@@ -49,7 +49,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 문의 내용 */}
-      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 8 }}>문의 내용</p>
         <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(q.body)}

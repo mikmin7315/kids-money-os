@@ -55,7 +55,7 @@ export default async function OnboardingCompletePage() {
           <Link
             key={href}
             href={href}
-            className="flex items-start gap-3 rounded-[14px] bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
+            className="flex items-start gap-3 rounded-[14px] bg-white p-4 shadow-[var(--monari-shadow-card)] transition active:scale-[0.98]"
           >
             <span style={{ fontSize: 24, lineHeight: 1 }}>{emoji}</span>
             <div>

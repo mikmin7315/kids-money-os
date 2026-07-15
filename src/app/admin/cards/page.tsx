@@ -11,9 +11,9 @@ const STATUS_LABEL: Record<string, string> = {
   active: "정상", frozen: "정지", lost: "분실", cancelled: "해지", expired: "만료",
 };
 const STATUS_COLOR: Record<string, string> = {
-  active: "bg-[#d1fae5] text-[#065f46]",
-  frozen: "bg-[#dbeafe] text-[#1e40af]",
-  lost: "bg-[#fee2e2] text-[#991b1b]",
+  active: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]",
+  frozen: "bg-[var(--status-info-solid)] text-[var(--status-info-solid-text)]",
+  lost: "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]",
   cancelled: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
   expired: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
@@ -69,7 +69,7 @@ export default async function AdminCardsPage({ searchParams }: { searchParams: P
           ))}
         </div>
 
-        <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
+        <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
           {cards.map((c) => (
             <Link key={c.id} href={`/admin/cards/${c.id}`} className="flex items-center justify-between px-4 py-3">
               <div>
@@ -82,7 +82,7 @@ export default async function AdminCardsPage({ searchParams }: { searchParams: P
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${STATUS_COLOR[c.status] ?? ""}`}>
                   {STATUS_LABEL[c.status] ?? c.status}
                 </span>
-                {!c.is_enabled && <span className="text-[10px] text-[#d97706]">비활성</span>}
+                {!c.is_enabled && <span className="text-[10px] text-[var(--monari-primary-strong)]">비활성</span>}
               </div>
             </Link>
           ))}
