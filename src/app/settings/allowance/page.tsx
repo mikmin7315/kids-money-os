@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { AlertCircle, ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 import { AllowanceRuleForm } from "@/components/finance/management-forms";
@@ -61,7 +61,7 @@ export default async function AllowancePage() {
               return (
                 <div
                   key={rule.id}
-                  className="flex items-center justify-between rounded-[18px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d1fae5] text-[#059669]">
@@ -86,7 +86,7 @@ export default async function AllowancePage() {
       )}
 
       {/* 안내 박스 */}
-      <div className="mb-6 rounded-[18px] bg-[#f0fdf4] p-4">
+      <div className="mb-6 rounded-[16px] bg-[#f0fdf4] p-4">
         <p className="text-xs font-bold text-[#065f46]">💡 용돈은 어떻게 지급되나요?</p>
         <ul className="mt-2 space-y-1 text-xs leading-5 text-[#059669]">
           <li>• 매주·매월 설정한 날에 자동으로 남긴 돈에 더해져요</li>
@@ -133,7 +133,7 @@ export default async function AllowancePage() {
 
       {/* 폼 */}
       {!hasChildren ? (
-        <div className="rounded-[20px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={32} />
           <p className="text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
           <Link href="/settings" className="mt-3 inline-block text-sm font-bold text-[var(--monari-hero)]">
@@ -141,7 +141,7 @@ export default async function AllowancePage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">새 용돈 규칙 추가</p>
           <AllowanceRuleForm childOptions={bundle.children} />
         </div>

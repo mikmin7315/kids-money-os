@@ -107,14 +107,14 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
       <div className="grid grid-cols-2 gap-3">
         <Link
           href={`/child/${id}/records`}
-          className="flex flex-col items-center gap-2.5 rounded-[20px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📒</span>
           <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>거래 내역</p>
         </Link>
         <Link
           href={`/child/${id}/interest`}
-          className="flex flex-col items-center gap-2.5 rounded-[20px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col items-center gap-2.5 rounded-[24px] bg-white py-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 32 }}>📈</span>
           <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>이자 미리보기</p>

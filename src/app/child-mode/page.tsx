@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
@@ -52,7 +52,7 @@ export default async function ChildModePage() {
                 className="monari-card flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5 hover:border-[var(--monari-line-strong)] active:translate-y-0"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-[var(--monari-plus-bg)] text-[17px] font-800 text-[var(--monari-hero)]">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-[var(--monari-plus-bg)] text-[17px] font-800 text-[var(--monari-hero)]">
                     {summary.child.name[0]}
                   </span>
                   <div className="min-w-0">

@@ -1,4 +1,4 @@
-import { formatWon } from "@/lib/format";
+﻿import { formatWon } from "@/lib/format";
 
 export function ReportBarGroup({
   allowance,
@@ -96,7 +96,7 @@ function LegendBox({
   tone: "rose" | "emerald";
 }) {
   return (
-    <div className="rounded-[18px] border border-[var(--monari-line)] bg-[var(--monari-bg)] p-4">
+    <div className="rounded-[16px] border border-[var(--monari-line)] bg-[var(--monari-bg)] p-4">
       <div className="flex items-center gap-2">
         <span className={`h-2.5 w-2.5 rounded-full ${tone === "rose" ? "bg-[var(--monari-minus)]" : "bg-[var(--monari-done)]"}`} />
         <p className="text-[11px] font-700 text-[var(--monari-ink-muted)]">{label}</p>

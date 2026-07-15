@@ -29,7 +29,7 @@ export default async function ApprovalsPage() {
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
-      <div className="mb-4 rounded-[20px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="mb-4 rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden">
         <div className="grid grid-cols-4 divide-x divide-[var(--monari-line)]">
           <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
           <StatItem label="현금 대기" value={pendingCashRequests.length} color="#dc2626" />
@@ -258,7 +258,7 @@ function StatItem({ label, value, color }: { label: string; value: number; color
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] bg-[var(--monari-hero-lo)] p-4">
+    <div className="rounded-[16px] bg-[var(--monari-hero-lo)] p-4">
       <p className="text-[12px] text-[var(--monari-hero)]/60" style={{ fontWeight: 600 }}>{label}</p>
       <p className="mt-1 text-[var(--monari-hero)]" style={{ fontSize: 18, fontWeight: 800 }}>{value}</p>
     </div>

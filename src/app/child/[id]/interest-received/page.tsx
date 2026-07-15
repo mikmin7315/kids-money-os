@@ -95,7 +95,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
           {months.map(({ month, items, total }) => {
             const [y, m] = month.split("-");
             return (
-              <div key={month} className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div key={month} className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                 <div className="flex items-center justify-between border-b border-[var(--monari-line)] px-5 py-3">
                   <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>
                     {y}년 {m}월

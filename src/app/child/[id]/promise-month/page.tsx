@@ -95,7 +95,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
 
       {/* 행동 약속 리스트 */}
       {activeRules.length > 0 ? (
-        <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>
             이번 달 행동 약속
           </p>
@@ -138,7 +138,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
           </div>
         </div>
       ) : (
-        <div className="mb-5 rounded-[20px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-5 rounded-[24px] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 40, marginBottom: 10 }}>🌱</p>
           <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)" }}>행동 약속이 없어요</p>
           <p className="mt-2" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>
@@ -148,7 +148,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
       )}
 
       {/* 약속 설명 */}
-      <div className="rounded-[20px] bg-[var(--monari-hero-lo)] p-4">
+      <div className="rounded-[24px] bg-[var(--monari-hero-lo)] p-4">
         <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginBottom: 6 }}>📌 약속이란?</p>
         <p style={{ fontSize: 13, color: "var(--monari-hero)", lineHeight: 1.7 }}>
           부모님과 함께 정한 행동 약속을 지키면 이자율이 올라가요.

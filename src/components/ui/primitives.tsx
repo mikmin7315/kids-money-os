@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { clsx } from "clsx";
 import { ReactNode } from "react";
 
@@ -16,7 +16,7 @@ export function PageHero({
 }) {
   return (
     <section className="mt-6">
-      <div className="relative overflow-hidden rounded-[30px] bg-[var(--hero-parent-bg)] px-6 py-7">
+      <div className="relative overflow-hidden rounded-[28px] bg-[var(--hero-parent-bg)] px-6 py-7">
         <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -bottom-10 -left-6 h-32 w-32 rounded-full bg-white/5" />
         <div className="relative">
@@ -35,7 +35,7 @@ export function PageHero({
 /** Stat pill used inside PageHero — styled for dark navy background */
 export function HeroPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-white/15 bg-white/10 p-3 backdrop-blur-sm">
+    <div className="rounded-[24px] border border-white/15 bg-white/10 p-3 backdrop-blur-sm">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/55">{label}</p>
       <p className="mt-2 font-display text-lg font-semibold text-white">{value}</p>
     </div>
@@ -103,7 +103,7 @@ export function Surface({ className, children }: { className?: string; children:
   return (
     <div
       className={clsx(
-        "rounded-[30px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]",
+        "rounded-[28px] border border-[var(--border-soft)] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-soft)]",
         className,
       )}
     >

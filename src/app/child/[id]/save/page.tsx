@@ -35,7 +35,7 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
       </div>
 
       {totalSaved > 0 && (
-        <div className="mb-4 rounded-[20px] bg-[#bfdbfe] p-4">
+        <div className="mb-4 rounded-[24px] bg-[#bfdbfe] p-4">
           <p style={{ fontSize: 13, fontWeight: 600, color: "#1e40af99" }}>이번 달 저금 총액</p>
           <p className="mt-1 tabular-nums" style={{ fontSize: 24, fontWeight: 900, color: "#1e40af", letterSpacing: "-0.03em" }}>
             {formatWon(totalSaved)}

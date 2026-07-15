@@ -55,7 +55,7 @@ export default async function ChildInquiriesPage({ params }: { params: Promise<{
       <section>
         <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>내가 보낸 문의</p>
         {inquiries.length === 0 ? (
-          <div className="rounded-[20px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <p style={{ fontSize: 32, marginBottom: 8 }}>📭</p>
             <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>아직 문의가 없어요</p>
             <p className="mt-1" style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>위에서 궁금한 점을 물어보세요!</p>

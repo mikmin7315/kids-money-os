@@ -126,7 +126,7 @@ export function OnboardingCarousel() {
           {current > 0 && (
             <button
               onClick={prev}
-              className="flex-1 rounded-[18px] border-2 border-[var(--monari-hero-lo)] py-4 text-base font-extrabold text-[var(--monari-hero)] transition active:scale-[0.97]"
+              className="flex-1 rounded-[16px] border-2 border-[var(--monari-hero-lo)] py-4 text-base font-extrabold text-[var(--monari-hero)] transition active:scale-[0.97]"
             >
               이전
             </button>
@@ -134,7 +134,7 @@ export function OnboardingCarousel() {
           {isLast ? (
             <Link
               href="/login"
-              className="flex flex-1 items-center justify-center rounded-[18px] py-4 text-base font-extrabold text-white transition active:scale-[0.97]"
+              className="flex flex-1 items-center justify-center rounded-[16px] py-4 text-base font-extrabold text-white transition active:scale-[0.97]"
               style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}
             >
               시작하기 🚀
@@ -142,7 +142,7 @@ export function OnboardingCarousel() {
           ) : (
             <button
               onClick={next}
-              className="flex-1 rounded-[18px] py-4 text-base font-extrabold text-white transition active:scale-[0.97]"
+              className="flex-1 rounded-[16px] py-4 text-base font-extrabold text-white transition active:scale-[0.97]"
               style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}
             >
               다음

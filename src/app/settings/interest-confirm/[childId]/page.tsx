@@ -71,7 +71,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
 
         {/* 행동 약속 현황 */}
         {activeRules.length > 0 && (
-          <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>이번 달 행동 약속 현황</p>
             <div className="space-y-3">
               {activeRules.map((rule) => {
@@ -98,7 +98,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
         )}
 
         {/* 주의 안내 */}
-        <div className="mb-5 rounded-[20px] bg-[#fef3c7] p-4">
+        <div className="mb-5 rounded-[24px] bg-[#fef3c7] p-4">
           <p style={{ fontSize: 13, fontWeight: 700, color: "#92400e", marginBottom: 6 }}>⚠️ 확정 전에 확인하세요</p>
           <ul className="space-y-1" style={{ fontSize: 13, color: "#b45309" }}>
             <li>• 확정 후 이번 달 이자율은 변경되지 않아요</li>

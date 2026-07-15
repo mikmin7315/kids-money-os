@@ -49,7 +49,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 문의 내용 */}
-      <div className="mb-5 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 8 }}>문의 내용</p>
         <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(q.body)}
@@ -58,7 +58,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
 
       {/* 답변 */}
       {q.admin_reply ? (
-        <div className="rounded-[20px] border-l-4 border-[var(--monari-hero)] bg-[var(--monari-hero-lo)] p-5">
+        <div className="rounded-[24px] border-l-4 border-[var(--monari-hero)] bg-[var(--monari-hero-lo)] p-5">
           <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-hero)", marginBottom: 8 }}>
             📩 운영팀 답변 · {String(q.replied_at ?? "").slice(0, 10).replace(/-/g, ".")}
           </p>
@@ -67,7 +67,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           </p>
         </div>
       ) : (
-        <div className="rounded-[20px] bg-[var(--monari-surface-soft)] p-5 text-center">
+        <div className="rounded-[24px] bg-[var(--monari-surface-soft)] p-5 text-center">
           <p style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
             아직 답변이 작성되지 않았어요. 빠르게 도움을 드릴게요 🙏
           </p>

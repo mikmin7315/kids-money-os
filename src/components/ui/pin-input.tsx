@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 
@@ -41,7 +41,7 @@ export function PinInput({
             autoFocus={autoFocus && i === 0}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
-            className="h-14 w-14 rounded-[20px] border-2 border-[var(--color-border)] bg-white/90 text-center font-display text-2xl font-bold text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+            className="h-14 w-14 rounded-[24px] border-2 border-[var(--color-border)] bg-white/90 text-center font-display text-2xl font-bold text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
           />
         ))}
       </div>

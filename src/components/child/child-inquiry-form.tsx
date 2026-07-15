@@ -20,7 +20,7 @@ export function ChildInquiryForm() {
 
   if (state.ok) {
     return (
-      <div className="rounded-[20px] bg-[#d1fae5] p-5 text-center">
+      <div className="rounded-[24px] bg-[#d1fae5] p-5 text-center">
         <p style={{ fontSize: 32, marginBottom: 8 }}>✅</p>
         <p style={{ fontSize: 15, fontWeight: 800, color: "#065f46" }}>문의가 접수됐어요!</p>
         <p className="mt-1" style={{ fontSize: 12, color: "#047857" }}>빠르게 답변드릴게요 🙏</p>
@@ -29,7 +29,7 @@ export function ChildInquiryForm() {
   }
 
   return (
-    <form action={formAction} className="space-y-4 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <form action={formAction} className="space-y-4 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       {state.message && !state.ok && (
         <p className="text-sm font-semibold text-[#dc2626]">{state.message}</p>
       )}

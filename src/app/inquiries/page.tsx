@@ -56,7 +56,7 @@ export default async function InquiriesPage() {
       <section>
         <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>내 문의 내역</p>
         {inquiries.length === 0 ? (
-          <div className="rounded-[20px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <p style={{ fontSize: 36, marginBottom: 10 }}>📭</p>
             <p style={{ fontSize: 16, fontWeight: 700, color: "var(--monari-ink)" }}>문의 내역이 없어요</p>
             <p className="mt-2" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>
@@ -71,7 +71,7 @@ export default async function InquiriesPage() {
                 <Link
                   key={q.id}
                   href={`/inquiries/${q.id}`}
-                  className="flex items-start gap-3 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
+                  className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.98]"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">

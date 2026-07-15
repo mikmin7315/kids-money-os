@@ -70,7 +70,7 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
       ) : (
         <div className="space-y-3">
           {notices.map((a) => (
-            <div key={a.id} className="rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <div key={a.id} className="rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
               <div className="flex items-start gap-3">
                 <span style={{ fontSize: 28 }}>{TYPE_EMOJI[a.type] ?? "📢"}</span>
                 <div className="flex-1 min-w-0">

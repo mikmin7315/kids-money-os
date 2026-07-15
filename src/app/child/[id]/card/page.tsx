@@ -48,7 +48,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
         ) : (
           <>
             {/* 카드 상태 */}
-            <div className={`mb-5 rounded-[20px] p-5 ${card.is_enabled && card.status === "active" ? "bg-gradient-to-br from-[#7c3aed] to-[#4f46e5]" : "bg-[#6b7280]"}`}>
+            <div className={`mb-5 rounded-[24px] p-5 ${card.is_enabled && card.status === "active" ? "bg-gradient-to-br from-[#7c3aed] to-[#4f46e5]" : "bg-[#6b7280]"}`}>
               <p className="text-[11px] font-bold text-white/70">Monari 체크카드</p>
               {card.last4 && <p className="mt-2 font-mono text-sm text-white">**** **** **** {card.last4}</p>}
               <div className="mt-4 flex items-end justify-between">

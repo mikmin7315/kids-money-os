@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
@@ -183,7 +183,7 @@ function NotificationCard({
     <button
       type="button"
       onClick={onRead}
-      className={`w-full rounded-[22px] border p-4 text-left transition ${
+      className={`w-full rounded-[24px] border p-4 text-left transition ${
         notification.isRead
           ? "border-[var(--monari-line)] bg-[var(--monari-surface-soft)] opacity-75"
           : "border-[var(--monari-line-strong)] bg-white shadow-[var(--monari-shadow-card)]"

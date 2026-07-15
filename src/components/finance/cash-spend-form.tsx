@@ -19,7 +19,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
         <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>{state.message}</p>
         <button
           onClick={() => window.history.back()}
-          className="mt-6 w-full rounded-[18px] bg-[var(--monari-surface-soft)] py-4 text-base font-extrabold text-[var(--monari-hero)]"
+          className="mt-6 w-full rounded-[16px] bg-[var(--monari-surface-soft)] py-4 text-base font-extrabold text-[var(--monari-hero)]"
         >
           돌아가기
         </button>
@@ -97,7 +97,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-[18px] py-4 text-base font-extrabold text-white transition active:scale-[0.97] disabled:opacity-60"
+        className="w-full rounded-[16px] py-4 text-base font-extrabold text-white transition active:scale-[0.97] disabled:opacity-60"
         style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}
       >
         {pending ? "기록 중..." : "기록하기 💸"}

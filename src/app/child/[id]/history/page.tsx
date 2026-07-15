@@ -55,12 +55,12 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
 
       {/* 요약 배너 */}
       <div className="mb-5 grid grid-cols-2 gap-3">
-        <div className="rounded-[20px] p-4" style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}>
+        <div className="rounded-[24px] p-4" style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>총 달성</p>
           <p style={{ fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>{totalDone}번</p>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>약속을 지켰어요!</p>
         </div>
-        <div className="rounded-[20px] bg-[#fef3c7] p-4">
+        <div className="rounded-[24px] bg-[#fef3c7] p-4">
           <p style={{ fontSize: 12, fontWeight: 600, color: "#92400e" }}>연속 달성</p>
           <p style={{ fontSize: 32, fontWeight: 900, color: "#b45309", letterSpacing: "-0.03em" }}>🔥 {streak}일</p>
           <p style={{ fontSize: 12, color: "#b45309", opacity: 0.7, marginTop: 2 }}>계속해봐요!</p>
@@ -81,7 +81,7 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
               <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 8 }}>
                 {date.slice(5).replace("-", "월 ")}일
               </p>
-              <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                 {dayLogs.map((log, i) => {
                   const rule = bundle.behaviorRules.find((r) => r.id === log.behaviorRuleId);
                   const style = STATUS_STYLE[log.status] ?? STATUS_STYLE.pending;

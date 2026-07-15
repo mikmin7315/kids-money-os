@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useState } from "react";
 import { giveAllowanceForm } from "@/actions/finance";
@@ -23,7 +23,7 @@ export function GiveAllowanceForm({
 
   if (state.ok) {
     return (
-      <div className="rounded-[20px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <p style={{ fontSize: 52 }}>🎉</p>
         <p className="mt-3 text-lg font-black text-[var(--monari-ink)]">용돈을 줬어요!</p>
         <p className="mt-1 text-sm text-[var(--monari-ink-muted)]">{state.message}</p>
@@ -42,7 +42,7 @@ export function GiveAllowanceForm({
     <form action={action} className="space-y-4">
       <input type="hidden" name="childId" value={childId} />
 
-      <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">
           얼마나 줄까요?
         </label>
@@ -78,7 +78,7 @@ export function GiveAllowanceForm({
         />
       </div>
 
-      <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">
           메모 (선택)
         </label>

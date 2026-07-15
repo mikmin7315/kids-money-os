@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
@@ -40,7 +40,7 @@ export function InstallAppPrompt() {
   }
 
   return (
-    <aside className="fixed inset-x-3 bottom-[calc(82px+env(safe-area-inset-bottom))] z-[60] mx-auto flex max-w-[416px] items-center gap-3 rounded-[20px] border border-[var(--monari-line)] bg-white p-3 shadow-[var(--monari-shadow-float)]">
+    <aside className="fixed inset-x-3 bottom-[calc(82px+env(safe-area-inset-bottom))] z-[60] mx-auto flex max-w-[416px] items-center gap-3 rounded-[24px] border border-[var(--monari-line)] bg-white p-3 shadow-[var(--monari-shadow-float)]">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[#25273a] text-white">
         <Download className="h-5 w-5" aria-hidden="true" />
       </span>

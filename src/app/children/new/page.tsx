@@ -42,7 +42,7 @@ export default async function AddChildPage() {
         </div>
 
         {/* 단계 안내 */}
-        <div className="mb-6 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="mb-6 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="mb-3 text-xs font-bold text-[var(--monari-ink-muted)]">등록 후 할 수 있는 것</p>
           <div className="space-y-2.5">
             {[
@@ -64,7 +64,7 @@ export default async function AddChildPage() {
         </div>
 
         {/* 등록 폼 */}
-        <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div className="rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">아이 정보 입력</p>
           <ChildCreateForm />
         </div>

@@ -54,7 +54,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       <div className="mb-6 grid grid-cols-2 gap-3">
         <Link
           href={`/child/${id}/records`}
-          className="flex flex-col gap-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col gap-2 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 28 }}>📒</span>
           <p style={{ fontSize: 13, fontWeight: 800, color: "var(--monari-ink)" }}>내 돈 기록</p>
@@ -62,7 +62,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
         </Link>
         <Link
           href={`/child/${id}/history`}
-          className="flex flex-col gap-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col gap-2 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 28 }}>✅</span>
           <p style={{ fontSize: 13, fontWeight: 800, color: "var(--monari-ink)" }}>약속 기록</p>
@@ -70,7 +70,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
         </Link>
         <Link
           href={`/child/${id}/notification-settings`}
-          className="flex flex-col gap-2 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
+          className="flex flex-col gap-2 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition active:scale-[0.97]"
         >
           <span style={{ fontSize: 28 }}>🔔</span>
           <p style={{ fontSize: 13, fontWeight: 800, color: "var(--monari-ink)" }}>알림 설정</p>
@@ -79,7 +79,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 용어 사전 */}
-      <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div className="mb-4 flex items-center gap-2">
           <BookOpen size={18} color="var(--monari-hero)" />
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>용어 사전</p>
@@ -95,7 +95,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 자주 묻는 질문 */}
-      <div className="mb-6 rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div className="mb-4 flex items-center gap-2">
           <HelpCircle size={18} color="var(--monari-hero)" />
           <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)" }}>자주 묻는 질문</p>
@@ -111,7 +111,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 부모에게 알려주기 / 문의 (C-14) */}
-      <div className="mb-6 rounded-[20px] bg-[#fef3c7] p-4">
+      <div className="mb-6 rounded-[24px] bg-[#fef3c7] p-4">
         <div className="flex items-center gap-2 mb-2">
           <MessageCircle size={16} color="#d97706" />
           <p style={{ fontSize: 14, fontWeight: 800, color: "#92400e" }}>운영팀에 물어보기</p>
@@ -131,7 +131,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
       {/* 앱 나가기 */}
       <Link
         href="/"
-        className="flex items-center gap-3 rounded-[20px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+        className="flex items-center gap-3 rounded-[24px] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
       >
         <LogOut size={18} color="var(--monari-ink-muted)" />
         <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink-muted)" }}>부모 화면으로 가기</p>
