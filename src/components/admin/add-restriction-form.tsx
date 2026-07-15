@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { addRestrictionAction } from "@/actions/admin-policy";
