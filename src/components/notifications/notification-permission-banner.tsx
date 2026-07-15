@@ -27,7 +27,7 @@ export function NotificationPermissionBanner() {
     return (
       <div className="mb-6 rounded-[16px] bg-[var(--status-danger-solid)] px-4 py-3">
         <p style={{ fontSize: 13, fontWeight: 700, color: "var(--status-danger-solid-text)" }}>🔕 알림이 차단되어 있어요</p>
-        <p style={{ fontSize: 12, color: "#b91c1c", marginTop: 4, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 12, color: "var(--status-danger-solid-text)", marginTop: 4, lineHeight: 1.6 }}>
           브라우저 설정 → 알림에서 이 사이트의 알림을 허용으로 변경해주세요.
         </p>
       </div>

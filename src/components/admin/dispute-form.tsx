@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useActionState } from "react";
 import { openDisputeAction, resolveDisputeAction } from "@/actions/admin-card-disputes";
@@ -15,7 +15,7 @@ export function OpenDisputeForm({ txId }: { txId: string }) {
         className="w-full rounded-[8px] border border-[var(--color-border)] px-2 py-1.5 text-xs" />
       {state.message && <p className={`text-[10px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>}
       <button type="submit" disabled={pending}
-        className="rounded-[8px] bg-[#dc2626] py-2 text-xs font-bold text-white disabled:opacity-50">
+        className="rounded-[8px] bg-[var(--monari-minus)] py-2 text-xs font-bold text-white disabled:opacity-50">
         {pending ? "..." : "분쟁 개설"}
       </button>
     </form>
@@ -29,7 +29,7 @@ export function ResolveDisputeForm({ txId }: { txId: string }) {
       <input type="hidden" name="tx_id" value={txId} />
       {state.message && <p className={`self-center text-[10px] font-semibold ${state.ok ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>{state.message}</p>}
       <button type="submit" name="outcome" value="resolved" disabled={pending}
-        className="flex-1 rounded-[8px] bg-[#059669] py-1.5 text-xs font-bold text-white disabled:opacity-50">
+        className="flex-1 rounded-[8px] bg-[var(--monari-done)] py-1.5 text-xs font-bold text-white disabled:opacity-50">
         {pending ? "..." : "완료"}
       </button>
       <button type="submit" name="outcome" value="rejected" disabled={pending}

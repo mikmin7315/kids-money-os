@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useActionState } from "react";
@@ -39,7 +39,7 @@ export function CardLostForm({ cardId, childName }: { cardId: string; childName:
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-[14px] bg-[#dc2626] py-3.5 text-sm font-bold text-white disabled:opacity-50"
+          className="w-full rounded-[14px] bg-[var(--monari-minus)] py-3.5 text-sm font-bold text-white disabled:opacity-50"
         >
           {pending ? "처리 중..." : "즉시 분실 신고하기"}
         </button>

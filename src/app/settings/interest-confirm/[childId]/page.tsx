@@ -80,7 +80,7 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
                   <div key={rule.id} className="flex items-center gap-3">
                     <span
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-base"
-                      style={{ background: done ? "#d1fae5" : "#f3f4f6" }}
+                      style={{ background: done ? "var(--status-success-solid)" : "var(--monari-surface-soft)" }}
                     >
                       {done ? "✅" : "○"}
                     </span>

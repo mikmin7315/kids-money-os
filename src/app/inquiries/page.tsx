@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -84,7 +84,7 @@ export default async function InquiriesPage() {
                       {q.admin_reply ? " · 답변 있음" : ""}
                     </p>
                   </div>
-                  <ChevronRight size={16} className="mt-1 shrink-0 text-[#d1d5db]" />
+                  <ChevronRight size={16} className="mt-1 shrink-0 text-[var(--monari-ink-muted)]" />
                 </Link>
               );
             })}

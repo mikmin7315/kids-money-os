@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -104,7 +104,7 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
                   취소
                 </button>
                 <button type="submit" disabled={deletePending}
-                  className="flex-1 rounded-[14px] bg-[#dc2626] py-3 text-[14px] font-700 text-white disabled:opacity-50">
+                  className="flex-1 rounded-[14px] bg-[var(--monari-minus)] py-3 text-[14px] font-700 text-white disabled:opacity-50">
                   {deletePending ? "삭제 중…" : "삭제 확인"}
                 </button>
               </div>

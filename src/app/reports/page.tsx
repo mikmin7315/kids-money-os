@@ -196,8 +196,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               <div className="monari-card p-4">
                 <p className="text-[13px] font-700 text-[var(--monari-ink)] mb-3">월별 저축 목표 달성도</p>
                 {[
-                  { label: "저축 비중", value: saveRatio, color: "bg-[#059669]" },
-                  { label: "지출 비중", value: spendRatio, color: "bg-[#dc2626]" },
+                  { label: "저축 비중", value: saveRatio, color: "bg-[var(--monari-done)]" },
+                  { label: "지출 비중", value: spendRatio, color: "bg-[var(--monari-minus)]" },
                   { label: "약속 달성", value: Math.round(primary.monthReport.behaviorSuccessRate), color: "bg-[var(--monari-hero)]" },
                 ].map(({ label, value, color }) => (
                   <div key={label} className="mb-2">

@@ -244,10 +244,10 @@ export default async function HomePage() {
             </div>
 
             {/* 지출 합계 */}
-            <div className="rounded-[24px] p-4" style={{ background: "#fecdd3" }}>
+            <div className="rounded-[24px] p-4" style={{ background: "var(--status-rose-solid)" }}>
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-[12px] text-[var(--status-rose-solid-text)]" style={{ fontWeight: 700 }}>지출</p>
-                <TrendingDown className="h-4 w-4 text-[#e11d48]" />
+                <TrendingDown className="h-4 w-4 text-[var(--monari-minus)]" />
               </div>
               <p className="leading-none tabular-nums text-[var(--status-rose-solid-text)]" style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em" }}>
                 {formatWon(primary.monthReport.totalSpend)}
@@ -255,7 +255,7 @@ export default async function HomePage() {
             </div>
 
             {/* 저축 금액 */}
-            <div className="rounded-[24px] p-4" style={{ background: "#a7f3d0" }}>
+            <div className="rounded-[24px] p-4" style={{ background: "var(--status-success-solid)" }}>
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-[12px] text-[var(--status-success-solid-text)]" style={{ fontWeight: 700 }}>저축</p>
                 <TrendingUp className="h-4 w-4 text-[var(--monari-done)]" />

@@ -1,4 +1,4 @@
-﻿import { notFound, redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ChildBehaviorCheckForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -108,7 +108,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
                   border: isToday && !done ? "2px solid #c4b5fd" : "none",
                 }}
               >
-                {done ? "⭐" : isToday ? "👀" : <span style={{ fontSize: 12, color: "#d1d5db" }}>{label}</span>}
+                {done ? "⭐" : isToday ? "👀" : <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>{label}</span>}
               </span>
             </div>
           ))}
