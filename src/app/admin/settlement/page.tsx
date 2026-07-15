@@ -100,8 +100,8 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   partial: { label: "일부 실패", color: "bg-[#fef3c7] text-[#92400e]" },
   failed: { label: "실패", color: "bg-[#fee2e2] text-[#991b1b]" },
   running: { label: "실행 중", color: "bg-[#dbeafe] text-[#1d4ed8]" },
-  pending: { label: "대기", color: "bg-[#f3f4f6] text-[#6b7280]" },
-  skipped: { label: "건너뜀", color: "bg-[#f3f4f6] text-[#6b7280]" },
+  pending: { label: "대기", color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
+  skipped: { label: "건너뜀", color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
 };
 
 export default async function AdminSettlementPage({
@@ -126,7 +126,7 @@ export default async function AdminSettlementPage({
         <section className="mb-6">
           <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">정산 이력</p>
           {runs.length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
               정산 이력이 없어요. Edge Function이 실행되면 여기에 표시돼요.
             </div>
           ) : (

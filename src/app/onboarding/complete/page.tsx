@@ -17,7 +17,7 @@ export default async function OnboardingCompletePage() {
         style={{
           fontSize: 28,
           fontWeight: 900,
-          color: "#1a0533",
+          color: "var(--monari-ink)",
           letterSpacing: "-0.03em",
           lineHeight: 1.25,
           marginBottom: 12,
@@ -26,7 +26,7 @@ export default async function OnboardingCompletePage() {
         Monari에 오신 걸<br />환영해요!
       </h1>
 
-      <p style={{ fontSize: 15, color: "#6b7280", lineHeight: 1.75, maxWidth: 280 }}>
+      <p style={{ fontSize: 15, color: "var(--monari-ink-muted)", lineHeight: 1.75, maxWidth: 280 }}>
         이제 아이의 첫 금융 교육을 시작할 준비가 됐어요. 용돈을 주고, 약속을 만들고, 이자와 저축을 함께 배워봐요.
       </p>
 
@@ -39,14 +39,14 @@ export default async function OnboardingCompletePage() {
         </Link>
         <Link
           href="/"
-          className="block w-full rounded-[16px] border border-[#e5e7eb] bg-white py-4 text-[16px] font-bold text-[#374151] transition active:scale-[0.97]"
+          className="block w-full rounded-[16px] border border-[#e5e7eb] bg-white py-4 text-[16px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
         >
           홈으로 가기
         </Link>
       </div>
 
       <div className="mt-12 space-y-4 text-left w-full max-w-xs">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af", marginBottom: 8 }}>다음 단계 추천</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 8 }}>다음 단계 추천</p>
         {[
           { emoji: "👶", title: "아이 프로필 만들기", desc: "이름·닉네임·PIN을 설정해요", href: "/children/new" },
           { emoji: "💰", title: "이자율 설정", desc: "기본 이자율과 행동 약속 보너스를 정해요", href: "/settings/interest" },
@@ -59,8 +59,8 @@ export default async function OnboardingCompletePage() {
           >
             <span style={{ fontSize: 24, lineHeight: 1 }}>{emoji}</span>
             <div>
-              <p style={{ fontSize: 14, fontWeight: 800, color: "#1a0533" }}>{title}</p>
-              <p style={{ fontSize: 12, color: "#9ca3af" }}>{desc}</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-ink)" }}>{title}</p>
+              <p style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>{desc}</p>
             </div>
           </Link>
         ))}

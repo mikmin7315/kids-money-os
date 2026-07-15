@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
@@ -72,11 +72,11 @@ export default async function BalanceVerificationPage() {
         {error && <div className="mb-4 rounded-[12px] bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
         <div className="mb-5 grid grid-cols-2 gap-3">
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">전체 아이</p>
             <p className="mt-1 text-lg font-black text-[var(--color-text)]">{rows.length}</p>
           </div>
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">불일치</p>
             <p className={`mt-1 text-lg font-black ${mismatches.length > 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>{mismatches.length}</p>
           </div>
@@ -87,7 +87,7 @@ export default async function BalanceVerificationPage() {
           <div className="overflow-hidden rounded-[16px] border border-[var(--color-border)] bg-white">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[#f9fafb] text-left text-xs font-semibold text-[var(--color-muted)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--monari-surface-soft)] text-left text-xs font-semibold text-[var(--color-muted)]">
                   <th className="px-4 py-3">아이</th>
                   <th className="px-4 py-3 text-right">원장 합계</th>
                   <th className="px-4 py-3 text-right">스냅샷</th>

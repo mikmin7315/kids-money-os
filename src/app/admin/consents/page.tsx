@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -33,15 +33,15 @@ export default async function AdminConsentsPage({ searchParams }: { searchParams
 
         {types.length > 0 && (
           <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
-            <Link href="/admin/consents" className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!type ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}>전체</Link>
+            <Link href="/admin/consents" className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!type ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}>전체</Link>
             {types.map((t) => (
-              <Link key={t} href={`/admin/consents?type=${t}`} className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${type === t ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}>{t}</Link>
+              <Link key={t} href={`/admin/consents?type=${t}`} className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${type === t ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}>{t}</Link>
             ))}
           </div>
         )}
 
         {logs.length === 0 ? (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">동의 이력이 없어요.</div>
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">동의 이력이 없어요.</div>
         ) : (
           <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (

@@ -26,7 +26,7 @@ const STATUS_STYLE: Record<string, string> = {
   pending:     "bg-[#fef3c7] text-[#92400e]",
   in_progress: "bg-[#dbeafe] text-[#1d4ed8]",
   resolved:    "bg-[#d1fae5] text-[#065f46]",
-  closed:      "bg-[#f3f4f6] text-[#6b7280]",
+  closed:      "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 
 async function loadInquiries(): Promise<{ rows: InquiryRow[]; error?: string }> {
@@ -89,7 +89,7 @@ export default async function AdminInquiriesPage({
             { label: "미처리", value: pending.length, c: "text-[#dc2626]" },
             { label: "완료", value: rows.filter((r) => r.status === "resolved").length, c: "text-[#059669]" },
           ].map(({ label, value, c }) => (
-            <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+            <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
               <p className={`mt-1 text-lg font-black ${c || "text-[var(--color-text)]"}`}>{value}</p>
             </div>
@@ -105,7 +105,7 @@ export default async function AdminInquiriesPage({
                 {selected.user_name} · {selected.category} · {selected.created_at.slice(0, 10)}
               </p>
             </div>
-            <div className="mb-4 rounded-[10px] bg-[#f9fafb] p-3">
+            <div className="mb-4 rounded-[10px] bg-[var(--monari-surface-soft)] p-3">
               <p className="text-sm text-[var(--color-text)] whitespace-pre-wrap">{selected.body}</p>
             </div>
             {selected.admin_reply && (
@@ -122,7 +122,7 @@ export default async function AdminInquiriesPage({
         <section>
           <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">문의 목록</p>
           {rows.length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
               접수된 문의가 없어요.
             </div>
           ) : (

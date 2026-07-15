@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
@@ -28,7 +28,7 @@ export default async function ConsentHistoryPage() {
         <AppHeader eyebrow="설정" title="동의 이력" />
 
         {logs.length === 0 ? (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">
             동의 이력이 없어요.
           </div>
         ) : (

@@ -37,8 +37,8 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
-          <p className="mt-2" style={{ fontSize: 14, fontWeight: 600, color: "#9ca3af" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
+          <p className="mt-2" style={{ fontSize: 14, fontWeight: 600, color: "var(--monari-ink-muted)" }}>
             부모님이 허락하면 용돈 전에 미리 쓸 수 있어요
           </p>
         </div>
@@ -84,7 +84,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
       )}
 
       {/* 새 요청 폼 */}
-      <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>새 미리쓰기 요청</p>
+      <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>새 미리쓰기 요청</p>
       <div className="rounded-[24px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
         <BorrowRequestQuickForm childId={id} />
       </div>

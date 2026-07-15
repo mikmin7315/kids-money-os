@@ -47,14 +47,16 @@ export function MobileAppShell({
 
       <nav className="monari-tabbar" aria-label="주요 메뉴">
         {TAB_DEFS.map((tab) => {
-          const active = pathname === tab.href;
+          const hasPending = tab.showBadge && pendingCount && pendingCount > 0;
+          const href = hasPending ? "/approvals" : tab.href;
+          const active = pathname === tab.href || (hasPending && pathname === "/approvals");
           const Icon = tab.icon;
-          const badge = tab.showBadge && pendingCount && pendingCount > 0 ? pendingCount : null;
+          const badge = hasPending ? pendingCount : null;
 
           return (
             <Link
               key={tab.href}
-              href={tab.href}
+              href={href}
               className={`monari-tab ${active ? "monari-tab-active" : ""}`}
               aria-current={active ? "page" : undefined}
             >

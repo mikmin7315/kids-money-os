@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { RetryAllowanceButton } from "@/components/admin/retry-allowance-button";
@@ -74,7 +74,7 @@ async function loadExecutions(): Promise<{ rows: ExecRow[]; error?: string }> {
 const STATUS_STYLE: Record<string, string> = {
   success: "bg-[#d1fae5] text-[#065f46]",
   failed: "bg-[#fee2e2] text-[#991b1b]",
-  pending: "bg-[#f3f4f6] text-[#6b7280]",
+  pending: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
   skipped: "bg-[#fef3c7] text-[#92400e]",
 };
 
@@ -101,7 +101,7 @@ export default async function AdminAllowanceLogPage() {
             { label: "성공", value: success.length, color: "text-[#059669]" },
             { label: "실패", value: failed.length, color: "text-[#dc2626]" },
           ].map(({ label, value, color }) => (
-            <div key={label} className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+            <div key={label} className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
               <p className="text-[10px] font-semibold text-[var(--color-muted)]">{label}</p>
               <p className={`mt-1 text-lg font-black ${color}`}>{value}</p>
             </div>
@@ -140,14 +140,14 @@ export default async function AdminAllowanceLogPage() {
         <section>
           <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">전체 실행 이력</p>
           {rows.length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
               실행 이력이 없어요. 정기 용돈 배치가 실행되면 여기에 기록돼요.
             </div>
           ) : (
             <div className="overflow-hidden rounded-[16px] border border-[var(--color-border)] bg-white">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--color-border)] bg-[#f9fafb] text-left text-xs font-semibold text-[var(--color-muted)]">
+                  <tr className="border-b border-[var(--color-border)] bg-[var(--monari-surface-soft)] text-left text-xs font-semibold text-[var(--color-muted)]">
                     <th className="px-4 py-3">아이 / 규칙</th>
                     <th className="px-4 py-3">예정일</th>
                     <th className="px-4 py-3 text-right">금액</th>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
@@ -47,7 +47,7 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
             <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
               card.status === "active" ? "bg-[#d1fae5] text-[#065f46]" :
               card.status === "lost" ? "bg-[#fee2e2] text-[#991b1b]" :
-              "bg-[#f3f4f6] text-[#6b7280]"
+              "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
             }`}>{card.status}</span>
           </div>
           <div className="space-y-2 text-sm">
@@ -71,7 +71,7 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
         <section className="mb-4">
           <p className="mb-2 text-sm font-extrabold">최근 거래</p>
           {(txRes.data ?? []).length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] py-6 text-center text-sm text-[var(--color-muted)]">거래 내역 없음</div>
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-6 text-center text-sm text-[var(--color-muted)]">거래 내역 없음</div>
           ) : (
             <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
               {(txRes.data ?? []).map((t) => (
@@ -91,7 +91,7 @@ export default async function AdminCardDetailPage({ params }: { params: Promise<
         <section className="mb-4">
           <p className="mb-2 text-sm font-extrabold">최근 연동 로그</p>
           {(logRes.data ?? []).length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] py-6 text-center text-sm text-[var(--color-muted)]">로그 없음</div>
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-6 text-center text-sm text-[var(--color-muted)]">로그 없음</div>
           ) : (
             <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
               {(logRes.data ?? []).map((l) => (

@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/layout/app-header";
+﻿import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
@@ -47,7 +47,7 @@ export default async function NotificationLogsPage() {
           {rows.map((row) => (
             <div key={row.id} className="rounded-[14px] border border-[var(--color-border)] p-3">
               <div className="flex items-center justify-between">
-                <span className="rounded-full bg-[#f3f4f6] px-2 py-0.5 text-[10px] font-bold text-[#374151]">
+                <span className="rounded-full bg-[var(--monari-surface-soft)] px-2 py-0.5 text-[10px] font-bold text-[var(--monari-ink-soft)]">
                   {row.target === "parent" ? "부모" : "아이"}
                 </span>
                 <span className="text-[10px] text-[var(--color-text-muted)]">

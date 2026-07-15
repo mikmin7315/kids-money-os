@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -51,7 +51,7 @@ export default async function AdminTermsPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${r.is_active ? "bg-[#d1fae5] text-[#065f46]" : "bg-[#f3f4f6] text-[#6b7280]"}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${r.is_active ? "bg-[#d1fae5] text-[#065f46]" : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"}`}>
                           {r.is_active ? "활성" : "비활성"}
                         </span>
                         <span className="text-[11px] font-bold text-[var(--color-muted)]">v{r.version}</span>
@@ -70,7 +70,7 @@ export default async function AdminTermsPage() {
         ))}
 
         {rows.length === 0 && (
-          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
             등록된 약관이 없어요. 위 양식으로 첫 약관을 등록해주세요.
           </div>
         )}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -22,7 +22,7 @@ const DISPUTE_STYLE: Record<string, string> = {
   open: "bg-[#fee2e2] text-[#991b1b]",
   reviewing: "bg-[#fef3c7] text-[#92400e]",
   resolved: "bg-[#d1fae5] text-[#065f46]",
-  rejected: "bg-[#f3f4f6] text-[#6b7280]",
+  rejected: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 const DISPUTE_LABEL: Record<string, string> = {
   open: "분쟁 접수", reviewing: "검토 중", resolved: "처리 완료", rejected: "반려",
@@ -70,11 +70,11 @@ export default async function AdminCardDisputesPage() {
         {error && <div className="mb-4 rounded-[12px] bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
         <div className="mb-4 grid grid-cols-2 gap-3">
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">처리 필요</p>
             <p className={`mt-1 text-lg font-black ${open.length > 0 ? "text-[#dc2626]" : "text-[#059669]"}`}>{open.length}</p>
           </div>
-          <div className="rounded-[12px] bg-[#f9fafb] p-3 text-center">
+          <div className="rounded-[12px] bg-[var(--monari-surface-soft)] p-3 text-center">
             <p className="text-[10px] font-semibold text-[var(--color-muted)]">전체</p>
             <p className="mt-1 text-lg font-black text-[var(--color-text)]">{rows.length}</p>
           </div>
@@ -100,7 +100,7 @@ export default async function AdminCardDisputesPage() {
             </Link>
           ))}
           {rows.length === 0 && !error && (
-            <div className="rounded-[16px] bg-[#f9fafb] px-5 py-10 text-center">
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-10 text-center">
               <p style={{ fontSize: 32, marginBottom: 8 }}>✅</p>
               <p className="text-sm font-semibold text-[var(--color-muted)]">접수된 분쟁 티켓이 없어요.</p>
             </div>

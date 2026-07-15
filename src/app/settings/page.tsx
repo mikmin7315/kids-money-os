@@ -122,7 +122,7 @@ export default async function SettingsPage() {
                         <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
                           통장 보기 <ChevronRight size={14} aria-hidden="true" />
                         </Link>
-                        <Link href={`/settings/children/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[#f3f4f6] px-3 text-xs font-bold text-[#374151]">
+                        <Link href={`/settings/children/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-surface-soft)] px-3 text-xs font-bold text-[var(--monari-ink-soft)]">
                           수정·삭제
                         </Link>
                         <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-hero-lo)] px-3 text-xs font-bold text-[var(--monari-hero)]">

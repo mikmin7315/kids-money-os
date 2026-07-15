@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -35,7 +35,7 @@ async function loadAnnouncements(): Promise<{ rows: Ann[]; error?: string }> {
 
 const STATUS_STYLE: Record<string, string> = {
   active: "bg-[#d1fae5] text-[#065f46]",
-  draft:  "bg-[#f3f4f6] text-[#6b7280]",
+  draft:  "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
   ended:  "bg-[#fee2e2] text-[#991b1b]",
 };
 const STATUS_LABEL: Record<string, string> = { active: "게시 중", draft: "임시저장", ended: "종료" };
@@ -63,7 +63,7 @@ export default async function AdminAnnouncementsPage() {
         <section>
           <p className="mb-3 text-sm font-extrabold text-[var(--color-text)]">공지 목록</p>
           {rows.length === 0 ? (
-            <div className="rounded-[16px] bg-[#f9fafb] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
+            <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-8 text-center text-sm text-[var(--color-muted)]">
               등록된 공지가 없어요.
             </div>
           ) : (

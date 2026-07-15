@@ -20,7 +20,7 @@ function ToggleRow({
     <form action={formAction} className="flex items-center justify-between rounded-[14px] bg-white px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       <input type="hidden" name="notif_type" value={notifType} />
       <input type="hidden" name="enabled" value={String(!enabled)} />
-      <p style={{ fontSize: 14, fontWeight: 700, color: "#1a0533" }}>{label}</p>
+      <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }}>{label}</p>
       <button
         type="submit"
         disabled={pending}

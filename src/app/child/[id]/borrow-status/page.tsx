@@ -42,8 +42,8 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
       </Link>
 
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>{child.name}의 미리쓰기</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>{child.name}의 미리쓰기</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           🛒 미리쓰기 현황
         </h1>
       </div>
@@ -52,8 +52,8 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
       {activeBorrows.length === 0 && pendingBorrows.length === 0 ? (
         <div className="mb-5 rounded-[24px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>갚아야 할 돈이 없어요!</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>미리쓰기를 모두 갚았어요. 잘 했어요!</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>갚아야 할 돈이 없어요!</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>미리쓰기를 모두 갚았어요. 잘 했어요!</p>
           <Link
             href={`/child/${id}/borrow`}
             className="mt-5 block rounded-[14px] bg-[var(--monari-hero)] py-3 text-sm font-extrabold text-white transition active:scale-[0.97]"
@@ -119,7 +119,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                     {dDay !== null && (
                       <div className="text-center rounded-[14px] bg-white/70 px-3 py-2">
                         <p style={{ fontSize: 11, fontWeight: 600, color: "#9f1239" }}>다음 상환</p>
-                        <p style={{ fontSize: 22, fontWeight: 900, color: dDay <= 3 ? "#dc2626" : "#1a0533" }}>
+                        <p style={{ fontSize: 22, fontWeight: 900, color: dDay <= 3 ? "#dc2626" : "var(--monari-ink)" }}>
                           {dDay === 0 ? "오늘" : dDay > 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}
                         </p>
                       </div>
@@ -131,40 +131,40 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                 {/* 진행률 */}
                 <div className="px-5 py-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#6b7280" }}>상환 진행률</p>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)" }}>상환 진행률</p>
                     <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>{paidRatio}%</p>
                   </div>
-                  <div className="h-3 rounded-full bg-[#f3f4f6] overflow-hidden">
+                  <div className="h-3 rounded-full bg-[var(--monari-surface-soft)] overflow-hidden">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#7c3aed] to-[#a855f7] transition-all"
                       style={{ width: `${paidRatio}%` }}
                     />
                   </div>
                   <div className="mt-2 flex justify-between">
-                    <p style={{ fontSize: 11, color: "#9ca3af" }}>갚은 돈 {formatWon(totalPaid)}</p>
-                    <p style={{ fontSize: 11, color: "#9ca3af" }}>총 {formatWon(r.requestedAmount)}</p>
+                    <p style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>갚은 돈 {formatWon(totalPaid)}</p>
+                    <p style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>총 {formatWon(r.requestedAmount)}</p>
                   </div>
                 </div>
 
                 {/* 상환 내역 */}
                 {repayments.length > 0 && (
-                  <div className="border-t border-[#f3f4f6]">
+                  <div className="border-t border-[var(--monari-line)]">
                     {repayments.map((p) => (
                       <div key={p.id} className="flex items-center justify-between px-5 py-3 border-b border-[#f9fafb] last:border-0">
                         <div>
-                          <p style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-soft)" }}>
                             {p.dueDate.slice(5).replace("-", "월 ")}일
                           </p>
-                          <p style={{ fontSize: 11, color: "#9ca3af" }}>
+                          <p style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>
                             {p.status === "paid" ? "완납" : p.status === "partial" ? "일부 납부" : p.status === "overdue" ? "연체" : "예정"}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p style={{ fontSize: 14, fontWeight: 800, color: p.status === "paid" ? "#059669" : p.status === "overdue" ? "#dc2626" : "#1a0533" }} className="tabular-nums">
+                          <p style={{ fontSize: 14, fontWeight: 800, color: p.status === "paid" ? "#059669" : p.status === "overdue" ? "#dc2626" : "var(--monari-ink)" }} className="tabular-nums">
                             {formatWon(p.amount)}
                           </p>
                           {p.paidAmount > 0 && p.paidAmount < p.amount && (
-                            <p style={{ fontSize: 11, color: "#9ca3af" }}>납부 {formatWon(p.paidAmount)}</p>
+                            <p style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>납부 {formatWon(p.paidAmount)}</p>
                           )}
                         </div>
                       </div>
@@ -180,7 +180,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
       {/* 완료된 미리쓰기 이력 */}
       {repaidBorrows.length > 0 && (
         <>
-          <p style={{ fontSize: 15, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>
+          <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>
             다 갚은 미리쓰기 🎉
           </p>
           <div className="space-y-2">
@@ -188,12 +188,12 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
               <div key={r.id} className="flex items-center gap-3 rounded-[16px] bg-white px-4 py-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                 <span style={{ fontSize: 24 }}>✅</span>
                 <div className="flex-1 min-w-0">
-                  <p style={{ fontSize: 14, fontWeight: 700, color: "#1a0533" }}>{r.purpose}</p>
-                  <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink)" }}>{r.purpose}</p>
+                  <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 2 }}>
                     {r.createdAt.slice(0, 7).replace("-", "년 ")}월
                   </p>
                 </div>
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#6b7280" }} className="tabular-nums">
+                <p style={{ fontSize: 15, fontWeight: 800, color: "var(--monari-ink-muted)" }} className="tabular-nums">
                   {formatWon(r.requestedAmount)}
                 </p>
               </div>

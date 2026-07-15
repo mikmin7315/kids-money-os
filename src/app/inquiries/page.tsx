@@ -14,7 +14,7 @@ const STATUS_STYLE: Record<string, { label: string; color: string }> = {
   pending:     { label: "접수됨",   color: "bg-[#fef3c7] text-[#92400e]" },
   in_progress: { label: "처리 중",  color: "bg-[#dbeafe] text-[#1d4ed8]" },
   resolved:    { label: "답변 완료", color: "bg-[#d1fae5] text-[#065f46]" },
-  closed:      { label: "종료",     color: "bg-[#f3f4f6] text-[#6b7280]" },
+  closed:      { label: "종료",     color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" },
 };
 
 type InquiryRow = {
@@ -40,26 +40,26 @@ export default async function InquiriesPage() {
   return (
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>고객지원</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>고객지원</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           💬 문의하기
         </h1>
       </div>
 
       {/* 문의 작성 폼 */}
       <section className="mb-8">
-        <p style={{ fontSize: 16, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>새 문의 작성</p>
+        <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>새 문의 작성</p>
         <InquirySubmitForm />
       </section>
 
       {/* 내 문의 내역 */}
       <section>
-        <p style={{ fontSize: 16, fontWeight: 800, color: "#1a0533", marginBottom: 12 }}>내 문의 내역</p>
+        <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>내 문의 내역</p>
         {inquiries.length === 0 ? (
           <div className="rounded-[20px] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <p style={{ fontSize: 36, marginBottom: 10 }}>📭</p>
-            <p style={{ fontSize: 16, fontWeight: 700, color: "#1a0533" }}>문의 내역이 없어요</p>
-            <p className="mt-2" style={{ fontSize: 13, color: "#9ca3af" }}>
+            <p style={{ fontSize: 16, fontWeight: 700, color: "var(--monari-ink)" }}>문의 내역이 없어요</p>
+            <p className="mt-2" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>
               위 양식으로 문의를 남겨주세요.
             </p>
           </div>
@@ -76,10 +76,10 @@ export default async function InquiriesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>{st.label}</span>
-                      <span style={{ fontSize: 11, color: "#9ca3af" }}>{CATEGORY_LABEL[q.category] ?? q.category}</span>
+                      <span style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>{CATEGORY_LABEL[q.category] ?? q.category}</span>
                     </div>
-                    <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }} className="truncate">{q.title}</p>
-                    <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
+                    <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">{q.title}</p>
+                    <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 2 }}>
                       {q.created_at.slice(0, 10).replace(/-/g, ".")}
                       {q.admin_reply ? " · 답변 있음" : ""}
                     </p>

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
@@ -10,11 +10,11 @@ import { formatWon } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 const DISPUTE_STYLE: Record<string, string> = {
-  none: "bg-[#f3f4f6] text-[#6b7280]",
+  none: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
   open: "bg-[#fee2e2] text-[#991b1b]",
   reviewing: "bg-[#fef3c7] text-[#92400e]",
   resolved: "bg-[#d1fae5] text-[#065f46]",
-  rejected: "bg-[#f3f4f6] text-[#6b7280]",
+  rejected: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 const DISPUTE_LABEL: Record<string, string> = {
   none: "분쟁 없음", open: "분쟁 접수", reviewing: "검토 중", resolved: "처리 완료", rejected: "반려",

@@ -57,7 +57,7 @@ export default async function AddChildPage() {
                 >
                   {step}
                 </span>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{text}</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-soft)" }}>{text}</p>
               </div>
             ))}
           </div>

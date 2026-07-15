@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -47,8 +47,8 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
   return (
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>행동 기록</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>행동 기록</p>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
           📋 내 약속 기록
         </h1>
       </div>
@@ -71,14 +71,14 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
       {Object.keys(grouped).length === 0 ? (
         <div className="rounded-[24px] bg-white p-10 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>아직 기록이 없어요</p>
-          <p style={{ fontSize: 14, color: "#9ca3af", marginTop: 6 }}>약속 탭에서 오늘 약속을 체크해봐요!</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>아직 기록이 없어요</p>
+          <p style={{ fontSize: 14, color: "var(--monari-ink-muted)", marginTop: 6 }}>약속 탭에서 오늘 약속을 체크해봐요!</p>
         </div>
       ) : (
         <div className="space-y-4">
           {Object.entries(grouped).map(([date, dayLogs]) => (
             <div key={date}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af", marginBottom: 8 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 8 }}>
                 {date.slice(5).replace("-", "월 ")}일
               </p>
               <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
@@ -98,11 +98,11 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
                         {log.status === "approved" || log.status === "completed" ? "⭐" : log.status === "pending" ? "⏳" : "💭"}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p style={{ fontSize: 15, fontWeight: 700, color: "#1a0533" }} className="truncate">
+                        <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">
                           {rule?.title ?? "약속"}
                         </p>
                         {log.memo && (
-                          <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }} className="truncate">
+                          <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 2 }} className="truncate">
                             {log.memo}
                           </p>
                         )}

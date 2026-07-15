@@ -36,8 +36,8 @@ export function NotificationPermissionBanner() {
 
   if (permission === "unsupported") {
     return (
-      <div className="mb-6 rounded-[16px] bg-[#f3f4f6] px-4 py-3">
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#6b7280" }}>이 환경에서는 푸시 알림이 지원되지 않아요.</p>
+      <div className="mb-6 rounded-[16px] bg-[var(--monari-surface-soft)] px-4 py-3">
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)" }}>이 환경에서는 푸시 알림이 지원되지 않아요.</p>
       </div>
     );
   }

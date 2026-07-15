@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState } from "react";
 import { cancelBorrowRequestAction } from "@/actions/finance";
@@ -11,7 +11,7 @@ export function CancelBorrowButton({ borrowRequestId }: { borrowRequestId: strin
 
   if (state.ok) {
     return (
-      <p className="mt-3 text-center text-sm font-bold text-[#6b7280]">✅ 취소됐어요</p>
+      <p className="mt-3 text-center text-sm font-bold text-[var(--monari-ink-muted)]">✅ 취소됐어요</p>
     );
   }
 

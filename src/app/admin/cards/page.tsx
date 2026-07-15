@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -14,8 +14,8 @@ const STATUS_COLOR: Record<string, string> = {
   active: "bg-[#d1fae5] text-[#065f46]",
   frozen: "bg-[#dbeafe] text-[#1e40af]",
   lost: "bg-[#fee2e2] text-[#991b1b]",
-  cancelled: "bg-[#f3f4f6] text-[#6b7280]",
-  expired: "bg-[#f3f4f6] text-[#6b7280]",
+  cancelled: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
+  expired: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
 };
 
 export default async function AdminCardsPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
@@ -54,7 +54,7 @@ export default async function AdminCardsPage({ searchParams }: { searchParams: P
         <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
           <Link
             href="/admin/cards"
-            className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!status ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}
+            className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!status ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}
           >
             전체 {counts?.length ?? 0}
           </Link>
@@ -62,7 +62,7 @@ export default async function AdminCardsPage({ searchParams }: { searchParams: P
             <Link
               key={s}
               href={`/admin/cards?status=${s}`}
-              className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${status === s ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}
+              className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${status === s ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}
             >
               {STATUS_LABEL[s]} {statusCounts[s] ?? 0}
             </Link>

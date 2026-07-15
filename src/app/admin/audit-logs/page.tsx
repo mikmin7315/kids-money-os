@@ -33,15 +33,15 @@ export default async function AdminAuditLogsPage({ searchParams }: { searchParam
 
         {actions.length > 0 && (
           <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
-            <Link href="/admin/audit-logs" className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!action ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}>전체</Link>
+            <Link href="/admin/audit-logs" className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${!action ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}>전체</Link>
             {actions.map((a) => (
-              <Link key={a} href={`/admin/audit-logs?action=${a}`} className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${action === a ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6]"}`}>{a}</Link>
+              <Link key={a} href={`/admin/audit-logs?action=${a}`} className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${action === a ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)]"}`}>{a}</Link>
             ))}
           </div>
         )}
 
         {logs.length === 0 ? (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">로그가 없어요.</div>
         ) : (
           <div className="rounded-[16px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden divide-y divide-[var(--color-border)]">
             {logs.map((l) => (

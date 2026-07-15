@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireParentSession } from "@/lib/auth";
@@ -82,7 +82,7 @@ export default async function CardsPage() {
                   card.status === "active" ? "bg-[#d1fae5] text-[#065f46]" :
                   card.status === "frozen" ? "bg-[#dbeafe] text-[#1e40af]" :
                   card.status === "lost" ? "bg-[#fee2e2] text-[#991b1b]" :
-                  "bg-[#f3f4f6] text-[#6b7280]"
+                  "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
                 }`}>
                   {card.status === "active" ? "정상" : card.status === "frozen" ? "일시정지" : card.status === "lost" ? "분실신고" : card.status}
                 </span>
@@ -91,11 +91,11 @@ export default async function CardsPage() {
 
             {/* 일/월 한도 */}
             <div className="mb-4 grid grid-cols-2 gap-3">
-              <div className="rounded-[10px] bg-[#f9fafb] p-3">
+              <div className="rounded-[10px] bg-[var(--monari-surface-soft)] p-3">
                 <p className="text-[10px] font-semibold text-[var(--color-muted)]">일 한도</p>
                 <p className="mt-1 text-sm font-bold">{formatWon(card.daily_limit)}</p>
               </div>
-              <div className="rounded-[10px] bg-[#f9fafb] p-3">
+              <div className="rounded-[10px] bg-[var(--monari-surface-soft)] p-3">
                 <p className="text-[10px] font-semibold text-[var(--color-muted)]">월 한도</p>
                 <p className="mt-1 text-sm font-bold">{formatWon(card.monthly_limit)}</p>
               </div>
@@ -122,7 +122,7 @@ export default async function CardsPage() {
             <div className="mt-2">
               <Link
                 href="/cards/transactions"
-                className="block rounded-[10px] bg-[#f9fafb] py-2 text-center text-xs font-bold text-[var(--color-text)]"
+                className="block rounded-[10px] bg-[var(--monari-surface-soft)] py-2 text-center text-xs font-bold text-[var(--color-text)]"
               >
                 카드 사용 내역 →
               </Link>
@@ -131,7 +131,7 @@ export default async function CardsPage() {
         ))}
 
         {cardList.length === 0 && appList.length === 0 && (
-          <div className="rounded-[16px] bg-[#f9fafb] px-5 py-12 text-center">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-12 text-center">
             <p style={{ fontSize: 36, marginBottom: 8 }}>💳</p>
             <p className="text-sm font-semibold text-[var(--color-text)]">아직 카드가 없어요.</p>
             <p className="mt-1 text-xs text-[var(--color-muted)]">아이를 위한 체크카드를 신청해보세요.</p>

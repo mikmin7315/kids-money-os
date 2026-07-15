@@ -15,11 +15,11 @@ export function CashSpendForm({ childId }: { childId: string }) {
     return (
       <div className="py-6 text-center">
         <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
-        <p style={{ fontSize: 20, fontWeight: 900, color: "#1a0533" }}>기록했어요!</p>
-        <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>{state.message}</p>
+        <p style={{ fontSize: 20, fontWeight: 900, color: "var(--monari-ink)" }}>기록했어요!</p>
+        <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>{state.message}</p>
         <button
           onClick={() => window.history.back()}
-          className="mt-6 w-full rounded-[18px] bg-[#f3f0ff] py-4 text-base font-extrabold text-[var(--monari-hero)]"
+          className="mt-6 w-full rounded-[18px] bg-[var(--monari-surface-soft)] py-4 text-base font-extrabold text-[var(--monari-hero)]"
         >
           돌아가기
         </button>
@@ -33,7 +33,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
 
       {/* 금액 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[#1a0533]">얼마 썼어요?</label>
+        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">얼마 썼어요?</label>
         <div className="flex flex-wrap gap-2 mb-3">
           {QUICK_AMOUNTS.map((q) => (
             <button
@@ -44,7 +44,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
               style={{
                 borderColor: amount === String(q) ? "var(--monari-hero)" : "#e5e7eb",
                 background: amount === String(q) ? "var(--monari-hero-lo)" : "#fff",
-                color: amount === String(q) ? "var(--monari-hero)" : "#6b7280",
+                color: amount === String(q) ? "var(--monari-hero)" : "var(--monari-ink-muted)",
               }}
             >
               {q.toLocaleString()}원
@@ -58,7 +58,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
           placeholder="직접 입력 (원)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[var(--monari-ink)] outline-none focus:border-[var(--monari-hero)]"
           min="1"
           required
         />
@@ -66,24 +66,24 @@ export function CashSpendForm({ childId }: { childId: string }) {
 
       {/* 날짜 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[#1a0533]">언제 썼어요?</label>
+        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">언제 썼어요?</label>
         <input
           name="date"
           type="date"
           defaultValue={new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date())}
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[var(--monari-ink)] outline-none focus:border-[var(--monari-hero)]"
           required
         />
       </div>
 
       {/* 메모 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[#1a0533]">뭐에 썼어요? (선택)</label>
+        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">뭐에 썼어요? (선택)</label>
         <input
           name="memo"
           type="text"
           placeholder="예: 편의점 간식, 급식비"
-          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base text-[#1a0533] outline-none focus:border-[var(--monari-hero)]"
+          className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base text-[var(--monari-ink)] outline-none focus:border-[var(--monari-hero)]"
           maxLength={50}
         />
       </div>

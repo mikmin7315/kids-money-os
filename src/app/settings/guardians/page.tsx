@@ -72,7 +72,7 @@ export default async function GuardiansPage() {
                   <div className="flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       inv.status === "accepted" ? "bg-[#d1fae5] text-[#065f46]" :
-                      inv.expired ? "bg-[#f3f4f6] text-[#6b7280]" :
+                      inv.expired ? "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" :
                       "bg-[#fef3c7] text-[#92400e]"
                     }`}>
                       {inv.status === "accepted" ? "수락" : inv.expired ? "만료" : "대기"}
@@ -110,7 +110,7 @@ export default async function GuardiansPage() {
         )}
 
         {invites.length === 0 && guardians.length === 0 && (
-          <div className="rounded-[16px] bg-[#f9fafb] py-10 text-center text-sm text-[var(--color-muted)]">
+          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">
             아직 초대한 보호자가 없어요.
           </div>
         )}

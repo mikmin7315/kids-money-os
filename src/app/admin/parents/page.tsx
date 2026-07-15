@@ -85,7 +85,7 @@ export default async function AdminParentsPage() {
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--color-border)] bg-[#f9fafb] text-left text-xs font-semibold text-[var(--color-muted)]">
+                <tr className="border-b border-[var(--color-border)] bg-[var(--monari-surface-soft)] text-left text-xs font-semibold text-[var(--color-muted)]">
                   <th className="px-4 py-3">이름</th>
                   <th className="px-4 py-3">이메일</th>
                   <th className="px-4 py-3 text-center">아이</th>

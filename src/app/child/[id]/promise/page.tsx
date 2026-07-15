@@ -48,10 +48,10 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       {/* 헤더 */}
       <div className="mb-5 flex items-start justify-between">
         <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", marginBottom: 4 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>
             {today.slice(5).replace("-", ".")} 오늘
           </p>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.03em" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
             ✅ 오늘 약속 체크
           </h1>
         </div>
@@ -90,7 +90,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
 
       {/* 주간 달성 캘린더 */}
       <div className="mb-5 rounded-[20px] bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-        <p style={{ fontSize: 14, fontWeight: 700, color: "#9ca3af", marginBottom: 12 }}>이번 주 기록</p>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 12 }}>이번 주 기록</p>
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
             <div key={label} className="flex flex-col items-center gap-1.5">
@@ -119,8 +119,8 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       {activeRules.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>🌱</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>약속이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "#9ca3af" }}>부모님과 함께 새로운 약속을 만들어봐요!</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>약속이 없어요</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>부모님과 함께 새로운 약속을 만들어봐요!</p>
         </div>
       ) : (
         <>

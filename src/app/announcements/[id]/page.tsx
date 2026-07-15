@@ -45,10 +45,10 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
         <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold ${ti.color}`}>
           {ti.icon} {ti.label}
         </span>
-        <h1 className="mt-3" style={{ fontSize: 24, fontWeight: 900, color: "#1a0533", letterSpacing: "-0.02em" }}>
+        <h1 className="mt-3" style={{ fontSize: 24, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.02em" }}>
           {String(a.title)}
         </h1>
-        <p className="mt-2" style={{ fontSize: 12, color: "#9ca3af" }}>
+        <p className="mt-2" style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>
           {String(a.created_at ?? "").slice(0, 10).replace(/-/g, ".")}
           {a.starts_at && ` · 적용 ${String(a.starts_at).slice(0, 10).replace(/-/g, ".")}`}
           {a.ends_at && ` ~ ${String(a.ends_at).slice(0, 10).replace(/-/g, ".")}`}
@@ -56,7 +56,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
       </div>
 
       <div className="rounded-[20px] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <p style={{ fontSize: 15, lineHeight: 1.75, color: "#374151", whiteSpace: "pre-wrap" }}>
+        <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
           {String(a.body)}
         </p>
       </div>

@@ -151,7 +151,7 @@ export function OnboardingCarousel() {
         </div>
 
         {current === 0 && (
-          <p className="mt-4 text-center text-xs text-[#9ca3af]">
+          <p className="mt-4 text-center text-xs text-[var(--monari-ink-muted)]">
             이미 계정이 있어요?{" "}
             <Link href="/login" className="font-bold text-[var(--monari-hero)]">
               로그인하기

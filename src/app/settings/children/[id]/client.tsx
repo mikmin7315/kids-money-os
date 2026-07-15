@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -100,7 +100,7 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
               )}
               <div className="flex gap-2">
                 <button type="button" onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 rounded-[14px] border-2 border-[#e5e7eb] py-3 text-[14px] font-700 text-[#6b7280]">
+                  className="flex-1 rounded-[14px] border-2 border-[#e5e7eb] py-3 text-[14px] font-700 text-[var(--monari-ink-muted)]">
                   취소
                 </button>
                 <button type="submit" disabled={deletePending}

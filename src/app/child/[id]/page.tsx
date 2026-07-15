@@ -199,13 +199,13 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                   이자가 더 생겨요!
                 </p>
               </div>
-              <div className="divide-y divide-[#f3f4f6]">
+              <div className="divide-y divide-[var(--monari-line)]">
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p style={{ fontSize: 13, color: "#9ca3af", fontWeight: 600 }}>지금 남긴 돈</p>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "#1a0533" }}>{formatWon(summary.wallet.balance)}</p>
+                  <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", fontWeight: 600 }}>지금 남긴 돈</p>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-ink)" }}>{formatWon(summary.wallet.balance)}</p>
                 </div>
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p style={{ fontSize: 13, color: "#9ca3af", fontWeight: 600 }}>현재 이자율</p>
+                  <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", fontWeight: 600 }}>현재 이자율</p>
                   <p style={{ fontSize: 14, fontWeight: 800, color: "var(--monari-hero)" }}>{summary.wallet.currentInterestRate}%</p>
                 </div>
                 <div className="px-5 py-3">
@@ -227,19 +227,19 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         </div>
         <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
           {childTx.length === 0 ? (
-            <p className="px-5 py-10 text-center" style={{ fontSize: 16, color: "#9ca3af" }}>아직 거래 내역이 없어요.</p>
+            <p className="px-5 py-10 text-center" style={{ fontSize: 16, color: "var(--monari-ink-muted)" }}>아직 거래 내역이 없어요.</p>
           ) : (
             <ul>
               {childTx.map((tx, i) => {
                 const minus = tx.type === "spend" || tx.type === "borrow";
                 return (
-                  <li key={tx.id} className={`flex items-center gap-3 px-4 py-4 ${i < childTx.length - 1 ? "border-b border-[#f3f4f6]" : ""}`}>
+                  <li key={tx.id} className={`flex items-center gap-3 px-4 py-4 ${i < childTx.length - 1 ? "border-b border-[var(--monari-line)]" : ""}`}>
                     <TxIcon type={tx.type} />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate" style={{ fontSize: 16, fontWeight: 700, color: "#1a0533" }}>{txLabel(tx.type, tx.memo)}</p>
-                      <p className="mt-0.5" style={{ fontSize: 13, color: "#9ca3af" }}>{relativeDate(tx.date, today)}</p>
+                      <p className="truncate" style={{ fontSize: 16, fontWeight: 700, color: "var(--monari-ink)" }}>{txLabel(tx.type, tx.memo)}</p>
+                      <p className="mt-0.5" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{relativeDate(tx.date, today)}</p>
                     </div>
-                    <p className="shrink-0 tabular-nums" style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", color: minus ? "#1a0533" : "#15803d" }}>
+                    <p className="shrink-0 tabular-nums" style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", color: minus ? "var(--monari-ink)" : "#15803d" }}>
                       {minus ? "-" : "+"}{formatWon(tx.amount)}
                     </p>
                   </li>
@@ -255,7 +255,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
 function KidSectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 style={{ fontSize: 20, fontWeight: 800, color: "#1a0533", letterSpacing: "-0.02em" }}>{children}</h2>
+    <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--monari-ink)", letterSpacing: "-0.02em" }}>{children}</h2>
   );
 }
 

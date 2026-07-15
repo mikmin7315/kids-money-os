@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { requireAdminSession } from "@/lib/auth";
@@ -81,7 +81,7 @@ export default async function AdminTransactionsPage({
         <div className="mb-4 flex flex-wrap gap-2">
           <Link
             href="/admin/transactions"
-            className={`rounded-full px-3 py-1 text-xs font-bold ${!type ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6] text-[var(--color-muted)]"}`}
+            className={`rounded-full px-3 py-1 text-xs font-bold ${!type ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-muted)]"}`}
           >
             전체
           </Link>
@@ -89,7 +89,7 @@ export default async function AdminTransactionsPage({
             <Link
               key={t}
               href={`/admin/transactions?type=${t}`}
-              className={`rounded-full px-3 py-1 text-xs font-bold ${type === t ? "bg-[var(--color-accent)] text-white" : "bg-[#f3f4f6] text-[var(--color-muted)]"}`}
+              className={`rounded-full px-3 py-1 text-xs font-bold ${type === t ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-muted)]"}`}
             >
               {TX_LABEL[t]}
             </Link>
@@ -105,7 +105,7 @@ export default async function AdminTransactionsPage({
                 <div key={r.id} className="flex items-start justify-between px-4 py-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-[#f3f4f6] px-2 py-0.5 text-[10px] font-bold text-[var(--color-muted)]">
+                      <span className="rounded-full bg-[var(--monari-surface-soft)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-muted)]">
                         {TX_LABEL[r.type] ?? r.type}
                       </span>
                       <span className="text-[11px] text-[var(--color-muted)]">{r.child_name}</span>

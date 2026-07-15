@@ -15,8 +15,8 @@ export function WalletChargeForm() {
     return (
       <div className="py-6 text-center">
         <p style={{ fontSize: 40, marginBottom: 10 }}>💸</p>
-        <p style={{ fontSize: 18, fontWeight: 800, color: "#1a0533" }}>충전 요청 완료!</p>
-        <p style={{ fontSize: 14, fontWeight: 500, color: "#6b7280", marginTop: 6 }}>{state.message}</p>
+        <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>충전 요청 완료!</p>
+        <p style={{ fontSize: 14, fontWeight: 500, color: "var(--monari-ink-muted)", marginTop: 6 }}>{state.message}</p>
         <button
           onClick={() => window.location.reload()}
           className="mt-5 w-full rounded-[14px] bg-[var(--monari-hero)] py-3.5 text-sm font-extrabold text-white"
@@ -31,7 +31,7 @@ export function WalletChargeForm() {
     <form action={action} className="space-y-4">
       {/* 빠른 금액 */}
       <div>
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8 }}>빠른 선택</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-soft)", marginBottom: 8 }}>빠른 선택</p>
         <div className="grid grid-cols-4 gap-2">
           {QUICK_AMOUNTS.map((amt) => (
             <button
@@ -50,7 +50,7 @@ export function WalletChargeForm() {
       </div>
 
       <div>
-        <label style={{ fontSize: 13, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>
+        <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-soft)", display: "block", marginBottom: 6 }}>
           충전 금액
         </label>
         <div className="relative">
@@ -66,9 +66,9 @@ export function WalletChargeForm() {
             className="monari-input pr-10 text-right tabular-nums"
             style={{ fontSize: 20, fontWeight: 800 }}
           />
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-[#9ca3af]">원</span>
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-[var(--monari-ink-muted)]">원</span>
         </div>
-        <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>최소 1,000원 · 최대 100만 원</p>
+        <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 6 }}>최소 1,000원 · 최대 100만 원</p>
       </div>
 
       {state.message && !state.ok && (
@@ -110,7 +110,7 @@ export function BankAccountForm({
   return (
     <form action={action} className="space-y-3">
       <div>
-        <label style={{ fontSize: 13, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>
+        <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-soft)", display: "block", marginBottom: 6 }}>
           은행
         </label>
         <select name="bankName" defaultValue={defaultBankName} required className="monari-input">
@@ -120,7 +120,7 @@ export function BankAccountForm({
       </div>
 
       <div>
-        <label style={{ fontSize: 13, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>
+        <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-soft)", display: "block", marginBottom: 6 }}>
           계좌번호
         </label>
         <input
@@ -135,7 +135,7 @@ export function BankAccountForm({
       </div>
 
       <div>
-        <label style={{ fontSize: 13, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>
+        <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-soft)", display: "block", marginBottom: 6 }}>
           예금주
         </label>
         <input
