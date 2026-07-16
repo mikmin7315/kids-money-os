@@ -23,7 +23,7 @@ export default function ChildPinPage({ params }: { params: Promise<{ id: string 
   }, [state.ok, id, router]);
 
   return (
-    <div data-theme="child">
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
       <PageContainer>
         <MobileShell>
           <AppHeader eyebrow="아이 모드" title="PIN 입력" />

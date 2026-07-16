@@ -34,6 +34,7 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
   const totalActive = activeBorrows.length + pendingBorrows.length;
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6 flex items-start justify-between">
         <div>
@@ -98,5 +99,6 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
         </p>
       </div>
     </main>
+    </div>
   );
 }

@@ -36,6 +36,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   );
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기
@@ -120,6 +121,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
           <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }}>이자 미리보기</p>
         </Link>
       </div>
+    </div>
     </div>
   );
 }

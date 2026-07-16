@@ -26,6 +26,7 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
   const totalSaved = summary.monthReport.totalSave;
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <div className="mb-6">
         <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
@@ -35,8 +36,8 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
       </div>
 
       {totalSaved > 0 && (
-        <div className="mb-4 rounded-[24px] bg-[#bfdbfe] p-4">
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#1e40af99" }}>이번 달 저금 총액</p>
+        <div className="mb-4 rounded-[24px] bg-[#a7f3d0] p-4">
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#05966999" }}>이번 달 저금 총액</p>
           <p className="mt-1 tabular-nums" style={{ fontSize: 24, fontWeight: 900, color: "var(--status-info-solid-text)", letterSpacing: "-0.03em" }}>
             {formatWon(totalSaved)}
           </p>
@@ -47,5 +48,6 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
         <ChildSaveForm childId={id} availableBalance={summary.wallet.balance} />
       </div>
     </main>
+    </div>
   );
 }

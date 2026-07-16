@@ -19,6 +19,17 @@ export default async function BehaviorsPage() {
 
   return (
     <MobileAppShell title="함께 정한 약속" subtitle="약속">
+      <section className="monari-hero mb-6">
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-white/75">행동 약속 현황</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight text-white">아이와 함께 정한 약속이에요</h2>
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
+            <HeroPill label="자동 완료" value={`${autoRules}개`} />
+            <HeroPill label="확인 필요" value={`${reviewRules}개`} />
+          </div>
+        </div>
+      </section>
       <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
         <div className="grid grid-cols-3 divide-x divide-[var(--monari-line)]">
           <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
@@ -122,6 +133,10 @@ export default async function BehaviorsPage() {
       )}
     </MobileAppShell>
   );
+}
+
+function HeroPill({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-xl border border-white/15 bg-white/10 px-2 py-2.5 text-center"><p className="text-[10px] font-semibold text-white/70">{label}</p><p className="mt-0.5 text-sm font-black text-white">{value}</p></div>;
 }
 
 function StatItem({ label, value, unit = "건", color }: { label: string; value: number; unit?: string; color: string }) {

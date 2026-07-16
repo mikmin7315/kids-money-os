@@ -679,6 +679,29 @@ a {
   --color-stamp-pending-bg: #fff7df;
 }
 
+[data-theme="child-mint"] {
+  --monari-hero: #059669;
+  --monari-hero-mid: #047857;
+  --monari-hero-strong: #065F46;
+  --monari-hero-lo: #ECFDF5;
+  --monari-plus: #059669;
+  --monari-plus-bg: rgba(5, 150, 105, 0.08);
+  --monari-bg: #F0FEFA;
+  --monari-surface-soft: #ECFDF5;
+  --color-accent: #059669;
+  --color-accent-strong: #065F46;
+  --brand-primary: #059669;
+  --monari-tabbar-bg: rgba(240, 254, 250, 0.93);
+}
+
+[data-theme="child-mint"] .monari-hero {
+  background: linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%);
+}
+
+[data-theme="child-mint"] :where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(5, 150, 105, 0.38);
+}
+
 @layer components {
   /* ── Layout shells ── */
   .monari-shell {

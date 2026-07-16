@@ -44,6 +44,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
   const totalReward = activeRules.reduce((sum, r) => sum + (r.rewardAmount ?? 0), 0);
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       {/* 헤더 */}
       <div className="mb-5 flex items-start justify-between">
@@ -67,7 +68,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       {todayTotal > 0 && (
         <div
           className="mb-5 rounded-[24px] p-4"
-          style={{ background: allDone ? "linear-gradient(135deg,#a7f3d0,#6ee7b7)" : "linear-gradient(135deg,#ede9fe,#ddd6fe)" }}
+          style={{ background: allDone ? "linear-gradient(135deg,#a7f3d0,#6ee7b7)" : "linear-gradient(135deg,#d1fae5,#a7f3d0)" }}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -103,9 +104,9 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
               <span
                 className="flex h-9 w-9 items-center justify-center rounded-full"
                 style={{
-                  background: done ? "linear-gradient(145deg,#7c3aed,#a855f7)" : isToday ? "#f3f0ff" : "#f9fafb",
+                  background: done ? "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" : isToday ? "#ecfdf5" : "#f9fafb",
                   fontSize: 18,
-                  border: isToday && !done ? "2px solid #c4b5fd" : "none",
+                  border: isToday && !done ? "2px solid #6ee7b7" : "none",
                 }}
               >
                 {done ? "⭐" : isToday ? "👀" : <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>{label}</span>}
@@ -145,6 +146,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         </>
       )}
     </main>
+    </div>
   );
 }
 

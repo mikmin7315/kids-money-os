@@ -20,6 +20,7 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
   if (!child) notFound();
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link
         href={`/child/${id}`}
@@ -54,5 +55,6 @@ export default async function ChildCashPage({ params }: { params: Promise<{ id: 
         <CashSpendForm childId={id} />
       </div>
     </main>
+    </div>
   );
 }
