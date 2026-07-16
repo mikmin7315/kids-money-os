@@ -26,6 +26,7 @@ export default async function ChildNotificationSettingsPage({ params }: { params
   const preferences = await getNotificationPreferencesAction("child", id);
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link href={`/child/${id}/settings`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 돌아가기
@@ -46,5 +47,6 @@ export default async function ChildNotificationSettingsPage({ params }: { params
         action={toggleChildNotificationAction}
       />
     </main>
+    </div>
   );
 }

@@ -20,6 +20,7 @@ export default async function ChildRestrictedPage({ params }: { params: Promise<
     .maybeSingle();
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <PageContainer>
       <MobileShell>
         <div className="flex flex-col items-center py-16 text-center">
@@ -46,5 +47,6 @@ export default async function ChildRestrictedPage({ params }: { params: Promise<
         </div>
       </MobileShell>
     </PageContainer>
+    </div>
   );
 }

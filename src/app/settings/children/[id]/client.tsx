@@ -3,8 +3,9 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { updateChildForm, deleteChildForm, type ManagementFormState } from "@/actions/management";
+import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { ChildProfile } from "@/lib/types";
 
 const initial: ManagementFormState = { ok: false, message: "" };
@@ -25,18 +26,30 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
   }, [deleteState.ok, router]);
 
   return (
-    <main className="min-h-screen bg-[var(--monari-bg)] px-4 py-6">
-      <div className="mx-auto max-w-md space-y-6">
-        <div className="flex items-center gap-3">
-          <Link href="/settings" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-            <ChevronLeft size={20} />
-          </Link>
-          <div>
-            <p className="text-xs font-bold text-[var(--monari-ink-muted)]">아이 정보 수정</p>
-            <h1 className="text-xl font-extrabold text-[var(--monari-ink)]">{initialChild.name}</h1>
-          </div>
-        </div>
+    <MobileAppShell title="아이 정보 수정" subtitle={initialChild.name}>
+      <Link
+        href="/settings"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"
+      >
+        <ArrowLeft size={16} /> 설정으로
+      </Link>
 
+      {/* 히어로 */}
+      <section
+        className="relative mb-6 overflow-hidden rounded-[24px] p-6 text-white"
+        style={{
+          background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)",
+          boxShadow: "0 16px 40px rgba(109,40,217,0.35)",
+        }}
+      >
+        <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
+        <div className="relative z-10">
+          <p className="text-[13px] font-semibold text-white/70">아이 프로필 관리</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight">{initialChild.name}</h2>
+        </div>
+      </section>
+
+      <div className="space-y-6">
         {/* 수정 폼 */}
         <div className="monari-card p-5 space-y-4">
           <h2 className="text-[15px] font-800 text-[var(--monari-ink)]">프로필 수정</h2>
@@ -76,7 +89,7 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
         </div>
 
         {/* 삭제 */}
-        <div className="monari-card p-5 border border-[var(--status-danger-solid-text)]/30">
+        <div className="monari-card border border-[var(--status-danger-solid-text)]/30 p-5">
           <h2 className="text-[15px] font-800 text-[var(--status-danger-solid-text)] mb-2">아이 삭제</h2>
           <p className="text-[13px] text-[var(--monari-ink-muted)] mb-4">
             삭제하면 아이 모드에 접근할 수 없어요. 거래 내역은 보존됩니다.
@@ -112,6 +125,6 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
           )}
         </div>
       </div>
-    </main>
+    </MobileAppShell>
   );
 }
