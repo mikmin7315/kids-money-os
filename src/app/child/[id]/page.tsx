@@ -63,12 +63,12 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const allDone = todayTotal > 0 && remaining === 0;
 
   return (
-    <div style={{ background: "#EFF8FF", minHeight: "100vh" }}>
+    <div style={{ background: "#F0FEFA", minHeight: "100vh" }}>
 
       {/* ── 히어로 헤더 ── */}
       <section
         className="relative overflow-hidden px-5 pb-6 pt-[calc(18px+env(safe-area-inset-top))]"
-        style={{ background: "linear-gradient(145deg, #0369a1 0%, #0284c7 45%, #0ea5e9 100%)" }}
+        style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" }}
       >
         {/* 배경 원 장식 */}
         <div className="pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full bg-white/10" />
@@ -121,7 +121,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           <div className="mt-3 flex justify-center gap-2 flex-wrap">
             {summary.wallet.currentInterestRate > 0 && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#86efac]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#6EE7B7]" />
                 이자율 {summary.wallet.currentInterestRate}%
               </span>
             )}
@@ -157,7 +157,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="7" />
                 <circle
                   cx="34" cy="34" r="28" fill="none"
-                  stroke={allDone ? "#86efac" : "#fcd34d"}
+                  stroke={allDone ? "#6EE7B7" : "#FCD34D"}
                   strokeWidth="7"
                   strokeLinecap="round"
                   strokeDasharray={`${2 * Math.PI * 28}`}
@@ -177,7 +177,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           <Link
             href={`${base}/promise`}
             className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] bg-white transition active:scale-[0.97]"
-            style={{ fontSize: 17, fontWeight: 900, color: "#0284c7" }}
+            style={{ fontSize: 17, fontWeight: 900, color: "#059669" }}
           >
             <Check className="h-5 w-5" strokeWidth={3} />
             약속 체크하기
@@ -213,14 +213,14 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
         {/* 이번 달 흐름 */}
         <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#0c1a2e", letterSpacing: "-0.02em" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
             이번 달 흐름
           </h2>
         </div>
         <div className="mb-6 grid grid-cols-2 gap-2.5">
-          <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#DBEAFE" textColor="#1D4ED8" />
-          <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#D1FAE5" textColor="#065F46" />
-          <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#E0F2FE" textColor="#0369A1" />
+          <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#D1FAE5" textColor="#065F46" />
+          <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#A7F3D0" textColor="#064E3B" />
+          <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#ECFDF5" textColor="#059669" />
           <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
         </div>
 
@@ -228,17 +228,17 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {policy && summary.wallet.balance > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h2 style={{ fontSize: 18, fontWeight: 900, color: "#0c1a2e", letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
                 이자 미리보기 📈
               </h2>
-              <Link href={`${base}/interest`} className="text-[13px] font-700 text-[#0284c7]">
+              <Link href={`${base}/interest`} className="text-[13px] font-700 text-[#059669]">
                 자세히 <ArrowRight className="inline h-3.5 w-3.5" />
               </Link>
             </div>
-            <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(2,132,199,0.12)] border border-[#DBEAFE]">
+            <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(5,150,105,0.12)] border border-[#A7F3D0]">
               <div
                 className="px-5 py-4"
-                style={{ background: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)" }}
+                style={{ background: "linear-gradient(135deg, #065F46 0%, #059669 100%)" }}
               >
                 <p className="text-[12px] font-600 text-white/70 mb-1">이대로면 이번 달</p>
                 <p className="tabular-nums text-white" style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.03em" }}>
@@ -246,17 +246,17 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 </p>
                 <p className="text-[12px] font-600 text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
               </div>
-              <div className="divide-y divide-[#EFF8FF]">
+              <div className="divide-y divide-[#F0FEFA]">
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[#64748b]">지금 남긴 돈</p>
-                  <p className="text-[14px] font-800 text-[#0c1a2e]">{formatWon(summary.wallet.balance)}</p>
+                  <p className="text-[13px] font-600 text-[#6B7280]">지금 남긴 돈</p>
+                  <p className="text-[14px] font-800 text-[#052E16]">{formatWon(summary.wallet.balance)}</p>
                 </div>
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[#64748b]">현재 이자율</p>
-                  <p className="text-[14px] font-800 text-[#0284c7]">{summary.wallet.currentInterestRate}%</p>
+                  <p className="text-[13px] font-600 text-[#6B7280]">현재 이자율</p>
+                  <p className="text-[14px] font-800 text-[#059669]">{summary.wallet.currentInterestRate}%</p>
                 </div>
-                <div className="px-5 py-3 bg-[#EFF8FF]">
-                  <p className="text-[12px] font-700 text-[#0284c7]">
+                <div className="px-5 py-3 bg-[#ECFDF5]">
+                  <p className="text-[12px] font-700 text-[#059669]">
                     💡 약속을 더 지키면 이자율이 올라가요!
                   </p>
                 </div>
@@ -269,41 +269,41 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         <div className="mb-6 grid grid-cols-2 gap-2.5">
           <Link
             href={`${base}/borrow`}
-            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#DBEAFE] transition active:scale-[0.97]"
+            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#EFF8FF] text-xl flex-shrink-0">🛒</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">🛒</span>
             <div>
-              <p className="text-[13px] font-800 text-[#0c1a2e]">미리쓰기</p>
-              <p className="text-[11px] font-600 text-[#64748b] mt-0.5">요청하기 →</p>
+              <p className="text-[13px] font-800 text-[#052E16]">미리쓰기</p>
+              <p className="text-[11px] font-600 text-[#6B7280] mt-0.5">요청하기 →</p>
             </div>
           </Link>
           <Link
             href={`${base}/records`}
-            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#DBEAFE] transition active:scale-[0.97]"
+            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#EFF8FF] text-xl flex-shrink-0">📒</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">📒</span>
             <div>
-              <p className="text-[13px] font-800 text-[#0c1a2e]">내 기록</p>
-              <p className="text-[11px] font-600 text-[#64748b] mt-0.5">전체 보기 →</p>
+              <p className="text-[13px] font-800 text-[#052E16]">내 기록</p>
+              <p className="text-[11px] font-600 text-[#6B7280] mt-0.5">전체 보기 →</p>
             </div>
           </Link>
         </div>
 
         {/* 최근 내역 */}
         <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#0c1a2e", letterSpacing: "-0.02em" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
             최근 내역
           </h2>
-          <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-700 text-[#0284c7]">
+          <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-700 text-[#059669]">
             전체 보기 →
           </Link>
         </div>
-        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#DBEAFE]">
+        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0]">
           {childTx.length === 0 ? (
             <div className="py-10 text-center">
               <p className="text-[32px]">🌱</p>
-              <p className="mt-2 text-[15px] font-700 text-[#0c1a2e]">아직 거래 내역이 없어요</p>
-              <p className="mt-1 text-[12px] text-[#64748b]">용돈을 받거나 저금을 해봐요!</p>
+              <p className="mt-2 text-[15px] font-700 text-[#052E16]">아직 거래 내역이 없어요</p>
+              <p className="mt-1 text-[12px] text-[#6B7280]">용돈을 받거나 저금을 해봐요!</p>
             </div>
           ) : (
             <ul>
@@ -313,15 +313,15 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 return (
                   <li
                     key={tx.id}
-                    className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#EFF8FF]" : ""}`}
+                    className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#F0FEFA]" : ""}`}
                   >
                     <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-lg ${
-                      minus ? "bg-[#FFE4E6]" : saved ? "bg-[#DBEAFE]" : "bg-[#D1FAE5]"
+                      minus ? "bg-[#FFE4E6]" : saved ? "bg-[#A7F3D0]" : "bg-[#D1FAE5]"
                     }`}>
                       {minus ? "🛍️" : saved ? "🐷" : "💰"}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[14px] font-700 text-[#0c1a2e]">{txLabel(tx.type, tx.memo)}</p>
+                      <p className="truncate text-[14px] font-700 text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
                       <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
                     </div>
                     <p className={`shrink-0 tabular-nums text-[15px] font-800 ${minus ? "text-[#BE123C]" : "text-[#065F46]"}`}>
@@ -337,11 +337,11 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 설정 링크 */}
         <Link
           href={`${base}/settings`}
-          className="mt-4 flex items-center justify-between rounded-[18px] bg-white px-4 py-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-[#DBEAFE] transition active:scale-[0.98]"
+          className="mt-4 flex items-center justify-between rounded-[18px] bg-white px-4 py-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-[#A7F3D0] transition active:scale-[0.98]"
         >
           <div className="flex items-center gap-3">
             <span className="text-[20px]">⚙️</span>
-            <p className="text-[13px] font-700 text-[#0c1a2e]">설정 · 도움말</p>
+            <p className="text-[13px] font-700 text-[#052E16]">설정 · 도움말</p>
           </div>
           <ArrowRight className="h-4 w-4 text-[#94a3b8]" />
         </Link>
@@ -350,8 +350,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
       {/* ── 하단 탭바 ── */}
       <nav
-        className="fixed bottom-0 left-0 right-0 flex justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2 border-t border-[#DBEAFE]"
-        style={{ background: "rgba(239,248,255,0.95)", backdropFilter: "blur(12px)" }}
+        className="fixed bottom-0 left-0 right-0 flex justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2 border-t border-[#A7F3D0]"
+        style={{ background: "rgba(240,254,250,0.95)", backdropFilter: "blur(12px)" }}
       >
         <ChildNavItem href={base} icon="🏠" label="홈" active />
         <ChildNavItem href={`${base}/promise`} icon="✅" label="약속" />
@@ -366,10 +366,10 @@ function ChildNavItem({ href, icon, label, active }: { href: string; icon: strin
   return (
     <Link
       href={href}
-      className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-[12px] transition ${active ? "bg-[#DBEAFE]" : ""}`}
+      className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-[12px] transition ${active ? "bg-[#D1FAE5]" : ""}`}
     >
       <span className={`text-[22px] ${active ? "" : "opacity-35"}`}>{icon}</span>
-      <span className={`text-[9px] font-800 ${active ? "text-[#0284c7]" : "text-[#94a3b8]"}`}>{label}</span>
+      <span className={`text-[9px] font-800 ${active ? "text-[#059669]" : "text-[#94a3b8]"}`}>{label}</span>
     </Link>
   );
 }
