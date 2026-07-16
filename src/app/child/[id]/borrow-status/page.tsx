@@ -137,8 +137,8 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                   </div>
                   <div className="h-3 rounded-full bg-[var(--monari-surface-soft)] overflow-hidden">
                     <div
-                      className="h-full rounded-full transition-all" style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" }}
-                      style={{ width: `${paidRatio}%` }}
+                      className="h-full rounded-full transition-all"
+                      style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)", width: `${paidRatio}%` }}
                     />
                   </div>
                   <div className="mt-2 flex justify-between">
