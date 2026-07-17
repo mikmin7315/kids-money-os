@@ -29,18 +29,18 @@
 
   /* ── Ink ── */
   --monari-ink: #17181c;
-  --monari-ink-soft: rgba(23, 24, 28, 0.66);
-  --monari-ink-muted: rgba(23, 24, 28, 0.44);
+  --monari-ink-soft: #3e3e50;
+  --monari-ink-muted: #696974;
 
   /* ── Border ── */
-  --monari-line: rgba(23, 24, 28, 0.07);
-  --monari-line-strong: rgba(23, 24, 28, 0.12);
+  --monari-line: rgba(23, 24, 28, 0.10);
+  --monari-line-strong: rgba(23, 24, 28, 0.18);
 
   /* ── Shadow ── */
-  --monari-shadow-card: 0 1px 2px rgba(23, 24, 28, 0.04);
-  --monari-shadow-hero: 0 12px 28px rgba(31, 33, 47, 0.16);
-  --monari-shadow-soft: 0 6px 18px rgba(23, 24, 28, 0.07);
-  --monari-shadow-float: 0 12px 32px rgba(23, 24, 28, 0.10);
+  --monari-shadow-card: 0 1px 4px rgba(23, 24, 28, 0.10), 0 0 0 1px rgba(23, 24, 28, 0.06);
+  --monari-shadow-hero: 0 12px 28px rgba(31, 33, 47, 0.22);
+  --monari-shadow-soft: 0 6px 18px rgba(23, 24, 28, 0.12);
+  --monari-shadow-float: 0 12px 32px rgba(23, 24, 28, 0.16);
 
   /* Legacy compatibility: keep every active screen on the Monari system. */
   --color-bg: var(--monari-bg);
@@ -107,10 +107,10 @@
   --monari-blur-border: rgba(255, 255, 255, 0.72);
   --monari-tabbar-bg: rgba(255, 255, 255, 0.90);
   --monari-tabbar-shadow: 0 18px 45px rgba(23, 24, 28, 0.15);
-  --monari-shadow-lift: 0 2px 16px rgba(0, 0, 0, 0.06);
-  --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.06);
-  --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
-  --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.07);
+  --monari-shadow-lift: 0 2px 12px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.10);
+  --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.11);
+  --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.13);
 
   /* ── Child banking UI (spend/save CTAs) ── */
   --child-spend: #C66B3D;
@@ -139,10 +139,10 @@
     --monari-surface: #161222;
     --monari-surface-soft: #1e1830;
     --monari-ink: #ede8ff;
-    --monari-ink-soft: rgba(237, 232, 255, 0.72);
-    --monari-ink-muted: rgba(237, 232, 255, 0.48);
-    --monari-line: rgba(237, 232, 255, 0.08);
-    --monari-line-strong: rgba(237, 232, 255, 0.14);
+    --monari-ink-soft: #c4bfe8;
+    --monari-ink-muted: #9990bc;
+    --monari-line: rgba(237, 232, 255, 0.12);
+    --monari-line-strong: rgba(237, 232, 255, 0.20);
     --monari-hero-lo: #2d1f5e;
     --monari-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.40);
     --monari-shadow-hero: 0 12px 28px rgba(0, 0, 0, 0.55);
@@ -686,12 +686,18 @@ a {
   --monari-hero-lo: #ECFDF5;
   --monari-plus: #059669;
   --monari-plus-bg: rgba(5, 150, 105, 0.08);
-  --monari-bg: #F0FEFA;
-  --monari-surface-soft: #ECFDF5;
+  --monari-bg: #E8FBF5;
+  --monari-surface: #ffffff;
+  --monari-surface-soft: #D1FAE5;
+  --monari-ink: #0a2a1f;
+  --monari-ink-soft: #1e4d3a;
+  --monari-ink-muted: #4a7a67;
+  --monari-line: rgba(5, 150, 105, 0.12);
+  --monari-line-strong: rgba(5, 150, 105, 0.22);
   --color-accent: #059669;
   --color-accent-strong: #065F46;
   --brand-primary: #059669;
-  --monari-tabbar-bg: rgba(240, 254, 250, 0.93);
+  --monari-tabbar-bg: rgba(232, 251, 245, 0.95);
 }
 
 [data-theme="child-mint"] .monari-hero {
@@ -801,6 +807,7 @@ a {
   .monari-card {
     border-radius: 20px;
     background: var(--monari-surface);
+    border: 1px solid var(--monari-line-strong);
     box-shadow: var(--monari-shadow-lift);
     transition: box-shadow 0.16s ease, transform 0.16s ease;
   }
