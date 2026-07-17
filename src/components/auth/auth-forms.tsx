@@ -206,8 +206,8 @@ export function AuthTabs() {
   ];
 
   return (
-    <section className="rounded-[24px] border border-[var(--monari-line)] bg-white p-4 shadow-[var(--monari-shadow-card)] sm:p-5" aria-label="로그인 방법">
-      <div className="mb-5 grid grid-cols-3 gap-1 rounded-2xl bg-[var(--monari-bg)] p-1" role="tablist" aria-label="로그인 방법 선택">
+    <section className="rounded-[24px] border border-[var(--monari-line)] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-card)] sm:p-5" aria-label="로그인 방법">
+      <div className="mb-5 grid grid-cols-3 gap-1 rounded-2xl bg-[var(--monari-surface-soft)] p-1" role="tablist" aria-label="로그인 방법 선택">
         {tabs.map((item) => (
           <button
             key={item.id}
@@ -217,7 +217,7 @@ export function AuthTabs() {
             aria-controls={`auth-panel-${item.id}`}
             onClick={() => setTab(item.id)}
             className={`min-h-11 rounded-xl px-2 text-xs font-bold transition ${
-              tab === item.id ? "bg-white text-[var(--monari-hero)] shadow-sm" : "text-[var(--monari-ink-muted)]"
+              tab === item.id ? "bg-[var(--monari-surface)] text-[var(--monari-hero)] shadow-sm" : "text-[var(--monari-ink-soft)]"
             }`}
           >
             {item.label}

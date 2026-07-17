@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChartNoAxesCombined, ClipboardList, Home, PiggyBank, Settings } from "lucide-react";
-import type { ReactNode } from "react";
+import { Bell, ChartNoAxesCombined, ClipboardList, Home, Moon, PiggyBank, Settings, Sun } from "lucide-react";
+import { type ReactNode, useEffect, useState } from "react";
 
 const TAB_DEFS = [
   { href: "/", label: "홈", icon: Home },
@@ -36,6 +36,7 @@ export function MobileAppShell({
           </div>
 
           <div className="flex shrink-0 items-center gap-1">
+            <ThemeToggle />
             <HeaderLink href="/notifications" label="알림 보기">
               <Bell aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />
             </HeaderLink>
@@ -74,6 +75,38 @@ export function MobileAppShell({
         })}
       </nav>
     </>
+  );
+}
+
+function ThemeToggle() {
+  const [isDark, setIsDark] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("monari-theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const dark = stored ? stored === "dark" : prefersDark;
+    setIsDark(dark);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  }, []);
+
+  function toggle() {
+    const next = !isDark;
+    setIsDark(next);
+    localStorage.setItem("monari-theme", next ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
+  }
+
+  if (isDark === null) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+      className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--monari-ink-soft)] transition hover:bg-white hover:text-[var(--monari-hero)]"
+    >
+      {isDark ? <Sun aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} /> : <Moon aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />}
+    </button>
   );
 }
 

@@ -41,15 +41,6 @@ export default async function ApprovalsPage() {
           </div>
         </div>
       </section>
-      <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
-        <div className="grid grid-cols-4 divide-x divide-[var(--monari-line)]">
-          <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
-          <StatItem label="현금 대기" value={pendingCashRequests.length} color="var(--monari-minus)" />
-          <StatItem label="미리쓰기" value={pendingBorrows.length} color="var(--monari-primary-strong)" />
-          <StatItem label="상환 중" value={activeBorrows.length} color="var(--monari-done)" />
-        </div>
-      </div>
-
       {/* Behavior approvals */}
       <section className="mb-4">
         <SectionTitle>약속 확인 대기</SectionTitle>
@@ -256,15 +247,6 @@ export default async function ApprovalsPage() {
         </section>
       )}
     </MobileAppShell>
-  );
-}
-
-function StatItem({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <div className="flex flex-col items-center py-5 gap-1.5">
-      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--monari-ink-muted)" }}>{label}</p>
-      <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}건</p>
-    </div>
   );
 }
 

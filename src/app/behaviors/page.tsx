@@ -30,14 +30,6 @@ export default async function BehaviorsPage() {
           </div>
         </div>
       </section>
-      <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
-        <div className="grid grid-cols-3 divide-x divide-[var(--monari-line)]">
-          <StatItem label="전체 약속" value={activeRules.length} unit="개" color="var(--monari-hero)" />
-          <StatItem label="자동 완료" value={autoRules} unit="개" color="var(--monari-done)" />
-          <StatItem label="확인 필요" value={reviewRules} unit="개" color="var(--monari-primary-strong)" />
-        </div>
-      </div>
-
       {/* Active rules */}
       <section className="mb-4">
         <SectionTitle>현재 약속 목록</SectionTitle>
@@ -137,15 +129,6 @@ export default async function BehaviorsPage() {
 
 function HeroPill({ label, value }: { label: string; value: string }) {
   return <div className="rounded-xl border border-white/15 bg-white/10 px-2 py-2.5 text-center"><p className="text-[10px] font-semibold text-white/70">{label}</p><p className="mt-0.5 text-sm font-black text-white">{value}</p></div>;
-}
-
-function StatItem({ label, value, unit = "건", color }: { label: string; value: number; unit?: string; color: string }) {
-  return (
-    <div className="flex flex-col items-center py-5 gap-1.5">
-      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--monari-ink-muted)" }}>{label}</p>
-      <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}{unit}</p>
-    </div>
-  );
 }
 
 function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
