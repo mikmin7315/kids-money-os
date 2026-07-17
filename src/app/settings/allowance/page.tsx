@@ -31,8 +31,8 @@ export default async function AllowancePage() {
       <section
         className="relative mb-6 overflow-hidden rounded-[24px] p-6 text-white"
         style={{
-          background: "linear-gradient(145deg,#059669 0%,#10b981 60%,#34d399 100%)",
-          boxShadow: "0 16px 40px rgba(5,150,105,0.35)",
+          background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)",
+          boxShadow: "0 16px 40px rgba(109,40,217,0.35)",
         }}
       >
         <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />

@@ -29,6 +29,18 @@ export default async function ApprovalsPage() {
 
   return (
     <MobileAppShell title={headline} subtitle="승인 센터">
+      <section className="monari-hero mb-6">
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-white/75">승인 센터 현황</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight text-white">{headline}</h2>
+          <div className="mt-5 grid grid-cols-4 gap-2">
+            <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
+            <HeroPill label="현금 대기" value={`${pendingCashRequests.length}건`} />
+            <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
+            <HeroPill label="상환 중" value={`${activeBorrows.length}건`} />
+          </div>
+        </div>
+      </section>
       <div className="mb-4 rounded-[24px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-lift)] overflow-hidden">
         <div className="grid grid-cols-4 divide-x divide-[var(--monari-line)]">
           <StatItem label="약속 대기" value={pendingBehaviorLogs.length} color="var(--monari-hero)" />
@@ -254,6 +266,10 @@ function StatItem({ label, value, color }: { label: string; value: number; color
       <p style={{ fontSize: 32, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{value}건</p>
     </div>
   );
+}
+
+function HeroPill({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-xl border border-white/15 bg-white/10 px-2 py-2.5 text-center"><p className="text-[10px] font-semibold text-white/70">{label}</p><p className="mt-0.5 text-sm font-black text-white">{value}</p></div>;
 }
 
 function MetricBox({ label, value }: { label: string; value: string }) {

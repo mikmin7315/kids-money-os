@@ -60,6 +60,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
   const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기
@@ -132,6 +133,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }

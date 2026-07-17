@@ -38,6 +38,7 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
   if (!child) notFound();
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 돌아가기
@@ -137,5 +138,6 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
         <p style={{ fontSize: 14, fontWeight: 700, color: "var(--monari-ink-muted)" }}>부모 화면으로 가기</p>
       </Link>
     </main>
+    </div>
   );
 }

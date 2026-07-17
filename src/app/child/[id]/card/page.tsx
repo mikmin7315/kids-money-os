@@ -35,6 +35,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
     : { data: [] };
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <PageContainer>
       <MobileShell>
         <AppHeader eyebrow="내 카드" title="카드 사용 내역" />
@@ -97,5 +98,6 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
         </div>
       </MobileShell>
     </PageContainer>
+    </div>
   );
 }

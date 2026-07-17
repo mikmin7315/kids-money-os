@@ -49,6 +49,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
   }, 0);
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <div className="mb-5 flex items-start justify-between gap-2">
         <div>
@@ -68,7 +69,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
       {/* 이자 미리보기 히어로 */}
       <div
         className="mb-5 overflow-hidden rounded-[24px] p-5 text-white"
-        style={{ background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)" }}
+        style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" }}
       >
         <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.65)" }}>
           이번 달 이대로면
@@ -176,6 +177,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
         </div>
       )}
     </main>
+    </div>
   );
 }
 
@@ -188,7 +190,7 @@ function CalcRow({
     <div className="flex items-center justify-between gap-2">
       <div>
         <p style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: bold ? "var(--monari-ink)" : "var(--monari-ink-muted)" }}>{label}</p>
-        <p style={{ fontSize: 11, color: "#c4b5fd", marginTop: 1 }}>{desc}</p>
+        <p style={{ fontSize: 11, color: "#6EE7B7", marginTop: 1 }}>{desc}</p>
       </div>
       <p style={{ fontSize: 16, fontWeight: 800, color }}>{value}</p>
     </div>

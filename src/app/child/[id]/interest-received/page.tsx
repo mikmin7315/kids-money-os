@@ -41,6 +41,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
   const months = Object.values(byMonth).sort((a, b) => b.month.localeCompare(a.month));
 
   return (
+    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link href={`/child/${id}/interest`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
         <ArrowLeft size={16} /> 이자 미리보기로
@@ -56,7 +57,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
       {/* 총계 히어로 */}
       <div
         className="mb-6 overflow-hidden rounded-[24px] p-5 text-white"
-        style={{ background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)" }}
+        style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" }}
       >
         <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.65)" }}>지금까지 받은 이자</p>
         <p className="tabular-nums mt-1" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em" }}>
@@ -125,5 +126,6 @@ export default async function InterestReceivedPage({ params }: { params: Promise
         </div>
       )}
     </main>
+    </div>
   );
 }

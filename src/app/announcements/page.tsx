@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
+import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -17,8 +18,8 @@ type Announcement = {
 };
 
 const TYPE_STYLE: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  notice:      { icon: <Bell size={14} />,   label: "공지",  color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
-  maintenance: { icon: <Wrench size={14} />, label: "점검",  color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
+  notice:      { icon: <Bell size={14} />,   label: "공지",    color: "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]" },
+  maintenance: { icon: <Wrench size={14} />, label: "점검",    color: "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]" },
   update:      { icon: <Zap size={14} />,    label: "업데이트", color: "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" },
 };
 
@@ -43,20 +44,31 @@ export default async function AnnouncementsPage() {
   await requireParentSession();
   const announcements = await loadAnnouncements();
 
+  const noticeCount = announcements.filter((a) => a.type === "notice").length;
+  const maintenanceCount = announcements.filter((a) => a.type === "maintenance").length;
+  const updateCount = announcements.filter((a) => a.type === "update").length;
+
   return (
-    <main className="px-4 pb-36 pt-8">
-      <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>Monari</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
-          ?? 공지사항
-        </h1>
-      </div>
+    <MobileAppShell title="공지사항" subtitle="공지">
+      {/* Hero */}
+      <section className="monari-hero mb-6">
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-white/75">Monari 공지사항</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight text-white">
+            {announcements.length === 0 ? "현재 공지가 없어요" : `총 ${announcements.length}건의 공지`}
+          </h2>
+          <div className="mt-4 flex gap-3">
+            <HeroPill label="공지" value={`${noticeCount}건`} />
+            <HeroPill label="점검" value={`${maintenanceCount}건`} />
+            <HeroPill label="업데이트" value={`${updateCount}건`} />
+          </div>
+        </div>
+      </section>
 
       {announcements.length === 0 ? (
-        <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
-          <p style={{ fontSize: 48, marginBottom: 12 }}>??</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>공지사항이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>현재 진행 중인 공지나 점검 안내가 없어요.</p>
+        <div className="monari-card p-8 text-center">
+          <p className="text-[18px] font-black text-[var(--monari-ink)] mb-2">공지사항이 없어요</p>
+          <p className="text-[14px] text-[var(--monari-ink-muted)]">현재 진행 중인 공지나 점검 안내가 없어요.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -66,19 +78,19 @@ export default async function AnnouncementsPage() {
               <Link
                 key={a.id}
                 href={`/announcements/${a.id}`}
-                className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-md)] transition active:scale-[0.98]"
+                className="monari-card flex items-start gap-3 p-4 transition active:scale-[0.98]"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>
                       {st.icon}{st.label}
                     </span>
-                    <span style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>
+                    <span className="text-[11px] text-[var(--monari-ink-muted)]">
                       {a.created_at.slice(0, 10).replace(/-/g, ".")}
                     </span>
                   </div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">{a.title}</p>
-                  <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", marginTop: 2 }} className="truncate">{a.body}</p>
+                  <p className="text-[15px] font-bold text-[var(--monari-ink)] truncate">{a.title}</p>
+                  <p className="text-[13px] text-[var(--monari-ink-muted)] mt-0.5 truncate">{a.body}</p>
                 </div>
                 <ChevronRight size={16} className="mt-1 shrink-0 text-[var(--monari-ink-muted)]" />
               </Link>
@@ -86,6 +98,15 @@ export default async function AnnouncementsPage() {
           })}
         </div>
       )}
-    </main>
+    </MobileAppShell>
+  );
+}
+
+function HeroPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[14px] bg-white/15 px-4 py-2.5 text-center backdrop-blur-sm">
+      <p className="text-[11px] font-semibold text-white/70">{label}</p>
+      <p className="text-[18px] font-black text-white">{value}</p>
+    </div>
   );
 }
