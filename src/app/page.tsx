@@ -1,11 +1,9 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Bell,
   CheckCircle2,
   CircleDollarSign,
   ClipboardList,
-  PiggyBank,
   ReceiptText,
   Smartphone,
   TrendingDown,

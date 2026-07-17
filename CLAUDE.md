@@ -78,6 +78,30 @@ supabase/
 - cron.sql에서 vault의 `cron_secret` 값을 헤더로 전달
 - Supabase vault에 `cron_secret`, `supabase_url`, `supabase_service_role_key` 저장 필요
 
+#### 새 환경 크론 설정 체크리스트
+
+1. **Supabase Dashboard → Edge Functions → Secrets**에서 환경변수 추가:
+   ```
+   CRON_SECRET=<랜덤 32자 이상 문자열>
+   SUPABASE_URL=https://<project-ref>.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=<service_role_key>
+   ```
+
+2. **Supabase SQL Editor**에서 vault 비밀 등록:
+   ```sql
+   SELECT vault.create_secret('<CRON_SECRET값>', 'cron_secret');
+   SELECT vault.create_secret('https://<project-ref>.supabase.co', 'supabase_url');
+   SELECT vault.create_secret('<service_role_key>', 'supabase_service_role_key');
+   ```
+
+3. **pg_cron, pg_net 익스텐션 활성화** 확인 (Dashboard → Database → Extensions)
+
+4. **`supabase/cron.sql`** 실행 → 크론 잡 등록:
+   - `process-allowances`: 매일 15:05 UTC (KST 00:05)
+   - `monthly-settlement`: 매월 1일 00:05 UTC (KST 09:05)
+
+5. **`.env.local`**에 동일한 `CRON_SECRET` 추가 (로컬 Edge Function 테스트용)
+
 ## 브랜치 전략 (AI 협업)
 
 ```
