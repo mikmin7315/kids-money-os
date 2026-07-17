@@ -11,7 +11,7 @@ export function SectionTitle({
     <div className="flex items-center justify-between">
       <h2 className="monari-section-title">{children}</h2>
       {action && (
-        <span className="text-[14px] font-600 text-[rgba(43,43,43,0.54)]">{action}</span>
+        <span className="text-[14px] font-600 text-[var(--monari-ink-muted)]">{action}</span>
       )}
     </div>
   );
@@ -37,8 +37,8 @@ const toneStyles: Record<Tone, { pill: string; value: string }> = {
     value: "text-[var(--monari-minus)]",
   },
   neutral: {
-    pill: "bg-[rgba(43,43,43,0.06)] text-[rgba(43,43,43,0.58)]",
-    value: "text-[rgba(43,43,43,0.58)]",
+    pill: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]",
+    value: "text-[var(--monari-ink-muted)]",
   },
 };
 

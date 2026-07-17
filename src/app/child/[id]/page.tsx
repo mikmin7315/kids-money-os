@@ -248,11 +248,11 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
               </div>
               <div className="divide-y divide-[#F0FEFA]">
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[#6B7280]">지금 남긴 돈</p>
+                  <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
                   <p className="text-[14px] font-800 text-[#052E16]">{formatWon(summary.wallet.balance)}</p>
                 </div>
                 <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[#6B7280]">현재 이자율</p>
+                  <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</p>
                   <p className="text-[14px] font-800 text-[#059669]">{summary.wallet.currentInterestRate}%</p>
                 </div>
                 <div className="px-5 py-3 bg-[#ECFDF5]">
@@ -274,7 +274,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">🛒</span>
             <div>
               <p className="text-[13px] font-800 text-[#052E16]">미리쓰기</p>
-              <p className="text-[11px] font-600 text-[#6B7280] mt-0.5">요청하기 →</p>
+              <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">요청하기 →</p>
             </div>
           </Link>
           <Link
@@ -284,7 +284,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">📒</span>
             <div>
               <p className="text-[13px] font-800 text-[#052E16]">내 기록</p>
-              <p className="text-[11px] font-600 text-[#6B7280] mt-0.5">전체 보기 →</p>
+              <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">전체 보기 →</p>
             </div>
           </Link>
         </div>
@@ -303,7 +303,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <div className="py-10 text-center">
               <p className="text-[32px]">🌱</p>
               <p className="mt-2 text-[15px] font-700 text-[#052E16]">아직 거래 내역이 없어요</p>
-              <p className="mt-1 text-[12px] text-[#6B7280]">용돈을 받거나 저금을 해봐요!</p>
+              <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
             </div>
           ) : (
             <ul>
@@ -380,7 +380,7 @@ function KidFlowCard({ icon, label, value, bg, textColor }: {
   return (
     <div className="rounded-[18px] p-4" style={{ background: bg }}>
       <span className="text-[22px] mb-2 block">{icon}</span>
-      <p className="text-[11px] font-700 mb-1" style={{ color: textColor + "99" }}>{label}</p>
+      <p className="text-[11px] font-700 mb-1" style={{ color: textColor }}>{label}</p>
       <p className="tabular-nums text-[20px] font-900 leading-none" style={{ color: textColor, letterSpacing: "-0.02em" }}>
         {value}
       </p>
