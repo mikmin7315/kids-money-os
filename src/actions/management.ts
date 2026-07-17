@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { requireParentSession } from "@/lib/auth";
-import { isDemoMode } from "@/lib/data";
+import { isDemoMode, invalidateAppData } from "@/lib/data";
 import { getSupabaseAdminClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 const scryptAsync = promisify(scrypt);
@@ -69,6 +69,7 @@ export async function createChildAction(input: {
 
     if (error) throw error;
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/child-mode");
     revalidatePath("/settings");
@@ -224,6 +225,7 @@ export async function createBehaviorRuleAction(input: {
 
     if (error) throw error;
     revalidatePath("/behaviors");
+    void invalidateAppData();
     revalidatePath("/");
     return { ok: true, data: { id: String(data.id) } };
   } catch (error) {
@@ -272,6 +274,7 @@ export async function upsertInterestPolicyAction(input: {
 
     if (error) throw error;
     revalidatePath("/settings");
+    void invalidateAppData();
     revalidatePath("/");
     return { ok: true, data: { id: String(data.id) } };
   } catch (error) {
@@ -724,6 +727,7 @@ export async function updateChildAction(input: {
     });
     if (error) throw error;
     revalidatePath("/settings");
+    void invalidateAppData();
     revalidatePath("/");
     return { ok: true };
   } catch (e) {
@@ -742,6 +746,7 @@ export async function deleteChildAction(childId: string): Promise<ActionResult<v
     const { error } = await supabase.rpc("delete_child", { p_child_id: childId });
     if (error) throw error;
     revalidatePath("/settings");
+    void invalidateAppData();
     revalidatePath("/");
     return { ok: true };
   } catch (e) {

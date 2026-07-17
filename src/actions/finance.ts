@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { approveBorrowRequest, computeMonthlyReport, createMoneyTransaction } from "@/lib/finance";
 import { requireParentSession, requireChildOrParentAccess } from "@/lib/auth";
-import { getAppDataBundle, isDemoMode } from "@/lib/data";
+import { getAppDataBundle, isDemoMode, invalidateAppData } from "@/lib/data";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { insertNotification, getParentIdForChild } from "@/lib/notifications";
 import { uploadBehaviorPhoto } from "@/lib/supabase/storage";
@@ -76,6 +76,7 @@ export async function createBehaviorLogAction(input: {
       });
     }
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/behaviors");
     revalidatePath(`/child/${input.childId}`);
@@ -127,6 +128,7 @@ export async function approveBehaviorLogAction(input: {
       });
     }
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/behaviors");
     revalidatePath("/approvals");
@@ -175,6 +177,7 @@ export async function rejectBehaviorLogAction(input: {
 
     revalidatePath("/behaviors");
     revalidatePath("/approvals");
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath(`/child/${log.childId}`);
     return { ok: true, data: { id: log.id } };
@@ -223,6 +226,7 @@ export async function createMoneyTransactionAction(input: {
       .single();
 
     if (error) throw error;
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/records");
     revalidatePath(`/child/${input.childId}`);
@@ -382,6 +386,7 @@ export async function approveBorrowRequestAction(input: {
       });
     }
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/approvals");
     revalidatePath(`/child/${request.childId}`);
@@ -431,6 +436,7 @@ export async function rejectBorrowRequestAction(input: {
     }
 
     revalidatePath("/approvals");
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath(`/child/${request.childId}`);
     return { ok: true, data: { id: request.id } };
@@ -657,6 +663,7 @@ export async function giveAllowanceForm(
     if (error) throw error;
     if (!data) return { ok: false, message: "용돈 지급 결과를 확인하지 못했어요." };
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/records");
     revalidatePath("/settings/wallet");
@@ -695,6 +702,7 @@ export async function confirmInterestRateAction(
       return { ok: false, message: "확정할 이자율을 찾지 못했어요." };
     }
 
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/settings");
     revalidatePath(`/child/${childId}`);

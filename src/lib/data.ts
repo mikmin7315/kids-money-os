@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { unstable_cache, revalidateTag } from "next/cache";
 import { getAuthContext } from "@/lib/auth";
 import { buildActivityFeed, computeMonthlyReport, computeWallet } from "@/lib/finance";
 import {
@@ -54,7 +54,22 @@ export async function getDashboardView(): Promise<DashboardData> {
 
 export async function getAppDataBundle(): Promise<AppDataBundle> {
   if (isDemoMode()) return getMockBundle();
-  return fetchAppDataFromSupabase();
+
+  const auth = await getAuthContext();
+  if (!auth.user || !auth.profile) throw new Error("Profile not found for current user.");
+
+  const userId = auth.user.id;
+  return unstable_cache(
+    fetchAppDataFromSupabase,
+    ["app-data", userId],
+    { tags: [`app-data-${userId}`], revalidate: 30 },
+  )();
+}
+
+/** 서버 액션에서 데이터 변경 후 호출 — 해당 유저의 캐시를 즉시 무효화 */
+export async function invalidateAppData(): Promise<void> {
+  const auth = await getAuthContext();
+  if (auth.user) revalidateTag(`app-data-${auth.user.id}`, "default");
 }
 
 export function hasSupabaseEnv() {
@@ -65,7 +80,7 @@ export function isDemoMode() {
   return process.env.NODE_ENV !== "production" && !hasSupabaseEnv();
 }
 
-const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
+const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
   const auth = await getAuthContext();
   if (!auth.user || !auth.profile) throw new Error("Profile not found for current user.");
 
@@ -132,7 +147,7 @@ const fetchAppDataFromSupabase = cache(async (): Promise<AppDataBundle> => {
     cashSpendRequests: mappedCashRequests,
     allowanceExecutions: mappedExecutions,
   };
-});
+};
 
 function buildDashboardFromBundle(bundle: AppDataBundle): DashboardData {
   const now = new Date();

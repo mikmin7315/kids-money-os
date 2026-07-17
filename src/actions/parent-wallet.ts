@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { isDemoMode } from "@/lib/data";
+import { isDemoMode, invalidateAppData } from "@/lib/data";
 
 export type ParentWallet = {
   balance: number;
@@ -93,6 +93,7 @@ export async function chargeParentWalletAction(
   if (amount > 1000000) return { ok: false, message: "1회 최대 충전은 100만 원이에요." };
 
   if (isDemoMode()) {
+    void invalidateAppData();
     revalidatePath("/");
     revalidatePath("/settings/wallet");
     return { ok: true, message: `${amount.toLocaleString()}원 충전 요청이 접수되었어요. (데모 모드)` };
