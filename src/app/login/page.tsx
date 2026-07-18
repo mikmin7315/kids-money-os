@@ -68,7 +68,7 @@ export default async function LoginPage({
 
 function TrustPoint({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-[var(--monari-line)] bg-white/80 px-3 py-3 text-xs font-bold text-[var(--monari-ink-soft)]">
+    <div className="flex items-center gap-2 rounded-2xl border border-[var(--monari-line)] bg-[var(--monari-surface)] px-3 py-3 text-xs font-bold text-[var(--monari-ink)]">
       <CheckCircle2 size={16} className="shrink-0 text-[var(--monari-done)]" aria-hidden="true" />
       {text}
     </div>
