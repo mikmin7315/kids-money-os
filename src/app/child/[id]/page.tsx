@@ -350,8 +350,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
       {/* ── 하단 탭바 ── */}
       <nav
-        className="fixed bottom-0 left-0 right-0 flex justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2 border-t border-[#A7F3D0]"
-        style={{ background: "rgba(240,254,250,0.95)", backdropFilter: "blur(12px)" }}
+        className="fixed bottom-0 flex justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2 border-t border-[#A7F3D0]"
+        style={{ background: "rgba(240,254,250,0.95)", backdropFilter: "blur(12px)", left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 500 }}
       >
         <ChildNavItem href={base} icon="🏠" label="홈" active />
         <ChildNavItem href={`${base}/promise`} icon="✅" label="약속" />
