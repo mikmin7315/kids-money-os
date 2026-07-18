@@ -348,29 +348,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
       </main>
 
-      {/* ── 하단 탭바 ── */}
-      <nav
-        className="fixed bottom-0 flex justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2 border-t border-[#A7F3D0]"
-        style={{ background: "rgba(240,254,250,0.95)", backdropFilter: "blur(12px)", left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 500 }}
-      >
-        <ChildNavItem href={base} icon="🏠" label="홈" active />
-        <ChildNavItem href={`${base}/promise`} icon="✅" label="약속" />
-        <ChildNavItem href={`${base}/records`} icon="📒" label="기록" />
-        <ChildNavItem href={`${base}/settings`} icon="⚙️" label="설정" />
-      </nav>
     </div>
-  );
-}
-
-function ChildNavItem({ href, icon, label, active }: { href: string; icon: string; label: string; active?: boolean }) {
-  return (
-    <Link
-      href={href}
-      className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-[12px] transition ${active ? "bg-[#D1FAE5]" : ""}`}
-    >
-      <span className={`text-[22px] ${active ? "" : "opacity-35"}`}>{icon}</span>
-      <span className={`text-[9px] font-800 ${active ? "text-[#059669]" : "text-[#94a3b8]"}`}>{label}</span>
-    </Link>
   );
 }
 
