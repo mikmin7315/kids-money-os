@@ -13,6 +13,12 @@ const TAB_DEFS = [
   { href: "/settings", label: "설정", icon: Settings },
 ];
 
+function getInitialTheme() {
+  if (typeof window === "undefined") return false;
+  const stored = localStorage.getItem("monari-theme");
+  return stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 export function MobileAppShell({
   title,
   subtitle,
@@ -79,15 +85,11 @@ export function MobileAppShell({
 }
 
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState<boolean | null>(null);
+  const [isDark, setIsDark] = useState(getInitialTheme);
 
   useEffect(() => {
-    const stored = localStorage.getItem("monari-theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const dark = stored ? stored === "dark" : prefersDark;
-    setIsDark(dark);
-    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-  }, []);
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+  }, [isDark]);
 
   function toggle() {
     const next = !isDark;
@@ -95,8 +97,6 @@ function ThemeToggle() {
     localStorage.setItem("monari-theme", next ? "dark" : "light");
     document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
   }
-
-  if (isDark === null) return null;
 
   return (
     <button
