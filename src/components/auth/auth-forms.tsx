@@ -260,7 +260,7 @@ function FormField({ id, label, hint, children }: { id: string; label: string; h
 function ConsentCheck({ name, children }: { name: string; children: React.ReactNode }) {
   return (
     <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-3">
-      <input name={name} type="checkbox" required className="mt-1 h-4 w-4 accent-[var(--monari-hero)]" />
+      <input name={name} type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--monari-hero)]" />
       <span className="text-xs leading-5 text-[var(--monari-ink-soft)]">{children}</span>
     </label>
   );

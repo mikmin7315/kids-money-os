@@ -119,7 +119,7 @@ export default async function BehaviorsPage() {
       )}
 
       {recentLogs.some((log) => log.status === "pending") && (
-        <Link href="/approvals" className="monari-btn-primary w-full">
+        <Link href="/approvals" className="monari-btn-outline w-full">
           확인 대기 약속 처리하기
         </Link>
       )}
