@@ -48,7 +48,7 @@ export type AppDataBundle = {
 export async function getDashboardView(): Promise<DashboardData> {
   if (isDemoMode()) return getDashboardData();
 
-  const bundle = await fetchAppDataFromSupabase();
+  const bundle = await getAppDataBundle();
   return buildDashboardFromBundle(bundle);
 }
 
