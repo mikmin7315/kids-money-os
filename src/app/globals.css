@@ -206,6 +206,149 @@
   }
 }
 
+/* ── 수동 테마 오버라이드 (OS prefers-color-scheme 무시) ── */
+/* :root[data-theme="*"] 는 specificity 0,2,0 → @media :root (0,1,0) 보다 높아 항상 이김 */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --monari-bg: #0d0b16;
+  --monari-surface: #161222;
+  --monari-surface-soft: #1e1830;
+  --monari-ink: #ede8ff;
+  --monari-ink-soft: #c4bfe8;
+  --monari-ink-muted: #9990bc;
+  --monari-line: rgba(237, 232, 255, 0.12);
+  --monari-line-strong: rgba(237, 232, 255, 0.20);
+  --monari-hero-lo: #2d1f5e;
+  --monari-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --monari-shadow-hero: 0 12px 28px rgba(0, 0, 0, 0.55);
+  --monari-shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.32);
+  --monari-shadow-float: 0 12px 32px rgba(0, 0, 0, 0.50);
+  --monari-shadow-lift: 0 2px 16px rgba(0, 0, 0, 0.35);
+  --monari-blur-bg: rgba(22, 18, 34, 0.88);
+  --monari-blur-border: rgba(237, 232, 255, 0.12);
+  --monari-tabbar-bg: rgba(22, 18, 34, 0.94);
+  --monari-tabbar-shadow: 0 18px 45px rgba(0, 0, 0, 0.50);
+  --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.32);
+  --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.40);
+  --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --color-bg: var(--monari-bg);
+  --color-panel: var(--monari-surface);
+  --color-card: #1e1830;
+  --color-text: var(--monari-ink);
+  --color-muted: var(--monari-ink-soft);
+  --color-soft: var(--monari-ink-muted);
+  --color-border: var(--monari-line-strong);
+  --color-chip-bg: #271d47;
+  --color-chip-border: rgba(167, 139, 250, 0.22);
+  --bg-surface: var(--monari-surface);
+  --bg-surface-alt: #271d47;
+  --border-soft: var(--monari-line);
+  --border-strong: var(--monari-line-strong);
+  --text-primary: var(--monari-ink);
+  --text-secondary: var(--monari-ink-soft);
+  --text-tertiary: var(--monari-ink-muted);
+  --text-muted: var(--monari-ink-muted);
+  --hero-parent-bg: #2e1065;
+  --status-neutral: #a5a3c8;
+  --status-neutral-bg: rgba(165, 163, 200, 0.12);
+  --status-neutral-border: rgba(165, 163, 200, 0.22);
+  --status-review-bg: rgba(167, 139, 250, 0.12);
+  --status-review-border: rgba(167, 139, 250, 0.20);
+  --status-success-bg: rgba(52, 211, 153, 0.12);
+  --status-success-border: rgba(52, 211, 153, 0.22);
+  --status-pending-bg: rgba(251, 191, 36, 0.12);
+  --status-pending-border: rgba(251, 191, 36, 0.22);
+  --status-danger-bg: rgba(248, 113, 113, 0.12);
+  --status-danger-border: rgba(248, 113, 113, 0.22);
+  --shadow-card: var(--monari-shadow-card);
+  --shadow-soft: var(--monari-shadow-soft);
+  --child-spend: #e58c5a;
+  --child-spend-hover: #d4743f;
+  --child-save: #5b8ee6;
+  --child-surface: rgba(255, 255, 255, 0.08);
+  --status-success-solid: rgba(52, 211, 153, 0.14);
+  --status-success-solid-text: #6ee7b7;
+  --status-danger-solid: rgba(248, 113, 113, 0.14);
+  --status-danger-solid-text: #fca5a5;
+  --status-pending-solid: rgba(251, 191, 36, 0.14);
+  --status-pending-solid-text: #fcd34d;
+  --status-info-solid: rgba(96, 165, 250, 0.14);
+  --status-info-solid-text: #93c5fd;
+  --status-rose-solid: rgba(251, 113, 133, 0.14);
+  --status-rose-solid-text: #fda4af;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --monari-bg: #faf5ff;
+  --monari-surface: #ffffff;
+  --monari-surface-soft: #f5f0fe;
+  --monari-ink: #17181c;
+  --monari-ink-soft: #3e3e50;
+  --monari-ink-muted: #696974;
+  --monari-line: rgba(23, 24, 28, 0.10);
+  --monari-line-strong: rgba(23, 24, 28, 0.18);
+  --monari-hero-lo: #ede9fe;
+  --monari-shadow-card: 0 1px 4px rgba(23, 24, 28, 0.10), 0 0 0 1px rgba(23, 24, 28, 0.06);
+  --monari-shadow-hero: 0 12px 28px rgba(31, 33, 47, 0.22);
+  --monari-shadow-soft: 0 6px 18px rgba(23, 24, 28, 0.12);
+  --monari-shadow-float: 0 12px 32px rgba(23, 24, 28, 0.16);
+  --monari-shadow-lift: 0 2px 12px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --monari-blur-bg: rgba(255, 255, 255, 0.78);
+  --monari-blur-border: rgba(255, 255, 255, 0.72);
+  --monari-tabbar-bg: rgba(255, 255, 255, 0.90);
+  --monari-tabbar-shadow: 0 18px 45px rgba(23, 24, 28, 0.15);
+  --monari-shadow-sm: 0 1px 6px rgba(0, 0, 0, 0.10);
+  --monari-shadow-md: 0 2px 12px rgba(0, 0, 0, 0.11);
+  --monari-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.13);
+  --color-bg: var(--monari-bg);
+  --color-panel: var(--monari-surface);
+  --color-card: #f3f4f6;
+  --color-text: var(--monari-ink);
+  --color-muted: var(--monari-ink-soft);
+  --color-soft: var(--monari-ink-muted);
+  --color-border: var(--monari-line-strong);
+  --color-chip-bg: #f3f0ff;
+  --color-chip-border: rgba(124, 58, 237, 0.14);
+  --bg-surface: var(--monari-surface);
+  --bg-surface-alt: #f3f0ff;
+  --border-soft: var(--monari-line);
+  --border-strong: var(--monari-line-strong);
+  --text-primary: var(--monari-ink);
+  --text-secondary: var(--monari-ink-soft);
+  --text-tertiary: var(--monari-ink-muted);
+  --text-muted: var(--monari-ink-muted);
+  --hero-parent-bg: #3b0764;
+  --status-neutral: #57556f;
+  --status-neutral-bg: rgba(87, 85, 111, 0.08);
+  --status-neutral-border: rgba(87, 85, 111, 0.16);
+  --status-review-bg: var(--monari-plus-bg);
+  --status-review-border: rgba(124, 58, 237, 0.18);
+  --status-success-bg: var(--monari-done-bg);
+  --status-success-border: rgba(22, 163, 74, 0.18);
+  --status-pending-bg: var(--monari-pending-bg);
+  --status-pending-border: rgba(180, 83, 9, 0.18);
+  --status-danger-bg: var(--monari-minus-bg);
+  --status-danger-border: rgba(220, 38, 38, 0.16);
+  --shadow-card: var(--monari-shadow-card);
+  --shadow-soft: var(--monari-shadow-soft);
+  --child-spend: #C66B3D;
+  --child-spend-hover: #A85930;
+  --child-save: #10367D;
+  --child-surface: #EBEBEB;
+  --status-success-solid: #d1fae5;
+  --status-success-solid-text: #065f46;
+  --status-danger-solid: #fee2e2;
+  --status-danger-solid-text: #991b1b;
+  --status-pending-solid: #fef3c7;
+  --status-pending-solid-text: #92400e;
+  --status-info-solid: #dbeafe;
+  --status-info-solid-text: #1e40af;
+  --status-rose-solid: #fecdd3;
+  --status-rose-solid-text: #9f1239;
+}
+
 html,
 body {
   min-height: 100%;
