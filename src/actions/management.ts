@@ -648,6 +648,102 @@ export async function upsertBorrowConditionsForm(
     : { ok: false, message: result.error ?? "저장 실패." };
 }
 
+export async function clearChildPinAction(input: {
+  childId: string;
+}): Promise<ActionResult<void>> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "인증이 필요합니다." };
+
+  try {
+    const admin = getSupabaseAdminClient();
+    const { data: child, error: fetchError } = await admin
+      .from("children")
+      .select("id, parent_id")
+      .eq("id", input.childId)
+      .maybeSingle();
+    if (fetchError) throw fetchError;
+    if (!child || (auth.profile?.role !== "admin" && child.parent_id !== auth.user.id)) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
+
+    const { error } = await admin
+      .from("children")
+      .update({ pin_code: null, pin_failed_attempts: 0, pin_locked_until: null })
+      .eq("id", input.childId);
+    if (error) throw error;
+
+    await invalidateAppData();
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "PIN 초기화 실패." };
+  }
+}
+
+export async function clearChildPinForm(
+  _: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const childId = readString(formData, "childId");
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  const result = await clearChildPinAction({ childId });
+  return result.ok
+    ? { ok: true, message: "PIN이 초기화되었습니다." }
+    : { ok: false, message: result.error ?? "초기화 실패." };
+}
+
+export async function enterChildModeDirectAction(input: {
+  childId: string;
+}): Promise<ActionResult<{ childId: string }>> {
+  if (isDemoMode()) {
+    const cookieStore = await cookies();
+    cookieStore.set("child_mode", input.childId, {
+      httpOnly: true, maxAge: 60 * 60 * 8, path: "/", sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return { ok: true, data: { childId: input.childId } };
+  }
+
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "인증이 필요합니다." };
+
+  try {
+    const admin = getSupabaseAdminClient();
+    const { data: child, error } = await admin
+      .from("children")
+      .select("id, parent_id, pin_code")
+      .eq("id", input.childId)
+      .maybeSingle();
+    if (error) throw error;
+    if (!child || (auth.profile?.role !== "admin" && child.parent_id !== auth.user.id)) {
+      return { ok: false, error: "아이를 찾을 수 없습니다." };
+    }
+    if (child.pin_code) {
+      return { ok: false, error: "PIN이 설정되어 있습니다. PIN을 입력해주세요." };
+    }
+
+    const cookieStore = await cookies();
+    cookieStore.set("child_mode", input.childId, {
+      httpOnly: true, maxAge: 60 * 60 * 8, path: "/", sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return { ok: true, data: { childId: input.childId } };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "입장 실패." };
+  }
+}
+
+export async function enterChildModeDirectForm(
+  _: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const childId = readString(formData, "childId");
+  if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
+  const result = await enterChildModeDirectAction({ childId });
+  return result.ok
+    ? { ok: true, message: "입장합니다." }
+    : { ok: false, message: result.error ?? "입장 실패." };
+}
+
 export async function setChildPinForm(
   _: ManagementFormState,
   formData: FormData,

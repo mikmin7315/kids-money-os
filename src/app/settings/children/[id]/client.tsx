@@ -4,7 +4,13 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { updateChildForm, deleteChildForm, type ManagementFormState } from "@/actions/management";
+import {
+  updateChildForm,
+  deleteChildForm,
+  setChildPinForm,
+  clearChildPinForm,
+  type ManagementFormState,
+} from "@/actions/management";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { ChildProfile } from "@/lib/types";
 
@@ -13,9 +19,12 @@ const initial: ManagementFormState = { ok: false, message: "" };
 export function ChildEditClient({ childId, initialChild }: { childId: string; initialChild: ChildProfile }) {
   const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPinReset, setShowPinReset] = useState(false);
 
   const [updateState, updateAction, updatePending] = useActionState(updateChildForm, initial);
   const [deleteState, deleteAction, deletePending] = useActionState(deleteChildForm, initial);
+  const [setPinState, setPinAction, setPinPending] = useActionState(setChildPinForm, initial);
+  const [clearPinState, clearPinAction, clearPinPending] = useActionState(clearChildPinForm, initial);
 
   useEffect(() => {
     if (updateState.ok) router.push("/settings");
@@ -86,6 +95,74 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
               {updatePending ? "저장 중…" : "저장하기"}
             </button>
           </form>
+        </div>
+
+        {/* PIN 관리 */}
+        <div className="monari-card p-5 space-y-4">
+          <h2 className="text-[15px] font-800 text-[var(--monari-ink)]">아이 모드 PIN</h2>
+          <p className="text-[13px] text-[var(--monari-ink-muted)]">
+            아이가 PIN을 입력해 아이 통장에 접근해요. PIN이 없으면 바로 입장됩니다.
+          </p>
+
+          {/* PIN 설정 */}
+          <form action={setPinAction} className="space-y-3">
+            <input type="hidden" name="childId" value={childId} />
+            <div>
+              <label className="mb-1.5 block text-[13px] font-700 text-[var(--monari-ink)]">새 PIN 설정</label>
+              <input
+                name="pin"
+                type="password"
+                inputMode="numeric"
+                maxLength={4}
+                pattern="\d{4}"
+                placeholder="4자리 숫자"
+                className="monari-input w-full"
+              />
+            </div>
+            {setPinState.message && (
+              <p className={`rounded-[12px] px-4 py-3 text-[13px] font-600 ${setPinState.ok ? "bg-[var(--status-success-solid)] text-[#166534]" : "bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)]"}`}>
+                {setPinState.message}
+              </p>
+            )}
+            <button type="submit" disabled={setPinPending} className="monari-btn-primary w-full h-[46px] text-[14px]">
+              {setPinPending ? "설정 중…" : "PIN 설정하기"}
+            </button>
+          </form>
+
+          {/* PIN 초기화 */}
+          <div className="border-t border-[var(--monari-line)] pt-4">
+            {!showPinReset ? (
+              <button
+                type="button"
+                onClick={() => setShowPinReset(true)}
+                className="w-full rounded-[14px] border-2 border-[var(--monari-line-strong)] py-2.5 text-[13px] font-700 text-[var(--monari-ink-muted)] transition active:scale-95"
+              >
+                PIN 초기화 (삭제)
+              </button>
+            ) : (
+              <form action={clearPinAction} className="space-y-3">
+                <input type="hidden" name="childId" value={childId} />
+                <p className="rounded-[12px] bg-[var(--status-pending-solid)] px-4 py-3 text-[13px] font-600 text-[var(--status-pending-solid-text)]">
+                  PIN을 삭제하면 아이 모드에 바로 입장할 수 있어요.
+                </p>
+                {clearPinState.message && (
+                  <p className={`rounded-[12px] px-4 py-3 text-[13px] font-600 ${clearPinState.ok ? "bg-[var(--status-success-solid)] text-[#166534]" : "bg-[var(--status-danger-solid)] text-[var(--status-rose-solid-text)]"}`}>
+                    {clearPinState.message}
+                  </p>
+                )}
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => setShowPinReset(false)}
+                    className="flex-1 rounded-[14px] border-2 border-[#e5e7eb] py-2.5 text-[13px] font-700 text-[var(--monari-ink-muted)]">
+                    취소
+                  </button>
+                  <button type="submit" disabled={clearPinPending}
+                    className="flex-1 rounded-[14px] bg-[var(--monari-ink-muted)] py-2.5 text-[13px] font-700 text-white disabled:opacity-50">
+                    {clearPinPending ? "초기화 중…" : "PIN 삭제"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
 
         {/* 삭제 */}
