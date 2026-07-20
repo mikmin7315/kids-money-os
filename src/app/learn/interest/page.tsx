@@ -72,7 +72,7 @@ export default function LearnInterestPage() {
   const isLast = step === steps.length - 1;
 
   return (
-    <main className="flex min-h-screen flex-col bg-[var(--color-bg)] px-5 pb-10 pt-10" data-theme="child">
+    <main className="flex min-h-dvh flex-col bg-[var(--color-bg)] px-5 pb-10 pt-10" data-theme="child">
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col">
 
         <div className="flex items-center justify-between">

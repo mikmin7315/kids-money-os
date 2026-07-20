@@ -5,7 +5,7 @@ import { RefreshCw } from "lucide-react";
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <html lang="ko">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#faf5ff", display: "flex", minHeight: "100vh", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#faf5ff", display: "flex", minHeight: "100dvh", alignItems: "center", justifyContent: "center", padding: "20px" }}>
         <div style={{ maxWidth: 380, width: "100%", background: "#fff", borderRadius: 24, padding: 32, textAlign: "center", boxShadow: "0 8px 40px rgba(0,0,0,0.08)" }}>
           <p style={{ fontSize: 56, marginBottom: 16 }}>⚠️</p>
           <h1 style={{ fontSize: 20, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>앱을 불러오지 못했어요</h1>

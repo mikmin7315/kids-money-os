@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { getSupportEmail } from "@/lib/public-info";
 
 export const metadata: Metadata = { title: "고객지원 — Monari" };
@@ -52,8 +53,13 @@ export default function SupportPage() {
   const supportEmail = getSupportEmail();
 
   return (
-    <div className="mx-auto min-h-screen max-w-[460px] bg-[#faf5ff]" style={{ boxShadow: "0 0 70px rgba(76,29,149,0.16)" }}>
-      <div className="px-4 pb-16 pt-12">
+    <div style={{ minHeight: "100dvh" }}>
+      <div className="mx-auto max-w-[460px] px-4 pb-16 pt-8">
+        {/* 뒤로 */}
+        <Link href="/" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+          <ArrowLeft size={16} /> 홈으로
+        </Link>
+
         {/* 헤더 */}
         <div className="mb-8">
           <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", color: "var(--monari-hero)" }}>SUPPORT</p>
