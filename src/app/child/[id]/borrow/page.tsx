@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { BorrowRequestQuickForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -36,6 +36,9 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
   return (
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+        <ArrowLeft size={16} /> 홈으로
+      </Link>
       <div className="mb-6 flex items-start justify-between">
         <div>
           <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>

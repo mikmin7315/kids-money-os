@@ -322,6 +322,7 @@ export async function createAllowanceRuleAction(input: {
       .single();
 
     if (error) throw error;
+    void invalidateAppData();
     revalidatePath("/settings");
     return { ok: true, data: { id: String(data.id) } };
   } catch (error) {
@@ -367,6 +368,7 @@ export async function upsertBorrowConditionsAction(input: {
       .single();
 
     if (error) throw error;
+    void invalidateAppData();
     revalidatePath("/settings");
     return { ok: true, data: { id: String(data.id) } };
   } catch (error) {
@@ -673,6 +675,7 @@ export async function clearChildPinAction(input: {
     if (error) throw error;
 
     await invalidateAppData();
+    revalidatePath("/settings");
     return { ok: true };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "PIN 초기화 실패." };

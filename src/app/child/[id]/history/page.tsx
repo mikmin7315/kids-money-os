@@ -1,4 +1,6 @@
-﻿import { notFound, redirect } from "next/navigation";
+﻿import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -47,6 +49,9 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
   return (
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+        <ArrowLeft size={16} /> 홈으로
+      </Link>
       <div className="mb-6">
         <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>행동 기록</p>
         <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
