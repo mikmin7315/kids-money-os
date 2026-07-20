@@ -26,11 +26,8 @@ export default async function GiveAllowancePage({ params }: { params: Promise<{ 
   const balance = summary.wallet.balance;
 
   return (
-    <div
-      className="mx-auto min-h-screen max-w-[460px] bg-[#faf5ff]"
-      style={{ boxShadow: "0 0 70px rgba(76,29,149,0.16)" }}
-    >
-      <div className="px-4 pb-12 pt-12">
+    <div style={{ minHeight: "100dvh", background: "#faf5ff" }}>
+      <div className="px-4 pb-36 pt-8">
         <Link
           href={`/child/${id}`}
           className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChartNoAxesCombined, ClipboardList, Home, Moon, PiggyBank, Settings, Sun } from "lucide-react";
+import { ChartNoAxesCombined, ClipboardList, Home, Moon, PiggyBank, Settings, Sun } from "lucide-react";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { type ReactNode, useEffect, useState } from "react";
 
 const TAB_DEFS = [
@@ -43,9 +44,7 @@ export function MobileAppShell({
 
           <div className="flex shrink-0 items-center gap-1">
             <ThemeToggle />
-            <HeaderLink href="/notifications" label="알림 보기">
-              <Bell aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />
-            </HeaderLink>
+            <NotificationBell />
           </div>
         </header>
 
@@ -107,17 +106,5 @@ function ThemeToggle() {
     >
       {isDark ? <Sun aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} /> : <Moon aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />}
     </button>
-  );
-}
-
-function HeaderLink({ href, label, children }: { href: string; label: string; children: ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--monari-ink-soft)] transition hover:bg-white hover:text-[var(--monari-hero)]"
-      aria-label={label}
-    >
-      {children}
-    </Link>
   );
 }

@@ -60,6 +60,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
     .slice(0, 5);
 
   const base = `/child/${id}`;
+  const isNewChild = summary.wallet.balance === 0 && bundle.moneyTransactions.filter((t) => t.childId === id).length === 0;
   const allDone = todayTotal > 0 && remaining === 0;
 
   return (
@@ -210,6 +211,29 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
       {/* ── 본문 ── */}
       <main className="px-4 pb-36 pt-5">
+
+        {/* 신규 아이 온보딩 배너 */}
+        {isNewChild && (
+          <div className="mb-6 overflow-hidden rounded-[22px] border border-[#A7F3D0]" style={{ background: "linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%)" }}>
+            <div className="px-5 py-5">
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#059669", marginBottom: 6 }}>👋 통장 개설 완료!</p>
+              <p style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em", lineHeight: 1.4 }}>
+                이제 용돈을 받으면<br />여기서 확인할 수 있어요
+              </p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#059669", marginTop: 8, lineHeight: 1.6, opacity: 0.8 }}>
+                약속을 지키면 이자율이 올라가요. 오늘 첫 약속을 체크해보세요! ✅
+              </p>
+            </div>
+            <div className="border-t border-[#A7F3D0] grid grid-cols-2 divide-x divide-[#A7F3D0]">
+              <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#059669] transition active:bg-[#A7F3D0]/40">
+                약속 체크하기 ✅
+              </Link>
+              <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#065F46] transition active:bg-[#A7F3D0]/40">
+                이자율 보기 📈
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* 이번 달 흐름 */}
         <div className="flex items-center justify-between mb-3">
