@@ -63,7 +63,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const allDone = todayTotal > 0 && remaining === 0;
 
   return (
-    <div style={{ background: "#F0FEFA", minHeight: "100vh" }}>
+    <div style={{ minHeight: "100dvh" }}>
 
       {/* ── 히어로 헤더 ── */}
       <section
