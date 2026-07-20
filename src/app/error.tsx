@@ -24,7 +24,7 @@ export default function AppError({
             <RefreshCw size={17} aria-hidden="true" />
             다시 시도
           </button>
-          <Link href="/support" className="monari-btn-ghost w-full">고객지원 안내</Link>
+          <Link href="/inquiries" className="monari-btn-ghost w-full">고객지원 문의</Link>
         </div>
       </section>
     </main>
