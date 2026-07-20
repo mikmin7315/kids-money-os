@@ -729,8 +729,19 @@ export async function cashSpendAction(
     return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 부모에게 알렸어요. 승인 후 잔액에 반영돼요.` };
   }
 
-  const auth = await requireParentSession().catch(() => null);
   const supabase = await getSupabaseServerClient();
+
+  // 부모 세션 또는 아이 모드 쿠키 중 하나가 반드시 있어야 함
+  const { getChildModeContext } = await import("@/lib/auth");
+  const [authResult, childMode] = await Promise.all([
+    requireParentSession().catch(() => null),
+    getChildModeContext().catch(() => null),
+  ]);
+  const isParent = !!authResult?.user;
+  const isChild = childMode?.childId === childId;
+  if (!isParent && !isChild) return { ok: false, message: "로그인이 필요해요." };
+
+  const auth = authResult;
 
   // 아이 소유권 확인 (부모 세션이면 직접 확인, 아이 모드이면 children 테이블로 확인)
   const { data: child } = await supabase

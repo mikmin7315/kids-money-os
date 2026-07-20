@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getAuthContext } from "@/lib/auth";
+import { signOut } from "@/actions/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -54,19 +55,21 @@ export default async function RestrictedPage() {
           ) : (
             <p className="mt-3 text-sm text-[var(--color-muted)]">운영팀에 문의해주세요.</p>
           )}
-          <div className="mt-8 flex gap-3">
+          <div className="mt-8 flex flex-col gap-3">
             <Link
               href="/inquiries"
               className="rounded-[14px] bg-[var(--color-accent)] px-6 py-3 text-sm font-bold text-white"
             >
               해제 요청 문의
             </Link>
-            <Link
-              href="/"
-              className="rounded-[14px] border border-[var(--color-border)] px-6 py-3 text-sm font-bold"
-            >
-              홈으로
-            </Link>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="w-full rounded-[14px] border border-[var(--color-border)] px-6 py-3 text-sm font-bold"
+              >
+                다른 계정으로 로그인
+              </button>
+            </form>
           </div>
         </div>
       </MobileShell>

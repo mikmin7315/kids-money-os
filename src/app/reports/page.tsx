@@ -65,7 +65,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         <div className="monari-card p-5 text-center">
           <p className="text-[15px] font-700 text-[var(--monari-ink)] mb-1">아이를 먼저 등록해주세요</p>
           <p className="monari-meta mb-4">리포트를 보려면 아이 프로필이 필요합니다.</p>
-          <a href="/settings" className="monari-btn-primary px-5">아이 등록하기 →</a>
+          <Link href="/settings" className="monari-btn-primary px-5">아이 등록하기 →</Link>
         </div>
       )}
 

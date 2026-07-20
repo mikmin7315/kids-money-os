@@ -3,6 +3,7 @@ import { ShieldCheck } from "lucide-react";
 import { ConsentForm } from "@/components/auth/consent-form";
 import { getAuthContext } from "@/lib/auth";
 import { hasCurrentConsent } from "@/lib/consent";
+import { signOut } from "@/actions/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,11 @@ export default async function ConsentPage() {
         <section className="monari-card p-5">
           <ConsentForm />
         </section>
+        <form action={signOut} className="text-center">
+          <button type="submit" className="text-xs font-semibold text-[var(--monari-ink-muted)] underline underline-offset-2">
+            다른 계정으로 로그인
+          </button>
+        </form>
       </div>
     </main>
   );

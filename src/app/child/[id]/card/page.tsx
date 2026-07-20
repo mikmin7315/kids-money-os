@@ -12,7 +12,8 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
   const ctx = await getChildModeContext();
   if (ctx.childId !== id) {
     const { redirect } = await import("next/navigation");
-    redirect(`/child/${ctx.childId}/card`);
+    if (ctx.childId) redirect(`/child/${ctx.childId}/card`);
+    else redirect("/child-mode");
   }
   const supabase = await getSupabaseServerClient();
 
