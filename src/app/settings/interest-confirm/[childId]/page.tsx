@@ -30,8 +30,8 @@ export default async function InterestConfirmPage({ params }: { params: Promise<
   );
 
   return (
-    <div className="mx-auto min-h-screen max-w-[460px] bg-[#faf5ff]" style={{ boxShadow: "0 0 70px rgba(76,29,149,0.16)" }}>
-      <div className="px-4 pb-16 pt-12">
+    <div style={{ minHeight: "100dvh" }}>
+      <div className="mx-auto max-w-[460px] px-4 pb-16 pt-8">
         <Link href="/settings" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
           <ArrowLeft size={16} /> 설정으로
         </Link>

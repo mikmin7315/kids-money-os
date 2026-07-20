@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, use, useEffect } from "react";
+import { useActionState, useEffect } from "react";
+import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer, Surface } from "@/components/ui/primitives";
@@ -10,7 +11,6 @@ import {
   enterChildModeDirectForm,
   type ManagementFormState,
 } from "@/actions/management";
-import { useFormStatus } from "react-dom";
 
 const initialState: ManagementFormState = { ok: false, message: "" };
 
@@ -61,7 +61,7 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
       <Surface className="border-[var(--color-chip-border)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98),rgba(255,242,203,0.92))]">
         <p className="text-center font-display text-2xl font-semibold">아이 PIN을 입력해주세요</p>
         <p className="mt-3 text-center text-sm leading-6 text-[var(--color-muted)]">
-          부모님이 설정한 4자리 숫자를 입력하면 내 통장 화면으로 이동합니다.
+          부모님이 설정한 4자리 숫자를 입력하면 아이 통장 화면으로 이동합니다.
         </p>
 
         <form action={action} className="mt-6 space-y-6">
@@ -69,7 +69,9 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
           <PinInput name="pin" autoFocus />
           <PinSubmitButton />
           {state.message && !state.ok && (
-            <p className="text-center text-sm font-medium text-[var(--monari-minus)]">{state.message}</p>
+            <p className="text-center text-sm font-medium text-[var(--monari-minus)]">
+              {state.message}
+            </p>
           )}
         </form>
       </Surface>
@@ -77,7 +79,7 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
       <div className="rounded-[16px] bg-white/70 px-4 py-3.5 text-center text-[13px] text-[var(--color-muted)]">
         PIN을 잊었나요?{" "}
         <span className="font-700 text-[#059669]">
-          부모님이 설정 → 아이 정보에서 PIN을 초기화할 수 있어요.
+          부모님 설정의 아이 정보에서 PIN을 초기화할 수 있어요.
         </span>
       </div>
     </div>
@@ -96,15 +98,17 @@ function NoPinView({ childId, onSuccess }: { childId: string; onSuccess: () => v
       <p className="text-center font-display text-2xl font-semibold">아이 모드로 입장</p>
       <p className="mt-3 text-center text-sm leading-6 text-[var(--color-muted)]">
         아직 PIN이 설정되지 않았어요.{" "}
-        <span className="font-700 text-[#059669]">바로 입장</span>하거나{" "}
-        부모님 설정에서 PIN을 먼저 설정할 수 있어요.
+        <span className="font-700 text-[#059669]">바로 입장</span>하거나 부모님 설정에서 PIN을 먼저
+        설정할 수 있어요.
       </p>
 
       <form action={action} className="mt-6">
         <input type="hidden" name="childId" value={childId} />
         <DirectEntryButton />
         {state.message && !state.ok && (
-          <p className="mt-3 text-center text-sm font-medium text-[var(--monari-minus)]">{state.message}</p>
+          <p className="mt-3 text-center text-sm font-medium text-[var(--monari-minus)]">
+            {state.message}
+          </p>
         )}
       </form>
     </Surface>
