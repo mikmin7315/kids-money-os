@@ -92,8 +92,8 @@ export default async function SettingsPage() {
             <span className="text-sm font-bold text-[var(--monari-ink)]">문의하기</span>
             <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
           </Link>
-          <Link href="/support" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="text-sm font-bold text-[var(--monari-ink)]">자주 묻는 질문 (FAQ)</span>
+          <Link href="/announcements" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="text-sm font-bold text-[var(--monari-ink)]">공지 및 안내</span>
             <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
           </Link>
           <Link href="/settings/consent-history" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">

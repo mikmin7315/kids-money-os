@@ -80,7 +80,7 @@ export default async function AnnouncementDetailPage({ params }: { params: Promi
       </div>
 
       <div className="mt-6">
-        <Link href="/support" className="text-sm font-bold text-[var(--monari-hero)]">문의하기 →</Link>
+        <Link href="/inquiries" className="text-sm font-bold text-[var(--monari-hero)]">문의하기 →</Link>
       </div>
     </MobileAppShell>
   );

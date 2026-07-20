@@ -36,14 +36,14 @@ export function PublicInfoPage({
             <Link href="/legal/privacy">개인정보 처리 안내</Link>
             <Link href="/legal/terms">이용약관</Link>
             <Link href="/account-deletion">계정 삭제 안내</Link>
-            <Link href="/support">고객지원</Link>
+            <Link href="/inquiries">고객지원</Link>
           </nav>
           <div className="mt-4 flex items-center gap-2 text-xs text-[var(--monari-ink-muted)]">
             <Mail size={14} aria-hidden="true" />
             {supportEmail ? (
               <a href={`mailto:${supportEmail}`} className="font-semibold underline underline-offset-2">{supportEmail}</a>
             ) : (
-              <Link href="/support" className="font-semibold underline underline-offset-2">고객지원 안내 보기</Link>
+              <Link href="/inquiries" className="font-semibold underline underline-offset-2">고객지원 안내 보기</Link>
             )}
           </div>
         </footer>

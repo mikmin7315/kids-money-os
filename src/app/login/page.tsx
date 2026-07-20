@@ -58,7 +58,7 @@ export default async function LoginPage({
         <nav aria-label="정책 및 고객지원" className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-[var(--monari-ink-muted)]">
           <Link href="/legal/privacy">개인정보 처리 안내</Link>
           <Link href="/legal/terms">이용약관</Link>
-          <Link href="/support">고객지원</Link>
+          <Link href="/inquiries">고객지원</Link>
           <Link href="/account-deletion">계정 삭제 안내</Link>
         </nav>
       </div>
