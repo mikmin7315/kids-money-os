@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { InquirySubmitForm } from "@/components/support/inquiry-form";
+import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -38,14 +39,7 @@ export default async function InquiriesPage() {
   const inquiries: InquiryRow[] = (data ?? []) as InquiryRow[];
 
   return (
-    <main className="px-4 pb-36 pt-8">
-      <div className="mb-6">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>고객지원</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em" }}>
-          💬 문의하기
-        </h1>
-      </div>
-
+    <MobileAppShell title="문의하기" subtitle="고객지원">
       {/* 문의 작성 폼 */}
       <section className="mb-8">
         <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>새 문의 작성</p>
@@ -92,9 +86,9 @@ export default async function InquiriesPage() {
         )}
 
         <div className="mt-6">
-          <Link href="/support" className="text-sm font-bold text-[var(--monari-hero)]">FAQ 보기 →</Link>
+          <Link href="/announcements" className="text-sm font-bold text-[var(--monari-hero)]">공지사항 보기 →</Link>
         </div>
       </section>
-    </main>
+    </MobileAppShell>
   );
 }
