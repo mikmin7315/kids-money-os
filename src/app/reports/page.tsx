@@ -1,8 +1,8 @@
 ﻿import Link from "next/link";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
-import { ReportBarGroup, SpendVsSaveSplit } from "@/components/finance/report-visuals";
+import { ReportBarGroup, SpendVsSaveSplit, BehaviorRing } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
-import { SectionTitle, ProgressBar } from "@/components/monari/ui";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -99,18 +99,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           <section className="mb-4">
             <SectionTitle>약속 달성률</SectionTitle>
             <div className="monari-card mt-3 p-5">
-              <div className="flex items-end justify-between gap-4 mb-4">
-                <div>
-                  <p className="monari-meta mb-1">이번달 약속 이행</p>
-                  <p className="text-[36px] font-800 leading-none tracking-tight text-[var(--monari-hero)]">
-                    {primary.monthReport.behaviorSuccessRate.toFixed(1)}%
-                  </p>
-                </div>
-                <p className="text-[12px] leading-5 text-[var(--monari-ink-soft)] text-right max-w-[18ch]">
-                  약속 이행률이 높을수록 이자 설명과 저축 대화가 쉬워집니다.
-                </p>
-              </div>
-              <ProgressBar value={primary.monthReport.behaviorSuccessRate} />
+              <BehaviorRing rate={primary.monthReport.behaviorSuccessRate} />
             </div>
           </section>
 

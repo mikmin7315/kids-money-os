@@ -5,6 +5,7 @@ import { NotificationToggleList } from "@/components/notifications/notification-
 import { NOTIFICATION_TYPES } from "@/lib/notification-types";
 import { requireParentSession } from "@/lib/auth";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { PushSubscribeButton } from "@/components/notifications/push-subscribe-button";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,8 @@ export default async function ParentNotificationSettingsPage() {
             받고 싶은 알림 종류를 선택하세요.
           </p>
         </div>
+
+        <PushSubscribeButton />
 
         <NotificationToggleList
           items={parentTypes.map((item) => ({ type: item.type, label: item.label }))}

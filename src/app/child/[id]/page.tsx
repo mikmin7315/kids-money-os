@@ -248,6 +248,16 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
         </div>
 
+        {/* 이번 달 저금 달성률 */}
+        {totalAllowance > 0 && !isNewChild && (
+          <div className="mb-6">
+            <h2 className="mb-3" style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
+              이번 달 저금 달성률 🐷
+            </h2>
+            <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
+          </div>
+        )}
+
         {/* 이자 미리보기 */}
         {policy && summary.wallet.balance > 0 && (
           <div className="mb-6">
@@ -373,6 +383,55 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
       </main>
 
     </div>
+  );
+}
+
+function SavingsRateCard({ totalSave, totalAllowance, masked, base }: {
+  totalSave: number; totalAllowance: number; masked: boolean; base: string;
+}) {
+  const rate = Math.round((totalSave / totalAllowance) * 100);
+  const TARGET = 30;
+  const r = 36;
+  const circumference = 2 * Math.PI * r;
+  const filled = Math.min(rate / 100, 1) * circumference;
+  const reached = rate >= TARGET;
+  const color = reached ? "#059669" : rate >= 15 ? "#D97706" : "#94A3B8";
+  const message = reached ? "저금 목표 달성! 🎉" : rate >= 15 ? `목표까지 ${TARGET - rate}% 남았어요` : "저금을 시작해봐요 💪";
+
+  return (
+    <Link href={`${base}/save`} className="block overflow-hidden rounded-[20px] bg-white border border-[#A7F3D0] shadow-[0_2px_12px_rgba(5,150,105,0.10)] transition active:scale-[0.98]">
+      <div className="flex items-center gap-4 px-5 py-4">
+        {/* 링 차트 */}
+        <svg width="88" height="88" viewBox="0 0 88 88" aria-label={`저금 달성률 ${rate}%`}>
+          <circle cx="44" cy="44" r={r} fill="none" stroke="#D1FAE5" strokeWidth="9" />
+          <circle
+            cx="44" cy="44" r={r}
+            fill="none"
+            stroke={color}
+            strokeWidth="9"
+            strokeLinecap="round"
+            strokeDasharray={`${filled} ${circumference - filled}`}
+            strokeDashoffset={circumference * 0.25}
+          />
+          <text x="44" y="40" textAnchor="middle" style={{ fontSize: 16, fontWeight: 900, fill: color }}>
+            {masked ? "••" : `${rate}%`}
+          </text>
+          <text x="44" y="56" textAnchor="middle" style={{ fontSize: 9, fontWeight: 700, fill: "#94A3B8" }}>
+            저금률
+          </text>
+        </svg>
+        {/* 텍스트 */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-700 mb-1" style={{ color }}>
+            목표 {TARGET}%
+            {reached && <span className="ml-1.5 rounded-full bg-[#D1FAE5] px-2 py-0.5 text-[10px] text-[#059669]">달성 ✓</span>}
+          </p>
+          <p className="text-[15px] font-900 text-[#052E16] leading-snug">{masked ? "••••원 저금했어요" : `${formatWon(totalSave)} 저금했어요`}</p>
+          <p className="mt-1 text-[12px] font-600 text-[#94A3B8]">{message}</p>
+        </div>
+        <ArrowRight className="h-4 w-4 flex-shrink-0 text-[#A7F3D0]" />
+      </div>
+    </Link>
   );
 }
 

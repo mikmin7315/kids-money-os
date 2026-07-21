@@ -1,4 +1,4 @@
-const CACHE_NAME = "monari-shell-v3";
+const CACHE_NAME = "monari-shell-v4";
 const APP_SHELL = ["/offline.html", "/icons/icon-192.png", "/icons/icon-512.png"];
 const PRIVATE_PATHS = [
   "/admin",
@@ -35,6 +35,35 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// ── 웹 푸시 ────────────────────────────────────────────────────────────────
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+  let data = { title: "Monari", body: "" };
+  try { data = event.data.json(); } catch { data.body = event.data.text(); }
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icons/icon-192.png",
+      badge: "/icons/icon-192.png",
+      tag: "monari-notification",
+      renotify: true,
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && "focus" in client) return client.focus();
+      }
+      return clients.openWindow("/notifications");
+    }),
+  );
+});
+
+// ── 네트워크 요청 ────────────────────────────────────────────────────────────
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);

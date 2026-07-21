@@ -1,5 +1,6 @@
 import { isDemoMode } from "@/lib/data";
 import { getSupabaseAdminClient } from "@/lib/supabase/server";
+import { sendPushToUser } from "@/actions/push-subscriptions";
 
 type InsertParams = {
   parentId: string;
@@ -35,6 +36,10 @@ export async function insertNotification(params: InsertParams): Promise<void> {
       title: params.title,
       body: params.body,
     });
+
+    // 웹 푸시 (구독 없으면 무시)
+    const pushTarget = params.target === "parent" ? params.parentId : params.childId;
+    if (pushTarget) void sendPushToUser(pushTarget, params.title, params.body);
   } catch {
     // Notification failure must never block the caller
   }
