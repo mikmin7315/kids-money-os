@@ -6,6 +6,7 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { requireParentSession } from "@/lib/auth";
 import { isDemoMode, invalidateAppData } from "@/lib/data";
+import { isValidInterestRateRange } from "@/lib/interest-policy";
 import { getSupabaseAdminClient, getSupabaseServerClient } from "@/lib/supabase/server";
 
 const scryptAsync = promisify(scrypt);
@@ -247,6 +248,10 @@ export async function upsertInterestPolicyAction(input: {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
+  if (!isValidInterestRateRange(input)) {
+    return { ok: false, error: "이자율은 최소 ≤ 기본 ≤ 최대 순서로 설정해 주세요." };
+  }
+
   if (isDemoMode()) {
     return { ok: true, data: { id: `mock-policy-${Date.now()}` } };
   }
@@ -403,6 +408,7 @@ export async function deleteAllowanceRuleAction(
     .eq("parent_id", auth.user.id);
 
   if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  void invalidateAppData();
   revalidatePath("/settings");
   revalidatePath("/settings/allowance");
   return { ok: true, message: "용돈 규칙이 삭제되었어요." };
@@ -430,6 +436,7 @@ export async function deleteInterestPolicyAction(
     .eq("parent_id", auth.user.id);
 
   if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  void invalidateAppData();
   revalidatePath("/settings");
   revalidatePath("/settings/interest");
   return { ok: true, message: "이자 정책이 삭제되었어요." };
@@ -458,6 +465,7 @@ export async function toggleBehaviorRuleAction(
     .eq("parent_id", auth.user.id);
 
   if (error) return { ok: false, message: "변경 중 오류가 발생했어요." };
+  void invalidateAppData();
   revalidatePath("/behaviors");
   revalidatePath("/");
   return { ok: true, message: !isActive ? "활성화되었어요." : "비활성화되었어요." };
@@ -485,6 +493,7 @@ export async function deleteBehaviorRuleAction(
     .eq("parent_id", auth.user.id);
 
   if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
+  void invalidateAppData();
   revalidatePath("/behaviors");
   revalidatePath("/");
   return { ok: true, message: "행동 약속이 삭제되었어요." };

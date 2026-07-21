@@ -5,6 +5,7 @@ import {
   chargeParentWalletAction,
   saveParentBankAccountAction,
 } from "@/actions/parent-wallet";
+import { MoneyInput } from "@/components/ui/money-input";
 
 const QUICK_AMOUNTS = [10000, 30000, 50000, 100000];
 
@@ -54,13 +55,11 @@ export function WalletChargeForm() {
           충전 금액
         </label>
         <div className="relative">
-          <input
+          <MoneyInput
             id="charge-amount"
             name="amount"
-            type="number"
-            min="1000"
-            max="1000000"
-            step="1000"
+            min={1000}
+            max={1000000}
             placeholder="0"
             required
             className="monari-input pr-10 text-right tabular-nums"

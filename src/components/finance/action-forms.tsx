@@ -236,11 +236,14 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
         </button>
         {showCustom && (
           <input
-            type="number"
-            min="100"
-            step="100"
-            value={amount}
-            onChange={(e) => setAmount(Math.max(100, Number(e.target.value)))}
+            type="text"
+            inputMode="numeric"
+            value={amount > 0 ? amount.toLocaleString("ko-KR") : ""}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
+              setAmount(Math.max(100, Number(raw) || 100));
+            }}
+            placeholder="금액 입력"
             className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-spend)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
           />
         )}
@@ -309,12 +312,15 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
         </button>
         {showCustom && (
           <input
-            type="number"
-            min="100"
-            max={Math.max(100, availableBalance)}
-            step="100"
-            value={amount}
-            onChange={(e) => setAmount(Math.min(Math.max(100, Number(e.target.value)), Math.max(100, availableBalance)))}
+            type="text"
+            inputMode="numeric"
+            value={amount > 0 ? amount.toLocaleString("ko-KR") : ""}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
+              const n = Number(raw) || 0;
+              setAmount(Math.min(Math.max(100, n), Math.max(100, availableBalance)));
+            }}
+            placeholder="금액 입력"
             className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
           />
         )}

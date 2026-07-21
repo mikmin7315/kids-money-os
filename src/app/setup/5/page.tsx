@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, Suspense } from "react";
 import { createBehaviorRuleAction } from "@/actions/management";
 
@@ -13,9 +13,6 @@ const QUICK_PRESETS = [
 
 function Setup5Inner() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const childId = searchParams.get("childId") || "";
-
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
 

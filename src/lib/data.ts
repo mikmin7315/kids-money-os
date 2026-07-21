@@ -45,6 +45,19 @@ export type AppDataBundle = {
   allowanceExecutions: AllowanceExecution[];
 };
 
+type DatabaseRow = Record<string, unknown>;
+type AppDataBundleRpc = {
+  children?: DatabaseRow[];
+  behavior_rules?: DatabaseRow[];
+  behavior_logs?: DatabaseRow[];
+  allowance_rules?: DatabaseRow[];
+  money_transactions?: DatabaseRow[];
+  borrow_requests?: DatabaseRow[];
+  borrow_repayments?: DatabaseRow[];
+  interest_policies?: DatabaseRow[];
+  wallet_snapshots?: DatabaseRow[];
+};
+
 export async function getDashboardView(): Promise<DashboardData> {
   if (isDemoMode()) return getDashboardData();
 
@@ -88,7 +101,7 @@ const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
 
   const { data, error } = await supabase.rpc("get_app_data_bundle");
   if (error) throw error;
-  const rows = (data ?? {}) as Record<string, Record<string, unknown>[]>;
+  const rows = (data ?? {}) as AppDataBundleRpc;
 
   const parent = mapProfile(auth.profile);
   const mappedChildren = (rows.children ?? []).map(mapChild);
@@ -104,18 +117,20 @@ const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
   // cash_spend_requests, allowance_executions: fetch separately
   const childIds = mappedChildren.map((c) => c.id);
   const [cashResult, execResult] = await Promise.all([
-    supabase
-      .from("cash_spend_requests")
-      .select("id,child_id,amount,spend_date,memo,status,reviewed_by,reviewed_at,rejection_reason,created_at")
-      .in("child_id", childIds)
-      .order("created_at", { ascending: false })
-      .limit(100),
+    childIds.length > 0
+      ? supabase
+          .from("cash_spend_requests")
+          .select("id,child_id,amount,spend_date,memo,status,reviewed_by,reviewed_at,rejection_reason,created_at")
+          .in("child_id", childIds)
+          .order("created_at", { ascending: false })
+          .limit(100)
+      : Promise.resolve({ data: [] }),
     childIds.length > 0
       ? supabase
           .from("allowance_executions")
           .select("id,allowance_rule_id,scheduled_date,status,failure_reason,executed_at")
           .in("allowance_rule_id",
-            (rows.allowance_rules ?? []).map((r) => (r as Record<string, unknown>).id as string))
+            (rows.allowance_rules ?? []).map((row) => String(row.id)))
           .order("scheduled_date", { ascending: false })
           .limit(60)
       : Promise.resolve({ data: [] }),
@@ -212,7 +227,7 @@ function getMockBundle(): AppDataBundle {
   };
 }
 
-function mapProfile(row: Record<string, unknown>): ParentProfile {
+function mapProfile(row: DatabaseRow): ParentProfile {
   return {
     id: String(row.id),
     email: String(row.email ?? ""),
@@ -222,7 +237,7 @@ function mapProfile(row: Record<string, unknown>): ParentProfile {
   };
 }
 
-function mapChild(row: Record<string, unknown>) {
+function mapChild(row: DatabaseRow): ChildProfile {
   return {
     id: String(row.id),
     parentId: String(row.parent_id),
@@ -233,7 +248,7 @@ function mapChild(row: Record<string, unknown>) {
   };
 }
 
-function mapBehaviorRule(row: Record<string, unknown>): BehaviorRule {
+function mapBehaviorRule(row: DatabaseRow): BehaviorRule {
   return {
     id: String(row.id),
     parentId: String(row.parent_id),
@@ -249,7 +264,7 @@ function mapBehaviorRule(row: Record<string, unknown>): BehaviorRule {
   };
 }
 
-function mapBehaviorLog(row: Record<string, unknown>): BehaviorLog {
+function mapBehaviorLog(row: DatabaseRow): BehaviorLog {
   return {
     id: String(row.id),
     childId: String(row.child_id),
@@ -261,7 +276,7 @@ function mapBehaviorLog(row: Record<string, unknown>): BehaviorLog {
   };
 }
 
-function mapAllowanceRule(row: Record<string, unknown>): AllowanceRule {
+function mapAllowanceRule(row: DatabaseRow): AllowanceRule {
   return {
     id: String(row.id),
     parentId: String(row.parent_id),
@@ -277,7 +292,7 @@ function mapAllowanceRule(row: Record<string, unknown>): AllowanceRule {
   };
 }
 
-function mapMoneyTransaction(row: Record<string, unknown>): MoneyTransaction {
+function mapMoneyTransaction(row: DatabaseRow): MoneyTransaction {
   return {
     id: String(row.id),
     childId: String(row.child_id),
@@ -293,7 +308,7 @@ function mapMoneyTransaction(row: Record<string, unknown>): MoneyTransaction {
   };
 }
 
-function mapBorrowRequest(row: Record<string, unknown>): BorrowRequest {
+function mapBorrowRequest(row: DatabaseRow): BorrowRequest {
   return {
     id: String(row.id),
     childId: String(row.child_id),
@@ -308,7 +323,7 @@ function mapBorrowRequest(row: Record<string, unknown>): BorrowRequest {
   };
 }
 
-function mapCashSpendRequest(row: Record<string, unknown>): CashSpendRequest {
+function mapCashSpendRequest(row: DatabaseRow): CashSpendRequest {
   return {
     id: String(row.id),
     childId: String(row.child_id),
@@ -323,7 +338,7 @@ function mapCashSpendRequest(row: Record<string, unknown>): CashSpendRequest {
   };
 }
 
-function mapBorrowRepayment(row: Record<string, unknown>): BorrowRepayment {
+function mapBorrowRepayment(row: DatabaseRow): BorrowRepayment {
   return {
     id: String(row.id),
     borrowRequestId: String(row.borrow_request_id),
@@ -335,7 +350,7 @@ function mapBorrowRepayment(row: Record<string, unknown>): BorrowRepayment {
   };
 }
 
-function mapInterestPolicy(row: Record<string, unknown>): InterestPolicy {
+function mapInterestPolicy(row: DatabaseRow): InterestPolicy {
   return {
     id: String(row.id),
     parentId: String(row.parent_id),
@@ -348,7 +363,7 @@ function mapInterestPolicy(row: Record<string, unknown>): InterestPolicy {
   };
 }
 
-function mapWalletSnapshot(row: Record<string, unknown>): Wallet {
+function mapWalletSnapshot(row: DatabaseRow): Wallet {
   return {
     childId: String(row.child_id),
     balance: Number(row.balance ?? 0),

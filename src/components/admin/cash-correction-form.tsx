@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { createCashCorrectionAction } from "@/actions/admin-ops";
+import { MoneyInput } from "@/components/ui/money-input";
 
 type State = { ok: boolean; message: string };
 const initial: State = { ok: false, message: "" };
@@ -16,10 +17,9 @@ export function CashCorrectionForm({ childOptions }: { childOptions: { id: strin
           <option key={c.id} value={c.id}>{c.name}</option>
         ))}
       </select>
-      <input
+      <MoneyInput
         name="amount"
-        type="number"
-        placeholder="정정 금액 (+ 지급 / - 차감)"
+        placeholder="정정 금액"
         className="w-full rounded-[8px] border border-[var(--color-border)] px-3 py-2 text-sm"
       />
       <input

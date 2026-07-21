@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { cashSpendAction } from "@/actions/finance";
+import { MoneyInput } from "@/components/ui/money-input";
 
 const initial = { ok: false, message: "" };
 
@@ -51,15 +52,13 @@ export function CashSpendForm({ childId }: { childId: string }) {
             </button>
           ))}
         </div>
-        <input
+        <MoneyInput
           name="amount"
-          type="number"
-          inputMode="numeric"
-          placeholder="직접 입력 (원)"
+          min={1}
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={setAmount}
+          placeholder="직접 입력 (원)"
           className="w-full rounded-[16px] border-2 border-[#e5e7eb] px-4 py-3.5 text-base font-bold text-[var(--monari-ink)] outline-none focus:border-[var(--monari-hero)]"
-          min="1"
           required
         />
       </div>

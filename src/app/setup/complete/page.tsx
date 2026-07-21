@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { redirect } from "next/navigation";
+import { SetupCleanup } from "./cleanup";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ export default async function SetupCompletePage() {
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 pb-10 pt-8 text-center">
+      <SetupCleanup />
       <div style={{ fontSize: 80, marginBottom: 20 }}>🎉</div>
       <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.03em", marginBottom: 10 }}>
         준비 완료!

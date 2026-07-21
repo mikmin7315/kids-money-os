@@ -3,13 +3,21 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createChildAction } from "@/actions/management";
-import { Plus, Trash2, ChevronRight } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 type AddedChild = { id: string; name: string; birthYear: number };
 
+const STORAGE_KEY = "setup2_children";
+
 export default function Setup2Page() {
   const router = useRouter();
-  const [children, setChildren] = useState<AddedChild[]>([]);
+  const [children, setChildren] = useState<AddedChild[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const saved = sessionStorage.getItem(STORAGE_KEY);
+      return saved ? (JSON.parse(saved) as AddedChild[]) : [];
+    } catch { return []; }
+  });
   const [name, setName] = useState("");
   const [birthYear, setBirthYear] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,7 +39,12 @@ export default function Setup2Page() {
         birthYear: Number(birthYear),
       });
       if (result.ok && result.data?.id) {
-        setChildren((prev) => [...prev, { id: result.data!.id, name: name.trim(), birthYear: Number(birthYear) }]);
+        const newChild = { id: result.data!.id, name: name.trim(), birthYear: Number(birthYear) };
+        setChildren((prev) => {
+          const next = [...prev, newChild];
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          return next;
+        });
         setName("");
         setBirthYear("");
         setShowForm(false);
@@ -85,7 +98,11 @@ export default function Setup2Page() {
                 </p>
               </div>
               <button
-                onClick={() => setChildren((prev) => prev.filter((_, j) => j !== i))}
+                onClick={() => setChildren((prev) => {
+                  const next = prev.filter((_, j) => j !== i);
+                  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+                  return next;
+                })}
                 style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
               >
                 <Trash2 size={16} color="var(--monari-minus)" />
@@ -96,7 +113,7 @@ export default function Setup2Page() {
       )}
 
       {/* 아이 추가 폼 */}
-      {showForm ? (
+      {showForm && (
         <form onSubmit={handleAddChild} style={{ marginBottom: 20 }}>
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", display: "block", marginBottom: 6 }}>
@@ -191,6 +208,33 @@ export default function Setup2Page() {
             </button>
           </div>
         </form>
+      )}
+
+      {/* 아이 한 명 더 추가 버튼 */}
+      {showForm ? (
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            width: "100%",
+            padding: "11px",
+            fontSize: 13,
+            fontWeight: 700,
+            background: "transparent",
+            color: "var(--monari-ink-muted)",
+            border: "2px dashed var(--monari-line)",
+            borderRadius: 14,
+            cursor: "default",
+            marginBottom: 20,
+            opacity: 0.5,
+          }}
+        >
+          <Plus size={14} /> 아이 한 명 더 추가 (이 아이를 먼저 등록해주세요)
+        </button>
       ) : (
         <button
           onClick={() => setShowForm(true)}
