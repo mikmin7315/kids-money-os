@@ -42,6 +42,18 @@ export default async function HomePage() {
   const pendingBorrows = bundle.borrowRequests.filter((r) => r.status === "pending");
   const totalPending = pendingBehaviors.length + pendingBorrows.length;
 
+  // 미설정 항목 감지
+  const incompleteItems = bundle.children.flatMap((child) => {
+    const items: { childName: string; label: string; href: string }[] = [];
+    if (!bundle.allowanceRules.find((r) => r.childId === child.id))
+      items.push({ childName: child.name, label: "용돈 설정", href: "/settings" });
+    if (!bundle.interestPolicies.find((p) => p.childId === child.id))
+      items.push({ childName: child.name, label: "이자율 설정", href: "/settings" });
+    return items;
+  });
+  if (bundle.behaviorRules.length === 0)
+    incompleteItems.push({ childName: "", label: "행동 약속 설정", href: "/behaviors" });
+
   // 이달 저금·지출 (모든 아이 합산)
   const totalSave = dashboard.children.reduce((s, c) => s + c.monthReport.totalSave, 0);
   const totalSpend = dashboard.children.reduce((s, c) => s + c.monthReport.totalSpend, 0);
@@ -116,19 +128,27 @@ export default async function HomePage() {
             const childBehaviors = bundle.behaviorLogs.filter((l) => l.childId === summary.child.id);
             const achieved = childBehaviors.filter((l) => l.status === "approved").length;
             const achieveRate = childBehaviors.length > 0 ? Math.round((achieved / childBehaviors.length) * 100) : 0;
+            const childIncomplete = incompleteItems.filter((it) => it.childName === summary.child.name);
+            const hasIncomplete = childIncomplete.length > 0;
 
             return (
               <Link
                 key={summary.child.id}
                 href={`/child/${summary.child.id}`}
                 className="rounded-[20px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-md)] transition active:scale-[0.97]"
+                style={hasIncomplete ? { border: "2px solid var(--monari-pending)", boxShadow: "0 0 0 3px rgba(180,83,9,0.08)" } : {}}
               >
                 <div className="flex items-center gap-2.5 mb-3">
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-[14px] font-900 text-white"
-                    style={{ background: color.bg, boxShadow: `0 3px 10px ${color.shadow}` }}
-                  >
-                    {summary.child.name[0]}
+                  <span className="relative shrink-0">
+                    <span
+                      className="flex h-9 w-9 items-center justify-center rounded-[11px] text-[14px] font-900 text-white"
+                      style={{ background: color.bg, boxShadow: `0 3px 10px ${color.shadow}` }}
+                    >
+                      {summary.child.name[0]}
+                    </span>
+                    {hasIncomplete && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--monari-pending)] text-[9px] font-900 text-white">!</span>
+                    )}
                   </span>
                   <div className="min-w-0">
                     <p className="text-[13px] font-800 text-[var(--monari-ink)] leading-tight">{summary.child.name}</p>
@@ -209,6 +229,33 @@ export default async function HomePage() {
         )}
 
       </div>
+
+      {/* ── 미설정 항목 배너 ── */}
+      {incompleteItems.length > 0 && (
+        <section className="mb-4 rounded-[20px] overflow-hidden" style={{ border: "2px solid var(--monari-pending)", background: "var(--status-pending-solid)" }}>
+          <div className="flex items-center gap-2 px-4 pt-3.5 pb-2">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--monari-pending)] text-[11px] font-900 text-white">!</span>
+            <p className="text-[13px] font-800 text-[var(--status-pending-solid-text)]">아직 설정하지 않은 항목이 있어요</p>
+          </div>
+          <div className="px-4 pb-3.5 space-y-2">
+            {incompleteItems.map((item, idx) => (
+              <Link
+                key={idx}
+                href={item.href}
+                className="flex items-center justify-between rounded-[12px] bg-white/60 px-3 py-2.5 transition active:bg-white/80"
+              >
+                <div>
+                  {item.childName && (
+                    <span className="text-[10px] font-700 text-[var(--monari-pending)] mr-1.5">{item.childName}</span>
+                  )}
+                  <span className="text-[13px] font-700 text-[var(--status-pending-solid-text)]">{item.label}</span>
+                </div>
+                <span className="text-[11px] font-700 text-[var(--monari-pending)]">설정하기 →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── 아이 모드 빠른 이동 ── */}
       {dashboard.children.length > 0 && (
