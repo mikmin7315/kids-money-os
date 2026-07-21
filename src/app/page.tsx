@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -33,6 +34,8 @@ export default async function HomePage() {
     getAppDataBundle(),
     getParentWalletAction().catch(() => null),
   ]);
+
+  if (bundle.children.length === 0) redirect("/setup/1");
 
   const pendingBehaviors = bundle.behaviorLogs.filter((l) => l.status === "pending");
   const pendingBorrows = bundle.borrowRequests.filter((r) => r.status === "pending");
