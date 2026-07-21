@@ -22,6 +22,13 @@ function Setup3Inner() {
   const isLast = childIndex >= childIds.length - 1;
 
   const [amount, setAmount] = useState("");
+  const [displayAmount, setDisplayAmount] = useState("");
+
+  function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
+    setAmount(raw);
+    setDisplayAmount(raw ? Number(raw).toLocaleString() : "");
+  }
   const [type, setType] = useState<"weekly" | "monthly" | "manual">("monthly");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -95,12 +102,11 @@ function Setup3Inner() {
           </label>
           <div style={{ position: "relative" }}>
             <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              type="text"
+              inputMode="numeric"
+              value={displayAmount}
+              onChange={handleAmountChange}
               placeholder="0"
-              min={0}
-              step={1000}
               style={{
                 width: "100%",
                 padding: "14px 48px 14px 16px",
@@ -116,7 +122,6 @@ function Setup3Inner() {
             />
             <span style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", fontSize: 16, fontWeight: 700, color: "var(--monari-ink-muted)" }}>원</span>
           </div>
-          {amount && <p style={{ marginTop: 6, fontSize: 12, color: "var(--monari-hero)", fontWeight: 700 }}>{Number(amount).toLocaleString()}원</p>}
         </div>
 
         <div style={{ marginBottom: 24 }}>
