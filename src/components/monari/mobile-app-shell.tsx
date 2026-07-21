@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChartNoAxesCombined, ClipboardList, Home, Moon, PiggyBank, Settings, Sun } from "lucide-react";
+import { CheckCircle2, Home, Moon, Settings, SlidersHorizontal, Sun } from "lucide-react";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { type ReactNode, useEffect, useState } from "react";
 
+const MANAGE_PREFIXES = ["/manage", "/behaviors", "/records", "/reports"];
+
 const TAB_DEFS = [
   { href: "/", label: "홈", icon: Home },
-  { href: "/behaviors", label: "약속", icon: PiggyBank, showBadge: true },
-  { href: "/records", label: "기록", icon: ClipboardList },
-  { href: "/reports", label: "리포트", icon: ChartNoAxesCombined },
+  { href: "/approvals", label: "승인함", icon: CheckCircle2, showBadge: true },
+  { href: "/manage", label: "관리", icon: SlidersHorizontal },
   { href: "/settings", label: "설정", icon: Settings },
 ];
 
@@ -54,8 +55,11 @@ export function MobileAppShell({
       <nav className="monari-tabbar" aria-label="주요 메뉴">
         {TAB_DEFS.map((tab) => {
           const hasPending = tab.showBadge && pendingCount && pendingCount > 0;
-          const href = hasPending ? "/approvals" : tab.href;
-          const active = pathname === tab.href || (hasPending && pathname === "/approvals");
+          const href = tab.href;
+          const active =
+            tab.href === "/manage"
+              ? MANAGE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"))
+              : pathname === tab.href;
           const Icon = tab.icon;
           const badge = hasPending ? pendingCount : null;
 
