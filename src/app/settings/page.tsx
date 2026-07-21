@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
+import { ThemeToggleRow } from "@/components/ui/theme-toggle";
 import {
   AllowanceRuleForm,
   BorrowConditionsForm,
@@ -34,6 +35,13 @@ export default async function SettingsPage() {
             <HeroPill label="용돈 규칙" value={`${bundle.allowanceRules.length}개`} />
             <HeroPill label="정책 연결" value={`${configuredChildren.size}명`} />
           </div>
+        </div>
+      </section>
+
+      <section className="mb-7">
+        <SectionTitle>화면 테마</SectionTitle>
+        <div className="mt-3">
+          <ThemeToggleRow />
         </div>
       </section>
 

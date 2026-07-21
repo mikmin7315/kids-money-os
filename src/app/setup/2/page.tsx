@@ -114,7 +114,7 @@ export default function Setup2Page() {
       )}
 
       {/* 아이 추가 폼 */}
-      {showForm ? (
+      {showForm && (
         <form onSubmit={handleAddChild} style={{ marginBottom: 20 }}>
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", display: "block", marginBottom: 6 }}>

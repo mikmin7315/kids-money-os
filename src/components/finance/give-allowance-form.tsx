@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { giveAllowanceForm } from "@/actions/finance";
+import { MoneyInput } from "@/components/ui/money-input";
 
 const QUICK_AMOUNTS = [1000, 3000, 5000, 10000];
 
@@ -18,7 +19,7 @@ export function GiveAllowanceForm({
 }) {
   const [state, action, pending] = useActionState(giveAllowanceForm, initialState);
   const [amount, setAmount] = useState("");
-  const numAmount = Math.floor(Number(amount));
+  const numAmount = Math.floor(Number(amount.replace(/,/g, "")));
   const insufficient = parentWalletBalance !== undefined && numAmount > 0 && numAmount > parentWalletBalance;
 
   if (state.ok) {
@@ -53,7 +54,7 @@ export function GiveAllowanceForm({
             <button
               key={q}
               type="button"
-              onClick={() => setAmount(String(q))}
+              onClick={() => setAmount(q.toLocaleString("ko-KR"))}
               className="rounded-[12px] py-2.5 text-xs font-bold transition-colors"
               style={{
                 background: amount === String(q) ? "var(--monari-hero)" : "#f3f0ff",
@@ -65,13 +66,12 @@ export function GiveAllowanceForm({
           ))}
         </div>
 
-        <input
+        <MoneyInput
           name="amount"
-          type="number"
-          min="1"
-          max="100000000"
+          min={1}
+          max={100000000}
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={setAmount}
           placeholder="직접 입력 (원)"
           className="w-full rounded-[14px] border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] px-4 py-3 text-base font-extrabold text-[var(--monari-ink)] outline-none focus:border-[var(--monari-hero)]"
           required

@@ -11,6 +11,7 @@ import {
   type ManagementFormState,
 } from "@/actions/management";
 import { PinInput } from "@/components/ui/pin-input";
+import { MoneyInput } from "@/components/ui/money-input";
 import { ChildProfile } from "@/lib/types";
 
 const initialState: ManagementFormState = { ok: false, message: "" };
@@ -86,7 +87,7 @@ export function BehaviorRuleCreateForm() {
       )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="보상 금액 (원)" hint="약속 달성 시 바로 지급돼요.">
-          <input className={fieldClass} name="rewardAmount" type="number" min="0" defaultValue="500" required />
+          <MoneyInput className={fieldClass} name="rewardAmount" min={0} value="500" required />
         </Field>
         <Field label="이자율 변화 (%p)" hint="달성 시 다음 달 이자율 조정폭이에요.">
           <input className={fieldClass} name="interestDelta" type="number" step="0.1" defaultValue="0.5" required />
@@ -139,7 +140,7 @@ export function AllowanceRuleForm({ childOptions }: { childOptions: ChildProfile
       </Field>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="지급 금액 (원)">
-          <input className={fieldClass} name="amount" type="number" min="1" defaultValue="5000" required />
+          <MoneyInput className={fieldClass} name="amount" min={1} value="5000" required />
         </Field>
         <Field label="지급 방식">
           <select name="type" className={fieldClass} defaultValue="weekly">
@@ -174,10 +175,10 @@ export function BorrowConditionsForm({ childOptions }: { childOptions: ChildProf
       <FormIntro title="미리쓰기 한도 설정" description="아이가 잔액보다 먼저 쓸 수 있는 범위와 승인 기준을 정해주세요." />
       <ChildSelect childOptions={childOptions} />
       <Field label="최대 미리쓰기 금액 (원)" hint="아이가 요청할 수 있는 최대 금액이에요.">
-        <input className={fieldClass} name="maxAmount" type="number" min="1" defaultValue="20000" required />
+        <MoneyInput className={fieldClass} name="maxAmount" min={1} value="20000" required />
       </Field>
       <Field label="자동 승인 기준 금액 (원)" hint="0원이면 모든 미리쓰기 요청을 부모님이 확인해요.">
-        <input className={fieldClass} name="autoApproveBlow" type="number" min="0" defaultValue="0" />
+        <MoneyInput className={fieldClass} name="autoApproveBlow" min={0} value="0" />
       </Field>
       <CheckField name="requiresPurpose" label="아이가 사용 목적을 반드시 적어요" defaultChecked />
       <SubmitButton pending={pending} label="미리쓰기 조건 저장하기" />
