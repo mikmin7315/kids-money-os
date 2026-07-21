@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface MoneyInputProps {
   name: string;
@@ -29,25 +29,14 @@ export function MoneyInput({
   id,
   disabled,
 }: MoneyInputProps) {
-  const rawInit = value !== undefined ? String(value).replace(/,/g, "") : "";
-  const [raw, setRaw] = useState(rawInit);
-  const [display, setDisplay] = useState(
-    rawInit ? Number(rawInit).toLocaleString("ko-KR") : ""
-  );
-
-  useEffect(() => {
-    if (value !== undefined) {
-      const r = String(value).replace(/,/g, "");
-      setRaw(r);
-      setDisplay(r ? Number(r).toLocaleString("ko-KR") : "");
-    }
-  }, [value]);
+  const controlledRaw = value !== undefined ? String(value).replace(/,/g, "") : undefined;
+  const [internalRaw, setInternalRaw] = useState(controlledRaw ?? "");
+  const raw = controlledRaw ?? internalRaw;
+  const display = raw ? Number(raw).toLocaleString("ko-KR") : "";
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const stripped = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
-    const formatted = stripped ? Number(stripped).toLocaleString("ko-KR") : "";
-    setRaw(stripped);
-    setDisplay(formatted);
+    setInternalRaw(stripped);
     onChange?.(stripped);
   }
 

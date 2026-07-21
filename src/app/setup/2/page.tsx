@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createChildAction } from "@/actions/management";
-import { Plus, Trash2, ChevronRight } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 type AddedChild = { id: string; name: string; birthYear: number };
 
