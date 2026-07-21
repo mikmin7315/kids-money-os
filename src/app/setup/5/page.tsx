@@ -107,9 +107,14 @@ function Setup5Inner() {
                   <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)", margin: 0 }}>{p.title}</p>
                   <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", margin: 0 }}>{p.description}</p>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-plus)", whiteSpace: "nowrap" }}>
-                  +{p.rewardAmount.toLocaleString()}원
-                </span>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-hero)", margin: 0, whiteSpace: "nowrap" }}>
+                    이자율 +{p.interestDelta}%
+                  </p>
+                  <p style={{ fontSize: 11, color: "var(--monari-ink-muted)", margin: 0, whiteSpace: "nowrap" }}>
+                    보상 +{p.rewardAmount.toLocaleString()}원
+                  </p>
+                </div>
               </button>
             );
           })}
