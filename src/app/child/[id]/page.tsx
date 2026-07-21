@@ -14,6 +14,7 @@ import { formatWon, formatWonParts } from "@/lib/format";
 import type { BehaviorLog } from "@/lib/types";
 import { getAmountMasked } from "@/actions/child-prefs";
 import { AmountMaskToggle } from "@/components/child/amount-mask-toggle";
+import { ChildInterestReportCard } from "@/components/settlement/child-interest-report-card";
 
 export const dynamic = "force-dynamic";
 
@@ -211,6 +212,9 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
       {/* ── 본문 ── */}
       <main className="px-4 pb-36 pt-5">
+
+        {/* 이자율 월간 리포트 카드 */}
+        {!isNewChild && <ChildInterestReportCard childId={id} />}
 
         {/* 신규 아이 온보딩 배너 */}
         {isNewChild && (

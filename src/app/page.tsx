@@ -12,6 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { InterestReportCard } from "@/components/settlement/interest-report-card";
 import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { getParentWalletAction } from "@/actions/parent-wallet";
@@ -315,6 +316,18 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ── 이자율 월간 리포트 ── */}
+      {bundle.children.length > 0 && (
+        <section className="mb-4">
+          <div className="flex items-center justify-between px-1 mb-2.5">
+            <h2 className="text-[16px] font-800 text-[var(--monari-ink)]">이자율 리포트</h2>
+          </div>
+          {bundle.children.map((child) => (
+            <InterestReportCard key={child.id} childId={child.id} childName={child.name} />
+          ))}
+        </section>
+      )}
 
       {!auth.user && (
         <div className="mb-4 rounded-[20px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-md)] flex items-center justify-between gap-4">
