@@ -2,37 +2,40 @@
 
 import { formatWon } from "@/lib/format";
 
-// ── 도넛 차트 (지출 vs 저축) ───────────────────────────────────────────
 export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number }) {
   const total = Math.max(spend + save, 1);
   const saveRatio = (save / total) * 100;
   const spendRatio = (spend / total) * 100;
 
-  // SVG donut params
   const r = 52;
   const cx = 70;
   const cy = 70;
   const circumference = 2 * Math.PI * r;
   const spendDash = (spend / total) * circumference;
   const saveDash = (save / total) * circumference;
-  const spendOffset = 0;
-  const saveOffset = -(spendDash);
+  const saveOffset = -spendDash;
 
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-[15px] font-800 text-[var(--monari-ink)]">지출과 저축 비율</p>
-        <p className="monari-meta mt-1">사용한 돈과 남긴 돈의 균형이에요</p>
+        <p className="text-[15px] font-800 text-[var(--monari-ink)]">지출과 저금 비율</p>
+        <p className="monari-meta mt-1">사용한 돈과 모은 돈의 균형을 한눈에 볼 수 있어요.</p>
       </div>
 
       <div className="flex items-center gap-5">
-        {/* SVG 도넛 */}
-        <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label={`지출 ${spendRatio.toFixed(0)}%, 저축 ${saveRatio.toFixed(0)}%`}>
-          {/* 배경 링 */}
+        <svg
+          width="140"
+          height="140"
+          viewBox="0 0 140 140"
+          role="img"
+          aria-label={`지출 ${spendRatio.toFixed(0)}%, 저금 ${saveRatio.toFixed(0)}%`}
+        >
           <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--monari-line)" strokeWidth="16" />
           {spend > 0 && (
             <circle
-              cx={cx} cy={cy} r={r}
+              cx={cx}
+              cy={cy}
+              r={r}
               fill="none"
               stroke="var(--monari-minus)"
               strokeWidth="16"
@@ -43,7 +46,9 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
           )}
           {save > 0 && (
             <circle
-              cx={cx} cy={cy} r={r}
+              cx={cx}
+              cy={cy}
+              r={r}
               fill="none"
               stroke="var(--monari-done)"
               strokeWidth="16"
@@ -52,26 +57,33 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
               strokeLinecap="butt"
             />
           )}
-          {/* 중앙 텍스트 */}
-          <text x={cx} y={cy - 6} textAnchor="middle" style={{ fontSize: 18, fontWeight: 900, fill: "var(--monari-ink)" }}>
+          <text
+            x={cx}
+            y={cy - 6}
+            textAnchor="middle"
+            style={{ fontSize: 18, fontWeight: 900, fill: "var(--monari-ink)" }}
+          >
             {saveRatio.toFixed(0)}%
           </text>
-          <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontSize: 10, fontWeight: 600, fill: "var(--monari-ink-muted)" }}>
-            저축률
+          <text
+            x={cx}
+            y={cy + 14}
+            textAnchor="middle"
+            style={{ fontSize: 10, fontWeight: 600, fill: "var(--monari-ink-muted)" }}
+          >
+            저금률
           </text>
         </svg>
 
-        {/* 범례 */}
         <div className="flex-1 space-y-3">
-          <LegendRow icon="🛍️" label="지출" value={formatWon(spend)} ratio={spendRatio} tone="rose" />
-          <LegendRow icon="🐷" label="저축" value={formatWon(save)} ratio={saveRatio} tone="emerald" />
+          <LegendRow icon="💸" label="지출" value={formatWon(spend)} ratio={spendRatio} tone="rose" />
+          <LegendRow icon="🌱" label="저금" value={formatWon(save)} ratio={saveRatio} tone="emerald" />
         </div>
       </div>
     </div>
   );
 }
 
-// ── 가로 막대 차트 (용돈 흐름 비교) ─────────────────────────────────────
 export function ReportBarGroup({
   allowance,
   spend,
@@ -86,33 +98,47 @@ export function ReportBarGroup({
   const max = Math.max(allowance, spend, save, borrowed, 1);
 
   return (
-    <div className="space-y-5" role="img" aria-label="용돈, 지출, 저축, 빌린 돈 항목별 비교">
+    <div className="space-y-5" role="img" aria-label="용돈, 지출, 저금, 빌린 돈 항목별 비교">
       <div>
         <p className="text-[15px] font-800 text-[var(--monari-ink)]">돈의 흐름 비교</p>
-        <p className="monari-meta mt-1">가장 큰 항목을 기준으로 비교해요</p>
+        <p className="monari-meta mt-1">가장 큰 항목을 기준으로 금액 차이를 비교해요.</p>
       </div>
       <MetricBar label="용돈" emoji="💰" value={allowance} max={max} tone="sky" />
-      <MetricBar label="지출" emoji="🛍️" value={spend} max={max} tone="rose" />
-      <MetricBar label="저축" emoji="🐷" value={save} max={max} tone="emerald" />
-      <MetricBar label="빌린 돈" emoji="🛒" value={borrowed} max={max} tone="amber" />
+      <MetricBar label="지출" emoji="💸" value={spend} max={max} tone="rose" />
+      <MetricBar label="저금" emoji="🌱" value={save} max={max} tone="emerald" />
+      <MetricBar label="빌린 돈" emoji="🤝" value={borrowed} max={max} tone="amber" />
     </div>
   );
 }
 
-// ── 행동 달성률 링 차트 ───────────────────────────────────────────────────
 export function BehaviorRing({ rate }: { rate: number }) {
   const r = 44;
   const circumference = 2 * Math.PI * r;
-  const filled = Math.min(rate / 100, 1) * circumference;
-  const color = rate >= 80 ? "var(--monari-done)" : rate >= 50 ? "var(--monari-hero)" : "var(--monari-pending)";
-  const label = rate >= 80 ? "훌륭해요! 🎉" : rate >= 50 ? "잘 하고 있어요" : "더 노력해봐요";
+  const normalizedRate = Math.min(Math.max(rate, 0), 100);
+  const filled = (normalizedRate / 100) * circumference;
+  const color =
+    normalizedRate >= 80
+      ? "var(--monari-done)"
+      : normalizedRate >= 50
+        ? "var(--monari-hero)"
+        : "var(--monari-pending)";
+  const label =
+    normalizedRate >= 80 ? "아주 잘하고 있어요! 🎉" : normalizedRate >= 50 ? "좋아지고 있어요" : "다음엔 더 해볼까요?";
 
   return (
     <div className="flex items-center gap-5">
-      <svg width="104" height="104" viewBox="0 0 104 104" role="img" aria-label={`약속 달성률 ${rate.toFixed(1)}%`}>
+      <svg
+        width="104"
+        height="104"
+        viewBox="0 0 104 104"
+        role="img"
+        aria-label={`약속 달성률 ${normalizedRate.toFixed(1)}%`}
+      >
         <circle cx="52" cy="52" r={r} fill="none" stroke="var(--monari-line)" strokeWidth="10" />
         <circle
-          cx="52" cy="52" r={r}
+          cx="52"
+          cy="52"
+          r={r}
           fill="none"
           stroke={color}
           strokeWidth="10"
@@ -122,26 +148,32 @@ export function BehaviorRing({ rate }: { rate: number }) {
           style={{ transition: "stroke-dasharray 0.6s ease" }}
         />
         <text x="52" y="48" textAnchor="middle" style={{ fontSize: 20, fontWeight: 900, fill: "var(--monari-ink)" }}>
-          {rate.toFixed(0)}%
+          {normalizedRate.toFixed(0)}%
         </text>
         <text x="52" y="66" textAnchor="middle" style={{ fontSize: 9, fontWeight: 700, fill: "var(--monari-ink-muted)" }}>
           달성률
         </text>
       </svg>
       <div className="flex-1">
-        <p className="text-[15px] font-800" style={{ color }}>{label}</p>
+        <p className="text-[15px] font-800" style={{ color }}>
+          {label}
+        </p>
         <p className="mt-1 text-[12px] leading-5 text-[var(--monari-ink-soft)]">
-          약속 이행률이 높을수록<br />이자 보너스가 올라가요
+          약속을 잘 지킬수록
+          <br />
+          이자 보너스가 올라가요.
         </p>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--monari-line)]">
-          <div className="h-full rounded-full" style={{ width: `${Math.min(rate, 100)}%`, background: color, transition: "width 0.6s ease" }} />
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${normalizedRate}%`, background: color, transition: "width 0.6s ease" }}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-// ── 내부 헬퍼 컴포넌트 ─────────────────────────────────────────────────────
 function MetricBar({
   label,
   emoji,
@@ -157,16 +189,20 @@ function MetricBar({
 }) {
   const pct = Math.round((value / max) * 100);
   const barColor =
-    tone === "rose" ? "var(--monari-minus)"
-    : tone === "emerald" ? "var(--monari-done)"
-    : tone === "amber" ? "var(--monari-pending)"
-    : "var(--monari-plus)";
+    tone === "rose"
+      ? "var(--monari-minus)"
+      : tone === "emerald"
+        ? "var(--monari-done)"
+        : tone === "amber"
+          ? "var(--monari-pending)"
+          : "var(--monari-plus)";
 
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-sm">
         <span className="flex items-center gap-1.5 font-700 text-[var(--monari-ink-soft)]">
-          <span>{emoji}</span>{label}
+          <span>{emoji}</span>
+          {label}
         </span>
         <span className="font-800 tabular-nums text-[var(--monari-ink)]">{formatWon(value)}</span>
       </div>
@@ -204,13 +240,18 @@ function LegendRow({
   const color = tone === "rose" ? "var(--monari-minus)" : "var(--monari-done)";
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
+      <div className="mb-1 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-[12px] font-700 text-[var(--monari-ink-muted)]">
-          <span>{icon}</span>{label}
+          <span>{icon}</span>
+          {label}
         </span>
-        <span className="text-[12px] font-800 tabular-nums" style={{ color }}>{ratio.toFixed(0)}%</span>
+        <span className="text-[12px] font-800 tabular-nums" style={{ color }}>
+          {ratio.toFixed(0)}%
+        </span>
       </div>
-      <p className="text-[16px] font-900 tabular-nums" style={{ color }}>{value}</p>
+      <p className="text-[16px] font-900 tabular-nums" style={{ color }}>
+        {value}
+      </p>
     </div>
   );
 }
