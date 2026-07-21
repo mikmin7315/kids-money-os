@@ -6,6 +6,7 @@
 } from "@/components/finance/action-forms";
 import Image from "next/image";
 import Link from "next/link";
+import { TrendingUp } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
@@ -200,6 +201,31 @@ export default async function ApprovalsPage() {
       </section>
 
       {/* Active borrows */}
+      {/* 이자 확정 */}
+      <section className="mb-4">
+        <SectionTitle>이자 확정</SectionTitle>
+        <div className="mt-3 space-y-2">
+          {bundle.children.map((child) => (
+            <Link
+              key={child.id}
+              href={`/settings/interest-confirm/${child.id}`}
+              className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+                  <TrendingUp size={17} />
+                </span>
+                <div>
+                  <p className="text-[14px] font-700 text-[var(--monari-ink)]">{child.name}</p>
+                  <p className="text-[12px] text-[var(--monari-ink-muted)]">이자율 확정 및 지급 처리</p>
+                </div>
+              </div>
+              <span className="text-[12px] font-700 text-[var(--monari-hero)]">확정하기 →</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {activeBorrows.length > 0 && (
         <section className="mb-4">
           <SectionTitle>상환 진행 중</SectionTitle>

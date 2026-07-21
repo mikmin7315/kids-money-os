@@ -7,12 +7,10 @@ import {
   ClipboardList,
   ReceiptText,
   Smartphone,
-  TrendingDown,
   TrendingUp,
   Wallet,
 } from "lucide-react";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
-import { InterestReportCard } from "@/components/settlement/interest-report-card";
 import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { getParentWalletAction } from "@/actions/parent-wallet";
@@ -54,9 +52,7 @@ export default async function HomePage() {
   if (bundle.behaviorRules.length === 0)
     incompleteItems.push({ childName: "", label: "행동 약속 설정", href: "/behaviors" });
 
-  // 이달 저금·지출 (모든 아이 합산)
   const totalSave = dashboard.children.reduce((s, c) => s + c.monthReport.totalSave, 0);
-  const totalSpend = dashboard.children.reduce((s, c) => s + c.monthReport.totalSpend, 0);
 
   // 약속 달성 (이달 전체)
   const behaviorsDone = bundle.behaviorLogs.filter((l) => l.status === "approved").length;
@@ -306,35 +302,6 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── 이달 지출 요약 ── */}
-      {dashboard.children.length > 0 && (
-        <section className="mb-4">
-          <div className="flex items-center justify-between px-1 mb-2.5">
-            <h2 className="text-[16px] font-800 text-[var(--monari-ink)]">이달 요약</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="rounded-[20px] p-4" style={{ background: "var(--status-rose-solid)" }}>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[11px] font-700 text-[var(--status-rose-solid-text)] uppercase tracking-[0.04em]">지출</p>
-                <TrendingDown className="h-4 w-4 text-[var(--monari-minus)]" />
-              </div>
-              <p className="text-[24px] font-900 tracking-[-0.03em] tabular-nums text-[var(--status-rose-solid-text)] leading-none">
-                {formatWon(totalSpend)}
-              </p>
-            </div>
-            <div className="rounded-[20px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-md)]">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[11px] font-700 text-[var(--monari-ink-muted)] uppercase tracking-[0.04em]">미리쓰기</p>
-                <ReceiptText className="h-4 w-4 text-[var(--monari-ink-muted)]" />
-              </div>
-              <p className="text-[24px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-ink)] leading-none">
-                {formatWon(bundle.borrowRequests.filter((r) => r.status === "approved" || r.status === "partial").reduce((s, r) => s + r.requestedAmount, 0))}
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ── 최근 활동 ── */}
       <section className="mb-5">
         <div className="flex items-center justify-between px-1 mb-2.5">
@@ -363,18 +330,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-
-      {/* ── 이자율 월간 리포트 ── */}
-      {bundle.children.length > 0 && (
-        <section className="mb-4">
-          <div className="flex items-center justify-between px-1 mb-2.5">
-            <h2 className="text-[16px] font-800 text-[var(--monari-ink)]">이자율 리포트</h2>
-          </div>
-          {bundle.children.map((child) => (
-            <InterestReportCard key={child.id} childId={child.id} childName={child.name} />
-          ))}
-        </section>
-      )}
 
       {!auth.user && (
         <div className="mb-4 rounded-[20px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-md)] flex items-center justify-between gap-4">

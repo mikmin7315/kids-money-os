@@ -15,6 +15,7 @@ import type { BehaviorLog } from "@/lib/types";
 import { getAmountMasked } from "@/actions/child-prefs";
 import { AmountMaskToggle } from "@/components/child/amount-mask-toggle";
 import { ChildInterestReportCard } from "@/components/settlement/child-interest-report-card";
+import { ChildHomeTabs } from "@/components/child/child-home-tabs";
 
 export const dynamic = "force-dynamic";
 
@@ -210,180 +211,156 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         </div>
       </section>
 
-      {/* ── 본문 ── */}
+      {/* ── 본문 (3탭) ── */}
       <main className="px-4 pb-36 pt-5">
-
-        {/* 이자율 월간 리포트 카드 */}
-        {!isNewChild && <ChildInterestReportCard childId={id} />}
-
-        {/* 신규 아이 온보딩 배너 */}
-        {isNewChild && (
-          <div className="mb-6 overflow-hidden rounded-[22px] border border-[#A7F3D0]" style={{ background: "linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%)" }}>
-            <div className="px-5 py-5">
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#059669", marginBottom: 6 }}>👋 통장 개설 완료!</p>
-              <p style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em", lineHeight: 1.4 }}>
-                이제 용돈을 받으면<br />여기서 확인할 수 있어요
-              </p>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#059669", marginTop: 8, lineHeight: 1.6, opacity: 0.8 }}>
-                약속을 지키면 이자율이 올라가요. 오늘 첫 약속을 체크해보세요! ✅
-              </p>
-            </div>
-            <div className="border-t border-[#A7F3D0] grid grid-cols-2 divide-x divide-[#A7F3D0]">
-              <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#059669] transition active:bg-[#A7F3D0]/40">
-                약속 체크하기 ✅
-              </Link>
-              <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#065F46] transition active:bg-[#A7F3D0]/40">
-                이자율 보기 📈
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* 이번 달 흐름 */}
-        <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
-            이번 달 흐름
-          </h2>
-        </div>
-        <div className="mb-6 grid grid-cols-2 gap-2.5">
-          <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#D1FAE5" textColor="#065F46" />
-          <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#A7F3D0" textColor="#064E3B" />
-          <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#ECFDF5" textColor="#059669" />
-          <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
-        </div>
-
-        {/* 이번 달 저금 달성률 */}
-        {totalAllowance > 0 && !isNewChild && (
-          <div className="mb-6">
-            <h2 className="mb-3" style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
-              이번 달 저금 달성률 🐷
-            </h2>
-            <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
-          </div>
-        )}
-
-        {/* 이자 미리보기 */}
-        {policy && summary.wallet.balance > 0 && (
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
-                이자 미리보기 📈
-              </h2>
-              <Link href={`${base}/interest`} className="text-[13px] font-700 text-[#059669]">
-                자세히 <ArrowRight className="inline h-3.5 w-3.5" />
-              </Link>
-            </div>
-            <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(5,150,105,0.12)] border border-[#A7F3D0]">
-              <div
-                className="px-5 py-4"
-                style={{ background: "linear-gradient(135deg, #065F46 0%, #059669 100%)" }}
-              >
-                <p className="text-[12px] font-600 text-white/70 mb-1">이대로면 이번 달</p>
-                <p className="tabular-nums text-white" style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.03em" }}>
-                  +{formatWon(estimateInterest(summary.wallet, policy))}
-                </p>
-                <p className="text-[12px] font-600 text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
-              </div>
-              <div className="divide-y divide-[#F0FEFA]">
-                <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
-                  <p className="text-[14px] font-800 text-[#052E16]">{formatWon(summary.wallet.balance)}</p>
-                </div>
-                <div className="flex items-center justify-between px-5 py-3">
-                  <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</p>
-                  <p className="text-[14px] font-800 text-[#059669]">{summary.wallet.currentInterestRate}%</p>
-                </div>
-                <div className="px-5 py-3 bg-[#ECFDF5]">
-                  <p className="text-[12px] font-700 text-[#059669]">
-                    💡 약속을 더 지키면 이자율이 올라가요!
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 미리쓰기 / 기타 링크 */}
-        <div className="mb-6 grid grid-cols-2 gap-2.5">
-          <Link
-            href={`${base}/borrow`}
-            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">🛒</span>
+        <ChildHomeTabs
+          statContent={
             <div>
-              <p className="text-[13px] font-800 text-[#052E16]">미리쓰기</p>
-              <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">요청하기 →</p>
-            </div>
-          </Link>
-          <Link
-            href={`${base}/records`}
-            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">📒</span>
-            <div>
-              <p className="text-[13px] font-800 text-[#052E16]">내 기록</p>
-              <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">전체 보기 →</p>
-            </div>
-          </Link>
-        </div>
-
-        {/* 최근 내역 */}
-        <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontSize: 18, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>
-            최근 내역
-          </h2>
-          <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-700 text-[#059669]">
-            전체 보기 →
-          </Link>
-        </div>
-        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0]">
-          {childTx.length === 0 ? (
-            <div className="py-10 text-center">
-              <p className="text-[32px]">🌱</p>
-              <p className="mt-2 text-[15px] font-700 text-[#052E16]">아직 거래 내역이 없어요</p>
-              <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
-            </div>
-          ) : (
-            <ul>
-              {childTx.map((tx, i) => {
-                const minus = tx.type === "spend" || tx.type === "borrow";
-                const saved = tx.type === "save";
-                return (
-                  <li
-                    key={tx.id}
-                    className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#F0FEFA]" : ""}`}
-                  >
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-lg ${
-                      minus ? "bg-[#FFE4E6]" : saved ? "bg-[#A7F3D0]" : "bg-[#D1FAE5]"
-                    }`}>
-                      {minus ? "🛍️" : saved ? "🐷" : "💰"}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[14px] font-700 text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
-                      <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
-                    </div>
-                    <p className={`shrink-0 tabular-nums text-[15px] font-800 ${minus ? "text-[#BE123C]" : "text-[#065F46]"}`}>
-                      {minus ? "-" : "+"}{formatWon(tx.amount)}
+              {/* 신규 아이 온보딩 배너 */}
+              {isNewChild && (
+                <div className="mb-6 overflow-hidden rounded-[22px] border border-[#A7F3D0]" style={{ background: "linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%)" }}>
+                  <div className="px-5 py-5">
+                    <p style={{ fontSize: 13, fontWeight: 700, color: "#059669", marginBottom: 6 }}>👋 통장 개설 완료!</p>
+                    <p style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em", lineHeight: 1.4 }}>
+                      이제 용돈을 받으면<br />여기서 확인할 수 있어요
                     </p>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
+                  </div>
+                  <div className="border-t border-[#A7F3D0] grid grid-cols-2 divide-x divide-[#A7F3D0]">
+                    <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#059669] transition active:bg-[#A7F3D0]/40">약속 체크하기 ✅</Link>
+                    <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#065F46] transition active:bg-[#A7F3D0]/40">이자율 보기 📈</Link>
+                  </div>
+                </div>
+              )}
 
-        {/* 설정 링크 */}
-        <Link
-          href={`${base}/settings`}
-          className="mt-4 flex items-center justify-between rounded-[18px] bg-white px-4 py-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-[#A7F3D0] transition active:scale-[0.98]"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-[20px]">⚙️</span>
-            <p className="text-[13px] font-700 text-[#052E16]">설정 · 도움말</p>
-          </div>
-          <ArrowRight className="h-4 w-4 text-[#94a3b8]" />
-        </Link>
+              {/* 이자율 리포트 */}
+              {!isNewChild && <ChildInterestReportCard childId={id} />}
 
+              {/* 이번 달 흐름 */}
+              <h2 className="mb-3 mt-5" style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>이번 달 흐름</h2>
+              <div className="mb-5 grid grid-cols-2 gap-2.5">
+                <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#D1FAE5" textColor="#065F46" />
+                <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#A7F3D0" textColor="#064E3B" />
+                <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#ECFDF5" textColor="#059669" />
+                <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
+              </div>
+
+              {/* 저금 달성률 */}
+              {totalAllowance > 0 && !isNewChild && (
+                <div className="mb-5">
+                  <h2 className="mb-3" style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>저금 달성률 🐷</h2>
+                  <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
+                </div>
+              )}
+
+              {/* 이자 미리보기 */}
+              {policy && summary.wallet.balance > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>이자 미리보기 📈</h2>
+                    <Link href={`${base}/interest`} className="text-[13px] font-700 text-[#059669]">자세히 <ArrowRight className="inline h-3.5 w-3.5" /></Link>
+                  </div>
+                  <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(5,150,105,0.12)] border border-[#A7F3D0]">
+                    <div className="px-5 py-4" style={{ background: "linear-gradient(135deg, #065F46 0%, #059669 100%)" }}>
+                      <p className="text-[12px] font-600 text-white/70 mb-1">이대로면 이번 달</p>
+                      <p className="tabular-nums text-white" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em" }}>+{formatWon(estimateInterest(summary.wallet, policy))}</p>
+                      <p className="text-[12px] font-600 text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
+                    </div>
+                    <div className="divide-y divide-[#F0FEFA]">
+                      <div className="flex items-center justify-between px-5 py-3">
+                        <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
+                        <p className="text-[14px] font-800 text-[#052E16]">{formatWon(summary.wallet.balance)}</p>
+                      </div>
+                      <div className="flex items-center justify-between px-5 py-3">
+                        <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</p>
+                        <p className="text-[14px] font-800 text-[#059669]">{summary.wallet.currentInterestRate}%</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          }
+          recordContent={
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h2 style={{ fontSize: 17, fontWeight: 900, color: "#052E16", letterSpacing: "-0.02em" }}>최근 내역</h2>
+                <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-700 text-[#059669]">전체 보기 →</Link>
+              </div>
+              <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0]">
+                {childTx.length === 0 ? (
+                  <div className="py-10 text-center">
+                    <p className="text-[32px]">🌱</p>
+                    <p className="mt-2 text-[15px] font-700 text-[#052E16]">아직 거래 내역이 없어요</p>
+                    <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
+                  </div>
+                ) : (
+                  <ul>
+                    {childTx.map((tx, i) => {
+                      const minus = tx.type === "spend" || tx.type === "borrow";
+                      const saved = tx.type === "save";
+                      return (
+                        <li key={tx.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#F0FEFA]" : ""}`}>
+                          <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-lg ${minus ? "bg-[#FFE4E6]" : saved ? "bg-[#A7F3D0]" : "bg-[#D1FAE5]"}`}>
+                            {minus ? "🛍️" : saved ? "🐷" : "💰"}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-[14px] font-700 text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
+                            <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
+                          </div>
+                          <p className={`shrink-0 tabular-nums text-[15px] font-800 ${minus ? "text-[#BE123C]" : "text-[#065F46]"}`}>
+                            {minus ? "-" : "+"}{formatWon(tx.amount)}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+              <Link href={`${base}/records`} className="mt-3 flex items-center justify-center gap-2 rounded-[16px] bg-white border border-[#A7F3D0] py-3 text-[13px] font-700 text-[#059669] transition active:scale-[0.97]">
+                전체 기록 보기 →
+              </Link>
+            </div>
+          }
+          borrowContent={
+            <div>
+              <div className="space-y-3">
+                <Link
+                  href={`${base}/borrow`}
+                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">🛒</span>
+                  <div className="flex-1">
+                    <p className="text-[14px] font-800 text-[#052E16]">미리쓰기 요청하기</p>
+                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">부모님 허락 받고 먼저 쓰기</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-[#A7F3D0]" />
+                </Link>
+                <Link
+                  href={`${base}/borrow-status`}
+                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#FFE4E6] text-xl flex-shrink-0">📋</span>
+                  <div className="flex-1">
+                    <p className="text-[14px] font-800 text-[#052E16]">상환 현황 보기</p>
+                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">갚아야 할 금액 확인</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-[#A7F3D0]" />
+                </Link>
+                <Link
+                  href={`${base}/settings`}
+                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] border border-[#A7F3D0] transition active:scale-[0.97]"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#ECFDF5] text-xl flex-shrink-0">⚙️</span>
+                  <div className="flex-1">
+                    <p className="text-[14px] font-800 text-[#052E16]">설정 · 도움말</p>
+                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">PIN, 금액 가리기 등</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-[#A7F3D0]" />
+                </Link>
+              </div>
+            </div>
+          }
+        />
       </main>
 
     </div>

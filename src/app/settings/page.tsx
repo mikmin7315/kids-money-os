@@ -1,14 +1,9 @@
-﻿import { ChevronRight, CircleDollarSign, Landmark, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
+﻿import { ChevronRight, CircleDollarSign, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
 import { ThemeToggleRow } from "@/components/ui/theme-toggle";
-import {
-  AllowanceRuleForm,
-  BorrowConditionsForm,
-  ChildPinForm,
-  InterestPolicyForm,
-} from "@/components/finance/management-forms";
+import { ChildPinForm } from "@/components/finance/management-forms";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
@@ -196,82 +191,7 @@ export default async function SettingsPage() {
         </div>
       </section>
 
-      <section className="mb-7">
-        <SectionTitle>금융 규칙</SectionTitle>
-        <p className="mt-2 text-xs leading-5 text-[var(--monari-ink-muted)]">아이와 함께 정한 규칙은 언제든 다시 저장해 변경할 수 있어요.</p>
-
-        {bundle.allowanceRules.length > 0 && (
-          <div className="monari-card mt-3 divide-y divide-[var(--monari-line)] px-4">
-            {bundle.allowanceRules.map((rule) => {
-              const child = bundle.children.find((item) => item.id === rule.childId);
-              const cycle = rule.type === "weekly" ? "매주" : rule.type === "monthly" ? "매월" : "직접 지급";
-              return (
-                <div key={rule.id} className="flex items-center justify-between gap-3 py-3.5">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-[var(--monari-ink)]">{child?.name} · {rule.title}</p>
-                    <p className="mt-0.5 text-xs text-[var(--monari-ink-muted)]">{cycle} {formatWon(rule.amount)}</p>
-                  </div>
-                  <StatusBadge>{cycle}</StatusBadge>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <UnavailableState show={!hasChildren} />
-        {hasChildren && (
-          <SettingsForm title="용돈 규칙 추가" description="정기 용돈의 금액과 지급일을 정해요." icon={CircleDollarSign}>
-            <AllowanceRuleForm childOptions={bundle.children} />
-          </SettingsForm>
-        )}
-
-        {bundle.interestPolicies.length > 0 && (
-          <div className="monari-card mt-3 divide-y divide-[var(--monari-line)] px-4">
-            {bundle.interestPolicies.map((policy) => {
-              const child = bundle.children.find((item) => item.id === policy.childId);
-              return (
-                <div key={policy.id} className="py-3.5">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-bold text-[var(--monari-ink)]">{child?.name}</p>
-                    <StatusBadge>{policy.settlementCycle === "monthly" ? "매월 정산" : "매주 정산"}</StatusBadge>
-                  </div>
-                  <p className="mt-1 text-xs leading-5 text-[var(--monari-ink-muted)]">
-                    기본 {formatPercent(policy.baseInterestRate)} · 최소 {formatPercent(policy.minInterestRate)} · 최대 {formatPercent(policy.maxInterestRate)}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {hasChildren && (
-          <>
-            <SettingsForm title="이자 정책 설정" description="약속 실천에 따라 변할 이자율 범위를 정해요." icon={PiggyBank}>
-              <InterestPolicyForm childOptions={bundle.children} />
-            </SettingsForm>
-            <SettingsForm title="미리쓰기 한도 설정" description="요청 한도와 부모 승인 기준을 관리해요." icon={Landmark}>
-              <BorrowConditionsForm childOptions={bundle.children} />
-            </SettingsForm>
-          </>
-        )}
-      </section>
     </MobileAppShell>
-  );
-}
-
-function SettingsForm({ title, description, icon: Icon, defaultOpen, children }: { title: string; description: string; icon: typeof Plus; defaultOpen?: boolean; children: React.ReactNode }) {
-  return (
-    <details className="monari-card mt-3 overflow-hidden" open={defaultOpen}>
-      <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 px-4 py-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-plus-bg)] text-[var(--monari-hero)]"><Icon size={19} aria-hidden="true" /></span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-extrabold text-[var(--monari-ink)]">{title}</span>
-          <span className="mt-0.5 block text-xs leading-5 text-[var(--monari-ink-muted)]">{description}</span>
-        </span>
-        <Plus size={18} className="shrink-0 text-[var(--monari-hero)]" aria-hidden="true" />
-      </summary>
-      <div className="border-t border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-4 sm:p-5">{children}</div>
-    </details>
   );
 }
 
@@ -286,19 +206,10 @@ function EmptyState({ icon: Icon, title, description, children }: { icon: typeof
   );
 }
 
-function UnavailableState({ show }: { show: boolean }) {
-  if (!show) return null;
-  return <EmptyState icon={UserPlus} title="아이 등록 후 규칙을 설정할 수 있어요" description="먼저 위에서 아이 프로필을 추가해주세요." />;
-}
-
 function HeroPill({ label, value }: { label: string; value: string }) {
   return <div className="rounded-xl border border-white/15 bg-white/10 px-2 py-2.5 text-center"><p className="text-[10px] font-semibold text-white/70">{label}</p><p className="mt-0.5 text-sm font-black text-white">{value}</p></div>;
 }
 
 function MetricBox({ label, value }: { label: string; value: string }) {
   return <div className="rounded-2xl border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-3"><p className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">{label}</p><p className="mt-1 text-sm font-extrabold text-[var(--monari-ink)]">{value}</p></div>;
-}
-
-function StatusBadge({ children }: { children: React.ReactNode }) {
-  return <span className="shrink-0 rounded-lg bg-[var(--monari-plus-bg)] px-2.5 py-1 text-[11px] font-bold text-[var(--monari-hero)]">{children}</span>;
 }
