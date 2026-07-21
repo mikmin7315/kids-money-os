@@ -1,24 +1,23 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
-const productionUrl = process.env.CAPACITOR_SERVER_URL;
+const PRODUCTION_URL = "https://kids-money-os.vercel.app";
 
 const config: CapacitorConfig = {
   appId: "com.monari.family",
-  appName: "Monari",
+  appName: "모나리",
   webDir: "native-shell",
-  server: productionUrl
-    ? {
-        url: productionUrl,
-        cleartext: false,
-        allowNavigation: [new URL(productionUrl).hostname],
-      }
-    : undefined,
+  server: {
+    url: PRODUCTION_URL,
+    cleartext: false,
+    allowNavigation: [new URL(PRODUCTION_URL).hostname],
+  },
   android: {
     allowMixedContent: false,
-    backgroundColor: "#f5f6f8",
+    backgroundColor: "#ffffff",
+    webContentsDebuggingEnabled: false,
   },
   ios: {
-    backgroundColor: "#f5f6f8",
+    backgroundColor: "#ffffff",
     contentInset: "automatic",
     scrollEnabled: true,
   },
@@ -26,12 +25,12 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchAutoHide: true,
       launchShowDuration: 1200,
-      backgroundColor: "#25273aff",
+      backgroundColor: "#ffffff",
       showSpinner: false,
     },
     StatusBar: {
-      style: "DARK",
-      backgroundColor: "#f5f6f8",
+      style: "LIGHT",
+      backgroundColor: "#ffffff",
     },
   },
 };
