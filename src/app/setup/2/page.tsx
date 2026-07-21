@@ -58,7 +58,6 @@ export default function Setup2Page() {
 
   function handleNext() {
     if (children.length === 0) return;
-    sessionStorage.removeItem(STORAGE_KEY);
     const childIds = children.map((c) => c.id).join(",");
     const childNames = children.map((c) => encodeURIComponent(c.name)).join(",");
     router.push(`/setup/3?childIds=${childIds}&childNames=${childNames}&childIndex=0`);
