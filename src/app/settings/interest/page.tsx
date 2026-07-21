@@ -1,11 +1,10 @@
 ﻿import { redirect } from "next/navigation";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { InterestPolicyForm } from "@/components/finance/management-forms";
+import { InterestPolicyCard } from "@/components/finance/interest-policy-card";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
-import { formatPercent } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -78,40 +77,7 @@ export default async function InterestSettingPage() {
         </div>
       </div>
 
-      {/* 현재 설정 현황 */}
-      {bundle.interestPolicies.length > 0 && (
-        <section className="mb-6">
-          <p className="mb-3 text-sm font-extrabold text-[var(--monari-ink)]">현재 설정된 이자 정책</p>
-          <div className="space-y-2">
-            {bundle.interestPolicies.map((policy) => {
-              const child = bundle.children.find((c) => c.id === policy.childId);
-              return (
-                <div
-                  key={policy.id}
-                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-                      <TrendingUp size={18} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-extrabold text-[var(--monari-ink)]">{child?.name}</p>
-                      <p className="mt-0.5 text-xs text-[var(--monari-ink-muted)]">
-                        {formatPercent(policy.minInterestRate)} ~ {formatPercent(policy.maxInterestRate)}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-lg font-black text-[var(--monari-hero)]">
-                    {formatPercent(policy.baseInterestRate)}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* 폼 */}
+      {/* 아이별 이자율 카드 */}
       {!hasChildren ? (
         <div className="rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
           <TrendingUp className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={32} />
@@ -121,10 +87,18 @@ export default async function InterestSettingPage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
-          <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">이자 정책 설정</p>
-          <InterestPolicyForm childOptions={bundle.children} />
-        </div>
+        <section>
+          <p className="mb-3 text-sm font-extrabold text-[var(--monari-ink)]">아이별 이자율 설정</p>
+          <div className="space-y-4">
+            {bundle.children.map((child) => (
+              <InterestPolicyCard
+                key={child.id}
+                child={child}
+                policy={bundle.interestPolicies.find((policy) => policy.childId === child.id)}
+              />
+            ))}
+          </div>
+        </section>
       )}
     </MobileAppShell>
   );
