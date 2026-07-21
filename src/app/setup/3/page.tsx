@@ -10,6 +10,9 @@ const PRESETS = [
   { label: "직접 지급", emoji: "✋", type: "manual" as const, desc: "부모가 직접 지급" },
 ];
 
+function getAmountKey(childId: string) { return `setup3_amount_${childId}`; }
+function getTypeKey(childId: string) { return `setup3_type_${childId}`; }
+
 function Setup3Inner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,19 +24,28 @@ function Setup3Inner() {
   const currentChildName = childNames[childIndex] || `아이 ${childIndex + 1}`;
   const isLast = childIndex >= childIds.length - 1;
 
-  const [amount, setAmount] = useState("");
-  const [displayAmount, setDisplayAmount] = useState("");
+  const savedAmount = (() => { try { return sessionStorage.getItem(getAmountKey(currentChildId)) || ""; } catch { return ""; } })();
+  const savedType = (() => { try { return (sessionStorage.getItem(getTypeKey(currentChildId)) as "weekly" | "monthly" | "manual") || "monthly"; } catch { return "monthly" as const; } })();
 
-  function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
-    setAmount(raw);
-    setDisplayAmount(raw ? Number(raw).toLocaleString() : "");
-  }
-  const [type, setType] = useState<"weekly" | "monthly" | "manual">("monthly");
+  const [rawAmount, setRawAmount] = useState(savedAmount);
+  const [displayAmount, setDisplayAmount] = useState(savedAmount ? Number(savedAmount).toLocaleString("ko-KR") : "");
+  const [type, setType] = useState<"weekly" | "monthly" | "manual">(savedType);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const params = `childIds=${childIds.join(",")}&childNames=${childNames.join(",")}`;
+
+  function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
+    setRawAmount(raw);
+    setDisplayAmount(raw ? Number(raw).toLocaleString("ko-KR") : "");
+    try { sessionStorage.setItem(getAmountKey(currentChildId), raw); } catch {}
+  }
+
+  function handleTypeChange(t: typeof type) {
+    setType(t);
+    try { sessionStorage.setItem(getTypeKey(currentChildId), t); } catch {}
+  }
 
   function goNext() {
     if (isLast) {
@@ -45,7 +57,7 @@ function Setup3Inner() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!amount || !currentChildId) { goNext(); return; }
+    if (!rawAmount || !currentChildId) { goNext(); return; }
     setLoading(true);
     setError("");
     try {
@@ -53,7 +65,7 @@ function Setup3Inner() {
       const result = await createAllowanceRuleAction({
         childId: currentChildId,
         title: "정기 용돈",
-        amount: Number(amount),
+        amount: Number(rawAmount),
         type,
         weekday: preset.type === "weekly" ? preset.weekday : undefined,
         dayOfMonth: preset.type === "monthly" ? preset.dayOfMonth : undefined,
@@ -77,13 +89,8 @@ function Setup3Inner() {
         </h1>
         {childIds.length > 1 && (
           <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            background: "var(--monari-hero-lo)",
-            borderRadius: 10,
-            padding: "4px 12px",
-            marginBottom: 8,
+            display: "inline-flex", alignItems: "center", gap: 6,
+            background: "var(--monari-hero-lo)", borderRadius: 10, padding: "4px 12px", marginBottom: 8,
           }}>
             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)" }}>
               {currentChildName} ({childIndex + 1}/{childIds.length})
@@ -110,7 +117,7 @@ function Setup3Inner() {
               style={{
                 width: "100%",
                 padding: "14px 48px 14px 16px",
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: 800,
                 border: "2px solid var(--monari-line)",
                 borderRadius: 14,
@@ -128,7 +135,7 @@ function Setup3Inner() {
           <label style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-ink-muted)", display: "block", marginBottom: 8 }}>지급 주기</label>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {PRESETS.map((p) => (
-              <button key={p.type} type="button" onClick={() => setType(p.type)}
+              <button key={p.type} type="button" onClick={() => handleTypeChange(p.type)}
                 style={{
                   display: "flex", alignItems: "center", gap: 14, padding: "14px 16px",
                   border: `2px solid ${type === p.type ? "var(--monari-hero)" : "var(--monari-line)"}`,
@@ -152,10 +159,9 @@ function Setup3Inner() {
           <button type="submit" disabled={loading}
             style={{
               width: "100%", padding: "16px", fontSize: 16, fontWeight: 800,
-              background: amount ? "var(--monari-hero)" : "var(--monari-line)",
-              color: amount ? "#fff" : "var(--monari-ink-muted)",
-              border: "none", borderRadius: 16,
-              cursor: "pointer",
+              background: rawAmount ? "var(--monari-hero)" : "var(--monari-line)",
+              color: rawAmount ? "#fff" : "var(--monari-ink-muted)",
+              border: "none", borderRadius: 16, cursor: "pointer",
             }}>
             {loading ? "저장 중..." : isLast ? "다음 →" : `${childNames[childIndex + 1] || "다음 아이"} 설정 →`}
           </button>
