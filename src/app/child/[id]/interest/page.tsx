@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -51,6 +52,9 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
   return (
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
+      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+        <ArrowLeft size={16} /> 홈으로
+      </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
         <div>
           <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>이자</p>

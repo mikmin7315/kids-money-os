@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { ChildBehaviorCheckForm } from "@/components/finance/action-forms";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -47,6 +49,9 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       {/* 헤더 */}
+      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+        <ArrowLeft size={16} /> 홈으로
+      </Link>
       <div className="mb-5 flex items-start justify-between">
         <div>
           <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 4 }}>
@@ -56,12 +61,12 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
             ✅ 오늘 약속 체크
           </h1>
         </div>
-        <a
+        <Link
           href={`/child/${id}/history`}
           style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginTop: 6, whiteSpace: "nowrap" }}
         >
           기록 보기 →
-        </a>
+        </Link>
       </div>
 
       {/* 상태 배너 */}

@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getChildModeContext } from "@/lib/auth";
@@ -39,6 +40,9 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
     <PageContainer>
       <MobileShell>
+        <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+          <ArrowLeft size={16} /> 홈으로
+        </Link>
         <AppHeader eyebrow="내 카드" title="카드 사용 내역" />
 
         {!card ? (
@@ -94,9 +98,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
           </>
         )}
 
-        <div className="mt-5">
-          <Link href={`/child/${id}`} className="text-sm font-bold text-[var(--color-accent)]">← 홈으로</Link>
-        </div>
+
       </MobileShell>
     </PageContainer>
     </div>
