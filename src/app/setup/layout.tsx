@@ -17,7 +17,7 @@ export default function SetupLayout({ children }: { children: React.ReactNode })
   const progress = isComplete ? 100 : currentIndex >= 0 ? ((currentIndex + 1) / STEPS.length) * 100 : 0;
 
   return (
-    <div style={{ minHeight: "100dvh", background: "#ffffff", display: "flex", flexDirection: "column" }}>
+    <div data-theme="light" style={{ minHeight: "100dvh", background: "var(--monari-bg)", display: "flex", flexDirection: "column" }}>
       {/* 상단 프로그레스 */}
       {!isComplete && (
         <div style={{ padding: "16px 20px 0" }}>
