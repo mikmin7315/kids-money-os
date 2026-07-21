@@ -26,6 +26,8 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
   if (!child || !summary) notFound();
 
   const totalSaved = summary.monthReport.totalSave;
+  const currentInterestRate = summary.wallet.currentInterestRate;
+  const savingsBalance = summary.wallet.savingsBalance;
 
   return (
     <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
@@ -50,7 +52,12 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
       )}
 
       <div className="rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-lift)]">
-        <ChildSaveForm childId={id} availableBalance={summary.wallet.balance} />
+        <ChildSaveForm
+          childId={id}
+          availableBalance={summary.wallet.balance}
+          currentInterestRate={currentInterestRate}
+          savingsBalance={savingsBalance}
+        />
       </div>
     </main>
     </div>

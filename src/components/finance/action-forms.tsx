@@ -92,8 +92,9 @@ export function ChildBehaviorCheckForm({
                 <p className={`truncate text-[15px] font-semibold ${isDone || isPending ? "text-[var(--monari-ink-muted)]" : "text-[var(--monari-ink)]"}`}>
                   {rule.title}
                 </p>
-                <p className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[var(--monari-ink-muted)]">
-                  +{formatWon(rule.rewardAmount)} 보상
+                <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px] font-medium text-[var(--monari-ink-muted)]">
+                  {rule.interestDelta > 0 && <span className="font-700 text-[var(--monari-hero)]">+{rule.interestDelta}%</span>}
+                  {rule.rewardAmount > 0 && <span>+{formatWon(rule.rewardAmount)} 보상</span>}
                   {needsApproval && !isDone && !isPending && (
                     <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-700 text-[var(--monari-pending)]">부모 확인 필요</span>
                   )}
@@ -124,8 +125,8 @@ export function ChildBehaviorCheckForm({
               )}
             </div>
 
-            {/* 사진 첨부 영역 (부모 확인 필요 약속) */}
-            {needsApproval && !isDone && !isPending && (
+            {/* 사진 첨부 영역 (모든 약속에 선택적으로 제공) */}
+            {!isDone && !isPending && (
               <div className="px-4 pb-3">
                 {photo ? (
                   <div className="relative overflow-hidden rounded-[14px]">
@@ -155,7 +156,7 @@ export function ChildBehaviorCheckForm({
                     className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[var(--monari-line-strong)] py-3 text-[13px] font-600 text-[var(--monari-ink-muted)] transition active:bg-[var(--monari-line)]"
                   >
                     <Camera className="h-4 w-4" />
-                    사진으로 증명하기 (선택)
+                    {needsApproval ? "사진으로 증명하기 (부모 확인용)" : "사진으로 기록하기 (선택)"}
                   </button>
                 )}
               </div>
@@ -264,10 +265,25 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
 
 const SAVE_PRESETS = [1000, 2000, 5000, 10000];
 
-export function ChildSaveForm({ childId, availableBalance }: { childId: string; availableBalance: number }) {
+export function ChildSaveForm({
+  childId,
+  availableBalance,
+  currentInterestRate = 0,
+  savingsBalance = 0,
+}: {
+  childId: string;
+  availableBalance: number;
+  currentInterestRate?: number;
+  savingsBalance?: number;
+}) {
   const [amount, setAmount] = useState(1000);
   const [showCustom, setShowCustom] = useState(false);
   const [state, action] = useActionState(submitTransactionForm, initialState);
+
+  const newSavings = savingsBalance + amount;
+  const estimatedInterest = currentInterestRate > 0
+    ? Math.round(newSavings * (currentInterestRate / 100 / 12))
+    : 0;
 
   return (
     <form action={action} className="space-y-4">
@@ -325,6 +341,20 @@ export function ChildSaveForm({ childId, availableBalance }: { childId: string; 
           />
         )}
       </div>
+
+      {/* 이자율 미리보기 */}
+      {currentInterestRate > 0 && amount > 0 && amount <= availableBalance && (
+        <div className="rounded-[14px] bg-[var(--child-surface)] px-4 py-3 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</span>
+            <span className="text-[13px] font-800 text-[var(--child-save)]">{currentInterestRate}%</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">저금 후 이달 예상 이자</span>
+            <span className="text-[13px] font-800 text-[var(--child-save)]">+{formatWon(estimatedInterest)}</span>
+          </div>
+        </div>
+      )}
 
       <ChildSaveButton label={`${formatWon(amount)} 저금할게요!`} disabled={availableBalance <= 0 || amount > availableBalance} />
       <FormMessage state={state} />

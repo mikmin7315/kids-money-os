@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   chargeParentWalletAction,
   saveParentBankAccountAction,
@@ -11,6 +11,7 @@ const QUICK_AMOUNTS = [10000, 30000, 50000, 100000];
 
 export function WalletChargeForm() {
   const [state, action, pending] = useActionState(chargeParentWalletAction, { ok: false, message: "" });
+  const [amount, setAmount] = useState(0);
 
   if (state.ok) {
     return (
@@ -38,11 +39,8 @@ export function WalletChargeForm() {
             <button
               key={amt}
               type="button"
-              className="rounded-[12px] bg-[var(--monari-hero-lo)] py-2.5 text-center text-sm font-bold text-[var(--monari-hero)] transition active:scale-[0.95]"
-              onClick={() => {
-                const el = document.getElementById("charge-amount") as HTMLInputElement;
-                if (el) el.value = String(amt);
-              }}
+              className={`rounded-[12px] py-2.5 text-center text-sm font-bold transition active:scale-[0.95] ${amount === amt ? "bg-[var(--monari-hero)] text-white" : "bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]"}`}
+              onClick={() => setAmount(amt)}
             >
               {(amt / 10000).toFixed(0)}만원
             </button>
@@ -56,8 +54,9 @@ export function WalletChargeForm() {
         </label>
         <div className="relative">
           <MoneyInput
-            id="charge-amount"
             name="amount"
+            value={amount || undefined}
+            onChange={(raw) => setAmount(Number(raw) || 0)}
             min={1000}
             max={1000000}
             placeholder="0"
@@ -76,8 +75,8 @@ export function WalletChargeForm() {
 
       <button
         type="submit"
-        disabled={pending}
-        className="monari-btn-primary w-full"
+        disabled={pending || amount < 1000}
+        className="monari-btn-primary w-full disabled:opacity-50"
       >
         {pending ? "처리 중..." : "충전 요청"}
       </button>

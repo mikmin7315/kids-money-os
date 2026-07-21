@@ -77,15 +77,23 @@ export function buildActivityFeed(
   borrowRequests: BorrowRequest[],
 ): ActivityItem[] {
   const activities: ActivityItem[] = [
-    ...behaviorLogs.map((log) => ({
-      id: log.id,
-      childId: log.childId,
-      date: log.date,
-      title: behaviorRules.find((rule) => rule.id === log.behaviorRuleId)?.title ?? "행동 기록",
-      description: `상태: ${log.status}`,
-      kind: "behavior" as const,
-      accent: "sky" as const,
-    })),
+    ...behaviorLogs.map((log) => {
+      const STATUS_KO: Record<string, string> = {
+        pending: "확인 대기 중",
+        approved: "승인됨 ✓",
+        completed: "완료 ✓",
+        rejected: "반려됨",
+      };
+      return {
+        id: log.id,
+        childId: log.childId,
+        date: log.date,
+        title: behaviorRules.find((rule) => rule.id === log.behaviorRuleId)?.title ?? "행동 기록",
+        description: STATUS_KO[log.status] ?? log.status,
+        kind: "behavior" as const,
+        accent: (log.status === "approved" || log.status === "completed" ? "sky" : "amber") as "sky" | "amber",
+      };
+    }),
     ...transactions.map((tx) => ({
       id: tx.id,
       childId: tx.childId,
@@ -101,7 +109,7 @@ export function buildActivityFeed(
       childId: request.childId,
       date: request.createdAt.slice(0, 10),
       title: "미리쓰기 요청",
-      description: `${request.status} | ${request.purpose}`,
+      description: request.purpose ?? "미리쓰기",
       kind: "borrow" as const,
       amount: request.requestedAmount,
       accent: "amber" as const,

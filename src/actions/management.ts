@@ -574,7 +574,7 @@ export async function createBehaviorRuleForm(
   });
 
   return result.ok
-    ? { ok: true, message: `약속 규칙 생성 완료: ${result.data?.id}` }
+    ? { ok: true, message: "약속이 추가됐어요! ✅" }
     : { ok: false, message: result.error ?? "규칙 생성 실패." };
 }
 
