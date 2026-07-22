@@ -242,7 +242,7 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
             value={amount > 0 ? amount.toLocaleString("ko-KR") : ""}
             onChange={(e) => {
               const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
-              setAmount(Math.max(100, Number(raw) || 100));
+              setAmount(Number(raw) || 0);
             }}
             placeholder="금액 입력"
             className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-spend)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
