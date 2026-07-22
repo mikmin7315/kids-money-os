@@ -911,13 +911,13 @@ a {
   }
 
   .monari-page-subtitle {
-    margin: 0 0 4px 0;
-    font-size: 12px;
+    margin: 0 0 2px 0;
+    font-size: 11px;
     line-height: 1.4;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--monari-ink-muted);
+    color: var(--monari-hero);
   }
 
   .monari-section-title {
@@ -960,6 +960,39 @@ a {
     border: 1px solid var(--monari-line);
     background: var(--monari-surface-soft);
     box-shadow: var(--monari-shadow-soft);
+  }
+
+  /* ── Eyebrow label ── */
+  .monari-eyebrow {
+    margin: 0 0 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--monari-hero);
+  }
+
+  /* ── Display number (80px hero KPI) ── */
+  .monari-display {
+    font-size: 80px;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Accent card (left blue border, coaching style) ── */
+  .monari-card-accent {
+    border-radius: 20px;
+    background: var(--monari-surface);
+    border: 0.5px solid var(--monari-line-strong);
+    border-left: 3px solid var(--monari-hero);
+  }
+
+  /* ── Ghost card (sunken, no border) ── */
+  .monari-card-ghost {
+    border-radius: 16px;
+    background: var(--monari-bg);
   }
 
   /* ── Hero banner ── */

@@ -58,6 +58,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const ageGroup = getAgeGroup(primaryChild?.birthYear);
   const peer = primary ? await getPeerStats(ageGroup) : null;
 
+  const peerMaxAllowance = peer ? Math.max(allowance, peer.avgAllowance, 1) : 1;
+  const peerAllowancePct = peer ? Math.round((peer.avgAllowance / peerMaxAllowance) * 100) : 0;
+  const childAllowancePct = peer ? Math.round((allowance / peerMaxAllowance) * 100) : 0;
+  const aheadOfPeer = peer ? allowance >= peer.avgAllowance : false;
+
   return (
     <MobileAppShell title="이번달 리포트" subtitle="리포트">
       {/* 아이 선택 */}
@@ -98,8 +103,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             {/* 저축률 — 가장 중요한 단일 숫자 */}
             <div className="mb-5 text-center">
               <p className="text-[11px] font-600 text-white/60 mb-1">이달 저축률</p>
-              <p className="text-[64px] font-900 leading-none tracking-[-0.04em] text-white">
-                {saveRatio}<span className="text-[28px] text-white/70">%</span>
+              <p className="text-[80px] font-900 leading-none tracking-[-0.05em] text-white">
+                {saveRatio}<span className="text-[32px] text-white/65">%</span>
               </p>
               <p className="mt-2 text-[13px] font-600 text-white/60">
                 {saveRatio >= 30 ? "훌륭한 저축 습관이에요" : saveRatio >= 15 ? "조금 더 모아볼까요?" : "저축을 시작해보세요"}
@@ -114,31 +119,47 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             </div>
           </div>
 
-          {/* ═══ 용돈 메인 카드 — full-width, 크게 ═══ */}
-          <section className="mb-4">
-            <div
-              className="rounded-[24px] px-6 py-5"
-              style={{ background: "linear-gradient(135deg,var(--monari-hero-lo),transparent)", border: "1.5px solid var(--monari-hero-lo)" }}
-            >
-              <p className="text-[11px] font-700 uppercase tracking-widest text-[var(--monari-ink-muted)] mb-1">이달 용돈</p>
-              <p className="text-[42px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-hero)]">
-                {formatWon(allowance)}
-              </p>
-              <div className="mt-4 flex gap-4">
-                <MiniStat Icon={PiggyBank} label="저축" value={formatWon(save)} color="var(--monari-done)" />
-                <MiniStat Icon={ShoppingBag} label="지출" value={formatWon(spend)} color="var(--monari-minus)" />
-                {borrowed > 0 && <MiniStat Icon={Coins} label="미리쓰기" value={formatWon(borrowed)} color="var(--monari-pending)" />}
+          {/* ═══ 저축 / 지출 2열 카드 ═══ */}
+          <section className="mb-5">
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="monari-card p-4">
+                <p className="monari-eyebrow mb-2">저축</p>
+                <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-done)] leading-tight">
+                  {formatWon(save)}
+                </p>
+                <div className="mt-3 h-[3px] rounded-full bg-[var(--monari-done-bg)] overflow-hidden">
+                  <div className="h-[3px] rounded-full bg-[var(--monari-done)]" style={{ width: `${saveRatio}%` }} />
+                </div>
+              </div>
+              <div className="monari-card p-4">
+                <p className="monari-eyebrow mb-2" style={{ color: "var(--monari-minus)" }}>지출</p>
+                <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-minus)] leading-tight">
+                  {formatWon(spend)}
+                </p>
+                <div className="mt-3 h-[3px] rounded-full bg-[var(--monari-minus-bg)] overflow-hidden">
+                  <div className="h-[3px] rounded-full bg-[var(--monari-minus)]" style={{ width: `${spendRatio}%` }} />
+                </div>
               </div>
             </div>
+            {borrowed > 0 && (
+              <div className="monari-card mt-2.5 flex items-center gap-2.5 px-4 py-3">
+                <Coins size={14} className="shrink-0 text-[var(--monari-pending)]" />
+                <p className="text-[13px] font-600 text-[var(--monari-ink-soft)]">미리쓰기</p>
+                <p className="ml-auto text-[14px] font-800 tabular-nums text-[var(--monari-pending)]">{formatWon(borrowed)}</p>
+              </div>
+            )}
           </section>
 
           {/* ═══ 또래 비교 — 수익 핵심 ═══ */}
           <section className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <SectionTitle>또래 비교</SectionTitle>
-              <span className="rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-1 text-[11px] font-800 text-[var(--monari-hero)]">
-                {ageGroup}세
-              </span>
+            <div className="mb-3">
+              <p className="monari-eyebrow">또래 비교</p>
+              <div className="flex items-center justify-between">
+                <h2 className="monari-section-title">전국 또래 평균</h2>
+                <span className="rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-1 text-[11px] font-800 text-[var(--monari-hero)]">
+                  {ageGroup}세
+                </span>
+              </div>
             </div>
 
             {!peer ? (
@@ -148,43 +169,35 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
             ) : (
               <div className="space-y-3">
-                {/* 무료 — 용돈 비교 대형 카드 */}
-                <div
-                  className="rounded-[24px] p-5"
-                  style={{ background: "linear-gradient(135deg,#7C3AED18,#7C3AED06)", border: "1.5px solid var(--monari-hero-lo)" }}
-                >
-                  <p className="text-[11px] font-700 uppercase tracking-widest text-[var(--monari-ink-muted)] mb-4">
-                    전국 또래 평균 용돈
-                  </p>
-                  <div className="flex items-center gap-4">
-                    {/* 또래 */}
-                    <div className="flex-1 text-center rounded-[16px] py-3" style={{ background: "var(--monari-surface-soft)" }}>
-                      <p className="text-[10px] font-600 text-[var(--monari-ink-muted)] mb-1">또래 평균</p>
-                      <p className="text-[24px] font-900 tabular-nums text-[var(--monari-ink-muted)]">{formatWon(peer.avgAllowance)}</p>
+                {/* 무료 — 용돈 바 차트 비교 */}
+                <div className="monari-card p-5">
+                  <p className="text-[13px] font-800 text-[var(--monari-ink)] mb-4">이달 용돈</p>
+                  <div className="mb-3">
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-[12px] font-500 text-[var(--monari-ink-muted)]">또래 평균</span>
+                      <span className="text-[12px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{formatWon(peer.avgAllowance)}</span>
                     </div>
-                    {/* VS */}
-                    <div className="flex flex-col items-center gap-1 shrink-0">
-                      <div className="text-[10px] font-800 text-[var(--monari-ink-muted)]">VS</div>
-                      {allowance > 0 && (
-                        <div className={`text-[10px] font-800 ${allowance >= peer.avgAllowance ? "text-emerald-500" : "text-rose-400"}`}>
-                          {allowance >= peer.avgAllowance ? "▲" : "▼"}
-                        </div>
-                      )}
+                    <div className="h-1.5 rounded-full bg-[var(--monari-surface-soft)] overflow-hidden">
+                      <div className="h-1.5 rounded-full bg-[var(--monari-line-strong)]" style={{ width: `${peerAllowancePct}%`, background: "var(--monari-ink-muted)" }} />
                     </div>
-                    {/* 우리 아이 */}
-                    <div className="flex-1 text-center rounded-[16px] py-3" style={{ background: "var(--monari-hero-lo)" }}>
-                      <p className="text-[10px] font-600 text-[var(--monari-hero)] mb-1">{String(primary.child.name)}</p>
-                      <p className="text-[24px] font-900 tabular-nums text-[var(--monari-hero)]">{formatWon(allowance)}</p>
+                  </div>
+                  <div className="mb-4">
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-[12px] font-700 text-[var(--monari-hero)]">{String(primary.child.name)}</span>
+                      <span className="text-[12px] font-800 tabular-nums text-[var(--monari-hero)]">{formatWon(allowance)}</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-[var(--monari-hero-lo)] overflow-hidden">
+                      <div className="h-1.5 rounded-full bg-[var(--monari-hero)]" style={{ width: `${childAllowancePct}%` }} />
                     </div>
                   </div>
                   {allowance > 0 && (
-                    <p className={`mt-3 text-center text-[12px] font-700 ${allowance >= peer.avgAllowance ? "text-emerald-500" : "text-rose-400"}`}>
-                      {allowance >= peer.avgAllowance
+                    <div className={`rounded-[10px] px-3 py-2 text-[12px] font-700 ${aheadOfPeer ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]" : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"}`}>
+                      {aheadOfPeer
                         ? `또래보다 ${formatWon(allowance - peer.avgAllowance)} 더 받아요`
                         : `또래 평균보다 ${formatWon(peer.avgAllowance - allowance)} 적어요`}
-                    </p>
+                    </div>
                   )}
-                  <p className="mt-2 text-center text-[10px] text-[var(--monari-ink-muted)]">익명 표본 {peer.sampleSize}명</p>
+                  <p className="mt-2 text-right text-[10px] text-[var(--monari-ink-muted)]">익명 표본 {peer.sampleSize}명</p>
                 </div>
 
                 {/* 저축률 비교 */}
@@ -246,7 +259,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
           {/* ═══ 약속 달성률 ═══ */}
           <section className="mb-5">
-            <SectionTitle>약속 달성률</SectionTitle>
+            <SectionTitle eyebrow="약속">약속 달성률</SectionTitle>
             <div className="monari-card mt-3 p-5">
               <BehaviorRing rate={primary.monthReport.behaviorSuccessRate} />
             </div>
@@ -254,7 +267,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
           {/* ═══ 시각화 ═══ */}
           <section className="mb-5">
-            <SectionTitle>돈의 흐름</SectionTitle>
+            <SectionTitle eyebrow="분석">돈의 흐름</SectionTitle>
             <div className="space-y-3 mt-3">
               <div className="monari-card p-5">
                 <ReportBarGroup allowance={allowance} spend={spend} save={save} borrowed={borrowed} />
@@ -267,13 +280,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
           {/* ═══ 코칭 포인트 ═══ */}
           <section className="mb-5">
-            <SectionTitle>코칭 포인트</SectionTitle>
+            <SectionTitle eyebrow="코칭">이번달 포인트</SectionTitle>
             <div className="mt-3 space-y-2">
-              {/* 메인 코칭 — 크게 */}
-              <div
-                className="rounded-[20px] p-5"
-                style={{ background: "linear-gradient(135deg,var(--monari-hero-lo),transparent)", border: "1px solid var(--monari-hero-lo)" }}
-              >
+              {/* 메인 코칭 — 왼쪽 파란 accent border */}
+              <div className="monari-card-accent p-5">
                 <p className="text-[15px] font-800 text-[var(--monari-ink)] mb-2">
                   {saveRatio >= 30
                     ? "저축 습관이 자리잡고 있어요"
@@ -281,7 +291,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                       ? "소비 계획을 함께 점검해 보세요"
                       : "돈의 균형을 함께 살펴보세요"}
                 </p>
-                <p className="text-[13px] leading-[1.6] text-[var(--monari-ink-soft)]">
+                <p className="text-[13px] leading-[1.65] text-[var(--monari-ink-soft)]">
                   {saveRatio >= 30
                     ? `이번달 용돈의 ${saveRatio}%를 저축했어요. 저축 목표와 이자를 함께 이야기해 보세요.`
                     : spendRatio >= 80
@@ -289,8 +299,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                       : "지출과 저축 기록을 보며 다음달에 유지할 습관 하나를 정해 보세요."}
                 </p>
               </div>
-              {/* 서브 코칭 — 작게 */}
-              <div className="monari-card px-5 py-4">
+              {/* 서브 코칭 — ghost */}
+              <div className="monari-card-ghost px-4 py-3.5">
                 <p className="text-[13px] font-700 text-[var(--monari-ink)] mb-1">미리쓰기는 목적 중심으로</p>
                 <p className="text-[12px] leading-[1.6] text-[var(--monari-ink-muted)]">
                   미리쓰기 이유를 아이가 직접 쓰게 하면 충동 구매보다 계획 소비로 전환하기 쉽습니다.
@@ -301,7 +311,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
           {/* ═══ 리포트 생성 ═══ */}
           <section className="mb-5">
-            <SectionTitle>월간 리포트 내보내기</SectionTitle>
+            <SectionTitle eyebrow="내보내기">월간 리포트</SectionTitle>
             <div className="monari-card mt-3 p-5">
               <MonthlyReportQuickForm childOptions={bundle.children} />
             </div>
@@ -310,7 +320,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           {/* ═══ 다른 아이와 비교 ═══ */}
           {allChildren.length > 1 && (
             <section className="mb-5">
-              <SectionTitle>다른 아이와 비교</SectionTitle>
+              <SectionTitle eyebrow="비교">다른 아이와 비교</SectionTitle>
               <div className="mt-3 space-y-2">
                 {allChildren.map((c) => {
                   const r = Math.round((c.monthReport.totalSave / Math.max(c.monthReport.totalAllowance, 1)) * 100);

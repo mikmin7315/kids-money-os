@@ -3,16 +3,21 @@ import type { ReactNode } from "react";
 export function SectionTitle({
   children,
   action,
+  eyebrow,
 }: {
   children: ReactNode;
   action?: ReactNode;
+  eyebrow?: string;
 }) {
   return (
-    <div className="flex items-center justify-between">
-      <h2 className="monari-section-title">{children}</h2>
-      {action && (
-        <span className="text-[14px] font-600 text-[var(--monari-ink-muted)]">{action}</span>
-      )}
+    <div>
+      {eyebrow && <p className="monari-eyebrow">{eyebrow}</p>}
+      <div className="flex items-center justify-between">
+        <h2 className="monari-section-title">{children}</h2>
+        {action && (
+          <span className="text-[14px] font-600 text-[var(--monari-ink-muted)]">{action}</span>
+        )}
+      </div>
     </div>
   );
 }
