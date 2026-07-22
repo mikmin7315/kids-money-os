@@ -61,3 +61,23 @@ select cron.schedule(
   );
   $$
 );
+
+-- aggregate-peer-stats: every Monday at 00:05 UTC
+select cron.unschedule('aggregate-peer-stats')
+where exists (select 1 from cron.job where jobname = 'aggregate-peer-stats');
+
+select cron.schedule(
+  'aggregate-peer-stats',
+  '5 0 * * 1',
+  $$
+  select net.http_post(
+    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/aggregate-peer-stats',
+    headers := jsonb_build_object(
+      'Content-Type',   'application/json',
+      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+    ),
+    body    := '{}'::jsonb
+  );
+  $$
+);

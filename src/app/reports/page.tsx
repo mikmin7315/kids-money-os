@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit, BehaviorRing } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
@@ -7,20 +7,28 @@ import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-// TODO(Codex): peer_stats 집계 테이블 완성 후 아래 mock을 실제 RPC로 교체
-// RPC: get_peer_stats(age_group: string, region?: string) → PeerStats
-// 테이블: peer_stats { week_start, age_group, region, avg_allowance, avg_savings_rate,
-//   spend_snack_pct, spend_education_pct, spend_game_pct, avg_behavior_completion_rate, sample_size }
-const MOCK_PEER: Record<string, { avgAllowance: number; savingsRate: number; behaviorRate: number; spendBreakdown: { label: string; pct: number }[] }> = {
-  "7-9": { avgAllowance: 18000, savingsRate: 28, behaviorRate: 71, spendBreakdown: [{ label: "군것질", pct: 42 }, { label: "문구/완구", pct: 28 }, { label: "게임", pct: 12 }, { label: "기타", pct: 18 }] },
-  "10-13": { avgAllowance: 32000, savingsRate: 23, behaviorRate: 64, spendBreakdown: [{ label: "군것질", pct: 35 }, { label: "문구/완구", pct: 20 }, { label: "게임/콘텐츠", pct: 22 }, { label: "기타", pct: 23 }] },
-  "14-16": { avgAllowance: 56000, savingsRate: 19, behaviorRate: 58, spendBreakdown: [{ label: "식음료", pct: 38 }, { label: "교통", pct: 15 }, { label: "게임/콘텐츠", pct: 25 }, { label: "기타", pct: 22 }] },
+type AgeGroup = "7-9" | "10-13" | "14-16";
+type SpendBreakdownItem = { label: string; pct: number };
+type PeerStatsRow = {
+  avg_allowance: number | string;
+  avg_savings_rate: number | string;
+  avg_behavior_rate: number | string;
+  spend_breakdown: unknown;
+  sample_size: number;
+};
+type PeerStatsView = {
+  avgAllowance: number;
+  savingsRate: number;
+  behaviorRate: number;
+  spendBreakdown: SpendBreakdownItem[];
+  sampleSize: number;
 };
 
-function getAgeGroup(birthYear?: number): string {
+function getAgeGroup(birthYear?: number): AgeGroup {
   if (!birthYear) return "10-13";
   const age = new Date().getFullYear() - birthYear;
   if (age <= 9) return "7-9";
@@ -52,8 +60,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         : { title: "돈의 균형을 함께 살펴보세요", body: "지출과 저축 기록을 보며 다음달에 유지할 습관 하나를 정해 보세요." };
 
   const primaryChild = primary ? bundle.children.find((c) => c.id === primary.child.id) : null;
-  const ageGroup = getAgeGroup((primaryChild as { birthYear?: number } | null)?.birthYear);
-  const peer = MOCK_PEER[ageGroup] ?? MOCK_PEER["10-13"];
+  const ageGroup = getAgeGroup(primaryChild?.birthYear);
+  const peer = primary ? await getPeerStats(ageGroup) : null;
 
   return (
     <MobileAppShell title="이번달 리포트" subtitle="리포트">
@@ -152,33 +160,41 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </span>
             </div>
 
-            {/* 맛보기 — 전국 또래 평균 용돈 (무료 공개) */}
-            <div
-              className="rounded-[20px] p-4 mb-3 flex items-center justify-between"
-              style={{ background: "linear-gradient(135deg,#7C3AED14,#7C3AED08)", border: "1.5px solid var(--monari-hero-lo)" }}
-            >
-              <div>
-                <p className="text-[11px] font-700 tracking-[0.06em] uppercase text-[var(--monari-ink-muted)] mb-1">
-                  전국 또래 평균 용돈
-                </p>
-                <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-hero)]">
-                  {formatWon(peer.avgAllowance)}
-                  <span className="ml-1.5 text-[13px] font-700 text-[var(--monari-ink-muted)]">/월</span>
-                </p>
+            {!peer ? (
+              <div className="monari-card p-5 text-center">
+                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 비교할 데이터가 충분하지 않아요</p>
+                <p className="monari-meta mt-1">같은 연령대 표본이 10명 이상 모이면 또래 통계를 보여드려요.</p>
               </div>
-              <div className="text-right">
-                <p className="text-[11px] font-700 text-[var(--monari-ink-muted)] mb-1">우리 아이</p>
-                <p className="text-[20px] font-900 tabular-nums text-[var(--monari-ink)]">
-                  {formatWon(primary.monthReport.totalAllowance)}
-                </p>
-                <p className={`text-[11px] font-800 mt-0.5 ${primary.monthReport.totalAllowance >= peer.avgAllowance ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
-                  {primary.monthReport.totalAllowance >= peer.avgAllowance ? "▲ 또래보다 높아요" : "▼ 또래 평균 이하"}
-                </p>
-              </div>
-            </div>
+            ) : (
+              <>
+                {/* 맛보기 — 전국 또래 평균 용돈 (무료 공개) */}
+                <div
+                  className="rounded-[20px] p-4 mb-3 flex items-center justify-between"
+                  style={{ background: "linear-gradient(135deg,#7C3AED14,#7C3AED08)", border: "1.5px solid var(--monari-hero-lo)" }}
+                >
+                  <div>
+                    <p className="text-[11px] font-700 tracking-[0.06em] uppercase text-[var(--monari-ink-muted)] mb-1">
+                      전국 또래 평균 용돈
+                    </p>
+                    <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-hero)]">
+                      {formatWon(peer.avgAllowance)}
+                      <span className="ml-1.5 text-[13px] font-700 text-[var(--monari-ink-muted)]">/월</span>
+                    </p>
+                    <p className="mt-1 text-[10px] text-[var(--monari-ink-muted)]">익명 표본 {peer.sampleSize}명</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] font-700 text-[var(--monari-ink-muted)] mb-1">우리 아이</p>
+                    <p className="text-[20px] font-900 tabular-nums text-[var(--monari-ink)]">
+                      {formatWon(primary.monthReport.totalAllowance)}
+                    </p>
+                    <p className={`text-[11px] font-800 mt-0.5 ${primary.monthReport.totalAllowance >= peer.avgAllowance ? "text-[var(--monari-done)]" : "text-[var(--monari-minus)]"}`}>
+                      {primary.monthReport.totalAllowance >= peer.avgAllowance ? "▲ 또래보다 높아요" : "▼ 또래 평균 이하"}
+                    </p>
+                  </div>
+                </div>
 
-            {/* 잠금 섹션들 */}
-            <div className="space-y-3">
+                {/* 잠금 섹션들 */}
+                <div className="space-y-3">
               <PremiumLockedCard
                 isPremium={IS_PREMIUM}
                 previewLabel="저축률 비교"
@@ -197,26 +213,30 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 <ComparisonBar label={`${primary.child.name}`} value={Math.round(primary.monthReport.behaviorSuccessRate)} color="#10b981" />
               </PremiumLockedCard>
 
-              <PremiumLockedCard
-                isPremium={IS_PREMIUM}
-                previewLabel="또래 지출 카테고리"
-                previewValue={`1위 ${peer.spendBreakdown[0].label} ${peer.spendBreakdown[0].pct}%`}
-              >
-                <div className="space-y-2">
-                  {peer.spendBreakdown.map((item) => (
-                    <div key={item.label}>
-                      <div className="flex justify-between text-[12px] mb-1">
-                        <span className="text-[var(--monari-ink-soft)]">{item.label}</span>
-                        <span className="font-700 text-[var(--monari-ink)]">{item.pct}%</span>
+                  {peer.spendBreakdown.length > 0 && (
+                    <PremiumLockedCard
+                      isPremium={IS_PREMIUM}
+                      previewLabel="또래 지출 카테고리"
+                      previewValue={`1위 ${peer.spendBreakdown[0].label} ${peer.spendBreakdown[0].pct}%`}
+                    >
+                      <div className="space-y-2">
+                        {peer.spendBreakdown.map((item) => (
+                          <div key={item.label}>
+                            <div className="flex justify-between text-[12px] mb-1">
+                              <span className="text-[var(--monari-ink-soft)]">{item.label}</span>
+                              <span className="font-700 text-[var(--monari-ink)]">{item.pct}%</span>
+                            </div>
+                            <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
+                              <div className="h-2 rounded-full bg-[var(--monari-hero)]" style={{ width: `${item.pct}%` }} />
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
-                        <div className="h-2 rounded-full bg-[var(--monari-hero)]" style={{ width: `${item.pct}%` }} />
-                      </div>
-                    </div>
-                  ))}
+                    </PremiumLockedCard>
+                  )}
                 </div>
-              </PremiumLockedCard>
-            </div>
+              </>
+            )}
           </section>
 
           {/* Report generate */}
@@ -264,6 +284,34 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       )}
     </MobileAppShell>
   );
+}
+
+async function getPeerStats(ageGroup: AgeGroup): Promise<PeerStatsView | null> {
+  const supabase = await getSupabaseServerClient();
+  const { data, error } = await supabase.rpc("get_peer_stats", {
+    p_age_group: ageGroup,
+    p_region: null,
+  });
+  if (error || !data || typeof data !== "object") return null;
+
+  const row = data as PeerStatsRow;
+  const spendBreakdown = Array.isArray(row.spend_breakdown)
+    ? row.spend_breakdown.filter(isSpendBreakdownItem).slice(0, 4)
+    : [];
+
+  return {
+    avgAllowance: Number(row.avg_allowance ?? 0),
+    savingsRate: Number(row.avg_savings_rate ?? 0),
+    behaviorRate: Number(row.avg_behavior_rate ?? 0),
+    spendBreakdown,
+    sampleSize: Number(row.sample_size ?? 0),
+  };
+}
+
+function isSpendBreakdownItem(value: unknown): value is SpendBreakdownItem {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Record<string, unknown>;
+  return typeof item.label === "string" && typeof item.pct === "number";
 }
 
 // ── 컴포넌트 ────────────────────────────────────────────────
