@@ -1,4 +1,4 @@
-﻿import { ChevronRight, CircleDollarSign, PiggyBank, Plus, ReceiptText, ShieldCheck, UserPlus } from "lucide-react";
+﻿import { ChevronRight, CircleDollarSign, PiggyBank, Plus, ReceiptText, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
@@ -39,6 +39,31 @@ export default async function SettingsPage() {
           <ThemeToggleRow />
         </div>
       </section>
+
+      {/* 모나리 플러스 배너 */}
+      {(() => {
+        const isPremium = (auth.profile as { subscription_tier?: string } | null)?.subscription_tier === "plus";
+        return isPremium ? (
+          <Link href="/settings/subscription" className="mb-6 flex items-center justify-between rounded-[20px] px-5 py-4 transition active:scale-[0.98]"
+            style={{ background: "linear-gradient(135deg,#7C3AED,#9333EA)", boxShadow: "0 6px 20px rgba(109,40,217,0.3)" }}>
+            <div>
+              <p className="text-[11px] font-700 tracking-widest uppercase text-white/60">구독 중</p>
+              <p className="text-[16px] font-900 text-white">모나리 플러스 ✨</p>
+            </div>
+            <ChevronRight size={18} className="text-white/60" />
+          </Link>
+        ) : (
+          <Link href="/settings/subscription" className="mb-6 flex items-center gap-3 rounded-[20px] px-5 py-4 transition active:scale-[0.98]"
+            style={{ background: "linear-gradient(135deg,#7C3AED14,#9333EA08)", border: "1.5px solid #7C3AED30" }}>
+            <Sparkles size={20} className="text-[var(--monari-hero)] shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-800 text-[var(--monari-ink)]">모나리 플러스로 업그레이드</p>
+              <p className="text-[12px] text-[var(--monari-ink-muted)]">또래 비교 리포트 · 월 3,900원</p>
+            </div>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)] shrink-0" />
+          </Link>
+        );
+      })()}
 
       <section className="mb-7">
         <SectionTitle>내 계정</SectionTitle>

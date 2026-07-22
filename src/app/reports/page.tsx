@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit, BehaviorRing } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
@@ -28,10 +28,9 @@ function getAgeGroup(birthYear?: number): string {
   return "14-16";
 }
 
-const IS_PREMIUM = false; // TODO: 구독 상태 DB에서 읽기
-
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<{ child?: string }> }) {
-  await requireParentSession();
+  const auth = await requireParentSession();
+  const IS_PREMIUM = (auth.profile as { subscription_tier?: string } | null)?.subscription_tier === "plus";
   const { child: selectedChildId } = await searchParams;
   const [dashboard, bundle] = await Promise.all([getDashboardView(), getAppDataBundle()]);
   const allChildren = dashboard.children;
