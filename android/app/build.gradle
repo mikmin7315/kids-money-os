@@ -1,14 +1,11 @@
 apply plugin: 'com.android.application'
 
-def uploadStoreFile = System.getenv('MONARI_UPLOAD_STORE_FILE')
-def uploadStorePassword = System.getenv('MONARI_UPLOAD_STORE_PASSWORD')
-def uploadKeyAlias = System.getenv('MONARI_UPLOAD_KEY_ALIAS')
-def uploadKeyPassword = System.getenv('MONARI_UPLOAD_KEY_PASSWORD')
-def canSignRelease = uploadStoreFile && uploadStorePassword && uploadKeyAlias && uploadKeyPassword
-def releaseBuildRequested = gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }
-
-if (releaseBuildRequested && !canSignRelease) {
-    throw new GradleException('Release builds require all MONARI_UPLOAD_* signing environment variables.')
+// 로컬 키스토어 서명 설정 (keystore.properties 없으면 환경변수 fallback)
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def useKeystoreProperties = keystorePropertiesFile.exists()
+def keystoreProperties = new Properties()
+if (useKeystoreProperties) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -22,24 +19,22 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
     signingConfigs {
         release {
-            storeFile canSignRelease ? file(uploadStoreFile) : null
-            storePassword uploadStorePassword ?: ''
-            keyAlias uploadKeyAlias ?: ''
-            keyPassword uploadKeyPassword ?: ''
+            storeFile file(useKeystoreProperties ? keystoreProperties['storeFile'] : (System.getenv('MONARI_UPLOAD_STORE_FILE') ?: ''))
+            storePassword useKeystoreProperties ? keystoreProperties['storePassword'] : (System.getenv('MONARI_UPLOAD_STORE_PASSWORD') ?: '')
+            keyAlias useKeystoreProperties ? keystoreProperties['keyAlias'] : (System.getenv('MONARI_UPLOAD_KEY_ALIAS') ?: '')
+            keyPassword useKeystoreProperties ? keystoreProperties['keyPassword'] : (System.getenv('MONARI_UPLOAD_KEY_PASSWORD') ?: '')
         }
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig canSignRelease ? signingConfigs.release : null
+            signingConfig signingConfigs.release
         }
     }
 }
