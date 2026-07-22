@@ -120,15 +120,22 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             )}
           </Link>
 
-          {/* 이자율 + 오늘 이자 배지 */}
+          {/* 이자율 + 이달 예상 이자 배지 */}
           <div className="mt-3 flex justify-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#6EE7B7]" />
-              {policy ? `이자율 ${summary.wallet.currentInterestRate}%` : "이자율 설정 전"}
-            </span>
-            {todayInterest > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-3 py-1.5 text-[12px] font-600 text-white/80">
-                ✨ 오늘 이자 +{formatWon(todayInterest)}
+            {policy ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#6EE7B7]" />
+                이자율 {summary.wallet.currentInterestRate}%
+                {estimateInterest(summary.wallet, policy) > 0 && (
+                  <span className="text-[#6EE7B7]">
+                    · 이달 +{formatWon(estimateInterest(summary.wallet, policy))}
+                  </span>
+                )}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
+                <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+                이자율 설정 전
               </span>
             )}
           </div>
