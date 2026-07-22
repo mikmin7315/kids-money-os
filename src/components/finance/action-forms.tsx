@@ -276,14 +276,27 @@ export function ChildSaveForm({
   currentInterestRate?: number;
   savingsBalance?: number;
 }) {
-  const [amount, setAmount] = useState(1000);
-  const [showCustom, setShowCustom] = useState(false);
+  const [rawInput, setRawInput] = useState("");
   const [state, action] = useActionState(submitTransactionForm, initialState);
 
+  // rawInput을 파싱한 실제 금액 (입력 중에는 클램핑 없이 순수값)
+  const amount = Number(rawInput.replace(/,/g, "")) || 0;
+  const isValid = amount >= 1 && amount <= availableBalance;
+
   const newSavings = savingsBalance + amount;
-  const estimatedInterest = currentInterestRate > 0
+  const estimatedInterest = currentInterestRate > 0 && amount > 0
     ? Math.round(newSavings * (currentInterestRate / 100 / 12))
     : 0;
+
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const digits = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
+    // 표시는 콤마 포맷, 상태는 raw 숫자 문자열
+    setRawInput(digits ? Number(digits).toLocaleString("ko-KR") : "");
+  }
+
+  function pickPreset(a: number) {
+    setRawInput(a.toLocaleString("ko-KR"));
+  }
 
   return (
     <form action={action} className="space-y-4">
@@ -299,18 +312,39 @@ export function ChildSaveForm({
             지금 쓸 수 있는 돈이 없어 저금할 수 없어요.
           </p>
         )}
+
+        {/* 직접 입력 (메인) */}
         <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           얼마를 저축할까?
         </label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="relative mb-1">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={rawInput}
+            onChange={handleInput}
+            placeholder="금액 입력"
+            disabled={availableBalance <= 0}
+            className="w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3.5 pr-10 text-[20px] font-800 text-[var(--monari-ink)] outline-none placeholder:text-[var(--monari-ink-muted)] placeholder:font-500 placeholder:text-[15px]"
+          />
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-700 text-[var(--monari-ink-muted)]">원</span>
+        </div>
+        {amount > availableBalance && amount > 0 && (
+          <p className="mb-2 text-[12px] font-700 text-[var(--monari-pending)]">
+            잔액({formatWon(availableBalance)})보다 많아요
+          </p>
+        )}
+
+        {/* 빠른 선택 버튼 */}
+        <div className="mt-3 grid grid-cols-4 gap-2">
           {SAVE_PRESETS.map((a) => (
             <button
               key={a}
               type="button"
               disabled={a > availableBalance}
-              onClick={() => { setAmount(a); setShowCustom(false); }}
-              className={`rounded-[14px] py-3 text-[13px] font-bold transition active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-[35%] ${
-                amount === a && !showCustom
+              onClick={() => pickPreset(a)}
+              className={`rounded-[14px] py-2.5 text-[13px] font-bold transition active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-[35%] ${
+                amount === a
                   ? "bg-[var(--child-save)] text-white"
                   : "bg-[var(--child-surface)] text-[var(--monari-ink)]"
               }`}
@@ -319,31 +353,10 @@ export function ChildSaveForm({
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={() => setShowCustom((v) => !v)}
-          className="mt-2 text-[12px] font-medium text-[var(--monari-ink-muted)] underline underline-offset-2"
-        >
-          직접 입력
-        </button>
-        {showCustom && (
-          <input
-            type="text"
-            inputMode="numeric"
-            value={amount > 0 ? amount.toLocaleString("ko-KR") : ""}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/,/g, "").replace(/[^0-9]/g, "");
-              const n = Number(raw) || 0;
-              setAmount(Math.min(Math.max(100, n), Math.max(100, availableBalance)));
-            }}
-            placeholder="금액 입력"
-            className="mt-2 w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3 text-[15px] font-bold text-[var(--monari-ink)] outline-none"
-          />
-        )}
       </div>
 
       {/* 이자율 미리보기 */}
-      {currentInterestRate > 0 && amount > 0 && amount <= availableBalance && (
+      {currentInterestRate > 0 && isValid && (
         <div className="rounded-[14px] bg-[var(--child-surface)] px-4 py-3 space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</span>
@@ -356,7 +369,7 @@ export function ChildSaveForm({
         </div>
       )}
 
-      <ChildSaveButton label={`${formatWon(amount)} 저금할게요!`} disabled={availableBalance <= 0 || amount > availableBalance} />
+      <ChildSaveButton label={amount > 0 ? `${formatWon(amount)} 저금할게요!` : "금액을 입력해주세요"} disabled={!isValid} />
       <FormMessage state={state} />
     </form>
   );
