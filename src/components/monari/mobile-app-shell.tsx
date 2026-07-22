@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CheckCircle2, Home, Moon, Settings, SlidersHorizontal, Sun } from "lucide-react";
+import { BarChart2, CheckCircle2, Home, Moon, Settings, SlidersHorizontal, Sun } from "lucide-react";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { type ReactNode, useEffect, useState } from "react";
 
-const MANAGE_PREFIXES = ["/manage", "/behaviors", "/records", "/reports"];
+const MANAGE_PREFIXES = ["/manage", "/behaviors", "/records"];
 
 const TAB_DEFS = [
   { href: "/", label: "홈", icon: Home },
   { href: "/approvals", label: "승인함", icon: CheckCircle2, showBadge: true },
+  { href: "/reports", label: "리포트", icon: BarChart2 },
   { href: "/manage", label: "관리", icon: SlidersHorizontal },
   { href: "/settings", label: "설정", icon: Settings },
 ];
