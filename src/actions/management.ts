@@ -467,6 +467,7 @@ export async function toggleBehaviorRuleAction(
   if (error) return { ok: false, message: "변경 중 오류가 발생했어요." };
   void invalidateAppData();
   revalidatePath("/behaviors");
+  revalidatePath("/manage");
   revalidatePath("/");
   return { ok: true, message: !isActive ? "활성화되었어요." : "비활성화되었어요." };
 }
@@ -495,6 +496,7 @@ export async function deleteBehaviorRuleAction(
   if (error) return { ok: false, message: "삭제 중 오류가 발생했어요." };
   void invalidateAppData();
   revalidatePath("/behaviors");
+  revalidatePath("/manage");
   revalidatePath("/");
   return { ok: true, message: "행동 약속이 삭제되었어요." };
 }

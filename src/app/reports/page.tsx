@@ -288,11 +288,17 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
 async function getPeerStats(ageGroup: AgeGroup): Promise<PeerStatsView | null> {
   const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase.rpc("get_peer_stats", {
-    p_age_group: ageGroup,
-    p_region: null,
-  });
-  if (error || !data || typeof data !== "object") return null;
+  // RPC 대신 테이블 직접 쿼리 (get_peer_stats 함수 미배포 시 대비)
+  const { data, error } = await supabase
+    .from("peer_stats")
+    .select("avg_allowance,avg_savings_rate,avg_behavior_rate,spend_breakdown,sample_size")
+    .eq("age_group", ageGroup)
+    .is("region", null)
+    .gte("sample_size", 10)
+    .order("week_start", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data) return null;
 
   const row = data as PeerStatsRow;
   const spendBreakdown = Array.isArray(row.spend_breakdown)
