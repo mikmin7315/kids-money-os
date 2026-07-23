@@ -34,7 +34,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
 
       {/* 금액 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">얼마 썼어요?</label>
+        <label htmlFor="amount-input" className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">얼마 썼어요?</label>
         <div className="flex flex-wrap gap-2 mb-3">
           {QUICK_AMOUNTS.map((q) => (
             <button
@@ -53,6 +53,7 @@ export function CashSpendForm({ childId }: { childId: string }) {
           ))}
         </div>
         <MoneyInput
+          id="amount-input"
           name="amount"
           min={1}
           value={amount}
@@ -65,8 +66,9 @@ export function CashSpendForm({ childId }: { childId: string }) {
 
       {/* 날짜 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">언제 썼어요?</label>
+        <label htmlFor="date-input" className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">언제 썼어요?</label>
         <input
+          id="date-input"
           name="date"
           type="date"
           defaultValue={new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date())}
@@ -77,8 +79,9 @@ export function CashSpendForm({ childId }: { childId: string }) {
 
       {/* 메모 */}
       <div>
-        <label className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">뭐에 썼어요? (선택)</label>
+        <label htmlFor="memo-input" className="mb-2 block text-sm font-extrabold text-[var(--monari-ink)]">뭐에 썼어요? (선택)</label>
         <input
+          id="memo-input"
           name="memo"
           type="text"
           placeholder="예: 편의점 간식, 급식비"

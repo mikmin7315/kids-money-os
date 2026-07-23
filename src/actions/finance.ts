@@ -450,7 +450,14 @@ export async function generateMonthlyReportAction(input: {
   year: number;
   month: number;
 }): Promise<ActionResult<{ childId: string; year: number; month: number }>> {
-  await requireParentSession();
+  const { user } = await requireParentSession();
+
+  if (!isDemoMode() && user) {
+    const supabase = await getSupabaseServerClient();
+    if (!(await parentOwnsChild(supabase, user.id, input.childId))) {
+      return { ok: false, error: "권한이 없습니다." };
+    }
+  }
 
   const bundle = await getAppDataBundle();
   const report = computeMonthlyReport(
@@ -743,13 +750,15 @@ export async function cashSpendAction(
 
   const auth = authResult;
 
-  // 아이 소유권 확인 (부모 세션이면 직접 확인, 아이 모드이면 children 테이블로 확인)
-  const { data: child } = await supabase
-    .from("children")
-    .select("id")
-    .eq("id", childId)
-    .maybeSingle();
-  if (!child) return { ok: false, message: "아이 정보를 찾을 수 없어요." };
+  // 아이 소유권 확인: 부모 세션이면 parent_id로 소유 검증, 아이 모드이면 childMode 쿠키로 검증
+  if (isParent && auth?.user) {
+    if (!(await parentOwnsChild(supabase, auth.user.id, childId))) {
+      return { ok: false, message: "아이 정보를 찾을 수 없어요." };
+    }
+  } else {
+    const { data: child } = await supabase.from("children").select("id").eq("id", childId).maybeSingle();
+    if (!child) return { ok: false, message: "아이 정보를 찾을 수 없어요." };
+  }
 
   const { error } = await supabase.from("cash_spend_requests").insert({
     child_id: childId,
@@ -770,6 +779,8 @@ export async function approveCashSpendAction(
 ): Promise<{ ok: boolean; message: string }> {
   const requestId = readString(formData, "requestId");
   if (!requestId) return { ok: false, message: "요청 ID가 없습니다." };
+
+  await requireParentSession();
 
   if (isDemoMode()) {
     revalidatePath("/approvals");
@@ -792,6 +803,8 @@ export async function rejectCashSpendAction(
   const requestId = readString(formData, "requestId");
   const reason = readString(formData, "reason") || undefined;
   if (!requestId) return { ok: false, message: "요청 ID가 없습니다." };
+
+  await requireParentSession();
 
   if (isDemoMode()) {
     revalidatePath("/approvals");
@@ -818,6 +831,14 @@ export async function cancelBorrowRequestAction(
   if (!borrowRequestId) return { ok: false, message: "미리쓰기 ID가 없습니다." };
 
   if (isDemoMode()) return { ok: true, message: "취소 완료 (데모)" };
+
+  // auth 먼저: 데이터 조회 전에 세션 존재 여부 확인
+  const { getChildModeContext } = await import("@/lib/auth");
+  const [authResult, childMode] = await Promise.all([
+    requireParentSession().catch(() => null),
+    getChildModeContext().catch(() => null),
+  ]);
+  if (!authResult?.user && !childMode?.childId) return { ok: false, message: "로그인이 필요해요." };
 
   const bundle = await getAppDataBundle();
   const request = bundle.borrowRequests.find((r) => r.id === borrowRequestId);

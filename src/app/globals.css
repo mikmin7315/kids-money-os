@@ -30,7 +30,7 @@
   /* ── Ink ── */
   --monari-ink: #17181c;
   --monari-ink-soft: #3e3e50;
-  --monari-ink-muted: #696974;
+  --monari-ink-muted: #5a5a64;
 
   /* ── Border ── */
   --monari-line: rgba(23, 24, 28, 0.10);
@@ -286,7 +286,7 @@
   --monari-surface-soft: #e8f2ff;
   --monari-ink: #17181c;
   --monari-ink-soft: #3e3e50;
-  --monari-ink-muted: #696974;
+  --monari-ink-muted: #5a5a64;
   --monari-line: rgba(23, 24, 28, 0.10);
   --monari-line-strong: rgba(23, 24, 28, 0.18);
   --monari-hero-lo: #ddeeff;

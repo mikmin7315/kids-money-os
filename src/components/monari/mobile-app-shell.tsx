@@ -60,7 +60,9 @@ export function MobileAppShell({
           const active =
             tab.href === "/manage"
               ? MANAGE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"))
-              : pathname === tab.href;
+              : tab.href === "/"
+                ? pathname === "/"
+                : pathname === tab.href || pathname.startsWith(tab.href + "/");
           const Icon = tab.icon;
           const badge = hasPending ? pendingCount : null;
 
@@ -70,6 +72,7 @@ export function MobileAppShell({
               href={href}
               className={`monari-tab ${active ? "monari-tab-active" : ""}`}
               aria-current={active ? "page" : undefined}
+              aria-label={badge ? `${tab.label} (대기 ${badge}건)` : tab.label}
             >
               <span className="relative">
                 <Icon aria-hidden="true" className="h-[22px] w-[22px]" strokeWidth={active ? 2.5 : 2} />
@@ -89,17 +92,27 @@ export function MobileAppShell({
 }
 
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState(getInitialTheme);
+  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  }, [isDark]);
+    const stored = localStorage.getItem("monari-theme");
+    const initial = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDark(initial);
+    setMounted(true);
+    document.documentElement.setAttribute("data-theme", initial ? "dark" : "light");
+  }, []);
 
   function toggle() {
     const next = !isDark;
     setIsDark(next);
     localStorage.setItem("monari-theme", next ? "dark" : "light");
     document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
+  }
+
+  // SSR과 첫 클라이언트 렌더 일치: 마운트 전에는 빈 버튼 placeholder
+  if (!mounted) {
+    return <span className="flex h-11 w-11 items-center justify-center" aria-hidden />;
   }
 
   return (

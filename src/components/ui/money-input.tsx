@@ -53,7 +53,7 @@ export function MoneyInput({
         disabled={disabled}
         className={className}
         style={style}
-        aria-label={name}
+        aria-label={placeholder !== "0" ? placeholder : name}
       />
       <input type="hidden" name={name} value={raw} min={min} max={max} />
     </>

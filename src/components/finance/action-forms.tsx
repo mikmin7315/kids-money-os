@@ -144,9 +144,10 @@ export function ChildBehaviorCheckForm({
                     <button
                       type="button"
                       onClick={() => removePhoto(rule.id)}
+                      aria-label="첨부 사진 삭제"
                       className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-4 w-4" aria-hidden />
                     </button>
                   </div>
                 ) : (
@@ -196,10 +197,11 @@ export function BorrowRequestQuickForm({ childId }: { childId: string }) {
 
       {/* Purpose */}
       <div>
-        <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
+        <label htmlFor="borrow-purpose" className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           무엇을 사고 싶어?
         </label>
         <input
+          id="borrow-purpose"
           name="purpose"
           type="text"
           placeholder="예: 문구점에서 필통 사고 싶어요"
@@ -314,11 +316,12 @@ export function ChildSaveForm({
         )}
 
         {/* 직접 입력 (메인) */}
-        <label className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
+        <label htmlFor="save-amount" className="mb-2 block text-[13px] font-semibold text-[var(--monari-ink-soft)]">
           얼마를 저축할까?
         </label>
         <div className="relative mb-1">
           <input
+            id="save-amount"
             type="text"
             inputMode="numeric"
             value={rawInput}

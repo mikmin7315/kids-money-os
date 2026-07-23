@@ -81,7 +81,7 @@ export function StatTile({
   );
 }
 
-export function ProgressBar({ value }: { value: number }) {
+export function ProgressBar({ value, label }: { value: number; label?: string }) {
   const safeValue = Math.min(100, Math.max(0, value));
 
   return (
@@ -93,6 +93,7 @@ export function ProgressBar({ value }: { value: number }) {
         aria-valuenow={safeValue}
         aria-valuemin={0}
         aria-valuemax={100}
+        aria-label={label ?? `${safeValue}%`}
       />
     </div>
   );
@@ -113,7 +114,7 @@ export function ProgressCard({
         <p className="text-[14px] font-700 text-[var(--monari-ink)]">{label}</p>
         <p className="text-[14px] font-800 text-[var(--monari-hero)]">{valueLabel}</p>
       </div>
-      <ProgressBar value={value} />
+      <ProgressBar value={value} label={label} />
     </div>
   );
 }
