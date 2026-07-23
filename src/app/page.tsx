@@ -44,7 +44,7 @@ export default async function HomePage() {
   const incompleteItems = bundle.children.flatMap((child) => {
     const items: { childName: string; label: string; href: string }[] = [];
     if (!bundle.allowanceRules.find((r) => r.childId === child.id))
-      items.push({ childName: child.name, label: "용돈 설정", href: "/settings/allowance" });
+      items.push({ childName: child.name, label: "용돈 설정", href: "/manage?tab=allowance" });
     if (!bundle.interestPolicies.find((p) => p.childId === child.id))
       items.push({ childName: child.name, label: "이자율 설정", href: "/settings/interest" });
     return items;
