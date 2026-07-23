@@ -4,9 +4,9 @@
   color-scheme: light;
 
   /* ── Brand ── */
-  --monari-hero: #0066cc;
-  --monari-hero-mid: #0052a3;
-  --monari-hero-strong: #003d7a;
+  --monari-hero: #0055B3;
+  --monari-hero-mid: #003d85;
+  --monari-hero-strong: #0A1628;
 
   /* ── Accent (action / highlight) ── */
   --monari-primary: #f59e0b;
@@ -1218,7 +1218,7 @@ a {
   }
 
   .monari-tab-active {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.12), rgba(0, 102, 204, 0.06));
+    background: linear-gradient(135deg, rgba(0, 85, 179, 0.13), rgba(10, 22, 40, 0.07));
     color: var(--monari-hero);
   }
 

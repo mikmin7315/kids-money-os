@@ -19,10 +19,10 @@ import { formatWon, maskAccountNumber } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 const CHILD_COLORS = [
-  { bg: "linear-gradient(135deg,#7C3AED,#A855F7)", shadow: "rgba(124,58,237,0.35)" },
-  { bg: "linear-gradient(135deg,#EC4899,#F97316)", shadow: "rgba(236,72,153,0.30)" },
+  { bg: "linear-gradient(135deg,#6C3FE8,#8B5CF6)", shadow: "rgba(108,63,232,0.35)" },
+  { bg: "linear-gradient(135deg,#EC4899,#F43F5E)", shadow: "rgba(236,72,153,0.30)" },
   { bg: "linear-gradient(135deg,#0D9488,#0EA5E9)", shadow: "rgba(13,148,136,0.30)" },
-  { bg: "linear-gradient(135deg,#D97706,#FBBF24)", shadow: "rgba(217,119,6,0.30)" },
+  { bg: "linear-gradient(135deg,#D97706,#F59E0B)", shadow: "rgba(217,119,6,0.30)" },
 ];
 
 export default async function HomePage() {
@@ -83,7 +83,7 @@ export default async function HomePage() {
         {/* 1. 부모 지갑 히어로 (full-width) */}
         <div
           className="col-span-2 rounded-[24px] p-5 relative overflow-hidden"
-          style={{ background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#9333ea 100%)", boxShadow: "0 12px 36px rgba(109,40,217,0.35)" }}
+          style={{ background: "linear-gradient(145deg,#0A1628 0%,#0A2463 50%,#0055B3 100%)", boxShadow: "0 12px 36px rgba(0,36,99,0.40)" }}
         >
           <div className="pointer-events-none absolute -right-8 -top-8 h-36 w-36 rounded-full bg-white/10" />
           <div className="pointer-events-none absolute right-8 bottom-0 h-20 w-20 rounded-full bg-white/06" />
