@@ -22,8 +22,8 @@ const PRESETS = [
 
 type Tab = "behaviors" | "allowance" | "interest";
 
-export function ManageContent({ bundle }: { bundle: AppDataBundle }) {
-  const [tab, setTab] = useState<Tab>("behaviors");
+export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: AppDataBundle; initialTab?: Tab }) {
+  const [tab, setTab] = useState<Tab>(initialTab);
   const hasChildren = bundle.children.length > 0;
 
   return (
