@@ -38,9 +38,9 @@ export default async function ChildSettingsPage({ params }: { params: Promise<{ 
   if (!child) notFound();
 
   return (
-    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
+    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
         <ArrowLeft size={16} /> 돌아가기
       </Link>
 

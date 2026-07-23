@@ -46,10 +46,10 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
   const totalReward = activeRules.reduce((sum, r) => sum + (r.rewardAmount ?? 0), 0);
 
   return (
-    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
+    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       {/* 헤더 */}
-      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-5 flex items-start justify-between">
@@ -63,7 +63,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         </div>
         <Link
           href={`/child/${id}/history`}
-          style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", marginTop: 6, whiteSpace: "nowrap" }}
+          style={{ fontSize: 13, fontWeight: 700, color: "#6C3FE8", marginTop: 6, whiteSpace: "nowrap" }}
         >
           기록 보기 →
         </Link>
@@ -73,18 +73,18 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
       {todayTotal > 0 && (
         <div
           className="mb-5 rounded-[24px] p-4"
-          style={{ background: allDone ? "linear-gradient(135deg,#a7f3d0,#6ee7b7)" : "linear-gradient(135deg,#d1fae5,#a7f3d0)" }}
+          style={{ background: allDone ? "linear-gradient(135deg,#C4B5FD,#A78BFA)" : "linear-gradient(135deg,#EDE9FE,#DDD6FE)" }}
         >
           <div className="flex items-center justify-between">
             <div>
               <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "var(--status-success-solid-text)" : "var(--monari-hero)", opacity: 0.7 }}>
                 {allDone ? "오늘 모두 완료! 🎉" : "오늘 약속"}
               </p>
-              <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#064e3b" : "var(--monari-hero)", letterSpacing: "-0.03em" }}>
+              <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#1C1033" : "#6C3FE8", letterSpacing: "-0.03em" }}>
                 {todayDone}/{todayTotal}개 완료
               </p>
               {streak > 0 && (
-                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "var(--status-success-solid-text)" : "var(--monari-hero)" }}>
+                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#4424B0" : "#6C3FE8" }}>
                   🔥 {streak}일 연속 달성 중!
                 </p>
               )}
@@ -100,7 +100,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
             <div key={label} className="flex flex-col items-center gap-1.5">
-              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "var(--monari-hero)" : "#d1d5db" }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "#6C3FE8" : "#d1d5db" }}>
                 {["일", "월", "화", "수", "목", "금", "토"][new Date(
                   // label은 날짜 숫자(day)
                   today.slice(0, 8) + String(label).padStart(2, "0")
@@ -109,9 +109,9 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
               <span
                 className="flex h-9 w-9 items-center justify-center rounded-full"
                 style={{
-                  background: done ? "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" : isToday ? "#ecfdf5" : "#f9fafb",
+                  background: done ? "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" : isToday ? "#F5F0FF" : "#f9fafb",
                   fontSize: 18,
-                  border: isToday && !done ? "2px solid #6ee7b7" : "none",
+                  border: isToday && !done ? "2px solid #C4B5FD" : "none",
                 }}
               >
                 {done ? "⭐" : isToday ? "👀" : <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>{label}</span>}
