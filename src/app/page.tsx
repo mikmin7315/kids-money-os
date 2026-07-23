@@ -7,6 +7,7 @@ import {
   ClipboardList,
   ReceiptText,
   Smartphone,
+  Sparkles,
   TrendingUp,
   Wallet,
 } from "lucide-react";
@@ -330,6 +331,25 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ── 모나리 플러스 배너 ── */}
+      {auth.user && (() => {
+        const isPremium = (auth.profile as { subscription_tier?: string } | null)?.subscription_tier === "plus";
+        return isPremium ? null : (
+          <Link
+            href="/settings/subscription"
+            className="mb-4 flex items-center gap-3 rounded-[20px] px-4 py-3.5 transition active:scale-[0.98]"
+            style={{ background: "linear-gradient(135deg,#7C3AED14,#9333EA08)", border: "1.5px solid #7C3AED30" }}
+          >
+            <Sparkles size={20} className="text-[var(--monari-hero)] shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-800 text-[var(--monari-ink)]">모나리 플러스로 업그레이드</p>
+              <p className="text-[12px] text-[var(--monari-ink-muted)]">또래 비교 리포트 · 월 3,900원</p>
+            </div>
+            <ArrowRight size={16} className="text-[var(--monari-ink-muted)] shrink-0" />
+          </Link>
+        );
+      })()}
 
       {!auth.user && (
         <div className="mb-4 rounded-[20px] bg-[var(--monari-surface)] p-4 shadow-[var(--monari-shadow-md)] flex items-center justify-between gap-4">
