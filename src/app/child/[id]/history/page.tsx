@@ -47,9 +47,9 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
   const streak = computeStreak(logs, bundle.behaviorRules.filter((r) => r.isActive).map((r) => r.id));
 
   return (
-    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
+    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-6">
@@ -61,7 +61,7 @@ export default async function ChildHistoryPage({ params }: { params: Promise<{ i
 
       {/* 요약 배너 */}
       <div className="mb-5 grid grid-cols-2 gap-3">
-        <div className="rounded-[24px] p-4" style={{ background: "linear-gradient(145deg, #065F46 0%, #059669 45%, #10B981 80%, #34D399 100%)" }}>
+        <div className="rounded-[24px] p-4" style={{ background: "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>총 달성</p>
           <p style={{ fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>{totalDone}번</p>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>약속을 지켰어요!</p>

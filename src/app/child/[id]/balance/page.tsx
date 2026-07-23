@@ -36,7 +36,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   );
 
   return (
-    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh" }}>
+    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기
@@ -50,7 +50,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         <p className="detail-kpi-label">총 보유 금액</p>
         <p className="detail-kpi">{formatWon(totalAssets)}</p>
         <p className="detail-kpi-sub">
-          이대로면 이번 달 이자 <strong style={{ color: "#86efac" }}>+{formatWon(estimated)}</strong>
+          이대로면 이번 달 이자 <strong style={{ color: "#C4B5FD" }}>+{formatWon(estimated)}</strong>
         </p>
       </div>
 
