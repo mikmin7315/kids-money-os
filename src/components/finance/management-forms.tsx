@@ -109,37 +109,40 @@ export function InterestPolicyForm({ childOptions }: { childOptions: ChildProfil
 
 export function AllowanceRuleForm({ childOptions }: { childOptions: ChildProfile[] }) {
   const [state, action, pending] = useActionState(createAllowanceRuleForm, initialState);
+  const [type, setType] = useState<"weekly" | "monthly" | "manual">("weekly");
+
   return (
     <form action={action} className={formClass}>
-      <FormIntro title="용돈 규칙 추가" description="지급 금액과 주기를 정해 일관된 용돈 습관을 만들어요." />
+      <input type="hidden" name="title" value={type === "weekly" ? "주간 용돈" : type === "monthly" ? "월간 용돈" : "용돈"} />
       <ChildSelect childOptions={childOptions} />
-      <Field label="규칙 이름">
-        <input className={fieldClass} name="title" type="text" placeholder="예: 주간 기본 용돈" required />
-      </Field>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label="지급 금액 (원)">
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="금액 (원)">
           <MoneyInput className={fieldClass} name="amount" min={1} value="5000" required />
         </Field>
-        <Field label="지급 방식">
-          <select name="type" className={fieldClass} defaultValue="weekly">
+        <Field label="지급 주기">
+          <select name="type" className={fieldClass} value={type} onChange={(e) => setType(e.target.value as typeof type)}>
             <option value="weekly">매주</option>
             <option value="monthly">매월</option>
-            <option value="manual">직접 지급</option>
+            <option value="manual">직접</option>
           </select>
         </Field>
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label="매주 지급 요일" hint="지급 방식이 매주일 때 적용돼요.">
+      {type === "weekly" && (
+        <Field label="지급 요일">
           <select name="weekday" className={fieldClass} defaultValue="6">
-            {WEEKDAYS.map((day, index) => <option key={day} value={index}>{day}</option>)}
+            {WEEKDAYS.map((day, i) => <option key={day} value={i}>{day}</option>)}
           </select>
         </Field>
-        <Field label="매월 지급일" hint="지급 방식이 매월일 때 적용돼요.">
+      )}
+      {type === "monthly" && (
+        <Field label="지급일">
           <select name="dayOfMonth" className={fieldClass} defaultValue="1">
-            {Array.from({ length: 28 }, (_, index) => index + 1).map((day) => <option key={day} value={day}>{day}일</option>)}
+            {Array.from({ length: 28 }, (_, i) => i + 1).map((d) => <option key={d} value={d}>{d}일</option>)}
           </select>
         </Field>
-      </div>
+      )}
+      {type !== "weekly" && <input type="hidden" name="weekday" value="6" />}
+      {type !== "monthly" && <input type="hidden" name="dayOfMonth" value="1" />}
       <SubmitButton pending={pending} label="용돈 규칙 저장하기" />
       <FormMessage state={state} />
     </form>
