@@ -60,13 +60,17 @@ export function BehaviorRuleCreateForm() {
     <form action={action} className={formClass}>
       <input type="hidden" name="ruleCategory" value="recurring" />
       <input type="hidden" name="monthlyTargetRate" value="80" />
-      <input type="hidden" name="interestDelta" value="0.5" />
       <Field label="약속 이름">
         <input className={fieldClass} name="title" type="text" placeholder="예: 스스로 책상 정리하기" required />
       </Field>
-      <Field label="보상 금액 (원)">
-        <MoneyInput className={fieldClass} name="rewardAmount" min={0} value="500" required />
-      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="보상 금액 (원)">
+          <MoneyInput className={fieldClass} name="rewardAmount" min={0} value="500" required />
+        </Field>
+        <Field label="이자율 변화 (%p)">
+          <input className={fieldClass} name="interestDelta" type="number" step="0.1" min="0" defaultValue="0.5" required />
+        </Field>
+      </div>
       <CheckField name="requiresParentApproval" label="완료 후 부모 확인을 받아요" />
       <SubmitButton pending={pending} label="약속 저장하기" />
       <FormMessage state={state} />
