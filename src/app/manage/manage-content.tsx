@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertCircle, CalendarDays, CircleDollarSign, TrendingUp } from "lucide-react";
+import { AlertCircle, CalendarDays, CircleDollarSign, Plus, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { BehaviorRuleCreateForm, AllowanceRuleForm } from "@/components/finance/management-forms";
 import {
@@ -14,16 +14,12 @@ import { SectionTitle } from "@/components/monari/ui";
 import { type AppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
 
-const PRESETS = [
-  { label: "낮음", rate: 2, desc: "처음 시작할 때 추천" },
-  { label: "기본", rate: 3, desc: "가장 많이 쓰는 설정" },
-  { label: "높음", rate: 5, desc: "약속 잘 지키는 아이" },
-];
-
 type Tab = "behaviors" | "allowance" | "interest";
 
 export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: AppDataBundle; initialTab?: Tab }) {
   const [tab, setTab] = useState<Tab>(initialTab);
+  const [showBehaviorForm, setShowBehaviorForm] = useState(false);
+  const [showAllowanceForm, setShowAllowanceForm] = useState(false);
   const hasChildren = bundle.children.length > 0;
 
   return (
@@ -56,11 +52,28 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
       {tab === "behaviors" && (
         <div className="space-y-4">
           <section>
-            <SectionTitle>현재 약속 목록</SectionTitle>
+            <div className="flex items-center justify-between">
+              <SectionTitle>약속 목록</SectionTitle>
+              <button
+                type="button"
+                onClick={() => setShowBehaviorForm((v) => !v)}
+                className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-700 text-white"
+              >
+                <Plus size={13} />
+                새 약속
+              </button>
+            </div>
+
+            {showBehaviorForm && (
+              <div className="monari-card mt-3 p-4">
+                <BehaviorRuleCreateForm />
+              </div>
+            )}
+
             {bundle.behaviorRules.length === 0 ? (
               <div className="monari-card mt-3 px-4 py-5 text-center">
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
-                <p className="monari-meta mt-1">아래 양식으로 첫 번째 약속을 만들어보세요</p>
+                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 약속이 없어요</p>
+                <p className="monari-meta mt-1">위의 새 약속 버튼으로 만들어보세요</p>
               </div>
             ) : (
               <div className="mt-3 space-y-3">
@@ -111,25 +124,47 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
               </div>
             )}
           </section>
-
-          <section>
-            <SectionTitle>새 약속 만들기</SectionTitle>
-            <div className="monari-card mt-3 p-4">
-              <p className="text-[12px] text-[var(--monari-ink-soft)] mb-4">
-                보상 금액과 이자율 변화를 같이 설정하면, 약속이 아이의 통장에 바로 연결돼요.
-              </p>
-              <BehaviorRuleCreateForm />
-            </div>
-          </section>
         </div>
       )}
 
       {/* Allowance tab */}
       {tab === "allowance" && (
         <div className="space-y-4">
-          {bundle.allowanceRules.length > 0 && (
-            <section>
-              <SectionTitle>현재 설정된 용돈</SectionTitle>
+          <section>
+            <div className="flex items-center justify-between">
+              <SectionTitle>정기 용돈</SectionTitle>
+              {hasChildren && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllowanceForm((v) => !v)}
+                  className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-700 text-white"
+                >
+                  <Plus size={13} />
+                  새 규칙
+                </button>
+              )}
+            </div>
+
+            {showAllowanceForm && hasChildren && (
+              <div className="monari-card mt-3 p-4">
+                <AllowanceRuleForm childOptions={bundle.children} />
+              </div>
+            )}
+
+            {!hasChildren ? (
+              <div className="monari-card mt-3 p-5 text-center">
+                <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
+                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
+                <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
+                  설정으로 가기 →
+                </Link>
+              </div>
+            ) : bundle.allowanceRules.length === 0 ? (
+              <div className="monari-card mt-3 px-4 py-5 text-center">
+                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 설정된 용돈이 없어요</p>
+                <p className="monari-meta mt-1">위의 새 규칙 버튼으로 추가해보세요</p>
+              </div>
+            ) : (
               <div className="mt-3 space-y-2">
                 {bundle.allowanceRules.map((rule) => {
                   const child = bundle.children.find((c) => c.id === rule.childId);
@@ -140,10 +175,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                         ? `매월 ${rule.dayOfMonth ?? 1}일`
                         : "직접 지급";
                   return (
-                    <div
-                      key={rule.id}
-                      className="monari-card flex items-center justify-between p-4"
-                    >
+                    <div key={rule.id} className="monari-card flex items-center justify-between p-4">
                       <div className="flex items-center gap-3">
                         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--monari-done-bg)] text-[var(--monari-done)]">
                           <CalendarDays size={16} />
@@ -163,17 +195,8 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                   );
                 })}
               </div>
-            </section>
-          )}
-
-          <div className="rounded-[16px] bg-[var(--monari-done-bg)] p-4">
-            <p className="text-[12px] font-700 text-[var(--monari-done)]">💡 용돈은 어떻게 지급되나요?</p>
-            <ul className="mt-2 space-y-1 text-[12px] leading-5 text-[var(--monari-done)]">
-              <li>• 매주·매월 설정한 날에 자동으로 남긴 돈에 더해져요</li>
-              <li>• 지급 후 아이에게 알림이 가요</li>
-              <li>• 즉시 지급은 아이 통장 페이지에서 할 수 있어요</li>
-            </ul>
-          </div>
+            )}
+          </section>
 
           {bundle.allowanceExecutions.filter((e) => e.status === "failed").length > 0 && (
             <section>
@@ -202,76 +225,34 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
               </div>
             </section>
           )}
-
-          <section>
-            <SectionTitle>새 용돈 규칙 추가</SectionTitle>
-            {!hasChildren ? (
-              <div className="monari-card mt-3 p-5 text-center">
-                <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
-                <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
-                  설정으로 가기 →
-                </Link>
-              </div>
-            ) : (
-              <div className="monari-card mt-3 p-4">
-                <AllowanceRuleForm childOptions={bundle.children} />
-              </div>
-            )}
-          </section>
         </div>
       )}
 
       {/* Interest tab */}
       {tab === "interest" && (
         <div className="space-y-4">
-          <div className="rounded-[16px] bg-[var(--monari-hero-lo)] p-4">
-            <p className="text-[12px] font-700 text-[var(--monari-hero)]">📊 이자는 어떻게 계산되나요?</p>
-            <div className="mt-2 space-y-1 text-[12px] leading-5 text-[var(--monari-hero)]">
-              <p>• <b>기본 이자율</b>로 시작해요</p>
-              <p>• 행동 약속을 지킬 때마다 이자율이 올라가요</p>
-              <p>• 최소·최대 범위 안에서만 움직여요</p>
-              <p>• 매월 말 남긴 돈 × 이자율로 계산해요</p>
+          {!hasChildren ? (
+            <div className="monari-card p-5 text-center">
+              <TrendingUp className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
+              <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
+              <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
+                설정으로 가기 →
+              </Link>
             </div>
-          </div>
-
-          <section>
-            <SectionTitle>이자율 가이드</SectionTitle>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              {PRESETS.map((p) => (
-                <div key={p.label} className="monari-card p-3 text-center">
-                  <p className="text-[20px] font-900 text-[var(--monari-hero)]">{p.rate}%</p>
-                  <p className="mt-0.5 text-[12px] font-700 text-[var(--monari-ink)]">{p.label}</p>
-                  <p className="mt-0.5 text-[10px] text-[var(--monari-ink-muted)]">{p.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            {!hasChildren ? (
-              <div className="monari-card p-5 text-center">
-                <TrendingUp className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
-                <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
-                  설정으로 가기 →
-                </Link>
+          ) : (
+            <section>
+              <SectionTitle>아이별 이자율 설정</SectionTitle>
+              <div className="mt-3 space-y-4">
+                {bundle.children.map((child) => (
+                  <InterestPolicyCard
+                    key={child.id}
+                    child={child}
+                    policy={bundle.interestPolicies.find((p) => p.childId === child.id)}
+                  />
+                ))}
               </div>
-            ) : (
-              <>
-                <SectionTitle>아이별 이자율 설정</SectionTitle>
-                <div className="mt-3 space-y-4">
-                  {bundle.children.map((child) => (
-                    <InterestPolicyCard
-                      key={child.id}
-                      child={child}
-                      policy={bundle.interestPolicies.find((p) => p.childId === child.id)}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </section>
+            </section>
+          )}
         </div>
       )}
     </div>
