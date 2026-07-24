@@ -27,7 +27,7 @@ export default function ChildError({
           <button
             onClick={reset}
             style={{
-              background: "linear-gradient(135deg,#059669,#10b981)",
+              background: "linear-gradient(135deg,#3B0764,#6C3FE8)",
               color: "#fff",
               border: "none",
               borderRadius: 18,
@@ -49,8 +49,8 @@ export default function ChildError({
             <Link
               href={`/child/${childId}`}
               style={{
-                background: "rgba(5,150,105,0.1)",
-                color: "#059669",
+                background: "rgba(108,63,232,0.1)",
+                color: "#6C3FE8",
                 borderRadius: 18,
                 padding: "14px 0",
                 fontSize: 15,

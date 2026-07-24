@@ -381,7 +381,7 @@ function SavingsRateCard({ totalSave, totalAllowance, masked, base }: {
   const circumference = 2 * Math.PI * r;
   const filled = Math.min(rate / 100, 1) * circumference;
   const reached = rate >= TARGET;
-  const color = reached ? "#059669" : rate >= 15 ? "#D97706" : "#94A3B8";
+  const color = reached ? "#6C3FE8" : rate >= 15 ? "#D97706" : "#94A3B8";
   const message = reached ? "저금 목표 달성! 🎉" : rate >= 15 ? `목표까지 ${TARGET - rate}% 남았어요` : "저금을 시작해봐요 💪";
 
   return (
