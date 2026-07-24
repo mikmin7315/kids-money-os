@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, Sparkles, Coins } from "lucide-react";
+import { ArrowRight, Download, Lock, Sparkles, Coins } from "lucide-react";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit, BehaviorRing } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
@@ -128,6 +128,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               <HeroPill label="지출" value={`${spendRatio}%`} sub={spendRatio > 70 ? "주의" : "양호"} warn={spendRatio > 70} />
               <HeroPill label="이자" value={formatWon(interest)} sub={interest > 0 ? "획득" : "—"} />
               <HeroPill label="약속" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
+            </div>
+            <div className="mt-4 border-t border-white/15 pt-4">
+              <Link
+                href={`/api/reports/export${primary.child.id ? `?child=${primary.child.id}` : ""}`}
+                className="flex items-center justify-center gap-2 rounded-[12px] bg-white/15 py-2.5 text-[13px] font-700 text-white transition active:scale-[0.97]"
+              >
+                <Download size={14} /> 이달 리포트 CSV 내보내기
+              </Link>
             </div>
           </div>
 
