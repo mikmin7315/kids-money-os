@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, Sparkles, TrendingUp, TrendingDown, Minus, PiggyBank, ShoppingBag, Coins } from "lucide-react";
+import { ArrowRight, Lock, Sparkles, Coins } from "lucide-react";
 import { MonthlyReportQuickForm } from "@/components/finance/action-forms";
 import { ReportBarGroup, SpendVsSaveSplit, BehaviorRing } from "@/components/finance/report-visuals";
 import { MobileAppShell } from "@/components/monari/mobile-app-shell";
@@ -400,22 +400,6 @@ function HeroPill({ label, value, sub, warn }: { label: string; value: string; s
   );
 }
 
-function MiniStat({ Icon, label, value, color }: {
-  Icon: React.ComponentType<{ size?: number; strokeWidth?: number; style?: React.CSSProperties }>;
-  label: string;
-  value: string;
-  color: string;
-}) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <Icon size={13} strokeWidth={2.5} style={{ color }} />
-      <div>
-        <p className="text-[10px] font-600 text-[var(--monari-ink-muted)]">{label}</p>
-        <p className="text-[13px] font-800 tabular-nums" style={{ color }}>{value}</p>
-      </div>
-    </div>
-  );
-}
 
 function ComparisonBarPair({
   left,
