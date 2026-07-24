@@ -85,7 +85,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               href={`/reports?child=${c.child.id}`}
               className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-bold transition active:scale-95 ${
                 primary?.child.id === c.child.id
-                  ? "bg-[var(--monari-hero)] text-white shadow-[0_2px_12px_rgba(109,40,217,0.4)]"
+                  ? "bg-[var(--monari-hero)] text-white shadow-[0_2px_12px_rgba(0,85,179,0.35)]"
                   : "bg-[var(--monari-surface)] text-[var(--monari-ink-muted)] border border-[var(--monari-line)]"
               }`}
             >
@@ -482,7 +482,7 @@ function HeroPill({ label, value, sub, warn }: { label: string; value: string; s
     <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-3 gap-1">
       <p className="text-[10px] font-600 text-white/55">{label}</p>
       <p className="text-[16px] font-900 text-white leading-none">{value}</p>
-      {sub && <p className={`text-[9px] font-700 ${warn ? "text-rose-300" : "text-violet-300"}`}>{sub}</p>}
+      {sub && <p className={`text-[9px] font-700 ${warn ? "text-rose-300" : "text-sky-300"}`}>{sub}</p>}
     </div>
   );
 }
@@ -547,7 +547,7 @@ function PremiumLockedCard({
         <p className="text-[12px] font-600 text-[var(--monari-ink-muted)] mb-4 leading-5">
           💡 {hint}
         </p>
-        <div className="pointer-events-none select-none" style={{ filter: "blur(5px)", opacity: 0.4 }}>
+        <div className="pointer-events-none select-none" style={{ opacity: 0.35 }}>
           {children}
         </div>
       </div>
