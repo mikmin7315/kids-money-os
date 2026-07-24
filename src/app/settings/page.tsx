@@ -1,4 +1,4 @@
-import { ChevronRight, Plus, ShieldCheck, UserPlus } from "lucide-react";
+import { ChevronRight, Crown, Plus, ShieldCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
@@ -16,8 +16,24 @@ export default async function SettingsPage() {
   const bundle = await getAppDataBundle();
   const hasChildren = bundle.children.length > 0;
 
+  const planLabel = auth.profile?.subscription_tier === "plus" ? "모나리 플러스" : "무료 플랜";
+  const isPlusPlan = auth.profile?.subscription_tier === "plus";
+
   return (
     <MobileAppShell title="설정" subtitle="부모 설정">
+      <section className="monari-hero mb-6">
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-white/75">내 계정</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight text-white">
+            {auth.profile?.name ? String(auth.profile.name) : (auth.user?.email ?? "부모")}
+          </h2>
+          <p className="mt-1 text-sm text-white/65">{auth.user?.email}</p>
+          <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
+            {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
+            <span className="text-[12px] font-700 text-white">{planLabel}</span>
+          </div>
+        </div>
+      </section>
 
       {/* ① 아이 프로필 */}
       <section className="mb-7">
@@ -43,7 +59,7 @@ export default async function SettingsPage() {
                           수정·삭제
                         </Link>
                         <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-hero-lo)] px-3 text-xs font-bold text-[var(--monari-hero)]">
-                          이자 확정 🔒
+                          이자 확정
                         </Link>
                       </div>
                     </div>
