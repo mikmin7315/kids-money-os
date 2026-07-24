@@ -475,7 +475,7 @@ function HeroPill({ label, value, sub, warn }: { label: string; value: string; s
     <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-3 gap-1">
       <p className="text-[10px] font-600 text-white/55">{label}</p>
       <p className="text-[16px] font-900 text-white leading-none">{value}</p>
-      {sub && <p className={`text-[9px] font-700 ${warn ? "text-rose-300" : "text-emerald-300"}`}>{sub}</p>}
+      {sub && <p className={`text-[9px] font-700 ${warn ? "text-rose-300" : "text-violet-300"}`}>{sub}</p>}
     </div>
   );
 }
