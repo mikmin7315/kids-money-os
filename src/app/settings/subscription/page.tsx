@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { ArrowLeft, BarChart2, Lock, Sparkles, TrendingUp, Users } from "lucide-react";
+import { PaymentButton } from "@/components/subscription/payment-button";
 import { requireParentSession } from "@/lib/auth";
+
+const PORTONE_CONFIGURED =
+  !!process.env.NEXT_PUBLIC_PORTONE_STORE_ID && !!process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY;
 
 export const dynamic = "force-dynamic";
 
@@ -68,13 +72,16 @@ export default async function SubscriptionPage() {
               <span className="text-[36px] font-900 text-white tabular-nums">3,900</span>
               <span className="text-[16px] font-700 text-white/70">원 / 월</span>
             </div>
-            {/* TODO: 결제선생 또는 인앱결제 연동 */}
-            <button
-              disabled
-              className="w-full rounded-[16px] bg-white py-3.5 text-[15px] font-900 text-[#7C3AED] opacity-60"
-            >
-              준비 중 — 곧 오픈해요
-            </button>
+            {PORTONE_CONFIGURED ? (
+              <PaymentButton userId={auth.user!.id} userEmail={auth.user!.email ?? ""} />
+            ) : (
+              <button
+                disabled
+                className="w-full rounded-[16px] bg-white py-3.5 text-[15px] font-900 text-[#7C3AED] opacity-60"
+              >
+                준비 중 — 곧 오픈해요
+              </button>
+            )}
           </div>
         )}
 
@@ -126,7 +133,7 @@ export default async function SubscriptionPage() {
           ))}
         </div>
 
-        {!isPremium && (
+        {!isPremium && !PORTONE_CONFIGURED && (
           <p className="text-center text-[12px] text-[var(--monari-ink-muted)]">
             결제 연동 준비 중입니다. 오픈 시 알림을 보내드릴게요.
           </p>
