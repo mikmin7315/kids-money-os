@@ -50,9 +50,20 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const spend = primary?.monthReport.totalSpend ?? 0;
   const save = primary?.monthReport.totalSave ?? 0;
   const borrowed = primary?.monthReport.totalBorrowed ?? 0;
+  const interest = primary?.monthReport.totalInterest ?? 0;
   const behRate = primary ? Math.round(primary.monthReport.behaviorSuccessRate) : 0;
   const saveRatio = Math.round((save / Math.max(allowance, 1)) * 100);
   const spendRatio = Math.round((spend / Math.max(allowance, 1)) * 100);
+  const currentBalance = primary?.wallet.balance ?? 0;
+  const currentRate = primary?.wallet.currentInterestRate ?? 0;
+
+  // 이번 달 약속별 달성 현황
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const monthKey = today.slice(0, 7);
+  const childLogs = primary
+    ? bundle.behaviorLogs.filter((l) => l.childId === primary.child.id && l.date.startsWith(monthKey))
+    : [];
+  const activeRules = bundle.behaviorRules.filter((r) => r.isActive);
 
   const primaryChild = primary ? bundle.children.find((c) => c.id === primary.child.id) : null;
   const ageGroup = getAgeGroup(primaryChild?.birthYear);
@@ -111,11 +122,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </p>
             </div>
 
-            {/* 보조 지표 3개 */}
-            <div className="grid grid-cols-3 gap-2 border-t border-white/15 pt-4">
+            {/* 보조 지표 4개 */}
+            <div className="grid grid-cols-4 gap-1.5 border-t border-white/15 pt-4">
               <HeroPill label="용돈" value={formatWon(allowance)} sub="" />
               <HeroPill label="지출" value={`${spendRatio}%`} sub={spendRatio > 70 ? "주의" : "양호"} warn={spendRatio > 70} />
-              <HeroPill label="약속 달성" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
+              <HeroPill label="이자" value={formatWon(interest)} sub={interest > 0 ? "획득" : "—"} />
+              <HeroPill label="약속" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
             </div>
           </div>
 
@@ -149,6 +161,74 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
             )}
           </section>
+
+          {/* ═══ 잔액 + 이자율 현황 ═══ */}
+          <section className="mb-5">
+            <SectionTitle eyebrow="현황">지금 통장 상태</SectionTitle>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="monari-card p-4 text-center">
+                <p className="monari-eyebrow mb-1.5">잔액</p>
+                <p className="text-[18px] font-900 tabular-nums text-[var(--monari-ink)] leading-tight">{formatWon(currentBalance)}</p>
+              </div>
+              <div className="monari-card p-4 text-center">
+                <p className="monari-eyebrow mb-1.5">이자율</p>
+                <p className="text-[18px] font-900 tabular-nums text-[var(--monari-hero)] leading-tight">{currentRate}%</p>
+              </div>
+              <div className="monari-card p-4 text-center">
+                <p className="monari-eyebrow mb-1.5">이달 이자</p>
+                <p className={`text-[18px] font-900 tabular-nums leading-tight ${interest > 0 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink-muted)]"}`}>
+                  {interest > 0 ? `+${formatWon(interest)}` : "—"}
+                </p>
+              </div>
+            </div>
+            {interest > 0 && (
+              <div className="mt-2 rounded-[14px] bg-[var(--monari-done-bg)] px-4 py-3">
+                <p className="text-[12px] font-700 text-[var(--monari-done)]">
+                  🎉 이번 달 이자 {formatWon(interest)}을 받았어요! 저금하면 이자가 쌓여요.
+                </p>
+              </div>
+            )}
+          </section>
+
+          {/* ═══ 약속별 달성 현황 ═══ */}
+          {activeRules.length > 0 && (
+            <section className="mb-5">
+              <SectionTitle eyebrow="약속">이번 달 약속 현황</SectionTitle>
+              <div className="mt-3 monari-card overflow-hidden">
+                {activeRules.map((rule, i) => {
+                  const logs = childLogs.filter((l) => l.behaviorRuleId === rule.id);
+                  const approved = logs.filter((l) => l.status === "approved" || l.status === "completed").length;
+                  const pending = logs.filter((l) => l.status === "pending").length;
+                  const isDone = approved > 0;
+                  const isWaiting = !isDone && pending > 0;
+                  return (
+                    <div
+                      key={rule.id}
+                      className={`flex items-center gap-3 px-4 py-3.5 ${i < activeRules.length - 1 ? "border-b border-[var(--monari-line)]" : ""}`}
+                    >
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] text-[14px]"
+                        style={{
+                          background: isDone ? "var(--status-success-solid)" : isWaiting ? "var(--status-pending-solid)" : "var(--monari-surface-soft)",
+                        }}
+                      >
+                        {isDone ? "✓" : isWaiting ? "⏳" : "○"}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-700 text-[var(--monari-ink)] truncate">{rule.title}</p>
+                        <p className="text-[11px] mt-0.5" style={{ color: isDone ? "var(--monari-done)" : isWaiting ? "var(--monari-pending)" : "var(--monari-ink-muted)" }}>
+                          {isDone ? "달성 완료" : isWaiting ? "확인 대기 중" : "아직 미달성"}
+                        </p>
+                      </div>
+                      <p className="shrink-0 text-[13px] font-800 tabular-nums" style={{ color: isDone ? "var(--monari-done)" : "var(--monari-line-strong)" }}>
+                        +{rule.interestDelta}%p
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* ═══ 또래 비교 — 수익 핵심 ═══ */}
           <section className="mb-6">
@@ -224,7 +304,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 >
                   <ComparisonBarPair
                     left={{ label: "또래 평균", value: peer.behaviorRate, color: "var(--monari-ink-muted)" }}
-                    right={{ label: String(primary.child.name), value: behRate, color: "#10b981" }}
+                    right={{ label: String(primary.child.name), value: behRate, color: "var(--monari-hero)" }}
                   />
                 </PremiumLockedCard>
 
