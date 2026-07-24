@@ -42,16 +42,20 @@ export default async function ApprovalsPage() {
           </div>
         </div>
       </section>
+      {/* 전체 비어있을 때 */}
+      {total === 0 && (
+        <div className="monari-card mb-5 px-5 py-8 text-center">
+          <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
+          <p className="text-[17px] font-800 text-[var(--monari-ink)]">모두 확인 완료!</p>
+          <p className="monari-meta mt-1 mb-4">대기 중인 항목이 없어요.</p>
+          <Link href="/behaviors" className="monari-btn-ghost h-10 px-5 text-[14px]">약속 관리하기</Link>
+        </div>
+      )}
+
       {/* Behavior approvals */}
-      <section className="mb-4">
-        <SectionTitle>약속 확인 대기</SectionTitle>
-        {pendingBehaviorLogs.length === 0 ? (
-          <div className="monari-card mt-3 px-5 py-6 text-center">
-            <p className="text-[17px] font-700 text-[var(--monari-ink)]">확인할 약속이 없어요</p>
-            <p className="monari-meta mt-1">아이의 다음 약속 활동을 기다리고 있어요.</p>
-            <Link href="/behaviors" className="monari-btn-ghost mt-4 h-11 px-5 text-[15px]">약속 관리하기</Link>
-          </div>
-        ) : (
+      {pendingBehaviorLogs.length > 0 && (
+        <section className="mb-4">
+          <SectionTitle>약속 확인 대기</SectionTitle>
           <div className="space-y-3 mt-3">
             {pendingBehaviorLogs.map((log) => {
               const child = bundle.children.find((item) => item.id === log.childId);
@@ -94,12 +98,10 @@ export default async function ApprovalsPage() {
                       확인 대기
                     </span>
                   </div>
-
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <MetricBox label="보상 금액" value={formatWon(rule?.rewardAmount ?? 0)} />
                     <MetricBox label="이자율 변화" value={`+${rule?.interestDelta ?? 0}%`} />
                   </div>
-
                   <div className="border-t border-[var(--monari-line)] pt-4">
                     <InlineBehaviorDecisionForm behaviorLogId={log.id} />
                   </div>
@@ -107,18 +109,13 @@ export default async function ApprovalsPage() {
               );
             })}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Cash spend approvals */}
-      <section className="mb-4">
-        <SectionTitle>현금 사용 확인 대기</SectionTitle>
-        {pendingCashRequests.length === 0 ? (
-          <div className="monari-card mt-3 px-5 py-6 text-center">
-            <p className="text-[17px] font-700 text-[var(--monari-ink)]">확인할 현금 사용이 없어요</p>
-            <p className="monari-meta mt-1">아이가 현금을 쓰면 여기서 확인할 수 있어요.</p>
-          </div>
-        ) : (
+      {pendingCashRequests.length > 0 && (
+        <section className="mb-4">
+          <SectionTitle>현금 사용 확인 대기</SectionTitle>
           <div className="space-y-3 mt-3">
             {pendingCashRequests.map((req) => {
               const child = bundle.children.find((c) => c.id === req.childId);
@@ -148,18 +145,13 @@ export default async function ApprovalsPage() {
               );
             })}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Borrow approvals */}
-      <section className="mb-4">
-        <SectionTitle>미리쓰기 확인 대기</SectionTitle>
-        {pendingBorrows.length === 0 ? (
-          <div className="monari-card mt-3 px-5 py-6 text-center">
-            <p className="text-[17px] font-700 text-[var(--monari-ink)]">미리쓰기 요청이 없어요</p>
-            <p className="monari-meta mt-1">새 요청이 오면 사용 목적과 상환 조건을 확인할 수 있어요.</p>
-          </div>
-        ) : (
+      {pendingBorrows.length > 0 && (
+        <section className="mb-4">
+          <SectionTitle>미리쓰기 확인 대기</SectionTitle>
           <div className="space-y-3 mt-3">
             {pendingBorrows.map((request) => {
               const child = bundle.children.find((item) => item.id === request.childId);
@@ -181,7 +173,6 @@ export default async function ApprovalsPage() {
                       확인 대기
                     </span>
                   </div>
-
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <MetricBox label="요청 금액" value={formatWon(request.requestedAmount)} />
                     <MetricBox
@@ -189,7 +180,6 @@ export default async function ApprovalsPage() {
                       value={request.repaymentMode === "next_allowance" ? "다음 용돈" : "분할 상환"}
                     />
                   </div>
-
                   <div className="border-t border-[var(--monari-line)] pt-4">
                     <InlineBorrowDecisionForm borrowRequestId={request.id} />
                   </div>
@@ -197,8 +187,8 @@ export default async function ApprovalsPage() {
               );
             })}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Active borrows */}
       {/* 이자 확정 */}
