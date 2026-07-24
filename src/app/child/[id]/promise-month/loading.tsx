@@ -4,7 +4,7 @@ export default function Loading() {
       <div className="mb-5 h-7 w-24 animate-pulse rounded-xl bg-[#34d399]/30" />
       <div className="mb-6 rounded-[20px] bg-white/70 p-5 space-y-3">
         <div className="h-5 w-32 animate-pulse rounded-md bg-[#34d399]/25" />
-        <div className="h-10 w-20 animate-pulse rounded-lg bg-[#059669]/20" />
+        <div className="h-10 w-20 animate-pulse rounded-lg bg-[#6C3FE8]/20" />
         <div className="h-3 w-full animate-pulse rounded-full bg-[#34d399]/15" />
       </div>
       <div className="space-y-3">

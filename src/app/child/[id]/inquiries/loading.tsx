@@ -16,7 +16,7 @@ export default function Loading() {
       <div className="space-y-3">
         <div className="h-14 animate-pulse rounded-[14px] bg-white/70" />
         <div className="h-24 animate-pulse rounded-[14px] bg-white/70" />
-        <div className="h-14 animate-pulse rounded-[18px] bg-[#059669]/25" />
+        <div className="h-14 animate-pulse rounded-[18px] bg-[#6C3FE8]/25" />
       </div>
     </div>
   );

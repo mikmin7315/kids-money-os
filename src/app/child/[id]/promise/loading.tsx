@@ -11,7 +11,7 @@ export default function Loading() {
               <div className="h-6 w-14 animate-pulse rounded-full bg-[#34d399]/20" />
             </div>
             <div className="h-3 w-full animate-pulse rounded-md bg-[#34d399]/15" />
-            <div className="h-8 w-full animate-pulse rounded-xl bg-[#059669]/15 mt-3" />
+            <div className="h-8 w-full animate-pulse rounded-xl bg-[#6C3FE8]/15 mt-3" />
           </div>
         ))}
       </div>

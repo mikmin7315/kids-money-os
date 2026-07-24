@@ -25,8 +25,8 @@ export function ChildHomeTabs({
             onClick={() => setTab(t)}
             className="flex-1 rounded-[12px] py-2 text-[13px] font-700 transition"
             style={{
-              background: tab === t ? "#059669" : "rgba(5,150,105,0.10)",
-              color: tab === t ? "#fff" : "#059669",
+              background: tab === t ? "#6C3FE8" : "rgba(108,63,232,0.10)",
+              color: tab === t ? "#fff" : "#6C3FE8",
             }}
           >
             {t}
