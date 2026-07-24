@@ -36,7 +36,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link href={`/child/${id}/borrow`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
         <ArrowLeft size={16} /> 미리쓰기로

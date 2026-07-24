@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div data-theme="child-mint" style={{ background: "#E8FBF5", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
       {/* 히어로 */}
       <div className="animate-pulse px-4 pb-4 pt-10" style={{ background: "linear-gradient(160deg,#059669,#34d399)" }}>
         <div className="mb-2 h-3 w-20 rounded-full bg-white/30" />

@@ -270,7 +270,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                       <p className="tabular-nums text-white" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em" }}>+{formatWon(estimateInterest(summary.wallet, policy))}</p>
                       <p className="text-[12px] font-600 text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
                     </div>
-                    <div className="divide-y divide-[#F0FEFA]">
+                    <div className="divide-y divide-[#F5F0FF]">
                       <div className="flex items-center justify-between px-5 py-3">
                         <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
                         <p className="text-[14px] font-800 text-[#1C1033]">{formatWon(summary.wallet.balance)}</p>

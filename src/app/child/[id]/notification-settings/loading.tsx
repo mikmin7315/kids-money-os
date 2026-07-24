@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div data-theme="child-mint" className="min-h-dvh bg-[#E8FBF5] px-4 pb-28 pt-5">
+    <div data-theme="child-violet" className="min-h-dvh bg-[#F5F0FF] px-4 pb-28 pt-5">
       <div className="mb-5 h-7 w-24 animate-pulse rounded-xl bg-[#34d399]/30" />
       <div className="rounded-[20px] bg-white/70 overflow-hidden">
         {Array.from({ length: 6 }).map((_, i) => (

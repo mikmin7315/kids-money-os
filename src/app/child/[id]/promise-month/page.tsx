@@ -39,7 +39,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
   const baseRate = policy?.baseInterestRate ?? 0;
 
   return (
-    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link
         href={`/child/${id}`}

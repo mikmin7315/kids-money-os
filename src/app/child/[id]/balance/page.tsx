@@ -36,7 +36,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   );
 
   return (
-    <div style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기

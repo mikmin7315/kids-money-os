@@ -14,7 +14,7 @@ export default function ChildError({
   const childId = params?.id as string | undefined;
 
   return (
-    <div data-theme="child-mint" style={{ background: "#F0FEFA", minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
       <div style={{ maxWidth: 320, width: "100%", textAlign: "center" }}>
         <p style={{ fontSize: 64, marginBottom: 16 }}>😢</p>
         <h1 style={{ fontSize: 22, fontWeight: 900, color: "#052E16", margin: "0 0 8px" }}>

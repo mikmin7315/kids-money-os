@@ -851,6 +851,35 @@ a {
   outline: 3px solid rgba(5, 150, 105, 0.38);
 }
 
+[data-theme="child-violet"] {
+  --monari-hero: #6C3FE8;
+  --monari-hero-mid: #5530CB;
+  --monari-hero-strong: #3B0764;
+  --monari-hero-lo: #EDE9FE;
+  --monari-plus: #6C3FE8;
+  --monari-plus-bg: rgba(108, 63, 232, 0.08);
+  --monari-bg: #F5F0FF;
+  --monari-surface: #ffffff;
+  --monari-surface-soft: #EDE9FE;
+  --monari-ink: #1C1033;
+  --monari-ink-soft: #2D1B69;
+  --monari-ink-muted: #6B5B95;
+  --monari-line: rgba(108, 63, 232, 0.12);
+  --monari-line-strong: rgba(108, 63, 232, 0.22);
+  --color-accent: #6C3FE8;
+  --color-accent-strong: #3B0764;
+  --brand-primary: #6C3FE8;
+  --monari-tabbar-bg: rgba(245, 240, 255, 0.95);
+}
+
+[data-theme="child-violet"] .monari-hero {
+  background: linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%);
+}
+
+[data-theme="child-violet"] :where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(108, 63, 232, 0.38);
+}
+
 @layer components {
   /* ── Layout shells ── */
   .monari-shell {

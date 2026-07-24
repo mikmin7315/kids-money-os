@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div data-theme="child-mint" className="min-h-dvh bg-[#E8FBF5] px-4 pb-28 pt-5">
+    <div data-theme="child-violet" className="min-h-dvh bg-[#F5F0FF] px-4 pb-28 pt-5">
       <div className="mb-5 h-7 w-24 animate-pulse rounded-xl bg-[#34d399]/30" />
       <div className="mb-4 rounded-[24px] bg-[#059669]/10 p-5 space-y-2">
         <div className="h-4 w-24 animate-pulse rounded-md bg-[#059669]/20" />
