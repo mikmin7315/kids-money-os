@@ -108,7 +108,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           {/* ═══ HERO — 이달의 핵심 숫자 ═══ */}
           <div className="monari-hero mb-6">
             <p className="text-[11px] font-700 uppercase tracking-[0.1em] text-white/50 mb-4">
-              {String(primary.child.name)}의 {new Date().getMonth() + 1}월 리포트
+              {String(primary.child.name)} · {new Date().getMonth() + 1}월
             </p>
 
             {/* 저축률 — 가장 중요한 단일 숫자 */}
@@ -122,11 +122,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </p>
             </div>
 
-            {/* 보조 지표 4개 */}
-            <div className="grid grid-cols-4 gap-1.5 border-t border-white/15 pt-4">
+            {/* 보조 지표 3개 */}
+            <div className="grid grid-cols-3 gap-1.5 border-t border-white/15 pt-4">
               <HeroPill label="용돈" value={formatWon(allowance)} sub="" />
               <HeroPill label="지출" value={`${spendRatio}%`} sub={spendRatio > 70 ? "주의" : "양호"} warn={spendRatio > 70} />
-              <HeroPill label="이자" value={formatWon(interest)} sub={interest > 0 ? "획득" : "—"} />
               <HeroPill label="약속" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
             </div>
             <div className="mt-4 border-t border-white/15 pt-4">
