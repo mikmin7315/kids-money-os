@@ -55,44 +55,18 @@ export function ChildPinForm({ childId }: { childId: string }) {
 
 export function BehaviorRuleCreateForm() {
   const [state, action, pending] = useActionState(createBehaviorRuleForm, initialState);
-  const [ruleCategory, setRuleCategory] = useState<"recurring" | "monthly_goal">("recurring");
 
   return (
     <form action={action} className={formClass}>
-      <FormIntro title="새 약속 만들기" description="아이가 이해하기 쉬운 행동과 보상을 정해주세요." />
+      <input type="hidden" name="ruleCategory" value="recurring" />
+      <input type="hidden" name="monthlyTargetRate" value="80" />
+      <input type="hidden" name="interestDelta" value="0.5" />
       <Field label="약속 이름">
         <input className={fieldClass} name="title" type="text" placeholder="예: 스스로 책상 정리하기" required />
       </Field>
-      <Field label="약속 설명" hint="언제 약속을 지킨 것으로 인정할지 구체적으로 적어주세요.">
-        <textarea className={textareaClass} name="description" placeholder="예: 저녁 8시 전에 책상 위를 정리해요." />
+      <Field label="보상 금액 (원)">
+        <MoneyInput className={fieldClass} name="rewardAmount" min={0} value="500" required />
       </Field>
-      <Field label="약속 유형" hint="이자율 반영 기준을 정해요.">
-        <select
-          className={fieldClass}
-          name="ruleCategory"
-          value={ruleCategory}
-          onChange={(e) => setRuleCategory(e.target.value as "recurring" | "monthly_goal")}
-        >
-          <option value="recurring">반복 습관 — 월 달성률이 목표를 넘으면 다음 달 이자율 반영</option>
-          <option value="monthly_goal">월 목표 — 한 번이라도 달성하면 다음 달 이자율 반영</option>
-        </select>
-      </Field>
-      {ruleCategory === "recurring" && (
-        <Field label="월 목표 달성률 (%)" hint="이 비율 이상 달성해야 이자율이 다음 달에 반영돼요.">
-          <input className={fieldClass} name="monthlyTargetRate" type="number" min="1" max="100" defaultValue="80" required />
-        </Field>
-      )}
-      {ruleCategory === "monthly_goal" && (
-        <input type="hidden" name="monthlyTargetRate" value="100" />
-      )}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label="보상 금액 (원)" hint="약속 달성 시 바로 지급돼요.">
-          <MoneyInput className={fieldClass} name="rewardAmount" min={0} value="500" required />
-        </Field>
-        <Field label="이자율 변화 (%p)" hint="달성 시 다음 달 이자율 조정폭이에요.">
-          <input className={fieldClass} name="interestDelta" type="number" step="0.1" defaultValue="0.5" required />
-        </Field>
-      </div>
       <CheckField name="requiresParentApproval" label="완료 후 부모 확인을 받아요" />
       <SubmitButton pending={pending} label="약속 저장하기" />
       <FormMessage state={state} />
