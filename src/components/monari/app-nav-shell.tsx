@@ -46,7 +46,7 @@ export function AppNavShell({
       >
         <div className="flex">
           {TAB_DEFS.map((tab) => {
-            const hasPending = tab.showBadge && pendingCount && pendingCount > 0;
+            const hasPending = !!(tab.showBadge && pendingCount && pendingCount > 0);
             const active =
               tab.href === "/manage"
                 ? MANAGE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"))
