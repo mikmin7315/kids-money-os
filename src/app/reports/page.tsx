@@ -72,6 +72,34 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
     ? Math.round(((save + (allowance > 0 ? (save / Math.max(dayOfMonth, 1)) * daysLeft : 0)) / Math.max(allowance, 1)) * 100)
     : 0;
 
+  // 금융 건강 점수 (저축률 35% + 행동달성률 40% + 이자 10% + 미리쓰기 없음 15%)
+  const healthScore = primary
+    ? Math.min(100, Math.round(saveRatio * 0.35 + behRate * 0.4 + (interest > 0 ? 10 : 0) + (borrowed === 0 ? 15 : 5)))
+    : 0;
+  const healthGrade = healthScore >= 90 ? "A+" : healthScore >= 80 ? "A" : healthScore >= 70 ? "B" : healthScore >= 60 ? "C" : "D";
+  const healthMsg =
+    healthScore >= 85 ? "금융 습관이 매우 우수해요 🏆" :
+    healthScore >= 70 ? "전반적으로 잘 관리하고 있어요 👍" :
+    healthScore >= 55 ? "조금 더 저축해 볼까요?" :
+    "함께 습관을 만들어봐요";
+
+  // 이번 달의 한 문장 (Spotify Wrapped 스타일)
+  const childName = primary?.child.name ?? "아이";
+  const monthSentence =
+    saveRatio >= 30 && behRate >= 80
+      ? `이번 달 ${childName}는 또래보다 더 꾸준히 모으는 아이였습니다.`
+      : saveRatio >= 30
+      ? `이번 달은 소비보다 저축을 선택한 한 달이었습니다.`
+      : behRate >= 80
+      ? `이번 달 ${childName}는 약속을 잘 지킨 한 달을 보냈습니다.`
+      : `이번 달도 ${childName}와 함께 성장하는 한 달이었습니다.`;
+
+  // 이자 시뮬레이션
+  const simInterestRate = Math.min(currentRate + 2, 20);
+  const actualMonthlyInterestEst = Math.round(currentBalance * currentRate / 100 / 12);
+  const simMonthlyInterest = Math.round(currentBalance * simInterestRate / 100 / 12);
+  const interestGap = simMonthlyInterest - actualMonthlyInterestEst;
+
   return (
     <AppNavShell>
       <PageHero>
@@ -129,6 +157,20 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
       {primary && (
         <>
+          {/* 이번 달의 한 문장 (Spotify Wrapped 스타일) */}
+          <div
+            className="mb-5 rounded-[20px] px-5 py-5"
+            style={{ background: "linear-gradient(135deg, #6d28d9 0%, #4F7FFF 100%)" }}
+          >
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-white/50 mb-2">이번 달의 한 줄</p>
+            <p className="text-[18px] font-black text-white leading-snug">{monthSentence}</p>
+            <div className="mt-3 flex items-center gap-1.5">
+              <div className="h-[3px] w-8 rounded-full bg-white/60" />
+              <div className="h-[3px] w-3 rounded-full bg-white/30" />
+              <div className="h-[3px] w-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+
           {/* 이달 예상 결과 카드 */}
           {daysLeft > 0 && allowance > 0 && (
             <div className="mb-5 overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--monari-hero-lo)", background: "var(--monari-hero-lo)" }}>
@@ -157,6 +199,42 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     ? "이대로라면 이달 저축 목표(30%)를 달성할 수 있어요 🎉"
                     : `저축률 30%까지 ${30 - projectedSaveRate}%p 남았어요. 함께 계획을 세워보세요.`}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* 금융 건강 점수 카드 */}
+          {healthScore > 0 && (
+            <div className="mb-5 rounded-[20px] overflow-hidden" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #4F7FFF 100%)" }}>
+              <div className="px-5 py-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <p className="text-[11px] font-bold text-white/60 mb-0.5 tracking-[0.06em] uppercase">금융 건강 점수</p>
+                    <p className="text-[12px] text-white/50">저축 · 약속 · 이자 종합</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[52px] font-black leading-none tabular-nums text-white">{healthScore}</p>
+                    <span className="inline-block rounded-lg bg-white/20 px-2.5 py-0.5 text-[13px] font-black text-white mt-1">{healthGrade}</span>
+                  </div>
+                </div>
+                <div className="mb-2 h-2 rounded-full bg-white/20 overflow-hidden">
+                  <div className="h-2 rounded-full bg-white transition-all duration-700" style={{ width: `${healthScore}%` }} />
+                </div>
+                <p className="text-[13px] font-semibold text-white/80">{healthMsg}</p>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                    <p className="text-[10px] text-white/60 mb-0.5">저축률</p>
+                    <p className="text-[14px] font-black text-white tabular-nums">{saveRatio}%</p>
+                  </div>
+                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                    <p className="text-[10px] text-white/60 mb-0.5">약속 달성</p>
+                    <p className="text-[14px] font-black text-white tabular-nums">{behRate}%</p>
+                  </div>
+                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                    <p className="text-[10px] text-white/60 mb-0.5">이자</p>
+                    <p className="text-[14px] font-black text-white tabular-nums">{interest > 0 ? formatWon(interest) : "—"}</p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -230,6 +308,29 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
             )}
           </section>
+
+          {/* 이자 시뮬레이션 — 플러스 */}
+          {currentRate > 0 && behRate < 95 && (
+            <section className="mb-5">
+              <PremiumLockedCard
+                isPremium={IS_PREMIUM}
+                previewLabel="이자 시뮬레이션"
+                hint={`약속 달성률을 높이면 이자가 월 +${formatWon(interestGap)} 늘어날 수 있어요`}
+              >
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-surface-soft)] px-4 py-3">
+                    <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율 {currentRate}%</span>
+                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-ink)]">월 {formatWon(actualMonthlyInterestEst)}</span>
+                  </div>
+                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-done-bg)] px-4 py-3">
+                    <span className="text-[12px] font-700 text-[var(--monari-done)]">달성률 100% 달성 시 {simInterestRate}%</span>
+                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-done)]">월 {formatWon(simMonthlyInterest)}</span>
+                  </div>
+                  <p className="text-[11px] text-center text-[var(--monari-ink-muted)]">매달 {formatWon(interestGap)} 더 받을 수 있어요</p>
+                </div>
+              </PremiumLockedCard>
+            </section>
+          )}
 
           {/* ═══ 또래 비교 ═══ */}
           <section className="mb-5">
@@ -363,6 +464,18 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   미리쓰기 이유를 아이가 직접 쓰게 하면 충동 구매보다 계획 소비로 전환하기 쉽습니다.
                 </p>
               </div>
+              {peer && (
+                <div className="monari-card-ghost px-4 py-3.5">
+                  <p className="text-[13px] font-700 text-[var(--monari-ink)] mb-1">💰 용돈 적정성 힌트</p>
+                  <p className="text-[12px] leading-[1.6] text-[var(--monari-ink-muted)]">
+                    {behRate >= 85 && allowance < peer.avgAllowance
+                      ? `약속을 잘 지키는 만큼, 또래 평균(${formatWon(peer.avgAllowance)})에 맞춰 용돈을 조금 올리는 것도 좋은 동기부여가 돼요.`
+                      : behRate >= 85
+                      ? "약속도 잘 지키고 용돈도 적절해요. 저축 목표를 함께 만들어보세요."
+                      : "약속 달성률이 높아지면 용돈 인상을 논의해보는 것도 훌륭한 동기부여 방법이에요."}
+                  </p>
+                </div>
+              )}
             </div>
           </section>
         </>
