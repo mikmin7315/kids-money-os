@@ -7,7 +7,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -29,19 +29,18 @@ export default async function ApprovalsPage() {
   const headline = total > 0 ? `${total}건 확인이 필요해요` : "모두 확인 완료!";
 
   return (
-    <MobileAppShell title={headline} subtitle="승인 센터">
-      <section className="monari-hero mb-6">
-        <div className="relative z-10">
-          <p className="text-sm font-bold text-white/75">승인 센터 현황</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight text-white">{headline}</h2>
-          <div className="mt-5 grid grid-cols-4 gap-2">
-            <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
-            <HeroPill label="현금 대기" value={`${pendingCashRequests.length}건`} />
-            <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
-            <HeroPill label="상환 중" value={`${activeBorrows.length}건`} />
-          </div>
+    <AppNavShell pendingCount={total}>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">승인 센터</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-4">{headline}</h1>
+        <div className="grid grid-cols-4 gap-2">
+          <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
+          <HeroPill label="현금 대기" value={`${pendingCashRequests.length}건`} />
+          <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
+          <HeroPill label="상환 중" value={`${activeBorrows.length}건`} />
         </div>
-      </section>
+      </PageHero>
+      <PageContent className="pt-4 space-y-4">
       {/* 전체 비어있을 때 */}
       {total === 0 && (
         <div className="monari-card mb-5 px-5 py-8 text-center">
@@ -262,7 +261,8 @@ export default async function ApprovalsPage() {
           </div>
         </section>
       )}
-    </MobileAppShell>
+    </PageContent>
+    </AppNavShell>
   );
 }
 

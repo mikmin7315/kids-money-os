@@ -1,6 +1,6 @@
 ﻿import { BehaviorRuleCreateForm } from "@/components/finance/management-forms";
 import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components/finance/delete-rule-button";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import Link from "next/link";
 import { requireParentSession } from "@/lib/auth";
@@ -18,18 +18,17 @@ export default async function BehaviorsPage() {
   const recentLogs = bundle.behaviorLogs.slice(0, 10);
 
   return (
-    <MobileAppShell title="함께 정한 약속" subtitle="약속">
-      <section className="monari-hero mb-6">
-        <div className="relative z-10">
-          <p className="text-sm font-bold text-white/75">행동 약속 현황</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight text-white">아이와 함께 정한 약속이에요</h2>
-          <div className="mt-5 grid grid-cols-3 gap-2">
-            <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
-            <HeroPill label="자동 완료" value={`${autoRules}개`} />
-            <HeroPill label="확인 필요" value={`${reviewRules}개`} />
-          </div>
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">행동 약속 관리</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-4">아이와 함께 정한 약속이에요</h1>
+        <div className="grid grid-cols-3 gap-2">
+          <HeroPill label="전체 약속" value={`${activeRules.length}개`} />
+          <HeroPill label="자동 완료" value={`${autoRules}개`} />
+          <HeroPill label="확인 필요" value={`${reviewRules}개`} />
         </div>
-      </section>
+      </PageHero>
+      <PageContent className="pt-4">
       {/* Active rules */}
       <section className="mb-4">
         <SectionTitle>현재 약속 목록</SectionTitle>
@@ -123,7 +122,8 @@ export default async function BehaviorsPage() {
           확인 대기 약속 처리하기
         </Link>
       )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
 

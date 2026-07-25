@@ -1,4 +1,4 @@
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { RecordList } from "@/components/records/record-list";
 import { requireParentSession } from "@/lib/auth";
@@ -20,14 +20,13 @@ export default async function RecordsPage() {
     .reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <MobileAppShell title="흐름 기록" subtitle="기록">
-      {/* Hero */}
-      <div className="monari-hero mb-4">
-        <p className="text-[13px] font-700 text-white/70 mb-2">약속과 돈의 타임라인</p>
-        <div className="relative mb-4 flex items-end justify-between gap-4">
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">약속과 돈의 타임라인</p>
+        <div className="mb-4 flex items-end justify-between gap-4">
           <div>
-            <p className="text-[12px] font-600 text-white/65">누적 순흐름</p>
-            <p className="mt-1 text-[25px] font-800 tracking-[-0.04em] text-white">{formatWon(moneyIn - moneyOut)}</p>
+            <p className="text-[12px] font-semibold text-white/65">누적 순흐름</p>
+            <p className="mt-1 text-[26px] font-extrabold tracking-[-0.04em] text-white">{formatWon(moneyIn - moneyOut)}</p>
           </div>
           <p className="max-w-[16ch] text-right text-[11px] leading-4 text-white/65">모든 아이의 기록을 합산한 금액이에요</p>
         </div>
@@ -36,20 +35,21 @@ export default async function RecordsPage() {
           <HeroPill label="거래" value={`${bundle.moneyTransactions.length}건`} />
           <HeroPill label="확인 대기" value={`${pendingCount}건`} />
         </div>
-      </div>
-
-      <section className="mb-4">
-        <SectionTitle>최근 활동</SectionTitle>
-        <div className="mt-3">
-          <RecordList
-            transactions={bundle.moneyTransactions}
-            behaviorLogs={bundle.behaviorLogs}
-            behaviorRules={bundle.behaviorRules}
-            borrowRequests={bundle.borrowRequests}
-          />
-        </div>
-      </section>
-    </MobileAppShell>
+      </PageHero>
+      <PageContent className="pt-4">
+        <section className="mb-4">
+          <SectionTitle>최근 활동</SectionTitle>
+          <div className="mt-3">
+            <RecordList
+              transactions={bundle.moneyTransactions}
+              behaviorLogs={bundle.behaviorLogs}
+              behaviorRules={bundle.behaviorRules}
+              borrowRequests={bundle.borrowRequests}
+            />
+          </div>
+        </section>
+      </PageContent>
+    </AppNavShell>
   );
 }
 

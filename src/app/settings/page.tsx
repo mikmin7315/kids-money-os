@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
 import { ChildPinForm } from "@/components/finance/management-forms";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
@@ -20,20 +20,19 @@ export default async function SettingsPage() {
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
 
   return (
-    <MobileAppShell title="설정" subtitle="부모 설정">
-      <section className="monari-hero mb-6">
-        <div className="relative z-10">
-          <p className="text-sm font-bold text-white/75">내 계정</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight text-white">
-            {auth.profile?.name ? String(auth.profile.name) : (auth.user?.email ?? "부모")}
-          </h2>
-          <p className="mt-1 text-sm text-white/65">{auth.user?.email}</p>
-          <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
-            {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
-            <span className="text-[12px] font-700 text-white">{planLabel}</span>
-          </div>
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">내 계정</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white">
+          {auth.profile?.name ? String(auth.profile.name) : (auth.user?.email ?? "부모")}
+        </h1>
+        <p className="mt-1 text-sm text-white/65">{auth.user?.email}</p>
+        <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
+          {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
+          <span className="text-[12px] font-bold text-white">{planLabel}</span>
         </div>
-      </section>
+      </PageHero>
+      <PageContent className="pt-4">
 
       {/* ① 아이 프로필 */}
       <section className="mb-7">
@@ -165,7 +164,8 @@ export default async function SettingsPage() {
         </div>
       </section>
 
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
 
