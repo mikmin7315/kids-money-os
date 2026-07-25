@@ -442,6 +442,65 @@ export async function deleteInterestPolicyAction(
   return { ok: true, message: "이자 정책이 삭제되었어요." };
 }
 
+export async function updateBehaviorRuleAction(input: {
+  ruleId: string;
+  title: string;
+  description: string;
+  rewardAmount: number;
+  interestDelta: number;
+  requiresParentApproval: boolean;
+  monthlyTargetRate: number;
+}): Promise<ActionResult<void>> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
+
+  if (isDemoMode()) {
+    revalidatePath("/behaviors");
+    return { ok: true };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const { error } = await supabase
+    .from("behavior_rules")
+    .update({
+      title: input.title,
+      description: input.description,
+      reward_amount: input.rewardAmount,
+      interest_delta: input.interestDelta,
+      requires_parent_approval: input.requiresParentApproval,
+      monthly_target_rate: input.monthlyTargetRate,
+    })
+    .eq("id", input.ruleId)
+    .eq("parent_id", auth.user.id);
+
+  if (error) return { ok: false, error: error.message };
+  void invalidateAppData();
+  revalidatePath("/behaviors");
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function updateBehaviorRuleForm(
+  _prev: ManagementFormState,
+  formData: FormData,
+): Promise<ManagementFormState> {
+  const ruleId = String(formData.get("ruleId") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const rewardAmount = Number(formData.get("rewardAmount") ?? 0);
+  const interestDelta = Number(formData.get("interestDelta") ?? 0);
+  const requiresParentApproval = formData.get("requiresParentApproval") === "on";
+  const monthlyTargetRate = Number(formData.get("monthlyTargetRate") ?? 80);
+
+  if (!ruleId || !title) return { ok: false, message: "필수 항목을 입력해주세요." };
+
+  const result = await updateBehaviorRuleAction({
+    ruleId, title, description, rewardAmount, interestDelta, requiresParentApproval, monthlyTargetRate,
+  });
+  if (!result.ok) return { ok: false, message: result.error ?? "수정 중 오류가 발생했어요." };
+  return { ok: true, message: "약속이 수정되었어요." };
+}
+
 export async function toggleBehaviorRuleAction(
   _prev: ManagementFormState,
   formData: FormData,

@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import {
   createBehaviorRuleForm,
+  updateBehaviorRuleForm,
   createChildForm,
   setChildPinForm,
   upsertInterestPolicyForm,
@@ -48,6 +49,46 @@ export function ChildPinForm({ childId }: { childId: string }) {
       </div>
       <PinInput name="pin" />
       <SubmitButton pending={pending} label="PIN 저장하기" />
+      <FormMessage state={state} />
+    </form>
+  );
+}
+
+export function BehaviorRuleEditForm({
+  rule,
+}: {
+  rule: {
+    id: string;
+    title: string;
+    description?: string;
+    rewardAmount: number;
+    interestDelta: number;
+    requiresParentApproval: boolean;
+    monthlyTargetRate?: number;
+  };
+}) {
+  const [state, action, pending] = useActionState(updateBehaviorRuleForm, initialState);
+
+  return (
+    <form action={action} className={formClass}>
+      <input type="hidden" name="ruleId" value={rule.id} />
+      <input type="hidden" name="monthlyTargetRate" value={rule.monthlyTargetRate ?? 80} />
+      <Field label="약속 이름">
+        <input className={fieldClass} name="title" type="text" defaultValue={rule.title} required />
+      </Field>
+      <Field label="설명 (선택)">
+        <input className={fieldClass} name="description" type="text" defaultValue={rule.description ?? ""} placeholder="짧게 설명해주세요" />
+      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="보상 금액 (원)">
+          <MoneyInput className={fieldClass} name="rewardAmount" min={0} value={String(rule.rewardAmount)} required />
+        </Field>
+        <Field label="이자율 변화 (%p)">
+          <input className={fieldClass} name="interestDelta" type="number" step="0.1" min="0" defaultValue={rule.interestDelta} required />
+        </Field>
+      </div>
+      <CheckField name="requiresParentApproval" label="완료 후 부모 확인을 받아요" defaultChecked={rule.requiresParentApproval} />
+      <SubmitButton pending={pending} label="수정 저장하기" />
       <FormMessage state={state} />
     </form>
   );

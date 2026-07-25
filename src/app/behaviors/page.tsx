@@ -3,6 +3,7 @@ import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import Link from "next/link";
+import { Pencil } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
@@ -38,38 +39,62 @@ export default async function BehaviorsPage() {
             <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
           </div>
         ) : (
-          <div className="space-y-3 mt-3">
+          <div className="space-y-2 mt-3">
             {bundle.behaviorRules.map((rule) => (
-              <div key={rule.id} className="monari-card p-5" style={{ opacity: rule.isActive ? 1 : 0.55 }}>
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="flex-1">
-                    <p className="text-[16px] font-800 text-[var(--monari-ink)] leading-tight">{rule.title}</p>
+              <div
+                key={rule.id}
+                className="monari-card px-4 py-3.5"
+                style={{
+                  opacity: rule.isActive ? 1 : 0.6,
+                  borderLeft: rule.isActive ? "3px solid var(--monari-hero)" : "3px solid var(--monari-line)",
+                }}
+              >
+                {/* 상단: 제목 + 액션 버튼 */}
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-800 text-[var(--monari-ink)] leading-tight truncate">{rule.title}</p>
                     {rule.description && (
-                      <p className="mt-1.5 text-[13px] text-[var(--monari-ink-soft)]">{rule.description}</p>
+                      <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)] truncate">{rule.description}</p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Link
+                      href={`/behaviors/${rule.id}/edit`}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)] active:scale-90 transition"
+                    >
+                      <Pencil size={13} />
+                    </Link>
                     <ToggleBehaviorRuleButton ruleId={rule.id} isActive={rule.isActive} label={rule.title} />
                     <DeleteBehaviorRuleButton ruleId={rule.id} label={rule.title} />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap mb-3">
-                  <span className={`inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
+
+                {/* 중단: 배지 */}
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <span className={`inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
                     {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                   </span>
                   {!rule.isActive && (
-                    <span className="inline-flex h-[26px] items-center rounded-[10px] px-[10px] text-[12px] font-700 bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
+                    <span className="inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-700 bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
                       비활성
                     </span>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <MetricBox label="약속 보상" value={formatWon(rule.rewardAmount)} />
-                  <MetricBox
-                    label="다음 달 이자율"
-                    value={rule.interestDelta !== 0 ? `+${formatPercent(rule.interestDelta)}` : "—"}
-                    sub={rule.ruleCategory === "recurring" ? `${rule.monthlyTargetRate}% 달성 시` : "한 번 달성 시"}
-                  />
+
+                {/* 하단: 보상 + 이자 인라인 */}
+                <div className="flex items-center gap-3 text-[12px]">
+                  <span className="font-600 text-[var(--monari-ink-muted)]">보상</span>
+                  <span className="font-800 text-[var(--monari-hero)]">{formatWon(rule.rewardAmount)}</span>
+                  <span className="text-[var(--monari-line)]">·</span>
+                  <span className="font-600 text-[var(--monari-ink-muted)]">이자</span>
+                  <span className="font-800 text-[var(--monari-done)]">
+                    {rule.interestDelta !== 0 ? `+${formatPercent(rule.interestDelta)}` : "—"}
+                  </span>
+                  {rule.interestDelta !== 0 && (
+                    <span className="text-[var(--monari-ink-muted)]">
+                      ({rule.ruleCategory === "recurring" ? `${rule.monthlyTargetRate}% 달성 시` : "1회 달성"})
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
