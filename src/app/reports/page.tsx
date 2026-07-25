@@ -64,6 +64,13 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const aheadOfPeer = peer ? allowance >= peer.avgAllowance : false;
 
   const month = new Date().getMonth() + 1;
+  const today = new Date();
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const dayOfMonth = today.getDate();
+  const daysLeft = daysInMonth - dayOfMonth;
+  const projectedSaveRate = primary
+    ? Math.round(((save + (allowance > 0 ? (save / Math.max(dayOfMonth, 1)) * daysLeft : 0)) / Math.max(allowance, 1)) * 100)
+    : 0;
 
   return (
     <AppNavShell>
@@ -122,6 +129,38 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
       {primary && (
         <>
+          {/* 이달 예상 결과 카드 */}
+          {daysLeft > 0 && allowance > 0 && (
+            <div className="mb-5 overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--monari-hero-lo)", background: "var(--monari-hero-lo)" }}>
+              <div className="px-4 py-3.5">
+                <p className="text-[11px] font-semibold text-[var(--monari-hero)] mb-2">📅 이달 예상 결과 · {daysLeft}일 남음</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">현재 저축률</p>
+                    <p className="text-[16px] font-black text-[var(--monari-hero)] tabular-nums">{saveRatio}%</p>
+                  </div>
+                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">예상 저축률</p>
+                    <p className={`text-[16px] font-black tabular-nums ${projectedSaveRate >= 30 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink)]"}`}>
+                      {projectedSaveRate}%
+                    </p>
+                  </div>
+                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속 달성률</p>
+                    <p className={`text-[16px] font-black tabular-nums ${behRate >= 80 ? "text-[var(--monari-done)]" : behRate >= 50 ? "text-amber-600" : "text-rose-500"}`}>
+                      {behRate}%
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-2.5 text-[11px] text-[var(--monari-ink-muted)]">
+                  {projectedSaveRate >= 30
+                    ? "이대로라면 이달 저축 목표(30%)를 달성할 수 있어요 🎉"
+                    : `저축률 30%까지 ${30 - projectedSaveRate}%p 남았어요. 함께 계획을 세워보세요.`}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* CSV 내보내기 */}
           <div className="mb-5">
             <Link

@@ -1,4 +1,4 @@
-import { ChevronRight, Crown, Plus, ShieldCheck, UserPlus } from "lucide-react";
+import { ChevronRight, Crown, Plus, ShieldCheck, UserPlus, Wallet, Bell, Users, HeadphonesIcon, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
@@ -18,6 +18,7 @@ export default async function SettingsPage() {
 
   const planLabel = auth.profile?.subscription_tier === "plus" ? "모나리 플러스" : "무료 플랜";
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
+  const childCount = bundle.children.length;
 
   return (
     <AppNavShell>
@@ -98,7 +99,36 @@ export default async function SettingsPage() {
         </Link>
       </section>
 
-      {/* ② 내 계정 */}
+      {/* ② 지갑 · 결제 */}
+      <section className="mb-7">
+        <SectionTitle>지갑 · 결제</SectionTitle>
+        <div className="mt-3 space-y-2">
+          <Link href="/settings/wallet" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              <Wallet size={17} />
+            </span>
+            <div className="flex-1">
+              <span className="text-sm font-bold text-[var(--monari-ink)]">부모 지갑 관리</span>
+              <p className="text-xs text-[var(--monari-ink-muted)]">충전 내역 · 연결 계좌</p>
+            </div>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+          <Link href="/settings/subscription" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              {isPlusPlan ? <Crown size={17} className="text-yellow-500" /> : <CreditCard size={17} />}
+            </span>
+            <div className="flex-1">
+              <span className="text-sm font-bold text-[var(--monari-ink)]">구독 관리</span>
+              <p className="text-xs text-[var(--monari-ink-muted)]">
+                {isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
+              </p>
+            </div>
+            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ③ 내 계정 */}
       <section className="mb-7">
         <SectionTitle>내 계정</SectionTitle>
         <div className="mt-3">
@@ -117,12 +147,15 @@ export default async function SettingsPage() {
         </div>
       </section>
 
-      {/* ③ 알림 */}
+      {/* ④ 알림 */}
       <section className="mb-7">
         <SectionTitle>알림</SectionTitle>
         <div className="mt-3 space-y-2">
-          <Link href="/settings/notifications" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <div>
+          <Link href="/settings/notifications" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
+              <Bell size={17} />
+            </span>
+            <div className="flex-1">
               <span className="text-sm font-bold text-[var(--monari-ink)]">알림 상세 설정</span>
               <p className="text-xs text-[var(--monari-ink-muted)]">받고 싶은 알림 종류를 선택해요</p>
             </div>
@@ -131,26 +164,36 @@ export default async function SettingsPage() {
         </div>
       </section>
 
-      {/* ④ 공동 보호자 */}
+      {/* ⑤ 공동 보호자 */}
       <section className="mb-7">
         <SectionTitle>공동 보호자</SectionTitle>
         <div className="mt-3 space-y-2">
-          <Link href="/settings/guardians" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <div>
+          <Link href="/settings/guardians" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
+              <Users size={17} />
+            </span>
+            <div className="flex-1">
               <span className="text-sm font-bold text-[var(--monari-ink)]">보호자 초대 및 권한 관리</span>
-              <p className="text-xs text-[var(--monari-ink-muted)]">배우자나 다른 보호자와 함께 관리해요</p>
+              <p className="text-xs text-[var(--monari-ink-muted)]">
+                {childCount > 0 ? `아이 ${childCount}명 · 배우자나 다른 보호자와 함께 관리해요` : "배우자나 다른 보호자와 함께 관리해요"}
+              </p>
             </div>
             <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
           </Link>
         </div>
       </section>
 
-      {/* ⑤ 고객지원 */}
+      {/* ⑥ 고객지원 */}
       <section className="mb-7">
         <SectionTitle>고객지원</SectionTitle>
         <div className="mt-3 space-y-2">
-          <Link href="/announcements" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="text-sm font-bold text-[var(--monari-ink)]">공지사항</span>
+          <Link href="/announcements" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
+              <HeadphonesIcon size={17} />
+            </span>
+            <div className="flex-1">
+              <span className="text-sm font-bold text-[var(--monari-ink)]">공지사항</span>
+            </div>
             <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
           </Link>
           <Link href="/inquiries" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">

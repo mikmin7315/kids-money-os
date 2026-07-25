@@ -26,6 +26,7 @@ export default async function ApprovalsPage() {
 
   const pendingCashRequests = bundle.cashSpendRequests.filter((r) => r.status === "pending");
   const total = pendingBehaviorLogs.length + pendingBorrows.length + pendingCashRequests.length;
+  const childrenWithPolicy = bundle.children.filter((c) => bundle.interestPolicies.some((p) => p.childId === c.id));
   const headline = total > 0 ? `${total}건 확인이 필요해요` : "모두 확인 완료!";
 
   return (
@@ -189,32 +190,6 @@ export default async function ApprovalsPage() {
         </section>
       )}
 
-      {/* Active borrows */}
-      {/* 이자 확정 */}
-      <section className="mb-4">
-        <SectionTitle>이자 확정</SectionTitle>
-        <div className="mt-3 space-y-2">
-          {bundle.children.map((child) => (
-            <Link
-              key={child.id}
-              href={`/settings/interest-confirm/${child.id}`}
-              className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-                  <TrendingUp size={17} />
-                </span>
-                <div>
-                  <p className="text-[14px] font-700 text-[var(--monari-ink)]">{child.name}</p>
-                  <p className="text-[12px] text-[var(--monari-ink-muted)]">이자율 확정 및 지급 처리</p>
-                </div>
-              </div>
-              <span className="text-[12px] font-700 text-[var(--monari-hero)]">확정하기 →</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {activeBorrows.length > 0 && (
         <section className="mb-4">
           <SectionTitle>상환 진행 중</SectionTitle>
@@ -258,6 +233,33 @@ export default async function ApprovalsPage() {
                 </div>
               );
             })}
+          </div>
+        </section>
+      )}
+      {/* 이자 확정 — 이자율 설정된 아이만 표시 */}
+      {childrenWithPolicy.length > 0 && (
+        <section className="mb-4">
+          <SectionTitle>이자 확정</SectionTitle>
+          <p className="mt-1 mb-3 text-[12px] text-[var(--monari-ink-muted)]">행동 달성률 기반 이자를 확정하고 지급해요.</p>
+          <div className="space-y-2">
+            {childrenWithPolicy.map((child) => (
+              <Link
+                key={child.id}
+                href={`/settings/interest-confirm/${child.id}`}
+                className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+                    <TrendingUp size={17} />
+                  </span>
+                  <div>
+                    <p className="text-[14px] font-700 text-[var(--monari-ink)]">{child.name}</p>
+                    <p className="text-[12px] text-[var(--monari-ink-muted)]">이자율 확정 및 지급 처리</p>
+                  </div>
+                </div>
+                <span className="text-[12px] font-700 text-[var(--monari-hero)]">확정하기 →</span>
+              </Link>
+            ))}
           </div>
         </section>
       )}

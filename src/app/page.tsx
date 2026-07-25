@@ -39,7 +39,8 @@ export default async function HomePage() {
 
   const pendingBehaviors = bundle.behaviorLogs.filter((l) => l.status === "pending");
   const pendingBorrows = bundle.borrowRequests.filter((r) => r.status === "pending");
-  const totalPending = pendingBehaviors.length + pendingBorrows.length;
+  const pendingCash = bundle.cashSpendRequests.filter((r) => r.status === "pending");
+  const totalPending = pendingBehaviors.length + pendingBorrows.length + pendingCash.length;
 
   const incompleteItems = bundle.children.flatMap((child) => {
     const items: { childName: string; label: string; href: string }[] = [];
@@ -61,6 +62,17 @@ export default async function HomePage() {
   const daysLeft = Math.ceil((nextSettlement.getTime() - now.getTime()) / 86400000);
 
   const firstName = dashboard.parent.name.split(" ")[0] || dashboard.parent.name;
+
+  const COACHING_TIPS = [
+    { q: "이번 주에 가장 잘한 소비가 뭐야?", icon: "💬" },
+    { q: "저금하고 싶은 이유가 생겼어?", icon: "🐷" },
+    { q: "다음 용돈으로 제일 하고 싶은 게 뭐야?", icon: "🎯" },
+    { q: "미리쓰기를 쓰면 어떤 느낌인지 얘기해줄래?", icon: "🔄" },
+    { q: "돈을 더 잘 쓰려면 어떻게 해야 할까?", icon: "✨" },
+    { q: "저금과 쓰기 중에 어느 게 더 어려워?", icon: "⚖️" },
+    { q: "이번 달 약속 중에 가장 뿌듯한 게 뭐야?", icon: "⭐" },
+  ];
+  const coachingTip = COACHING_TIPS[new Date().getDate() % COACHING_TIPS.length];
 
   const recentFeed = dashboard.activityFeed.slice(0, 4).map((item) => {
     const childName = dashboard.children.find((c) => c.child.id === item.childId)?.child.name;
@@ -129,9 +141,11 @@ export default async function HomePage() {
             <div className="flex-1 min-w-0">
               <p className="text-[13px] font-bold text-amber-900">승인 대기 중인 요청이 있어요</p>
               <p className="text-[11px] text-amber-700 mt-0.5">
-                {pendingBehaviors.length > 0 && `약속 ${pendingBehaviors.length}건`}
-                {pendingBehaviors.length > 0 && pendingBorrows.length > 0 && " · "}
-                {pendingBorrows.length > 0 && `미리쓰기 ${pendingBorrows.length}건`}
+                {[
+                  pendingBehaviors.length > 0 && `약속 ${pendingBehaviors.length}건`,
+                  pendingCash.length > 0 && `현금 ${pendingCash.length}건`,
+                  pendingBorrows.length > 0 && `미리쓰기 ${pendingBorrows.length}건`,
+                ].filter(Boolean).join(" · ")}
               </p>
             </div>
             <ArrowRight className="h-4 w-4 text-amber-600 shrink-0" />
@@ -237,6 +251,18 @@ export default async function HomePage() {
             })}
           </div>
         </section>
+
+        {/* 이번 주 대화 카드 */}
+        <div
+          className="flex items-start gap-3 rounded-2xl px-4 py-3.5"
+          style={{ background: "linear-gradient(135deg,#F0F9FF,#E0F2FE)", border: "1px solid #BAE6FD" }}
+        >
+          <span className="text-[22px] shrink-0">{coachingTip.icon}</span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-bold text-sky-600 mb-1">이번 주 대화 질문</p>
+            <p className="text-[14px] font-bold text-sky-900 leading-snug">&ldquo;{coachingTip.q}&rdquo;</p>
+          </div>
+        </div>
 
         {/* 최근 활동 */}
         <section>
