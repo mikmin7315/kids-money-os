@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Download, Lock, Sparkles, Coins } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -66,7 +66,33 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const month = new Date().getMonth() + 1;
 
   return (
-    <MobileAppShell title="이번달 리포트" subtitle="리포트">
+    <AppNavShell>
+      <PageHero>
+        {primary ? (
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/60 mb-1">
+              {String(primary.child.name)} · {month}월
+            </p>
+            <div className="mb-4 text-center">
+              <p className="text-[11px] font-semibold text-white/60 mb-1">이달 저축률</p>
+              <p className="text-[72px] font-black leading-none tracking-[-0.05em] text-white tabular-nums">
+                {saveRatio}<span className="text-[28px] text-white/65">%</span>
+              </p>
+              <p className="mt-2 text-[13px] font-semibold text-white/60">
+                {saveRatio >= 30 ? "훌륭한 저축 습관이에요" : saveRatio >= 15 ? "조금 더 모아볼까요?" : "저축을 시작해보세요"}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5 border-t border-white/15 pt-3">
+              <HeroPill label="용돈" value={formatWon(allowance)} />
+              <HeroPill label="지출" value={`${spendRatio}%`} sub={spendRatio > 70 ? "주의" : "양호"} warn={spendRatio > 70} />
+              <HeroPill label="약속" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
+            </div>
+          </>
+        ) : (
+          <h1 className="text-2xl font-extrabold text-white">이번 달 리포트</h1>
+        )}
+      </PageHero>
+      <PageContent className="pt-4">
       {/* 아이 선택 */}
       {allChildren.length > 1 && (
         <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
@@ -96,33 +122,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
       {primary && (
         <>
-          {/* ═══ HERO ═══ */}
-          <div className="monari-hero mb-5">
-            <p className="text-[11px] font-700 uppercase tracking-[0.1em] text-white/50 mb-4">
-              {String(primary.child.name)} · {month}월
-            </p>
-            <div className="mb-5 text-center">
-              <p className="text-[11px] font-600 text-white/60 mb-1">이달 저축률</p>
-              <p className="text-[80px] font-900 leading-none tracking-[-0.05em] text-white font-variant-numeric tabular-nums">
-                {saveRatio}<span className="text-[32px] text-white/65">%</span>
-              </p>
-              <p className="mt-2 text-[13px] font-600 text-white/60">
-                {saveRatio >= 30 ? "훌륭한 저축 습관이에요" : saveRatio >= 15 ? "조금 더 모아볼까요?" : "저축을 시작해보세요"}
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-1.5 border-t border-white/15 pt-4">
-              <HeroPill label="용돈" value={formatWon(allowance)} />
-              <HeroPill label="지출" value={`${spendRatio}%`} sub={spendRatio > 70 ? "주의" : "양호"} warn={spendRatio > 70} />
-              <HeroPill label="약속" value={`${behRate}%`} sub={behRate >= 80 ? "우수" : behRate >= 50 ? "보통" : "노력"} warn={behRate < 50} />
-            </div>
-            <div className="mt-3 border-t border-white/15 pt-3">
-              <Link
-                href={`/api/reports/export?child=${primary.child.id}`}
-                className="flex items-center justify-center gap-2 rounded-[12px] bg-white/12 py-2.5 text-[12px] font-700 text-white transition active:scale-[0.97]"
-              >
-                <Download size={13} /> 이달 리포트 CSV 내보내기
-              </Link>
-            </div>
+          {/* CSV 내보내기 */}
+          <div className="mb-5">
+            <Link
+              href={`/api/reports/export?child=${primary.child.id}`}
+              className="flex items-center justify-center gap-2 rounded-[14px] border border-[var(--monari-line)] bg-[var(--monari-surface)] py-2.5 text-[12px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
+            >
+              <Download size={13} /> 이달 리포트 CSV 내보내기
+            </Link>
           </div>
 
           {/* ═══ 저축 / 지출 2열 카드 ═══ */}
@@ -321,7 +328,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           </section>
         </>
       )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
 
