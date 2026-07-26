@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useTransition } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Camera, X } from "lucide-react";
@@ -43,9 +43,11 @@ export function ChildBehaviorCheckForm({
   doneRuleIds?: string[];
   pendingRuleIds?: string[];
 }) {
-  const [state, action] = useActionState(submitBehaviorLogForm, initialState);
+  const [state, setState] = useState<FormState>(initialState);
+  const [isPending, startTransition] = useTransition();
   const [photoMap, setPhotoMap] = useState<Record<string, { file: File; preview: string; takenAt: string }>>({});
   const [selectedRuleId, setSelectedRuleId] = useState<string | null>(null);
+  const [submittingRuleId, setSubmittingRuleId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (behaviorRules.length === 0) {
@@ -62,10 +64,31 @@ export function ChildBehaviorCheckForm({
     const preview = URL.createObjectURL(file);
     const takenAt = new Date().toISOString();
     setPhotoMap((prev) => ({ ...prev, [ruleId]: { file, preview, takenAt } }));
+    // reset so same file can be re-selected
+    e.target.value = "";
   };
 
   const removePhoto = (ruleId: string) => {
     setPhotoMap((prev) => { const next = { ...prev }; delete next[ruleId]; return next; });
+  };
+
+  const handleSubmit = (ruleId: string) => {
+    const photo = photoMap[ruleId];
+    const fd = new FormData();
+    fd.append("childId", childId);
+    fd.append("behaviorRuleId", ruleId);
+    fd.append("date", today());
+    if (photo) {
+      fd.append("photoFile", photo.file);
+      fd.append("photoTakenAt", photo.takenAt);
+    }
+    setSubmittingRuleId(ruleId);
+    startTransition(async () => {
+      const result = await submitBehaviorLogForm(state, fd);
+      setState(result);
+      setSubmittingRuleId(null);
+      if (result.ok) setPhotoMap((prev) => { const next = { ...prev }; delete next[ruleId]; return next; });
+    });
   };
 
   const formatStamp = (iso: string) => {
@@ -79,23 +102,24 @@ export function ChildBehaviorCheckForm({
     <div className="space-y-3">
       {behaviorRules.map((rule) => {
         const isDone = doneRuleIds.includes(rule.id);
-        const isPending = pendingRuleIds.includes(rule.id);
+        const isRulePending = pendingRuleIds.includes(rule.id);
         const photo = photoMap[rule.id];
         const needsApproval = rule.requiresParentApproval;
+        const isSubmitting = submittingRuleId === rule.id && isPending;
 
         return (
-          <div key={rule.id} className={`rounded-[16px] overflow-hidden transition ${isDone || isPending ? "opacity-60" : "bg-[var(--monari-surface-soft)]"}`}
-            style={isDone || isPending ? { background: "rgba(43,43,43,0.05)" } : {}}>
+          <div key={rule.id} className={`rounded-[16px] overflow-hidden transition ${isDone || isRulePending ? "opacity-60" : "bg-[var(--monari-surface-soft)]"}`}
+            style={isDone || isRulePending ? { background: "rgba(43,43,43,0.05)" } : {}}>
 
             <div className="flex items-center gap-3 px-4 py-3.5">
               <div className="min-w-0 flex-1">
-                <p className={`truncate text-[15px] font-semibold ${isDone || isPending ? "text-[var(--monari-ink-muted)]" : "text-[var(--monari-ink)]"}`}>
+                <p className={`truncate text-[15px] font-semibold ${isDone || isRulePending ? "text-[var(--monari-ink-muted)]" : "text-[var(--monari-ink)]"}`}>
                   {rule.title}
                 </p>
                 <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px] font-medium text-[var(--monari-ink-muted)]">
                   {rule.interestDelta > 0 && <span className="font-700 text-[var(--monari-hero)]">+{rule.interestDelta}%</span>}
                   {rule.rewardAmount > 0 && <span>+{formatWon(rule.rewardAmount)} 보상</span>}
-                  {needsApproval && !isDone && !isPending && (
+                  {needsApproval && !isDone && !isRulePending && (
                     <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-700 text-[var(--monari-pending)]">부모 확인 필요</span>
                   )}
                 </p>
@@ -106,27 +130,25 @@ export function ChildBehaviorCheckForm({
                     <path d="M4 9.5L7.5 13L14 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </span>
-              ) : isPending ? (
+              ) : isRulePending ? (
                 <span className="shrink-0 rounded-full bg-[var(--monari-pending-bg)] px-3 py-2 text-[12px] font-800 text-[var(--monari-pending)]">
                   확인 기다리는 중
                 </span>
               ) : (
-                <form action={action}>
-                  <input type="hidden" name="childId" value={childId} />
-                  <input type="hidden" name="date" value={today()} />
-                  {photo && (
-                    <>
-                      <input type="hidden" name="photoFile" />
-                      <input type="hidden" name="photoTakenAt" value={photo.takenAt} />
-                    </>
-                  )}
-                  <BehaviorSubmitButton ruleId={rule.id} photo={photo?.file} />
-                </form>
+                <button
+                  type="button"
+                  onClick={() => handleSubmit(rule.id)}
+                  disabled={isSubmitting}
+                  className="h-12 shrink-0 rounded-2xl bg-[var(--monari-hero)] px-5 text-[14px] font-bold text-white transition active:scale-[0.96] disabled:opacity-60"
+                  style={{ boxShadow: "0 4px 14px rgba(124,58,237,0.35)" }}
+                >
+                  {isSubmitting ? "확인 중..." : photo ? "사진과 함께 했어요!" : "했어요"}
+                </button>
               )}
             </div>
 
-            {/* 사진 첨부 영역 (모든 약속에 선택적으로 제공) */}
-            {!isDone && !isPending && (
+            {/* 사진 첨부 영역 */}
+            {!isDone && !isRulePending && (
               <div className="px-4 pb-3">
                 {photo ? (
                   <div className="relative overflow-hidden rounded-[14px]">
@@ -543,21 +565,6 @@ function ChildPlayButton({ label }: { label: string }) {
   );
 }
 
-function BehaviorSubmitButton({ ruleId, photo }: { ruleId: string; photo?: File }) {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      name="behaviorRuleId"
-      value={ruleId}
-      disabled={pending}
-      className="h-12 shrink-0 rounded-2xl bg-[var(--monari-hero)] px-5 text-[14px] font-bold text-white transition active:scale-[0.96] disabled:opacity-60"
-      style={{ boxShadow: "0 4px 14px rgba(124,58,237,0.35)" }}
-    >
-      {pending ? "확인 중..." : photo ? "사진과 함께 했어요!" : "했어요"}
-    </button>
-  );
-}
 
 function ChildSaveButton({ label, disabled }: { label: string; disabled: boolean }) {
   const { pending } = useFormStatus();
