@@ -3,7 +3,8 @@ import { AlertCircle, ArrowLeft, CalendarDays, CircleDollarSign } from "lucide-r
 import Link from "next/link";
 import { AllowanceRuleForm } from "@/components/finance/management-forms";
 import { DeleteAllowanceRuleButton } from "@/components/finance/delete-rule-button";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -16,136 +17,119 @@ export default async function AllowancePage() {
 
   const bundle = await getAppDataBundle();
   const hasChildren = bundle.children.length > 0;
+  const failedExecutions = bundle.allowanceExecutions.filter((e) => e.status === "failed");
 
   return (
-    <MobileAppShell title="정기 용돈 설정" subtitle="용돈 규칙 관리">
-      {/* 뒤로가기 */}
-      <Link
-        href="/settings"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]"
-      >
-        <ArrowLeft size={16} /> 설정으로
-      </Link>
+    <AppNavShell>
+      <PageHero>
+        <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 설정으로
+        </Link>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">금융 설정</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">정기 용돈</h1>
+        <p className="text-[13px] text-white/65">매달 자동으로 지급돼요</p>
+      </PageHero>
 
-      {/* 히어로 */}
-      <section
-        className="relative mb-6 overflow-hidden rounded-[24px] p-6 text-white"
-        style={{
-          background: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)",
-          boxShadow: "0 16px 40px rgba(109,40,217,0.35)",
-        }}
-      >
-        <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
-        <div className="relative z-10">
-          <p className="text-[13px] font-semibold text-white/70">매달 자동으로 지급돼요</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight">정기 용돈 설정</h2>
-          <p className="mt-2 text-sm text-white/75">
-            용돈 금액과 지급 주기를 정하면, 약속한 날에 자동으로 남긴 돈에 더해줘요.
-          </p>
+      <PageContent className="pt-5">
+
+        {/* 용돈 안내 */}
+        <div className="mb-5 rounded-[16px] bg-[var(--monari-hero-lo)] px-4 py-4">
+          <p className="text-[12px] font-bold text-[var(--monari-hero)] mb-2">용돈은 어떻게 지급되나요?</p>
+          <ul className="space-y-1 text-[12px] leading-5 text-[var(--monari-hero)]">
+            <li>• 매주·매월 설정한 날에 자동으로 남긴 돈에 더해져요</li>
+            <li>• 지급 후 아이에게 알림이 가요</li>
+            <li>• 즉시 지급은 아이 통장 페이지에서 할 수 있어요</li>
+          </ul>
         </div>
-      </section>
 
-      {/* 현재 설정 현황 */}
-      {bundle.allowanceRules.length > 0 && (
-        <section className="mb-6">
-          <p className="mb-3 text-sm font-extrabold text-[var(--monari-ink)]">현재 설정된 용돈</p>
-          <div className="space-y-2">
-            {bundle.allowanceRules.map((rule) => {
-              const child = bundle.children.find((c) => c.id === rule.childId);
-              const cycle =
-                rule.type === "weekly"
-                  ? `매주 ${["일", "월", "화", "수", "목", "금", "토"][rule.weekday ?? 6]}요일`
-                  : rule.type === "monthly"
-                    ? `매월 ${rule.dayOfMonth ?? 1}일`
-                    : "직접 지급";
-              return (
-                <div
-                  key={rule.id}
-                  className="flex items-center justify-between rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--status-success-solid)] text-[var(--monari-done)]">
+        {/* 현재 설정된 용돈 */}
+        {bundle.allowanceRules.length > 0 && (
+          <section className="mb-5">
+            <SectionTitle>현재 설정된 용돈</SectionTitle>
+            <div className="mt-3 space-y-2">
+              {bundle.allowanceRules.map((rule) => {
+                const child = bundle.children.find((c) => c.id === rule.childId);
+                const cycle =
+                  rule.type === "weekly"
+                    ? `매주 ${["일", "월", "화", "수", "목", "금", "토"][rule.weekday ?? 6]}요일`
+                    : rule.type === "monthly"
+                      ? `매월 ${rule.dayOfMonth ?? 1}일`
+                      : "직접 지급";
+                return (
+                  <div
+                    key={rule.id}
+                    className="monari-card flex items-center gap-3 px-4 py-3.5"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-done-bg)] text-[var(--monari-done)]">
                       <CalendarDays size={18} />
                     </span>
-                    <div>
-                      <p className="text-sm font-extrabold text-[var(--monari-ink)]">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[14px] font-extrabold text-[var(--monari-ink)] truncate">
                         {child?.name} · {rule.title}
                       </p>
-                      <p className="mt-0.5 text-xs text-[var(--monari-ink-muted)]">{cycle}</p>
+                      <p className="text-[12px] text-[var(--monari-ink-muted)]">{cycle}</p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-base font-black text-[var(--monari-done)]">{formatWon(rule.amount)}</p>
+                    <p className="text-[15px] font-black text-[var(--monari-done)] shrink-0">{formatWon(rule.amount)}</p>
                     <DeleteAllowanceRuleButton ruleId={rule.id} label={rule.title} />
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-      {/* 안내 박스 */}
-      <div className="mb-6 rounded-[16px] bg-[var(--status-success-solid)] p-4">
-        <p className="text-xs font-bold text-[var(--status-success-solid-text)]">💡 용돈은 어떻게 지급되나요?</p>
-        <ul className="mt-2 space-y-1 text-xs leading-5 text-[var(--monari-done)]">
-          <li>• 매주·매월 설정한 날에 자동으로 남긴 돈에 더해져요</li>
-          <li>• 지급 후 아이에게 알림이 가요</li>
-          <li>• 즉시 지급은 아이 통장 페이지에서 할 수 있어요</li>
-        </ul>
-      </div>
-
-      {/* 실패 내역 */}
-      {bundle.allowanceExecutions.filter((e) => e.status === "failed").length > 0 && (
-        <section className="mb-6">
-          <p className="mb-3 text-sm font-extrabold text-[var(--status-danger-solid-text)]">⚠️ 미지급 내역</p>
-          <div className="space-y-2">
-            {bundle.allowanceExecutions
-              .filter((e) => e.status === "failed")
-              .slice(0, 10)
-              .map((exec) => {
+        {/* 미지급 내역 */}
+        {failedExecutions.length > 0 && (
+          <section className="mb-5">
+            <SectionTitle>미지급 내역</SectionTitle>
+            <div className="mt-3 space-y-2">
+              {failedExecutions.slice(0, 10).map((exec) => {
                 const rule = bundle.allowanceRules.find((r) => r.id === exec.allowanceRuleId);
                 const child = bundle.children.find((c) => c.id === rule?.childId);
                 return (
-                  <div key={exec.id} className="flex items-start gap-3 rounded-[16px] border border-[var(--status-danger-solid-text)]/30 bg-[var(--status-danger-solid)] p-4">
-                    <AlertCircle size={18} className="mt-0.5 shrink-0 text-[var(--monari-minus)]" />
+                  <div key={exec.id} className="flex items-start gap-3 rounded-[16px] border border-red-200 bg-red-50 p-4 dark:border-red-900/40 dark:bg-red-950/30">
+                    <AlertCircle size={17} className="mt-0.5 shrink-0 text-red-500" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-700 text-[var(--status-danger-solid-text)]">
+                      <p className="text-[13px] font-bold text-red-700 dark:text-red-400">
                         {child?.name} · {rule?.title ?? "삭제된 규칙"} · {exec.scheduledDate}
                       </p>
-                      <p className="mt-0.5 text-[12px] text-[var(--monari-minus)]">
+                      <p className="mt-0.5 text-[12px] text-red-500">
                         {exec.failureReason ?? "알 수 없는 오류"}
                       </p>
                     </div>
                   </div>
                 );
               })}
-          </div>
-          <div className="mt-3 rounded-[14px] bg-[var(--status-danger-solid)] px-4 py-3">
-            <p className="text-[12px] text-[var(--monari-minus)]">
-              💳 부모 지갑 잔액이 부족해 지급되지 않은 경우,{" "}
-              <Link href="/settings/wallet" className="font-700 underline">지갑을 충전</Link>하면
-              다음 지급일에 자동으로 처리돼요.
-            </p>
+              <div className="rounded-[14px] bg-red-50 px-4 py-3 dark:bg-red-950/30">
+                <p className="text-[12px] text-red-600 dark:text-red-400">
+                  부모 지갑 잔액이 부족해 지급되지 않은 경우,{" "}
+                  <Link href="/settings/wallet" className="font-bold underline">지갑을 충전</Link>하면
+                  다음 지급일에 자동으로 처리돼요.
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 새 규칙 추가 */}
+        <section className="mb-6">
+          <SectionTitle>새 용돈 규칙 추가</SectionTitle>
+          <div className="monari-card mt-3 p-5">
+            {!hasChildren ? (
+              <div className="py-4 text-center">
+                <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
+                <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
+                <Link href="/settings" className="mt-3 inline-block text-[13px] font-bold text-[var(--monari-hero)]">
+                  설정으로 가기 →
+                </Link>
+              </div>
+            ) : (
+              <AllowanceRuleForm childOptions={bundle.children} />
+            )}
           </div>
         </section>
-      )}
 
-      {/* 폼 */}
-      {!hasChildren ? (
-        <div className="rounded-[24px] bg-white p-6 text-center shadow-[var(--monari-shadow-md)]">
-          <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={32} />
-          <p className="text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
-          <Link href="/settings" className="mt-3 inline-block text-sm font-bold text-[var(--monari-hero)]">
-            설정으로 가기 →
-          </Link>
-        </div>
-      ) : (
-        <div className="rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
-          <p className="mb-4 text-sm font-extrabold text-[var(--monari-ink)]">새 용돈 규칙 추가</p>
-          <AllowanceRuleForm childOptions={bundle.children} />
-        </div>
-      )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
