@@ -9,6 +9,9 @@ import {
   Users,
   Wallet,
   CalendarClock,
+  Megaphone,
+  MessageSquare,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
@@ -191,17 +194,23 @@ export default async function SettingsPage() {
           <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
             <SettingsRow
               href="/announcements"
-              icon={<HeadphonesIcon size={17} />}
+              icon={<Megaphone size={17} />}
               iconBg="var(--monari-surface-soft)"
               iconColor="var(--monari-ink-soft)"
               label="공지사항"
             />
             <SettingsRow
               href="/inquiries"
+              icon={<MessageSquare size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
               label="문의하기"
             />
             <SettingsRow
               href="/settings/consent-history"
+              icon={<FileText size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
               label="동의 이력"
             />
           </div>
