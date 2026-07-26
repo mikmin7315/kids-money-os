@@ -201,7 +201,7 @@ export default async function HomePage() {
                     boxShadow: "0 2px 12px rgba(0,0,0,0.07)"
                   }}
                 >
-                  <Link href={`/child/${summary.child.id}`} className="flex items-center gap-3 px-4 py-3.5 transition active:bg-[var(--monari-bg)]">
+                  <Link href={`/child/${summary.child.id}`} className="flex items-center gap-3 px-4 pt-3.5 pb-3 transition active:bg-[var(--monari-bg)]">
                     <span
                       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] text-[17px] font-black text-white"
                       style={{ background: color.bg }}
@@ -215,22 +215,24 @@ export default async function HomePage() {
                         <span className="text-[10px] text-[var(--monari-ink-muted)]">약속 달성 {achieveRate}%</span>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-[19px] font-black tracking-tight tabular-nums text-[var(--monari-ink)]">
-                        {formatWon(summary.wallet.balance)}
-                      </p>
-                    </div>
                   </Link>
 
-                  {/* 달성률 바 */}
-                  <div className="px-4 pb-3">
-                    <div className="h-1.5 w-full rounded-full bg-[var(--monari-bg)] overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${achieveRate}%`, background: color.bg }}
-                      />
-                    </div>
-                  </div>
+                  {/* 잔액 4분류 */}
+                  {(() => {
+                    const bal = summary.wallet.balance;
+                    const borrowed = summary.wallet.borrowedBalance ?? 0;
+                    const rate = summary.wallet.currentInterestRate ?? 0;
+                    const monthlyInterest = Math.round(bal * rate / 100 / 12);
+                    const netAsset = bal - borrowed;
+                    return (
+                      <div className="mx-4 mb-3 grid grid-cols-4 divide-x divide-[var(--monari-line)] rounded-[14px] border border-[var(--monari-line)] overflow-hidden">
+                        <BalancePill label="잔액" value={formatWon(bal)} color="var(--monari-ink)" />
+                        <BalancePill label="미리쓰기" value={borrowed > 0 ? formatWon(borrowed) : "없음"} color={borrowed > 0 ? "#EF4444" : "var(--monari-ink-muted)"} />
+                        <BalancePill label="이자 예상" value={monthlyInterest > 0 ? `+${formatWon(monthlyInterest)}` : "—"} color="#16A34A" />
+                        <BalancePill label="순 자산" value={formatWon(netAsset)} color={netAsset >= 0 ? "var(--monari-ink)" : "#EF4444"} />
+                      </div>
+                    );
+                  })()}
 
                   <div className="border-t border-[var(--monari-line)] grid grid-cols-2">
                     <Link
@@ -313,6 +315,15 @@ export default async function HomePage() {
         })()}
       </PageContent>
     </AppNavShell>
+  );
+}
+
+function BalancePill({ label, value, color }: { label: string; value: string; color: string }) {
+  return (
+    <div className="flex flex-col items-center py-2.5 px-1">
+      <p className="text-[9px] font-semibold text-[var(--monari-ink-muted)] mb-0.5">{label}</p>
+      <p className="text-[11px] font-black tabular-nums leading-tight" style={{ color }}>{value}</p>
+    </div>
   );
 }
 

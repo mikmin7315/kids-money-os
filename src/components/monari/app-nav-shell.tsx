@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart2, CheckCircle2, Home, SlidersHorizontal, Settings } from "lucide-react";
 import { type ReactNode } from "react";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 const MANAGE_PREFIXES = ["/manage", "/behaviors", "/records"];
 
@@ -26,6 +27,15 @@ export function AppNavShell({
 
   return (
     <>
+      {/* 알림 벨 — 전역 고정 */}
+      <div className="fixed top-3 right-4 z-50 pointer-events-none" style={{ maxWidth: 460, left: "50%", transform: "translateX(-50%)" }}>
+        <div className="relative w-full">
+          <div className="absolute right-4 top-0 pointer-events-auto">
+            <NotificationBell />
+          </div>
+        </div>
+      </div>
+
       <main
         className="relative mx-auto w-full max-w-[460px] min-h-dvh"
         style={{ paddingBottom: "calc(80px + env(safe-area-inset-bottom))" }}
