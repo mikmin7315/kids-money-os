@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CreditCard, Plus } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { CardToggleForm } from "@/components/cards/card-toggle-form";
 import { requireParentSession } from "@/lib/auth";
@@ -49,23 +49,26 @@ export default async function CardsPage() {
       : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]";
 
   return (
-    <MobileAppShell title="카드 관리" subtitle="아이 카드">
-      <section className="monari-hero mb-6">
-        <div className="relative z-10 flex items-center justify-between">
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">금융</p>
+        <div className="flex items-end justify-between">
           <div>
-            <p className="text-sm font-bold text-white/75">카드 관리</p>
-            <h2 className="mt-1 text-xl font-black tracking-tight text-white">
-              {cardList.length > 0 ? `카드 ${cardList.length}장` : "등록된 카드 없음"}
-            </h2>
+            <h1 className="text-2xl font-extrabold tracking-tight text-white">
+              {cardList.length > 0 ? `카드 ${cardList.length}장` : "카드 관리"}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-white/65">아이 카드를 관리하세요</p>
           </div>
           <Link
             href="/cards/apply"
-            className="flex items-center gap-1.5 rounded-[12px] bg-white/20 px-4 py-2.5 text-[13px] font-700 text-white transition active:scale-[0.97]"
+            className="flex items-center gap-1.5 rounded-[12px] bg-white/20 px-4 py-2.5 text-[13px] font-bold text-white transition active:scale-[0.97]"
           >
             <Plus size={14} /> 카드 신청
           </Link>
         </div>
-      </section>
+      </PageHero>
+
+      <PageContent className="pt-5">
 
       {/* 신청 진행 중 */}
       {appList.length > 0 && cardList.length === 0 && (
@@ -168,6 +171,7 @@ export default async function CardsPage() {
           </Link>
         </div>
       )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }

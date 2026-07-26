@@ -3,7 +3,8 @@ import { ChevronRight } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { InquirySubmitForm } from "@/components/support/inquiry-form";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
+import { SectionTitle } from "@/components/monari/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -39,56 +40,63 @@ export default async function InquiriesPage() {
   const inquiries: InquiryRow[] = (data ?? []) as InquiryRow[];
 
   return (
-    <MobileAppShell title="문의하기" subtitle="고객지원">
-      {/* 문의 작성 폼 */}
-      <section className="mb-8">
-        <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>새 문의 작성</p>
-        <InquirySubmitForm />
-      </section>
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">고객지원</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">문의하기</h1>
+        <p className="text-[13px] text-white/65">불편한 점이나 궁금한 점을 남겨주세요</p>
+      </PageHero>
 
-      {/* 내 문의 내역 */}
-      <section>
-        <p style={{ fontSize: 16, fontWeight: 800, color: "var(--monari-ink)", marginBottom: 12 }}>내 문의 내역</p>
-        {inquiries.length === 0 ? (
-          <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
-            <p style={{ fontSize: 36, marginBottom: 10 }}>📭</p>
-            <p style={{ fontSize: 16, fontWeight: 700, color: "var(--monari-ink)" }}>문의 내역이 없어요</p>
-            <p className="mt-2" style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>
-              위 양식으로 문의를 남겨주세요.
-            </p>
+      <PageContent className="pt-5">
+        {/* 문의 작성 폼 */}
+        <section className="mb-6">
+          <SectionTitle>새 문의 작성</SectionTitle>
+          <div className="monari-card mt-3 p-5">
+            <InquirySubmitForm />
           </div>
-        ) : (
-          <div className="space-y-3">
-            {inquiries.map((q) => {
-              const st = STATUS_STYLE[q.status] ?? STATUS_STYLE.pending;
-              return (
-                <Link
-                  key={q.id}
-                  href={`/inquiries/${q.id}`}
-                  className="flex items-start gap-3 rounded-[24px] bg-white p-4 shadow-[var(--monari-shadow-md)] transition active:scale-[0.98]"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>{st.label}</span>
-                      <span style={{ fontSize: 11, color: "var(--monari-ink-muted)" }}>{CATEGORY_LABEL[q.category] ?? q.category}</span>
+        </section>
+
+        {/* 내 문의 내역 */}
+        <section className="mb-6">
+          <SectionTitle>내 문의 내역</SectionTitle>
+          <div className="mt-3">
+          {inquiries.length === 0 ? (
+            <div className="monari-card p-8 text-center">
+              <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">문의 내역이 없어요</p>
+              <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">위 양식으로 문의를 남겨주세요.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {inquiries.map((q) => {
+                const st = STATUS_STYLE[q.status] ?? STATUS_STYLE.pending;
+                return (
+                  <Link
+                    key={q.id}
+                    href={`/inquiries/${q.id}`}
+                    className="monari-card flex items-start gap-3 p-4 transition active:scale-[0.98]"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${st.color}`}>{st.label}</span>
+                        <span className="text-[11px] text-[var(--monari-ink-muted)]">{CATEGORY_LABEL[q.category] ?? q.category}</span>
+                      </div>
+                      <p className="text-[15px] font-bold text-[var(--monari-ink)] truncate">{q.title}</p>
+                      <p className="text-[12px] text-[var(--monari-ink-muted)] mt-0.5">
+                        {q.created_at.slice(0, 10).replace(/-/g, ".")}
+                        {q.admin_reply ? " · 답변 있음" : ""}
+                      </p>
                     </div>
-                    <p style={{ fontSize: 15, fontWeight: 700, color: "var(--monari-ink)" }} className="truncate">{q.title}</p>
-                    <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 2 }}>
-                      {q.created_at.slice(0, 10).replace(/-/g, ".")}
-                      {q.admin_reply ? " · 답변 있음" : ""}
-                    </p>
-                  </div>
-                  <ChevronRight size={16} className="mt-1 shrink-0 text-[var(--monari-ink-muted)]" />
-                </Link>
-              );
-            })}
+                    <ChevronRight size={16} className="mt-1 shrink-0 text-[var(--monari-ink-muted)]" />
+                  </Link>
+                );
+              })}
+            </div>
+          )}
           </div>
-        )}
+        </section>
 
-        <div className="mt-6">
-          <Link href="/announcements" className="text-sm font-bold text-[var(--monari-hero)]">공지사항 보기 →</Link>
-        </div>
-      </section>
-    </MobileAppShell>
+        <Link href="/announcements" className="text-[13px] font-bold text-[var(--monari-hero)]">공지사항 보기 →</Link>
+      </PageContent>
+    </AppNavShell>
   );
 }

@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getDashboardView } from "@/lib/data";
@@ -13,22 +13,20 @@ export default async function ChildModePage() {
   const dashboard = await getDashboardView();
 
   return (
-    <MobileAppShell title="아이 프로필 선택" subtitle="아이 모드">
-      {/* Hero */}
-      <section className="monari-hero mb-4">
-        <div className="relative z-10">
-          <p className="text-sm font-bold text-white/75">아이 모드</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight text-white">아이 화면으로 전환</h2>
-          <p className="mt-1 text-[13px] text-white/70">
-            프로필을 선택하고 PIN을 입력하면 아이 전용 통장 화면으로 바로 들어갑니다.
-          </p>
-          <div className="mt-4 flex gap-3">
-            <HeroPill label="등록된 아이" value={`${dashboard.children.length}명`} />
-            <HeroPill label="확인 대기" value={`${dashboard.children.reduce((s, c) => s + (c.pendingApprovals ?? 0), 0)}건`} />
-          </div>
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">아이 모드</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">아이 화면으로 전환</h1>
+        <p className="text-[13px] text-white/65 mb-4">
+          프로필을 선택하고 PIN을 입력하면 아이 전용 통장 화면으로 들어갑니다
+        </p>
+        <div className="flex gap-3">
+          <HeroPill label="등록된 아이" value={`${dashboard.children.length}명`} />
+          <HeroPill label="확인 대기" value={`${dashboard.children.reduce((s, c) => s + (c.pendingApprovals ?? 0), 0)}건`} />
         </div>
-      </section>
+      </PageHero>
 
+      <PageContent className="pt-5">
       <section className="mb-5">
         <div className="monari-card flex items-start gap-3 p-4">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[var(--monari-done-bg)] text-[var(--monari-done)]">
@@ -81,7 +79,8 @@ export default async function ChildModePage() {
           </div>
         )}
       </section>
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
 

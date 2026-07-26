@@ -1,15 +1,23 @@
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+﻿import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 
 export default function Loading() {
   return (
-    <MobileAppShell title="돈 리포트" subtitle="이번 달 분석">
-      <div className="mb-5 h-36 animate-pulse rounded-[24px] bg-[var(--monari-line-strong)]" />
-      <div className="mb-4 grid grid-cols-2 gap-3">
+    <AppNavShell>
+      <PageHero>
+        <div className="h-3 w-20 animate-pulse rounded-md bg-white/30 mb-3" />
+        <div className="h-7 w-40 animate-pulse rounded-lg bg-white/40" />
+      </PageHero>
+      <PageContent className="pt-5">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="monari-card h-20 animate-pulse p-4" />
+          <div key={i} className="monari-card mb-2 flex items-center gap-4 p-4">
+            <div className="h-9 w-9 animate-pulse rounded-xl bg-[var(--monari-line-strong)]" />
+            <div className="flex-1 space-y-1.5">
+              <div className="h-4 w-28 animate-pulse rounded-md bg-[var(--monari-line-strong)]" />
+              <div className="h-3 w-20 animate-pulse rounded-md bg-[var(--monari-line-strong)]" />
+            </div>
+          </div>
         ))}
-      </div>
-      <div className="monari-card h-48 animate-pulse" />
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }

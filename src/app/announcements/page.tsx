@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -49,22 +49,20 @@ export default async function AnnouncementsPage() {
   const updateCount = announcements.filter((a) => a.type === "update").length;
 
   return (
-    <MobileAppShell title="공지사항" subtitle="공지">
-      {/* Hero */}
-      <section className="monari-hero mb-6">
-        <div className="relative z-10">
-          <p className="text-sm font-bold text-white/75">Monari 공지사항</p>
-          <h2 className="mt-1 text-xl font-black tracking-tight text-white">
-            {announcements.length === 0 ? "현재 공지가 없어요" : `총 ${announcements.length}건의 공지`}
-          </h2>
-          <div className="mt-4 flex gap-3">
-            <HeroPill label="공지" value={`${noticeCount}건`} />
-            <HeroPill label="점검" value={`${maintenanceCount}건`} />
-            <HeroPill label="업데이트" value={`${updateCount}건`} />
-          </div>
+    <AppNavShell>
+      <PageHero>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">고객지원</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-3">
+          {announcements.length === 0 ? "공지사항" : `공지 ${announcements.length}건`}
+        </h1>
+        <div className="flex gap-3">
+          <HeroPill label="공지" value={`${noticeCount}건`} />
+          <HeroPill label="점검" value={`${maintenanceCount}건`} />
+          <HeroPill label="업데이트" value={`${updateCount}건`} />
         </div>
-      </section>
+      </PageHero>
 
+      <PageContent className="pt-5">
       {announcements.length === 0 ? (
         <div className="monari-card p-8 text-center">
           <p className="text-[18px] font-black text-[var(--monari-ink)] mb-2">공지사항이 없어요</p>
@@ -98,7 +96,8 @@ export default async function AnnouncementsPage() {
           })}
         </div>
       )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
 

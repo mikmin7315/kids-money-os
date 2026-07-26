@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { MobileAppShell } from "@/components/monari/mobile-app-shell";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireAdminSession } from "@/lib/auth";
 import { hasSupabaseEnv } from "@/lib/data";
 import { formatWon } from "@/lib/format";
@@ -64,18 +64,20 @@ export default async function AdminWalletChargesPage() {
   const { pending, processed } = await getCharges();
 
   return (
-    <MobileAppShell title="충전 요청 관리" subtitle="A-W-01">
-      <Link href="/admin" className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
-        <ArrowLeft size={16} /> 대시보드로
-      </Link>
+    <AppNavShell>
+      <PageHero>
+        <Link href="/admin" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 대시보드로
+        </Link>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">관리자</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white">충전 요청 관리</h1>
+        <div className="mt-3 flex items-end gap-2">
+          <p className="text-[36px] font-black leading-none text-white">{pending.length}건</p>
+          <p className="mb-1 text-[13px] text-white/65">대기 · {formatWon(pending.reduce((s, c) => s + c.amount, 0))}</p>
+        </div>
+      </PageHero>
 
-      <div className="mb-6 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
-        <p className="text-sm font-bold text-[var(--monari-ink-muted)]">대기 중인 충전 요청</p>
-        <p className="mt-1 text-3xl font-black text-[var(--monari-hero)]">{pending.length}건</p>
-        <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">
-          총 {formatWon(pending.reduce((s, c) => s + c.amount, 0))}
-        </p>
-      </div>
+      <PageContent className="pt-5">
 
       {pending.length === 0 ? (
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
@@ -148,6 +150,7 @@ export default async function AdminWalletChargesPage() {
           </div>
         </section>
       )}
-    </MobileAppShell>
+      </PageContent>
+    </AppNavShell>
   );
 }
