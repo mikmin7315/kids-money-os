@@ -15,7 +15,6 @@ import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { getParentWalletAction } from "@/actions/parent-wallet";
 import { formatWon, maskAccountNumber } from "@/lib/format";
-import { NotificationBell } from "@/components/notifications/notification-bell";
 
 export const dynamic = "force-dynamic";
 
@@ -87,9 +86,6 @@ export default async function HomePage() {
           <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60">
             {now.getFullYear()}년 {now.getMonth() + 1}월
           </p>
-          <div className="flex items-center gap-1">
-            <NotificationBell />
-          </div>
         </div>
 
         <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white">
