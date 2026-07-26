@@ -1,24 +1,36 @@
-import { ChevronRight, Crown, Plus, ShieldCheck, UserPlus, Wallet, Bell, Users, HeadphonesIcon, CreditCard } from "lucide-react";
+import {
+  Bell,
+  ChevronRight,
+  CreditCard,
+  Crown,
+  HeadphonesIcon,
+  TrendingUp,
+  UserPlus,
+  Users,
+  Wallet,
+  CalendarClock,
+} from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
-import { ChildPinForm } from "@/components/finance/management-forms";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
-import { formatPercent, formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
+
+const AVATAR_COLORS = [
+  "#4F7FFF", "#7C3AED", "#059669", "#D97706", "#DB2777",
+];
 
 export default async function SettingsPage() {
   const auth = await requireParentSession();
   const bundle = await getAppDataBundle();
   const hasChildren = bundle.children.length > 0;
 
-  const planLabel = auth.profile?.subscription_tier === "plus" ? "모나리 플러스" : "무료 플랜";
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
-  const childCount = bundle.children.length;
+  const planLabel = isPlusPlan ? "모나리 플러스" : "무료 플랜";
 
   return (
     <AppNavShell>
@@ -27,202 +39,209 @@ export default async function SettingsPage() {
         <h1 className="text-2xl font-extrabold tracking-tight text-white">
           {auth.profile?.name ? String(auth.profile.name) : (auth.user?.email ?? "부모")}
         </h1>
-        <p className="mt-1 text-sm text-white/65">{auth.user?.email}</p>
+        <p className="mt-0.5 text-sm text-white/60">{auth.user?.email}</p>
         <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
           {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
           <span className="text-[12px] font-bold text-white">{planLabel}</span>
         </div>
       </PageHero>
-      <PageContent className="pt-4">
 
-      {/* ① 아이 프로필 */}
-      <section className="mb-7">
-        <SectionTitle>아이 프로필</SectionTitle>
-        {hasChildren ? (
-          <div className="mt-3 space-y-3">
-            {bundle.children.map((child) => {
-              const policy = bundle.interestPolicies.find((item) => item.childId === child.id);
-              const allowance = bundle.allowanceRules.find((item) => item.childId === child.id);
+      <PageContent className="pt-5">
+
+        {/* ① 아이 프로필 */}
+        <section className="mb-6">
+          <SectionTitle>아이 프로필</SectionTitle>
+          <div className="mt-3 space-y-2">
+            {bundle.children.map((child, idx) => {
+              const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+              const initial = child.name.charAt(0);
               return (
-                <article key={child.id} className="monari-card overflow-hidden">
-                  <div className="p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="truncate text-lg font-black text-[var(--monari-ink)]">{child.name}</p>
-                        <p className="mt-1 text-xs text-[var(--monari-ink-muted)]">{child.nickname} · {child.birthYear}년생</p>
-                      </div>
-                      <div className="flex flex-col gap-1.5">
-                        <Link href={`/child/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-plus-bg)] px-3 text-xs font-bold text-[var(--monari-hero)]">
-                          통장 보기 <ChevronRight size={14} aria-hidden="true" />
-                        </Link>
-                        <Link href={`/settings/children/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-surface-soft)] px-3 text-xs font-bold text-[var(--monari-ink-soft)]">
-                          수정·삭제
-                        </Link>
-                        <Link href={`/settings/interest-confirm/${child.id}`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-xl bg-[var(--monari-hero-lo)] px-3 text-xs font-bold text-[var(--monari-hero)]">
-                          이자 확정
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="mt-4 grid grid-cols-2 gap-2">
-                      <MetricBox label="기본 이자율" value={policy ? formatPercent(policy.baseInterestRate) : "설정 전"} />
-                      <MetricBox label="용돈 금액" value={allowance ? formatWon(allowance.amount) : "설정 전"} />
-                    </div>
+                <div key={child.id} className="monari-card px-4 py-3.5 flex items-center gap-3">
+                  {/* 아바타 */}
+                  <div
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[15px] font-black text-white"
+                    style={{ background: avatarColor }}
+                  >
+                    {initial}
                   </div>
-                  <details className="border-t border-[var(--monari-line)]">
-                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-5 text-sm font-bold text-[var(--monari-ink-soft)]">
-                      아이 모드 PIN 관리
-                      <ChevronRight size={16} aria-hidden="true" />
-                    </summary>
-                    <div className="border-t border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-5">
-                      <ChildPinForm childId={child.id} />
-                    </div>
-                  </details>
-                </article>
+                  {/* 이름 */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[15px] font-extrabold text-[var(--monari-ink)] truncate">{child.name}</p>
+                    <p className="text-[12px] text-[var(--monari-ink-muted)]">{child.birthYear}년생</p>
+                  </div>
+                  {/* 액션 */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <Link
+                      href={`/child/${child.id}`}
+                      className="inline-flex h-8 items-center gap-1 rounded-[10px] bg-[var(--monari-plus-bg)] px-3 text-[12px] font-bold text-[var(--monari-hero)]"
+                    >
+                      통장 보기
+                    </Link>
+                    <Link
+                      href={`/settings/children/${child.id}`}
+                      className="inline-flex h-8 items-center rounded-[10px] bg-[var(--monari-surface-soft)] px-3 text-[12px] font-bold text-[var(--monari-ink-soft)]"
+                    >
+                      수정
+                    </Link>
+                  </div>
+                </div>
               );
             })}
+            {!hasChildren && (
+              <div className="monari-card px-4 py-5 text-center">
+                <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">아직 아이가 없어요</p>
+                <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">아이를 등록하면 용돈과 이자를 관리할 수 있어요.</p>
+              </div>
+            )}
+            <Link
+              href="/children/new"
+              className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.99]"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-[var(--monari-hero)] text-[var(--monari-hero)]">
+                <UserPlus size={16} />
+              </span>
+              <span className="text-[14px] font-bold text-[var(--monari-hero)]">아이 추가하기</span>
+              <ChevronRight size={16} className="ml-auto text-[var(--monari-hero)]" />
+            </Link>
           </div>
-        ) : (
-          <EmptyState icon={UserPlus} title="첫 아이를 등록해주세요" description="아이 프로필을 등록하면 용돈, 이자, 미리쓰기 규칙을 설정할 수 있어요." />
-        )}
-        <Link
-          href="/children/new"
-          className="monari-card mt-3 flex min-h-16 items-center gap-3 px-4 py-3 transition active:scale-[0.99]"
-        >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-plus-bg)] text-[var(--monari-hero)]">
-            <UserPlus size={19} />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-extrabold text-[var(--monari-ink)]">아이 프로필 추가</span>
-            <span className="mt-0.5 block text-xs leading-5 text-[var(--monari-ink-muted)]">새 아이의 금융 생활을 시작해요.</span>
-          </span>
-          <ChevronRight size={18} className="shrink-0 text-[var(--monari-hero)]" />
-        </Link>
-      </section>
+        </section>
 
-      {/* ② 지갑 · 결제 */}
-      <section className="mb-7">
-        <SectionTitle>지갑 · 결제</SectionTitle>
-        <div className="mt-3 space-y-2">
-          <Link href="/settings/wallet" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-              <Wallet size={17} />
-            </span>
-            <div className="flex-1">
-              <span className="text-sm font-bold text-[var(--monari-ink)]">부모 지갑 관리</span>
-              <p className="text-xs text-[var(--monari-ink-muted)]">충전 내역 · 연결 계좌</p>
-            </div>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-          <Link href="/settings/subscription" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-              {isPlusPlan ? <Crown size={17} className="text-yellow-500" /> : <CreditCard size={17} />}
-            </span>
-            <div className="flex-1">
-              <span className="text-sm font-bold text-[var(--monari-ink)]">구독 관리</span>
-              <p className="text-xs text-[var(--monari-ink-muted)]">
-                {isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
-              </p>
-            </div>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ③ 내 계정 */}
-      <section className="mb-7">
-        <SectionTitle>내 계정</SectionTitle>
-        <div className="mt-3">
-          {auth.user ? (
-            <SessionCard
-              email={auth.user.email}
-              name={auth.profile?.name ? String(auth.profile.name) : String(auth.user.user_metadata?.name ?? "")}
-              role={auth.profile?.role ? String(auth.profile.role) : "parent"}
+        {/* ② 금융 설정 */}
+        <section className="mb-6">
+          <SectionTitle>금융 설정</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/settings/wallet"
+              icon={<Wallet size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="부모 지갑"
+              sub="충전 내역 · 연결 계좌"
             />
-          ) : (
-            <EmptyState icon={ShieldCheck} title="로그인이 필요해요" description="부모 계정으로 로그인하면 가족 설정을 안전하게 관리할 수 있어요.">
-              <Link href="/login" className="monari-btn-primary mt-4 w-full">로그인하기</Link>
-            </EmptyState>
-          )}
-          {auth.user && auth.profile?.role !== "admin" && <AccountDeletionCard />}
-        </div>
-      </section>
+            <SettingsRow
+              href="/settings/allowance"
+              icon={<CalendarClock size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="정기 용돈"
+              sub="자동 지급 설정"
+            />
+            <SettingsRow
+              href="/settings/interest"
+              icon={<TrendingUp size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="이자율 설정"
+              sub="기본 이자율 · 최소·최대 범위"
+            />
+          </div>
+        </section>
 
-      {/* ④ 알림 */}
-      <section className="mb-7">
-        <SectionTitle>알림</SectionTitle>
-        <div className="mt-3 space-y-2">
-          <Link href="/settings/notifications" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
-              <Bell size={17} />
-            </span>
-            <div className="flex-1">
-              <span className="text-sm font-bold text-[var(--monari-ink)]">알림 상세 설정</span>
-              <p className="text-xs text-[var(--monari-ink-muted)]">받고 싶은 알림 종류를 선택해요</p>
-            </div>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-        </div>
-      </section>
+        {/* ③ 앱 설정 */}
+        <section className="mb-6">
+          <SectionTitle>앱 설정</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/settings/notifications"
+              icon={<Bell size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="알림 설정"
+              sub="받을 알림 종류 선택"
+            />
+            <SettingsRow
+              href="/settings/guardians"
+              icon={<Users size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="공동 보호자"
+              sub="배우자나 다른 보호자 초대"
+            />
+          </div>
+        </section>
 
-      {/* ⑤ 공동 보호자 */}
-      <section className="mb-7">
-        <SectionTitle>공동 보호자</SectionTitle>
-        <div className="mt-3 space-y-2">
-          <Link href="/settings/guardians" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
-              <Users size={17} />
-            </span>
-            <div className="flex-1">
-              <span className="text-sm font-bold text-[var(--monari-ink)]">보호자 초대 및 권한 관리</span>
-              <p className="text-xs text-[var(--monari-ink-muted)]">
-                {childCount > 0 ? `아이 ${childCount}명 · 배우자나 다른 보호자와 함께 관리해요` : "배우자나 다른 보호자와 함께 관리해요"}
-              </p>
+        {/* ④ 계정 · 구독 */}
+        <section className="mb-6">
+          <SectionTitle>계정 · 구독</SectionTitle>
+          <div className="mt-3 space-y-2">
+            <div className="monari-card divide-y divide-[var(--monari-line)]">
+              <SettingsRow
+                href="/settings/subscription"
+                icon={isPlusPlan ? <Crown size={17} className="text-yellow-500" /> : <CreditCard size={17} />}
+                iconBg="var(--monari-hero-lo)"
+                iconColor="var(--monari-hero)"
+                label="구독 관리"
+                sub={isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
+              />
             </div>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-        </div>
-      </section>
+            {auth.user && (
+              <SessionCard
+                email={auth.user.email}
+                name={auth.profile?.name ? String(auth.profile.name) : String(auth.user.user_metadata?.name ?? "")}
+                role={auth.profile?.role ? String(auth.profile.role) : "parent"}
+              />
+            )}
+            {auth.user && auth.profile?.role !== "admin" && <AccountDeletionCard />}
+          </div>
+        </section>
 
-      {/* ⑥ 고객지원 */}
-      <section className="mb-7">
-        <SectionTitle>고객지원</SectionTitle>
-        <div className="mt-3 space-y-2">
-          <Link href="/announcements" className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--monari-surface-soft)] text-[var(--monari-ink-soft)]">
-              <HeadphonesIcon size={17} />
-            </span>
-            <div className="flex-1">
-              <span className="text-sm font-bold text-[var(--monari-ink)]">공지사항</span>
-            </div>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-          <Link href="/inquiries" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="text-sm font-bold text-[var(--monari-ink)]">문의하기</span>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-          <Link href="/settings/consent-history" className="monari-card flex items-center justify-between px-4 py-3.5 transition active:scale-[0.98]">
-            <span className="text-sm font-bold text-[var(--monari-ink)]">동의 이력</span>
-            <ChevronRight size={16} className="text-[var(--monari-ink-muted)]" />
-          </Link>
-        </div>
-      </section>
+        {/* ⑤ 고객지원 */}
+        <section className="mb-8">
+          <SectionTitle>고객지원</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/announcements"
+              icon={<HeadphonesIcon size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="공지사항"
+            />
+            <SettingsRow
+              href="/inquiries"
+              label="문의하기"
+            />
+            <SettingsRow
+              href="/settings/consent-history"
+              label="동의 이력"
+            />
+          </div>
+        </section>
 
       </PageContent>
     </AppNavShell>
   );
 }
 
-function EmptyState({ icon: Icon, title, description, children }: { icon: typeof Plus; title: string; description: string; children?: React.ReactNode }) {
+function SettingsRow({
+  href,
+  icon,
+  iconBg,
+  iconColor,
+  label,
+  sub,
+}: {
+  href: string;
+  icon?: React.ReactNode;
+  iconBg?: string;
+  iconColor?: string;
+  label: string;
+  sub?: string;
+}) {
   return (
-    <div className="monari-card mt-3 p-5 text-center">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--monari-plus-bg)] text-[var(--monari-hero)]"><Icon size={21} aria-hidden="true" /></span>
-      <p className="mt-3 text-sm font-extrabold text-[var(--monari-ink)]">{title}</p>
-      <p className="mx-auto mt-1 max-w-xs text-xs leading-5 text-[var(--monari-ink-muted)]">{description}</p>
-      {children}
-    </div>
+    <Link href={href} className="flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]">
+      {icon && (
+        <span
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+          style={{ background: iconBg, color: iconColor }}
+        >
+          {icon}
+        </span>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-[14px] font-bold text-[var(--monari-ink)]">{label}</p>
+        {sub && <p className="text-[12px] text-[var(--monari-ink-muted)]">{sub}</p>}
+      </div>
+      <ChevronRight size={16} className="shrink-0 text-[var(--monari-ink-muted)]" />
+    </Link>
   );
-}
-
-function MetricBox({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-2xl border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] p-3"><p className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">{label}</p><p className="mt-1 text-sm font-extrabold text-[var(--monari-ink)]">{value}</p></div>;
 }
