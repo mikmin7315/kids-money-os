@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
-import { AppHeader } from "@/components/layout/app-header";
-import { MobileShell, PageContainer } from "@/components/ui/primitives";
+import { ArrowLeft, ChevronRight, Users } from "lucide-react";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { InviteGuardianForm } from "@/components/guardians/invite-guardian-form";
@@ -38,42 +39,57 @@ export default async function GuardiansPage() {
   });
 
   return (
-    <PageContainer>
-      <MobileShell>
-        <AppHeader eyebrow="설정" title="공동 보호자 관리" />
+    <AppNavShell>
+      <PageHero>
+        <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 설정으로
+        </Link>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">설정</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">공동 보호자</h1>
+        <p className="text-[13px] text-white/65">배우자나 다른 보호자를 초대해 함께 관리하세요</p>
+        {guardians.length > 0 && (
+          <div className="mt-3">
+            <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5 text-[12px] font-bold text-white">
+              <Users size={12} /> 보호자 {guardians.length}명
+            </span>
+          </div>
+        )}
+      </PageHero>
 
-        <div className="mb-5 rounded-[16px] bg-[var(--monari-hero-lo)] p-4">
-          <p className="text-sm font-bold text-[var(--monari-hero)]">공동 보호자란?</p>
-          <p className="mt-1 text-xs text-[var(--monari-hero)]">
-            배우자나 다른 보호자를 초대해 아이 계정을 함께 관리할 수 있어요.
-            권한은 아이별로 세밀하게 조정 가능합니다.
-          </p>
-        </div>
+      <PageContent className="pt-5">
 
-        {/* 초대 폼 */}
-        <section className="mb-5">
-          <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">보호자 초대</p>
+        {/* 보호자 초대 */}
+        <section className="mb-6">
+          <SectionTitle>보호자 초대</SectionTitle>
+          <div className="mt-3 mb-3 rounded-[14px] bg-[var(--monari-hero-lo)] px-4 py-3.5">
+            <p className="text-[12px] font-700 text-[var(--monari-hero)] mb-0.5">공동 보호자란?</p>
+            <p className="text-[12px] text-[var(--monari-hero)]/70 leading-relaxed">
+              배우자나 다른 보호자를 초대해 아이 계정을 함께 관리할 수 있어요. 권한은 아이별로 조정 가능합니다.
+            </p>
+          </div>
           <InviteGuardianForm />
         </section>
 
-        {/* 대기 중 초대 */}
+        {/* 초대 현황 */}
         {invites.length > 0 && (
-          <section className="mb-5">
-            <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">초대 현황</p>
-            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <section className="mb-6">
+            <SectionTitle>초대 현황</SectionTitle>
+            <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
               {invites.map((inv) => (
-                <div key={inv.id} className="flex items-center justify-between px-4 py-3">
+                <div key={inv.id} className="flex items-center justify-between px-4 py-3.5">
                   <div>
-                    <p className="text-sm font-semibold">{inv.email}</p>
-                    <p className="text-[11px] text-[var(--color-muted)]">
+                    <p className="text-[14px] font-700 text-[var(--monari-ink)]">{inv.email}</p>
+                    <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
                       {inv.expired ? "만료됨" : `${inv.expires_at.slice(0, 10)}까지`}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      inv.status === "accepted" ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" :
-                      inv.expired ? "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" :
-                      "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]"
+                    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-700 ${
+                      inv.status === "accepted"
+                        ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]"
+                        : inv.expired
+                        ? "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
+                        : "bg-[var(--status-pending-solid)] text-[var(--status-pending-solid-text)]"
                     }`}>
                       {inv.status === "accepted" ? "수락" : inv.expired ? "만료" : "대기"}
                     </span>
@@ -89,36 +105,41 @@ export default async function GuardiansPage() {
 
         {/* 등록된 보호자 */}
         {guardians.length > 0 && (
-          <section className="mb-5">
-            <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">등록된 보호자</p>
-            <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
+          <section className="mb-6">
+            <SectionTitle>등록된 보호자</SectionTitle>
+            <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
               {guardians.map((g) => (
                 <Link
                   key={g.id}
                   href={`/settings/guardians/${g.guardian_id}?child=${g.child_id}`}
-                  className="flex items-center justify-between px-4 py-3"
+                  className="flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.98]"
                 >
-                  <div>
-                    <p className="text-sm font-semibold">{g.email}</p>
-                    <p className="text-[11px] text-[var(--color-muted)]">{g.child_name} 담당</p>
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+                    <Users size={16} />
                   </div>
-                  <span className="text-xs text-[var(--color-accent)]">권한 설정 →</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-700 text-[var(--monari-ink)] truncate">{g.email}</p>
+                    <p className="text-[12px] text-[var(--monari-ink-muted)]">{g.child_name} 담당</p>
+                  </div>
+                  <ChevronRight size={16} className="shrink-0 text-[var(--monari-ink-muted)]" />
                 </Link>
               ))}
             </div>
           </section>
         )}
 
+        {/* 빈 상태 */}
         {invites.length === 0 && guardians.length === 0 && (
-          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center text-sm text-[var(--color-muted)]">
-            아직 초대한 보호자가 없어요.
+          <div className="monari-card px-5 py-12 text-center">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              <Users size={26} />
+            </span>
+            <p className="mt-4 text-[16px] font-800 text-[var(--monari-ink)]">아직 초대한 보호자가 없어요</p>
+            <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">위 폼으로 배우자나 다른 보호자를 초대해보세요.</p>
           </div>
         )}
 
-        <div className="mt-4">
-          <Link href="/settings" className="text-sm font-bold text-[var(--color-accent)]">← 설정으로</Link>
-        </div>
-      </MobileShell>
-    </PageContainer>
+      </PageContent>
+    </AppNavShell>
   );
 }

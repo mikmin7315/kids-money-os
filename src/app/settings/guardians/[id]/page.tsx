@@ -1,7 +1,8 @@
 ﻿import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AppHeader } from "@/components/layout/app-header";
-import { MobileShell, PageContainer } from "@/components/ui/primitives";
+import { ArrowLeft, Users } from "lucide-react";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { GuardianPermissionsForm } from "@/components/guardians/guardian-permissions-form";
@@ -42,32 +43,51 @@ export default async function GuardianDetailPage({
   ] as const;
 
   return (
-    <PageContainer>
-      <MobileShell>
-        <AppHeader eyebrow="설정 · 보호자" title="권한 설정" />
+    <AppNavShell>
+      <PageHero>
+        <Link href="/settings/guardians" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 보호자 목록으로
+        </Link>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">설정 · 보호자</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">권한 설정</h1>
+        <p className="text-[13px] text-white/65">{String(child?.name ?? "-")} 담당 보호자</p>
+      </PageHero>
 
-        <div className="mb-5 rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
-          <p className="text-sm font-extrabold">{String(profile?.email ?? "-")}</p>
-          <p className="text-[11px] text-[var(--color-muted)]">{String(child?.name ?? "-")} 담당 보호자</p>
-        </div>
+      <PageContent className="pt-5">
 
-        <GuardianPermissionsForm
-          guardianId={guardianId}
-          childId={childId ?? ""}
-          permissions={{
-            can_give_allowance: Boolean(record.can_give_allowance),
-            can_approve_behavior: Boolean(record.can_approve_behavior),
-            can_approve_borrow: Boolean(record.can_approve_borrow),
-            can_change_settings: Boolean(record.can_change_settings),
-            can_invite_guardian: Boolean(record.can_invite_guardian),
-          }}
-          permissionDefs={PERMISSIONS}
-        />
+        {/* 보호자 정보 */}
+        <section className="mb-6">
+          <div className="monari-card flex items-center gap-3 px-4 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              <Users size={18} />
+            </div>
+            <div>
+              <p className="text-[15px] font-800 text-[var(--monari-ink)]">{String(profile?.email ?? "-")}</p>
+              <p className="text-[12px] text-[var(--monari-ink-muted)]">{String(child?.name ?? "-")} 담당 보호자</p>
+            </div>
+          </div>
+        </section>
 
-        <div className="mt-4">
-          <Link href="/settings/guardians" className="text-sm font-bold text-[var(--color-accent)]">← 보호자 목록으로</Link>
-        </div>
-      </MobileShell>
-    </PageContainer>
+        {/* 권한 설정 */}
+        <section className="mb-6">
+          <SectionTitle>권한</SectionTitle>
+          <div className="mt-3">
+            <GuardianPermissionsForm
+              guardianId={guardianId}
+              childId={childId ?? ""}
+              permissions={{
+                can_give_allowance: Boolean(record.can_give_allowance),
+                can_approve_behavior: Boolean(record.can_approve_behavior),
+                can_approve_borrow: Boolean(record.can_approve_borrow),
+                can_change_settings: Boolean(record.can_change_settings),
+                can_invite_guardian: Boolean(record.can_invite_guardian),
+              }}
+              permissionDefs={PERMISSIONS}
+            />
+          </div>
+        </section>
+
+      </PageContent>
+    </AppNavShell>
   );
 }
