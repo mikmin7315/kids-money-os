@@ -1,11 +1,47 @@
 ﻿"use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
+import { CheckCircle2, AlertCircle, X } from "lucide-react";
 import {
   chargeParentWalletAction,
   saveParentBankAccountAction,
 } from "@/actions/parent-wallet";
 import { MoneyInput } from "@/components/ui/money-input";
+
+function FormMessage({ state }: { state: { ok: boolean; message: string } }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    setVisible(true);
+    if (!state.ok || !state.message) return;
+    const t = setTimeout(() => setVisible(false), 4000);
+    return () => clearTimeout(t);
+  }, [state]);
+
+  if (!state.message || !visible) return null;
+
+  return (
+    <div
+      role={state.ok ? "status" : "alert"}
+      aria-live="polite"
+      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-semibold ${
+        state.ok
+          ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"
+          : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"
+      }`}
+    >
+      {state.ok
+        ? <CheckCircle2 size={16} className="mt-px shrink-0" aria-hidden="true" />
+        : <AlertCircle size={16} className="mt-px shrink-0" aria-hidden="true" />}
+      <span className="flex-1">{state.message}</span>
+      {!state.ok && (
+        <button type="button" onClick={() => setVisible(false)} className="ml-1 shrink-0 opacity-60 hover:opacity-100" aria-label="닫기">
+          <X size={14} />
+        </button>
+      )}
+    </div>
+  );
+}
 
 const QUICK_AMOUNTS = [10000, 30000, 50000, 100000];
 
@@ -69,9 +105,7 @@ export function WalletChargeForm() {
         <p style={{ fontSize: 12, color: "var(--monari-ink-muted)", marginTop: 6 }}>최소 1,000원 · 최대 100만 원</p>
       </div>
 
-      {state.message && !state.ok && (
-        <p style={{ fontSize: 14, color: "var(--monari-minus)", fontWeight: 600 }}>{state.message}</p>
-      )}
+      <FormMessage state={state} />
 
       <button
         type="submit"
@@ -146,9 +180,7 @@ export function BankAccountForm({
         />
       </div>
 
-      {state.message && !state.ok && (
-        <p style={{ fontSize: 14, color: "var(--monari-minus)", fontWeight: 600 }}>{state.message}</p>
-      )}
+      <FormMessage state={state} />
 
       <button type="submit" disabled={pending} className="monari-btn-primary w-full">
         {pending ? "저장 중..." : "계좌 저장"}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
+import { CheckCircle2, AlertCircle, X } from "lucide-react";
 import {
   createBehaviorRuleForm,
   updateBehaviorRuleForm,
@@ -256,11 +257,42 @@ function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
 }
 
 function FormMessage({ state }: { state: ManagementFormState }) {
-  if (!state.message) return null;
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    setVisible(true);
+    if (!state.ok || !state.message) return;
+    const t = setTimeout(() => setVisible(false), 4000);
+    return () => clearTimeout(t);
+  }, [state]);
+
+  if (!state.message || !visible) return null;
+
   return (
-    <p role="status" aria-live="polite" className={`rounded-xl px-3 py-2.5 text-sm font-semibold ${state.ok ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"}`}>
-      {state.message}
-    </p>
+    <div
+      role={state.ok ? "status" : "alert"}
+      aria-live="polite"
+      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-600 ${
+        state.ok
+          ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"
+          : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"
+      }`}
+    >
+      {state.ok
+        ? <CheckCircle2 size={16} className="mt-px shrink-0" aria-hidden="true" />
+        : <AlertCircle size={16} className="mt-px shrink-0" aria-hidden="true" />}
+      <span className="flex-1">{state.message}</span>
+      {!state.ok && (
+        <button
+          type="button"
+          onClick={() => setVisible(false)}
+          className="ml-1 shrink-0 opacity-60 hover:opacity-100"
+          aria-label="닫기"
+        >
+          <X size={14} />
+        </button>
+      )}
+    </div>
   );
 }
 
