@@ -509,7 +509,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             {!peer ? (
               <div className="monari-card p-5 text-center">
                 <p className="text-[14px] font-bold text-[var(--monari-ink)]">아직 비교 데이터가 부족해요</p>
-                <p className="text-[12px] text-[var(--monari-ink-muted)] mt-1">같은 연령대 표본이 10명 이상 모이면 또래 통계를 보여드려요.</p>
+                <p className="text-[12px] text-[var(--monari-ink-muted)] mt-1">같은 연령대 데이터가 모이면 또래 통계를 보여드려요.</p>
                 {!parentRegion && (
                   <a href="/settings/region" className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[var(--monari-hero)]">
                     거주 지역 설정하기 →
