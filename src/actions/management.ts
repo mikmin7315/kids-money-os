@@ -904,6 +904,32 @@ export async function updateChildAction(input: {
   }
 }
 
+// ────────────────────────────────────────────────────────────
+// 지역 설정
+// ────────────────────────────────────────────────────────────
+
+export async function updateRegionAction(region: string | null): Promise<ActionResult<void>> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
+
+  if (isDemoMode()) return { ok: true };
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({ region })
+      .eq("id", auth.user.id);
+    if (error) throw error;
+    revalidatePath("/settings");
+    revalidatePath("/settings/region");
+    revalidatePath("/reports");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "지역 저장 실패" };
+  }
+}
+
 export async function deleteChildAction(childId: string): Promise<ActionResult<void>> {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };

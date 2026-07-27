@@ -6,6 +6,7 @@ import {
   Crown,
   FileText,
   History,
+  MapPin,
   Megaphone,
   MessageSquare,
   TrendingUp,
@@ -33,6 +34,7 @@ export default async function SettingsPage() {
   const childCount = bundle.children.length;
 
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
+  const currentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
   const planLabel = isPlusPlan ? "모나리 플러스" : "무료 플랜";
   const displayName = auth.profile?.name ? String(auth.profile.name) : (auth.user?.email?.split("@")[0] ?? "부모");
 
@@ -177,6 +179,14 @@ export default async function SettingsPage() {
                 iconColor="var(--monari-hero)"
                 label="구독 관리"
                 sub={isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
+              />
+              <SettingsRow
+                href="/settings/region"
+                icon={<MapPin size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="거주 지역"
+                sub={currentRegion ?? "미설정 · 동네 또래 비교에 사용"}
               />
               <SettingsRow
                 href="/settings/notifications"

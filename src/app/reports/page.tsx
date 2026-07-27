@@ -24,6 +24,8 @@ type PeerStatsView = {
   behaviorRate: number;
   spendBreakdown: SpendBreakdownItem[];
   sampleSize: number;
+  isRegional: boolean;
+  regionLabel: string;
 };
 
 function getAgeGroup(birthYear?: number): AgeGroup {
@@ -88,7 +90,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
   const primaryChild = primary ? bundle.children.find((c) => c.id === primary.child.id) : null;
   const ageGroup = getAgeGroup(primaryChild?.birthYear);
-  const peer = primary ? await getPeerStats(ageGroup) : null;
+  const parentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
+  const peer = primary ? await getPeerStats(ageGroup, parentRegion) : null;
 
   const peerMaxAllowance = peer ? Math.max(allowance, peer.avgAllowance, 1) : 1;
   const peerAllowancePct = peer ? Math.round((peer.avgAllowance / peerMaxAllowance) * 100) : 0;
@@ -491,15 +494,27 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">또래 비교</p>
             <div className="flex items-center gap-2 mb-3">
-              <p className="text-[16px] font-extrabold text-[var(--monari-ink)]">전국 또래 평균</p>
+              <p className="text-[16px] font-extrabold text-[var(--monari-ink)]">
+                {peer?.isRegional ? `${peer.regionLabel} 또래` : "전국 또래 평균"}
+              </p>
               <span className="rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-0.5 text-[11px] font-extrabold text-[var(--monari-hero)]">
                 {ageGroup}세
               </span>
+              {peer?.isRegional && (
+                <span className="rounded-full bg-[var(--monari-done-bg)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--monari-done)]">
+                  동네
+                </span>
+              )}
             </div>
             {!peer ? (
               <div className="monari-card p-5 text-center">
                 <p className="text-[14px] font-bold text-[var(--monari-ink)]">아직 비교 데이터가 부족해요</p>
                 <p className="text-[12px] text-[var(--monari-ink-muted)] mt-1">같은 연령대 표본이 10명 이상 모이면 또래 통계를 보여드려요.</p>
+                {!parentRegion && (
+                  <a href="/settings/region" className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[var(--monari-hero)]">
+                    거주 지역 설정하기 →
+                  </a>
+                )}
               </div>
             ) : (
               <div className="space-y-3">
@@ -530,7 +545,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                         : `또래 평균보다 ${formatWon(peer.avgAllowance - allowance)} 적어요`}
                     </div>
                   )}
-                  <p className="mt-2 text-right text-[10px] text-[var(--monari-ink-muted)]">익명 표본 {peer.sampleSize}명</p>
+                  <p className="mt-2 text-right text-[10px] text-[var(--monari-ink-muted)]">
+                    {peer.isRegional ? peer.regionLabel : "전국"} 익명 표본 {peer.sampleSize}명
+                  </p>
+                  {!peer.isRegional && !parentRegion && (
+                    <a href="/settings/region" className="mt-2 flex justify-end text-[11px] font-bold text-[var(--monari-hero)]">
+                      거주 지역 설정 시 동네 비교 가능 →
+                    </a>
+                  )}
                 </div>
                 <PremiumLockedCard
                   isPremium={IS_PREMIUM}
@@ -754,8 +776,35 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   );
 }
 
-async function getPeerStats(ageGroup: AgeGroup): Promise<PeerStatsView | null> {
+async function getPeerStats(ageGroup: AgeGroup, region: string | null): Promise<PeerStatsView | null> {
   const supabase = await getSupabaseServerClient();
+
+  // 지역 데이터 먼저 시도 (sample_size >= 5)
+  if (region) {
+    const { data: regional } = await supabase
+      .from("peer_stats")
+      .select("avg_allowance,avg_savings_rate,avg_behavior_rate,spend_breakdown,sample_size")
+      .eq("age_group", ageGroup)
+      .eq("region", region)
+      .gte("sample_size", 5)
+      .order("week_start", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (regional) {
+      const row = regional as PeerStatsRow;
+      return {
+        avgAllowance: Number(row.avg_allowance ?? 0),
+        savingsRate: Number(row.avg_savings_rate ?? 0),
+        behaviorRate: Number(row.avg_behavior_rate ?? 0),
+        spendBreakdown: Array.isArray(row.spend_breakdown) ? row.spend_breakdown.filter(isSpendBreakdownItem).slice(0, 4) : [],
+        sampleSize: Number(row.sample_size ?? 0),
+        isRegional: true,
+        regionLabel: region,
+      };
+    }
+  }
+
+  // 전국 데이터로 폴백
   const { data, error } = await supabase
     .from("peer_stats")
     .select("avg_allowance,avg_savings_rate,avg_behavior_rate,spend_breakdown,sample_size")
@@ -767,15 +816,14 @@ async function getPeerStats(ageGroup: AgeGroup): Promise<PeerStatsView | null> {
     .maybeSingle();
   if (error || !data) return null;
   const row = data as PeerStatsRow;
-  const spendBreakdown = Array.isArray(row.spend_breakdown)
-    ? row.spend_breakdown.filter(isSpendBreakdownItem).slice(0, 4)
-    : [];
   return {
     avgAllowance: Number(row.avg_allowance ?? 0),
     savingsRate: Number(row.avg_savings_rate ?? 0),
     behaviorRate: Number(row.avg_behavior_rate ?? 0),
-    spendBreakdown,
+    spendBreakdown: Array.isArray(row.spend_breakdown) ? row.spend_breakdown.filter(isSpendBreakdownItem).slice(0, 4) : [],
     sampleSize: Number(row.sample_size ?? 0),
+    isRegional: false,
+    regionLabel: "전국",
   };
 }
 
