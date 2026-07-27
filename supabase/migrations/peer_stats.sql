@@ -92,8 +92,7 @@ drop policy if exists "peer_stats_select" on public.peer_stats;
 create policy "peer_stats_select" on public.peer_stats
   for select to authenticated
   using (
-    sample_size >= 10
-    and exists (
+    exists (
       select 1
       from public.profiles
       where id = auth.uid() and role in ('parent', 'admin')
