@@ -1,17 +1,16 @@
 import {
   Bell,
+  CalendarClock,
   ChevronRight,
   CreditCard,
   Crown,
-  HeadphonesIcon,
+  FileText,
+  Megaphone,
+  MessageSquare,
   TrendingUp,
   UserPlus,
   Users,
   Wallet,
-  CalendarClock,
-  Megaphone,
-  MessageSquare,
-  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
@@ -30,49 +29,51 @@ const AVATAR_COLORS = [
 export default async function SettingsPage() {
   const auth = await requireParentSession();
   const bundle = await getAppDataBundle();
-  const hasChildren = bundle.children.length > 0;
+  const childCount = bundle.children.length;
 
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
   const planLabel = isPlusPlan ? "모나리 플러스" : "무료 플랜";
+  const displayName = auth.profile?.name ? String(auth.profile.name) : (auth.user?.email?.split("@")[0] ?? "부모");
 
   return (
     <AppNavShell>
       <PageHero>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">내 계정</p>
-        <h1 className="text-2xl font-extrabold tracking-tight text-white">
-          {auth.profile?.name ? String(auth.profile.name) : (auth.user?.email ?? "부모")}
-        </h1>
-        <p className="mt-0.5 text-sm text-white/60">{auth.user?.email}</p>
-        <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
-          {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
-          <span className="text-[12px] font-bold text-white">{planLabel}</span>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white">{displayName}</h1>
+        <p className="mt-0.5 text-[13px] text-white/55">{auth.user?.email}</p>
+
+        {/* 플랜 + 아이 수 뱃지 */}
+        <div className="mt-4 flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
+            {isPlusPlan && <Crown size={12} className="text-yellow-300" />}
+            <span className="text-[12px] font-bold text-white">{planLabel}</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-[10px] border border-white/20 bg-white/10 px-3 py-1.5">
+            <span className="text-[12px] font-bold text-white">아이 {childCount}명</span>
+          </span>
         </div>
       </PageHero>
 
       <PageContent className="pt-5">
 
-        {/* ① 아이 프로필 */}
+        {/* ① 가족 */}
         <section className="mb-6">
-          <SectionTitle>아이 프로필</SectionTitle>
+          <SectionTitle>가족</SectionTitle>
           <div className="mt-3 space-y-2">
             {bundle.children.map((child, idx) => {
               const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length];
-              const initial = child.name.charAt(0);
               return (
                 <div key={child.id} className="monari-card px-4 py-3.5 flex items-center gap-3">
-                  {/* 아바타 */}
                   <div
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[15px] font-black text-white"
                     style={{ background: avatarColor }}
                   >
-                    {initial}
+                    {child.name.charAt(0)}
                   </div>
-                  {/* 이름 */}
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-extrabold text-[var(--monari-ink)] truncate">{child.name}</p>
                     <p className="text-[12px] text-[var(--monari-ink-muted)]">{child.birthYear}년생</p>
                   </div>
-                  {/* 액션 */}
                   <div className="flex items-center gap-1.5 shrink-0">
                     <Link
                       href={`/child/${child.id}`}
@@ -90,12 +91,15 @@ export default async function SettingsPage() {
                 </div>
               );
             })}
-            {!hasChildren && (
+
+            {childCount === 0 && (
               <div className="monari-card px-4 py-5 text-center">
                 <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">아직 아이가 없어요</p>
                 <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">아이를 등록하면 용돈과 이자를 관리할 수 있어요.</p>
               </div>
             )}
+
+            {/* 아이 추가 */}
             <Link
               href="/children/new"
               className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.99]"
@@ -106,6 +110,18 @@ export default async function SettingsPage() {
               <span className="text-[14px] font-bold text-[var(--monari-hero)]">아이 추가하기</span>
               <ChevronRight size={16} className="ml-auto text-[var(--monari-hero)]" />
             </Link>
+
+            {/* 공동 보호자 — 가족 관리의 일부 */}
+            <div className="monari-card divide-y divide-[var(--monari-line)]">
+              <SettingsRow
+                href="/settings/guardians"
+                icon={<Users size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="공동 보호자"
+                sub="배우자나 다른 보호자 초대"
+              />
+            </div>
           </div>
         </section>
 
@@ -140,32 +156,9 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ③ 앱 설정 */}
+        {/* ③ 계정 */}
         <section className="mb-6">
-          <SectionTitle>앱 설정</SectionTitle>
-          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
-            <SettingsRow
-              href="/settings/notifications"
-              icon={<Bell size={17} />}
-              iconBg="var(--monari-surface-soft)"
-              iconColor="var(--monari-ink-soft)"
-              label="알림 설정"
-              sub="받을 알림 종류 선택"
-            />
-            <SettingsRow
-              href="/settings/guardians"
-              icon={<Users size={17} />}
-              iconBg="var(--monari-surface-soft)"
-              iconColor="var(--monari-ink-soft)"
-              label="공동 보호자"
-              sub="배우자나 다른 보호자 초대"
-            />
-          </div>
-        </section>
-
-        {/* ④ 계정 · 구독 */}
-        <section className="mb-6">
-          <SectionTitle>계정 · 구독</SectionTitle>
+          <SectionTitle>계정</SectionTitle>
           <div className="mt-3 space-y-2">
             <div className="monari-card divide-y divide-[var(--monari-line)]">
               <SettingsRow
@@ -176,6 +169,14 @@ export default async function SettingsPage() {
                 label="구독 관리"
                 sub={isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
               />
+              <SettingsRow
+                href="/settings/notifications"
+                icon={<Bell size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="알림 설정"
+                sub="받을 알림 종류 선택"
+              />
             </div>
             {auth.user && (
               <SessionCard
@@ -184,35 +185,37 @@ export default async function SettingsPage() {
                 role={auth.profile?.role ? String(auth.profile.role) : "parent"}
               />
             )}
-            {auth.user && auth.profile?.role !== "admin" && <AccountDeletionCard />}
           </div>
         </section>
 
-        {/* ⑤ 고객지원 */}
+        {/* ④ 정보 · 지원 */}
         <section className="mb-8">
-          <SectionTitle>고객지원</SectionTitle>
-          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
-            <SettingsRow
-              href="/announcements"
-              icon={<Megaphone size={17} />}
-              iconBg="var(--monari-surface-soft)"
-              iconColor="var(--monari-ink-soft)"
-              label="공지사항"
-            />
-            <SettingsRow
-              href="/inquiries"
-              icon={<MessageSquare size={17} />}
-              iconBg="var(--monari-surface-soft)"
-              iconColor="var(--monari-ink-soft)"
-              label="문의하기"
-            />
-            <SettingsRow
-              href="/settings/consent-history"
-              icon={<FileText size={17} />}
-              iconBg="var(--monari-surface-soft)"
-              iconColor="var(--monari-ink-soft)"
-              label="동의 이력"
-            />
+          <SectionTitle>정보 · 지원</SectionTitle>
+          <div className="mt-3 space-y-2">
+            <div className="monari-card divide-y divide-[var(--monari-line)]">
+              <SettingsRow
+                href="/announcements"
+                icon={<Megaphone size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="공지사항"
+              />
+              <SettingsRow
+                href="/inquiries"
+                icon={<MessageSquare size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="문의하기"
+              />
+              <SettingsRow
+                href="/settings/consent-history"
+                icon={<FileText size={17} />}
+                iconBg="var(--monari-surface-soft)"
+                iconColor="var(--monari-ink-soft)"
+                label="동의 이력"
+              />
+            </div>
+            {auth.user && auth.profile?.role !== "admin" && <AccountDeletionCard />}
           </div>
         </section>
 
