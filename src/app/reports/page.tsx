@@ -779,14 +779,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 async function getPeerStats(ageGroup: AgeGroup, region: string | null): Promise<PeerStatsView | null> {
   const supabase = await getSupabaseServerClient();
 
-  // 지역 데이터 먼저 시도 (sample_size >= 5)
+  // 지역 데이터 먼저 시도 (sample_size >= 2)
   if (region) {
     const { data: regional } = await supabase
       .from("peer_stats")
       .select("avg_allowance,avg_savings_rate,avg_behavior_rate,spend_breakdown,sample_size")
       .eq("age_group", ageGroup)
       .eq("region", region)
-      .gte("sample_size", 5)
+      .gte("sample_size", 2)
       .order("week_start", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -810,7 +810,7 @@ async function getPeerStats(ageGroup: AgeGroup, region: string | null): Promise<
     .select("avg_allowance,avg_savings_rate,avg_behavior_rate,spend_breakdown,sample_size")
     .eq("age_group", ageGroup)
     .is("region", null)
-    .gte("sample_size", 10)
+    .gte("sample_size", 1)
     .order("week_start", { ascending: false })
     .limit(1)
     .maybeSingle();
