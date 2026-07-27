@@ -7,7 +7,7 @@ Next.js 16 App Router + Supabase + TypeScript. `src/` 구조.
 - **Frontend**: Next.js 16 App Router, React 19, TypeScript
 - **Backend**: Supabase (Auth, DB, Edge Functions)
 - **Styling**: Tailwind CSS, lucide-react
-- **배포**: Vercel (예정)
+- **배포**: Vercel — https://kids-money-os.vercel.app
 
 ## 프로젝트 구조
 
