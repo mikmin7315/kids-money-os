@@ -257,6 +257,9 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 </div>
               )}
 
+              {/* 오늘의 금융 대화 팁 */}
+              <CoachingTipCard today={today} childName={child.name} />
+
               {/* 이자 미리보기 */}
               {policy && summary.wallet.balance > 0 && (
                 <div className="mb-5">
@@ -431,6 +434,52 @@ function KidFlowCard({ icon, label, value, bg, textColor }: {
       <p className="tabular-nums text-[20px] font-900 leading-none" style={{ color: textColor, letterSpacing: "-0.02em" }}>
         {value}
       </p>
+    </div>
+  );
+}
+
+const COACHING_TIPS = [
+  { emoji: "🛒", topic: "계획 소비", tip: "오늘 살 것을 미리 정해봤어?", sub: "계획하고 사면 후회가 훨씬 적어요!" },
+  { emoji: "🎁", topic: "이자의 비밀", tip: "이자가 뭔지 알아?", sub: "돈을 모아두면 은행이 선물처럼 돈을 더 줘요" },
+  { emoji: "🎯", topic: "저축 목표", tip: "저금해서 뭘 살 거야?", sub: "목표가 있으면 저금이 더 즐거워져요" },
+  { emoji: "💝", topic: "돈 나누기", tip: "용돈을 3가지로 나눠볼까?", sub: "쓸 돈 · 모을 돈 · 나눌 돈으로 나눠봐요" },
+  { emoji: "✅", topic: "약속 연결", tip: "약속을 지키면 이자율이 올라가!", sub: "이자율이 높을수록 돈이 더 빨리 자라요" },
+  { emoji: "❓", topic: "필요 vs 원함", tip: "이게 꼭 필요한 건지, 그냥 갖고 싶은 건지?", sub: "필요한 것 먼저, 그다음 원하는 것 순서예요" },
+  { emoji: "📈", topic: "복리 마법", tip: "1년 동안 매달 1만원씩 모으면 얼마가 될까?", sub: "이자가 붙으면 12만원보다 조금 더 돼요!" },
+  { emoji: "💼", topic: "돈 버는 방법", tip: "돈을 벌려면 어떤 일을 할 수 있을까?", sub: "집안일 돕기, 재활용하기 같은 것도 돼요" },
+  { emoji: "🐷", topic: "저금 습관", tip: "용돈을 받으면 가장 먼저 뭘 해?", sub: "저금을 먼저 하고 나서 쓰는 습관이 좋아요" },
+  { emoji: "🤝", topic: "빌리기와 갚기", tip: "친구가 돈을 빌려달라고 하면 어떻게 할래?", sub: "빌려줄 땐 언제 갚을지 꼭 정해두는 게 좋아요" },
+  { emoji: "🌱", topic: "작은 시작", tip: "100원도 저금이 될까?", sub: "작은 돈도 꾸준히 모으면 크게 자라요" },
+  { emoji: "🏆", topic: "목표 달성", tip: "이번 달 가장 잘한 소비는 뭐야?", sub: "잘한 것을 기억하면 다음번에도 잘할 수 있어요" },
+  { emoji: "🔒", topic: "안전한 돈", tip: "은행에 돈을 왜 맡길까?", sub: "안전하게 보관하면서 이자도 받을 수 있거든요" },
+  { emoji: "📊", topic: "기록의 힘", tip: "이번 달 뭘 샀는지 기억해?", sub: "기록을 보면 다음 달을 더 잘 계획할 수 있어요" },
+  { emoji: "🌍", topic: "나눔의 기쁨", tip: "내 용돈으로 다른 사람을 도울 수 있을까?", sub: "조금씩 나누면 기쁨이 두 배가 돼요" },
+];
+
+function CoachingTipCard({ today, childName }: { today: string; childName: string }) {
+  const dayOfYear = Math.floor((new Date(today).getTime() - new Date(today.slice(0, 4) + "-01-01").getTime()) / 86400000);
+  const tip = COACHING_TIPS[dayOfYear % COACHING_TIPS.length];
+
+  return (
+    <div className="mb-5 overflow-hidden rounded-[20px]" style={{ background: "linear-gradient(135deg,#F5F0FF 0%,#EDE9FE 100%)", border: "1px solid #C4B5FD" }}>
+      <div className="px-4 pt-4 pb-3">
+        <div className="flex items-center gap-2 mb-2.5">
+          <span className="rounded-full bg-[#6C3FE8]/10 px-2.5 py-0.5 text-[10px] font-800 text-[#6C3FE8]">💬 오늘의 대화</span>
+          <span className="text-[10px] font-600 text-[#94a3b8]">{tip.topic}</span>
+        </div>
+        <div className="flex items-start gap-3">
+          <span className="text-[32px] leading-none">{tip.emoji}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-[15px] font-900 leading-snug" style={{ color: "#1C1033", letterSpacing: "-0.02em" }}>
+              {childName}야, {tip.tip}
+            </p>
+            <p className="mt-1.5 text-[12px] font-600 leading-5" style={{ color: "#5530CB" }}>{tip.sub}</p>
+          </div>
+        </div>
+      </div>
+      <div className="border-t border-[#C4B5FD]/60 px-4 py-2.5">
+        <p className="text-[10px] font-600 text-[#94a3b8]">부모님과 함께 이야기 해봐요 · 내일 또 새로운 팁이 와요</p>
+      </div>
     </div>
   );
 }
