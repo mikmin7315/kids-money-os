@@ -261,7 +261,51 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             </div>
           </div>
 
-          {/* ② 이달 현황 숫자 — 저축/지출/통장 */}
+          {/* ② 금융 건강 점수 — 백분위 포함 */}
+          {healthScore > 0 && (
+            <section className="mb-5">
+              <div className="rounded-[20px] overflow-hidden" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #4F7FFF 100%)" }}>
+                <div className="px-5 py-5">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-[11px] font-bold text-white/60 mb-0.5 tracking-[0.06em] uppercase">금융 건강 점수</p>
+                      <p className="text-[12px] text-white/50">저축 · 약속 · 이자 종합</p>
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-black text-white">
+                          상위 {100 - healthPercentile}%
+                        </span>
+                        <span className="text-[11px] text-white/50">또래 추정</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[52px] font-black leading-none tabular-nums text-white">{healthScore}</p>
+                      <span className="inline-block rounded-lg bg-white/20 px-2.5 py-0.5 text-[13px] font-black text-white mt-1">{healthGrade}</span>
+                    </div>
+                  </div>
+                  <div className="mb-2 h-2 rounded-full bg-white/20 overflow-hidden">
+                    <div className="h-2 rounded-full bg-white transition-all duration-700" style={{ width: `${healthScore}%` }} />
+                  </div>
+                  <p className="text-[13px] font-semibold text-white/80">{healthMsg}</p>
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">저축률</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{saveRatio}%</p>
+                    </div>
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">약속 달성</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{behRate}%</p>
+                    </div>
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">이자</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{interest > 0 ? formatWon(interest) : "—"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ④ 이달 현황 숫자 — 저축/지출/통장 */}
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">이달 현황</p>
             <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">저축 · 지출 · 통장</p>
@@ -320,7 +364,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             )}
           </section>
 
-          {/* ③ 소비성향 유형 배지 */}
+          {/* ③ 소비성향 유형 배지 — 건강점수 바로 다음 */}
           {personality && (
             <section className="mb-5">
               <p className="monari-eyebrow mb-1">소비성향 분석</p>
@@ -438,50 +482,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                       ? "이대로라면 이달 저축 목표(30%)를 달성할 수 있어요 🎉"
                       : `저축률 30%까지 ${30 - projectedSaveRate}%p 남았어요. 함께 계획을 세워보세요.`}
                   </p>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* ⑥ 금융 건강 점수 — 백분위 포함 */}
-          {healthScore > 0 && (
-            <section className="mb-5">
-              <div className="rounded-[20px] overflow-hidden" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #4F7FFF 100%)" }}>
-                <div className="px-5 py-5">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <p className="text-[11px] font-bold text-white/60 mb-0.5 tracking-[0.06em] uppercase">금융 건강 점수</p>
-                      <p className="text-[12px] text-white/50">저축 · 약속 · 이자 종합</p>
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-black text-white">
-                          상위 {100 - healthPercentile}%
-                        </span>
-                        <span className="text-[11px] text-white/50">또래 추정</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[52px] font-black leading-none tabular-nums text-white">{healthScore}</p>
-                      <span className="inline-block rounded-lg bg-white/20 px-2.5 py-0.5 text-[13px] font-black text-white mt-1">{healthGrade}</span>
-                    </div>
-                  </div>
-                  <div className="mb-2 h-2 rounded-full bg-white/20 overflow-hidden">
-                    <div className="h-2 rounded-full bg-white transition-all duration-700" style={{ width: `${healthScore}%` }} />
-                  </div>
-                  <p className="text-[13px] font-semibold text-white/80">{healthMsg}</p>
-                  <div className="mt-3 grid grid-cols-3 gap-2">
-                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                      <p className="text-[10px] text-white/60 mb-0.5">저축률</p>
-                      <p className="text-[14px] font-black text-white tabular-nums">{saveRatio}%</p>
-                    </div>
-                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                      <p className="text-[10px] text-white/60 mb-0.5">약속 달성</p>
-                      <p className="text-[14px] font-black text-white tabular-nums">{behRate}%</p>
-                    </div>
-                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                      <p className="text-[10px] text-white/60 mb-0.5">이자</p>
-                      <p className="text-[14px] font-black text-white tabular-nums">{interest > 0 ? formatWon(interest) : "—"}</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </section>
