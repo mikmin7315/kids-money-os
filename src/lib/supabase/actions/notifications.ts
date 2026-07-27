@@ -72,6 +72,29 @@ export async function countUnreadParentNotificationsAction(): Promise<number> {
   }
 }
 
+export async function countUnreadChildNotificationsAction(childId: string): Promise<number> {
+  if (isDemoMode()) return 0;
+
+  try {
+    const [auth, childMode] = await Promise.all([requireAppConsent(), getChildModeContext()]);
+    if (!auth.user) return 0;
+    if (!childMode.childId || childMode.childId !== childId) return 0;
+
+    const supabase = await getSupabaseServerClient();
+    const { count, error } = await supabase
+      .from("notifications")
+      .select("id", { count: "exact", head: true })
+      .eq("target", "child")
+      .eq("child_id", childId)
+      .eq("is_read", false);
+
+    if (error) throw error;
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 export async function markNotificationsReadAction(ids: string[]): Promise<ActionResult<void>> {
   const uniqueIds = [...new Set(ids)].slice(0, 50);
   if (isDemoMode() || uniqueIds.length === 0) return { ok: true };

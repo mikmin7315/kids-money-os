@@ -3,12 +3,14 @@ import { notFound, redirect } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
+  Bell,
   Check,
   PiggyBank,
   Sparkles,
 } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
+import { countUnreadChildNotificationsAction } from "@/lib/supabase/actions/notifications";
 import { estimateInterest } from "@/lib/finance";
 import { formatWon, formatWonParts } from "@/lib/format";
 import type { BehaviorLog } from "@/lib/types";
@@ -32,6 +34,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const isParentOrAdmin = auth.user && (auth.profile?.role === "parent" || auth.profile?.role === "admin");
   const isChildMode = childMode.childId === id;
   if (!isParentOrAdmin && !isChildMode) redirect("/login");
+
+  const unreadNotifCount = isChildMode ? await countUnreadChildNotificationsAction(id) : 0;
 
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
   const child = bundle.children.find((c) => c.id === id);
@@ -94,7 +98,21 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <p className="text-[15px] font-800 text-white">{child.name}의 통장</p>
           </div>
 
-          <AmountMaskToggle childId={id} masked={masked} />
+          <div className="flex items-center gap-2">
+            <Link
+              href="/notifications"
+              aria-label={unreadNotifCount > 0 ? `알림 ${unreadNotifCount}건 미읽음` : "알림 보기"}
+              className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/20 transition active:scale-90"
+            >
+              <Bell className="h-4.5 w-4.5 text-white" strokeWidth={2.25} />
+              {unreadNotifCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-black text-white">
+                  {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
+                </span>
+              )}
+            </Link>
+            <AmountMaskToggle childId={id} masked={masked} />
+          </div>
         </header>
 
         {/* 잔액 */}
