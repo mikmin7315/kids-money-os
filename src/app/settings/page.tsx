@@ -5,6 +5,7 @@ import {
   CreditCard,
   Crown,
   FileText,
+  History,
   Megaphone,
   MessageSquare,
   TrendingUp,
@@ -152,6 +153,14 @@ export default async function SettingsPage() {
               iconColor="var(--monari-hero)"
               label="이자율 설정"
               sub="기본 이자율 · 최소·최대 범위"
+            />
+            <SettingsRow
+              href="/settings/interest-history"
+              icon={<History size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="이자 지급 내역"
+              sub="월별 이자 지급 기록"
             />
           </div>
         </section>

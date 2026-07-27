@@ -258,12 +258,3 @@ function HeroPill({ label, value }: { label: string; value: string }) {
   return <div className="rounded-xl border border-white/15 bg-white/10 px-2 py-2.5 text-center"><p className="text-[10px] font-semibold text-white/70">{label}</p><p className="mt-0.5 text-sm font-black text-white">{value}</p></div>;
 }
 
-function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div className="rounded-[16px] bg-[var(--monari-hero-lo)] p-3">
-      <p className="text-[12px] text-[var(--monari-hero)]/60" style={{ fontWeight: 600 }}>{label}</p>
-      <p className="mt-1 text-[var(--monari-hero)]" style={{ fontSize: 15, fontWeight: 800 }}>{value}</p>
-      {sub && <p className="mt-0.5 text-[11px] text-[var(--monari-hero)]/50">{sub}</p>}
-    </div>
-  );
-}
