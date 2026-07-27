@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
-import { AppHeader } from "@/components/layout/app-header";
-import { MobileShell, PageContainer } from "@/components/ui/primitives";
+import Link from "next/link";
+import { ArrowLeft, CreditCard } from "lucide-react";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
+import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
@@ -11,8 +12,10 @@ const STATUS_LABEL: Record<string, string> = {
   approved: "승인", declined: "거절", cancelled: "취소", reversed: "환불",
 };
 const STATUS_COLOR: Record<string, string> = {
-  approved: "text-[var(--monari-done)]", declined: "text-[var(--monari-minus)]",
-  cancelled: "text-[var(--monari-ink-muted)]", reversed: "text-[#2563eb]",
+  approved: "text-[var(--monari-done)]",
+  declined: "text-[var(--monari-minus)]",
+  cancelled: "text-[var(--monari-ink-muted)]",
+  reversed: "text-blue-600",
 };
 
 export default async function CardTransactionsPage({ searchParams }: { searchParams: Promise<{ child?: string }> }) {
@@ -41,15 +44,10 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
     .order("approved_at", { ascending: false })
     .limit(50);
 
-  if (cardIds.length > 0) {
-    txQuery = txQuery.in("card_id", cardIds);
-  }
+  if (cardIds.length > 0) txQuery = txQuery.in("card_id", cardIds);
 
   const { data: txs } = await txQuery;
-  const txList = (txs ?? []).map((t) => ({
-    ...t,
-    child_name: cardMap[t.card_id] ?? "-",
-  }));
+  const txList = (txs ?? []).map((t) => ({ ...t, child_name: cardMap[t.card_id] ?? "-" }));
 
   const childList = (cards ?? []).map((c) => {
     const child = Array.isArray(c.children) ? c.children[0] : c.children;
@@ -58,17 +56,26 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
   const uniqueChildren = [...new Map(childList.map((c) => [c.id, c])).values()];
 
   return (
-    <PageContainer>
-      <MobileShell>
-        <AppHeader eyebrow="카드" title="카드 사용 내역" />
+    <AppNavShell>
+      <PageHero>
+        <Link href="/cards" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 카드 관리로
+        </Link>
+        <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">카드</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">카드 사용 내역</h1>
+        <p className="text-[13px] text-white/65">최근 50건</p>
+      </PageHero>
 
+      <PageContent className="pt-5">
         {/* 아이 탭 필터 */}
         {uniqueChildren.length > 1 && (
           <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
             <Link
               href="/cards/transactions"
-              className={`flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                !selectedChildId ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-text)]"
+              className={`flex-shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold transition ${
+                !selectedChildId
+                  ? "bg-[var(--monari-hero)] text-white"
+                  : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
               }`}
             >
               전체
@@ -77,8 +84,10 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
               <Link
                 key={c.id}
                 href={`/cards/transactions?child=${c.id}`}
-                className={`flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                  selectedChildId === c.id ? "bg-[var(--color-accent)] text-white" : "bg-[var(--monari-surface-soft)] text-[var(--color-text)]"
+                className={`flex-shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold transition ${
+                  selectedChildId === c.id
+                    ? "bg-[var(--monari-hero)] text-white"
+                    : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
                 }`}
               >
                 {c.name}
@@ -87,35 +96,39 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
           </div>
         )}
 
-        {txList.length === 0 ? (
-          <div className="rounded-[16px] bg-[var(--monari-surface-soft)] px-5 py-12 text-center">
-            <p className="text-sm text-[var(--color-muted)]">카드 사용 내역이 없어요.</p>
-          </div>
-        ) : (
-          <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
-            {txList.map((t) => (
-              <div key={t.id} className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-sm font-semibold text-[var(--color-text)]">{t.merchant_name || "가맹점 미상"}</p>
-                  <p className="text-[11px] text-[var(--color-muted)]">
-                    {t.child_name} · {t.merchant_category} · {String(t.approved_at ?? "").slice(0, 10)}
-                  </p>
+        <section className="mb-6">
+          <SectionTitle>내역</SectionTitle>
+          {txList.length === 0 ? (
+            <div className="mt-3 monari-card px-5 py-12 text-center">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+                <CreditCard size={26} />
+              </span>
+              <p className="mt-4 text-[15px] font-800 text-[var(--monari-ink)]">카드 사용 내역이 없어요</p>
+            </div>
+          ) : (
+            <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+              {txList.map((t) => (
+                <div key={t.id} className="flex items-center justify-between px-4 py-3.5">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[14px] font-semibold text-[var(--monari-ink)] truncate">
+                      {t.merchant_name || "가맹점 미상"}
+                    </p>
+                    <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
+                      {t.child_name} · {t.merchant_category} · {String(t.approved_at ?? "").slice(0, 10)}
+                    </p>
+                  </div>
+                  <div className="ml-3 shrink-0 text-right">
+                    <p className={`tabular-nums text-[14px] font-bold ${STATUS_COLOR[t.status] ?? ""}`}>
+                      {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
+                    </p>
+                    <p className="text-[11px] text-[var(--monari-ink-muted)]">{STATUS_LABEL[t.status] ?? t.status}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className={`tabular-nums text-sm font-bold ${STATUS_COLOR[t.status] ?? ""}`}>
-                    {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
-                  </p>
-                  <p className="text-[11px] text-[var(--color-muted)]">{STATUS_LABEL[t.status] ?? t.status}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-4">
-          <Link href="/cards" className="text-sm font-bold text-[var(--color-accent)]">← 카드 관리로</Link>
-        </div>
-      </MobileShell>
-    </PageContainer>
+              ))}
+            </div>
+          )}
+        </section>
+      </PageContent>
+    </AppNavShell>
   );
 }
