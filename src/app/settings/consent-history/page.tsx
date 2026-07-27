@@ -42,7 +42,7 @@ export default async function ConsentHistoryPage() {
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
               <FileText size={26} />
             </span>
-            <p className="mt-4 text-[15px] font-800 text-[var(--monari-ink)]">동의 이력이 없어요</p>
+            <p className="mt-4 text-[15px] font-extrabold text-[var(--monari-ink)]">동의 이력이 없어요</p>
           </div>
         ) : (
           <section className="mb-5">

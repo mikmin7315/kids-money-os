@@ -62,7 +62,7 @@ export default async function GuardianDetailPage({
               <Users size={18} />
             </div>
             <div>
-              <p className="text-[15px] font-800 text-[var(--monari-ink)]">{String(profile?.email ?? "-")}</p>
+              <p className="text-[15px] font-extrabold text-[var(--monari-ink)]">{String(profile?.email ?? "-")}</p>
               <p className="text-[12px] text-[var(--monari-ink-muted)]">{String(child?.name ?? "-")} 담당 보호자</p>
             </div>
           </div>

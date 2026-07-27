@@ -117,10 +117,10 @@ export function ChildBehaviorCheckForm({
                   {rule.title}
                 </p>
                 <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px] font-medium text-[var(--monari-ink-muted)]">
-                  {rule.interestDelta > 0 && <span className="font-700 text-[var(--monari-hero)]">+{rule.interestDelta}%</span>}
+                  {rule.interestDelta > 0 && <span className="font-bold text-[var(--monari-hero)]">+{rule.interestDelta}%</span>}
                   {rule.rewardAmount > 0 && <span>+{formatWon(rule.rewardAmount)} 보상</span>}
                   {needsApproval && !isDone && !isRulePending && (
-                    <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-700 text-[var(--monari-pending)]">부모 확인 필요</span>
+                    <span className="rounded-full bg-[var(--status-pending-solid)] px-2 py-0.5 text-[10px] font-bold text-[var(--monari-pending)]">부모 확인 필요</span>
                   )}
                 </p>
               </div>
@@ -131,7 +131,7 @@ export function ChildBehaviorCheckForm({
                   </svg>
                 </span>
               ) : isRulePending ? (
-                <span className="shrink-0 rounded-full bg-[var(--monari-pending-bg)] px-3 py-2 text-[12px] font-800 text-[var(--monari-pending)]">
+                <span className="shrink-0 rounded-full bg-[var(--monari-pending-bg)] px-3 py-2 text-[12px] font-extrabold text-[var(--monari-pending)]">
                   확인 기다리는 중
                 </span>
               ) : (
@@ -160,7 +160,7 @@ export function ChildBehaviorCheckForm({
                       unoptimized
                       className="w-full max-h-48 object-cover"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-700 text-white">
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-bold text-white">
                       📅 {formatStamp(photo.takenAt)}
                     </div>
                     <button
@@ -176,7 +176,7 @@ export function ChildBehaviorCheckForm({
                   <button
                     type="button"
                     onClick={() => { setSelectedRuleId(rule.id); fileInputRef.current?.click(); }}
-                    className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[var(--monari-line-strong)] py-3 text-[13px] font-600 text-[var(--monari-ink-muted)] transition active:bg-[var(--monari-line)]"
+                    className="flex w-full items-center justify-center gap-2 rounded-[14px] border-2 border-dashed border-[var(--monari-line-strong)] py-3 text-[13px] font-semibold text-[var(--monari-ink-muted)] transition active:bg-[var(--monari-line)]"
                   >
                     <Camera className="h-4 w-4" />
                     {needsApproval ? "사진으로 증명하기 (부모 확인용)" : "사진으로 기록하기 (선택)"}
@@ -332,7 +332,7 @@ export function ChildSaveForm({
 
       <div>
         {availableBalance <= 0 && (
-          <p className="mb-3 rounded-[14px] bg-[var(--monari-pending-bg)] px-4 py-3 text-[13px] font-700 text-[var(--monari-pending)]">
+          <p className="mb-3 rounded-[14px] bg-[var(--monari-pending-bg)] px-4 py-3 text-[13px] font-bold text-[var(--monari-pending)]">
             지금 쓸 수 있는 돈이 없어 저금할 수 없어요.
           </p>
         )}
@@ -350,12 +350,12 @@ export function ChildSaveForm({
             onChange={handleInput}
             placeholder="금액 입력"
             disabled={availableBalance <= 0}
-            className="w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3.5 pr-10 text-[20px] font-800 text-[var(--monari-ink)] outline-none placeholder:text-[var(--monari-ink-muted)] placeholder:font-500 placeholder:text-[15px]"
+            className="w-full rounded-[16px] border-2 border-[var(--child-save)] bg-[var(--child-surface)] px-4 py-3.5 pr-10 text-[20px] font-extrabold text-[var(--monari-ink)] outline-none placeholder:text-[var(--monari-ink-muted)] placeholder:font-500 placeholder:text-[15px]"
           />
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-700 text-[var(--monari-ink-muted)]">원</span>
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[14px] font-bold text-[var(--monari-ink-muted)]">원</span>
         </div>
         {amount > availableBalance && amount > 0 && (
-          <p className="mb-2 text-[12px] font-700 text-[var(--monari-pending)]">
+          <p className="mb-2 text-[12px] font-bold text-[var(--monari-pending)]">
             잔액({formatWon(availableBalance)})보다 많아요
           </p>
         )}
@@ -384,12 +384,12 @@ export function ChildSaveForm({
       {currentInterestRate > 0 && isValid && (
         <div className="rounded-[14px] bg-[var(--child-surface)] px-4 py-3 space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</span>
-            <span className="text-[13px] font-800 text-[var(--child-save)]">{currentInterestRate}%</span>
+            <span className="text-[12px] font-semibold text-[var(--monari-ink-muted)]">현재 이자율</span>
+            <span className="text-[13px] font-extrabold text-[var(--child-save)]">{currentInterestRate}%</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">저금 후 이달 예상 이자</span>
-            <span className="text-[13px] font-800 text-[var(--child-save)]">+{formatWon(estimatedInterest)}</span>
+            <span className="text-[12px] font-semibold text-[var(--monari-ink-muted)]">저금 후 이달 예상 이자</span>
+            <span className="text-[13px] font-extrabold text-[var(--child-save)]">+{formatWon(estimatedInterest)}</span>
           </div>
         </div>
       )}
@@ -572,7 +572,7 @@ function ChildSaveButton({ label, disabled }: { label: string; disabled: boolean
     <button
       type="submit"
       disabled={pending || disabled}
-      className="h-12 w-full rounded-[16px] bg-[var(--child-save)] text-[15px] font-700 text-white transition active:scale-[0.98] disabled:opacity-60"
+      className="h-12 w-full rounded-[16px] bg-[var(--child-save)] text-[15px] font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
     >
       {pending ? "저금하는 중..." : label}
     </button>
@@ -623,7 +623,7 @@ function FormMessage({ state }: { state: FormState }) {
     <div
       role={state.ok ? "status" : "alert"}
       aria-live="polite"
-      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-600 ${
+      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-semibold ${
         state.ok
           ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"
           : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"
@@ -650,7 +650,7 @@ function FormMessage({ state }: { state: FormState }) {
 function FormIntro({ title, description }: { title: string; description: string }) {
   return (
     <div>
-      <p className="text-[16px] font-800 text-[var(--monari-ink)]">{title}</p>
+      <p className="text-[16px] font-extrabold text-[var(--monari-ink)]">{title}</p>
       <p className="mt-1 text-[13px] leading-5 text-[var(--monari-ink-soft)]">{description}</p>
     </div>
   );
@@ -659,7 +659,7 @@ function FormIntro({ title, description }: { title: string; description: string 
 function Field({ label, optional = false, children }: { label: string; optional?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-2 flex items-center gap-1 text-[12px] font-700 text-[var(--monari-ink-soft)]">
+      <span className="mb-2 flex items-center gap-1 text-[12px] font-bold text-[var(--monari-ink-soft)]">
         {label}
         {optional && <span className="font-500 text-[var(--monari-ink-muted)]">(선택)</span>}
       </span>

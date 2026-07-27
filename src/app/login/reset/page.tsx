@@ -49,9 +49,9 @@ export default function ResetPasswordPage() {
         {status === "sent" ? (
           <div className="monari-card px-5 py-8 text-center space-y-3">
             <div className="text-4xl">📬</div>
-            <p className="text-[17px] font-800 text-[var(--monari-ink)]">이메일을 확인해주세요</p>
+            <p className="text-[17px] font-extrabold text-[var(--monari-ink)]">이메일을 확인해주세요</p>
             <p className="text-[14px] text-[var(--monari-ink-muted)]">
-              <span className="font-700 text-[var(--monari-primary)]">{email}</span>으로<br />
+              <span className="font-bold text-[var(--monari-primary)]">{email}</span>으로<br />
               재설정 링크를 보냈어요.
             </p>
             <p className="text-[12px] text-[var(--monari-ink-muted)]">
@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-[13px] font-700 text-[var(--monari-ink)]">이메일</label>
+              <label className="mb-1.5 block text-[13px] font-bold text-[var(--monari-ink)]">이메일</label>
               <input
                 type="email"
                 value={email}
@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
             </div>
 
             {status === "error" && (
-              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-600 text-[var(--status-rose-solid-text)]">
+              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-semibold text-[var(--status-rose-solid-text)]">
                 {errorMsg}
               </p>
             )}
@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
         )}
 
         <p className="text-center text-[13px] text-[var(--monari-ink-muted)]">
-          <Link href="/login" className="font-700 text-[var(--monari-primary)]">
+          <Link href="/login" className="font-bold text-[var(--monari-primary)]">
             로그인으로 돌아가기
           </Link>
         </p>

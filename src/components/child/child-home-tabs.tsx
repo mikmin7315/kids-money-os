@@ -23,7 +23,7 @@ export function ChildHomeTabs({
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            className="flex-1 rounded-[12px] py-2 text-[13px] font-700 transition"
+            className="flex-1 rounded-[12px] py-2 text-[13px] font-bold transition"
             style={{
               background: tab === t ? "#6C3FE8" : "rgba(108,63,232,0.10)",
               color: tab === t ? "#fff" : "#6C3FE8",

@@ -163,7 +163,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
       {!primary && (
         <div className="monari-card p-6 text-center">
-          <p className="text-[15px] font-700 text-[var(--monari-ink)] mb-1">아이를 먼저 등록해주세요</p>
+          <p className="text-[15px] font-bold text-[var(--monari-ink)] mb-1">아이를 먼저 등록해주세요</p>
           <p className="text-[13px] text-[var(--monari-ink-muted)] mb-4">리포트를 보려면 아이 프로필이 필요합니다.</p>
           <Link href="/settings" className="monari-btn-primary px-5">아이 등록하기 →</Link>
         </div>
@@ -188,12 +188,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           {/* ② 이달 현황 숫자 — 저축/지출/통장 */}
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">이달 현황</p>
-            <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">저축 · 지출 · 통장</p>
+            <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">저축 · 지출 · 통장</p>
 
             <div className="grid grid-cols-2 gap-2.5 mb-2.5">
               <div className="monari-card p-4">
                 <p className="monari-eyebrow mb-2">저축</p>
-                <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-done)] leading-tight">
+                <p className="text-[26px] font-black tracking-[-0.03em] tabular-nums text-[var(--monari-done)] leading-tight">
                   {formatWon(save)}
                 </p>
                 <div className="mt-3 h-[3px] rounded-full bg-[var(--monari-done-bg)] overflow-hidden">
@@ -202,7 +202,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
               <div className="monari-card p-4">
                 <p className="monari-eyebrow mb-2" style={{ color: "var(--monari-minus)" }}>지출</p>
-                <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-minus)] leading-tight">
+                <p className="text-[26px] font-black tracking-[-0.03em] tabular-nums text-[var(--monari-minus)] leading-tight">
                   {formatWon(spend)}
                 </p>
                 <div className="mt-3 h-[3px] rounded-full bg-[var(--monari-minus-bg)] overflow-hidden">
@@ -214,30 +214,30 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             {borrowed > 0 && (
               <div className="monari-card mb-2.5 flex items-center gap-2.5 px-4 py-3">
                 <Coins size={14} className="shrink-0 text-[var(--monari-pending)]" />
-                <p className="text-[13px] font-600 text-[var(--monari-ink-soft)]">미리쓰기</p>
-                <p className="ml-auto text-[14px] font-800 tabular-nums text-[var(--monari-pending)]">{formatWon(borrowed)}</p>
+                <p className="text-[13px] font-semibold text-[var(--monari-ink-soft)]">미리쓰기</p>
+                <p className="ml-auto text-[14px] font-extrabold tabular-nums text-[var(--monari-pending)]">{formatWon(borrowed)}</p>
               </div>
             )}
 
             <div className="monari-card px-4 py-4 grid grid-cols-3 divide-x divide-[var(--monari-line)]">
               <div className="text-center pr-3">
                 <p className="monari-eyebrow mb-1.5" style={{ fontSize: "10px" }}>잔액</p>
-                <p className="text-[17px] font-900 tabular-nums text-[var(--monari-ink)] leading-tight">{formatWon(currentBalance)}</p>
+                <p className="text-[17px] font-black tabular-nums text-[var(--monari-ink)] leading-tight">{formatWon(currentBalance)}</p>
               </div>
               <div className="text-center px-3">
                 <p className="monari-eyebrow mb-1.5" style={{ fontSize: "10px" }}>이자율</p>
-                <p className="text-[17px] font-900 tabular-nums text-[var(--monari-hero)] leading-tight">{currentRate}%</p>
+                <p className="text-[17px] font-black tabular-nums text-[var(--monari-hero)] leading-tight">{currentRate}%</p>
               </div>
               <div className="text-center pl-3">
                 <p className="monari-eyebrow mb-1.5" style={{ fontSize: "10px" }}>이달 이자</p>
-                <p className={`text-[17px] font-900 tabular-nums leading-tight ${interest > 0 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink-muted)]"}`}>
+                <p className={`text-[17px] font-black tabular-nums leading-tight ${interest > 0 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink-muted)]"}`}>
                   {interest > 0 ? `+${formatWon(interest)}` : "—"}
                 </p>
               </div>
             </div>
             {interest > 0 && (
               <div className="mt-2 rounded-[12px] bg-[var(--monari-done-bg)] px-4 py-3">
-                <p className="text-[12px] font-700 text-[var(--monari-done)]">
+                <p className="text-[12px] font-bold text-[var(--monari-done)]">
                   이번 달 이자 {formatWon(interest)}을 받았어요! 저금하면 이자가 쌓여요.
                 </p>
               </div>
@@ -254,18 +254,18 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   <div className="mt-3 w-full space-y-1.5">
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-done)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">저축</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
+                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">저축</span>
+                      <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-minus)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">지출</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
+                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">지출</span>
+                      <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-line-strong)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">잔여</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
+                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">잔여</span>
+                      <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
                     </div>
                   </div>
                 </div>
@@ -276,11 +276,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     <div className="mt-3 flex gap-3">
                       <div className="flex items-center gap-1">
                         <div className="h-[3px] w-4 rounded-full bg-[var(--monari-done)]" />
-                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">저축률</span>
+                        <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)]">저축률</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <div className="h-[3px] w-4 rounded-full" style={{ background: "#6366f1" }} />
-                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">약속</span>
+                        <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)]">약속</span>
                       </div>
                     </div>
                   </div>
@@ -365,24 +365,24 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">또래 비교</p>
             <div className="flex items-center gap-2 mb-3">
-              <p className="text-[16px] font-800 text-[var(--monari-ink)]">전국 또래 평균</p>
-              <span className="rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-0.5 text-[11px] font-800 text-[var(--monari-hero)]">
+              <p className="text-[16px] font-extrabold text-[var(--monari-ink)]">전국 또래 평균</p>
+              <span className="rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-0.5 text-[11px] font-extrabold text-[var(--monari-hero)]">
                 {ageGroup}세
               </span>
             </div>
             {!peer ? (
               <div className="monari-card p-5 text-center">
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 비교 데이터가 부족해요</p>
+                <p className="text-[14px] font-bold text-[var(--monari-ink)]">아직 비교 데이터가 부족해요</p>
                 <p className="text-[12px] text-[var(--monari-ink-muted)] mt-1">같은 연령대 표본이 10명 이상 모이면 또래 통계를 보여드려요.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 <div className="monari-card p-5">
-                  <p className="text-[13px] font-800 text-[var(--monari-ink)] mb-4">이달 용돈</p>
+                  <p className="text-[13px] font-extrabold text-[var(--monari-ink)] mb-4">이달 용돈</p>
                   <div className="mb-3">
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">또래 평균</span>
-                      <span className="text-[12px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{formatWon(peer.avgAllowance)}</span>
+                      <span className="text-[12px] font-semibold text-[var(--monari-ink-muted)]">또래 평균</span>
+                      <span className="text-[12px] font-extrabold tabular-nums text-[var(--monari-ink-muted)]">{formatWon(peer.avgAllowance)}</span>
                     </div>
                     <div className="h-2 rounded-full bg-[var(--monari-surface-soft)] overflow-hidden">
                       <div className="h-2 rounded-full bg-[var(--monari-line-strong)]" style={{ width: `${peerAllowancePct}%` }} />
@@ -390,15 +390,15 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   </div>
                   <div className="mb-4">
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-[12px] font-700 text-[var(--monari-hero)]">{String(primary.child.name)}</span>
-                      <span className="text-[12px] font-800 tabular-nums text-[var(--monari-hero)]">{formatWon(allowance)}</span>
+                      <span className="text-[12px] font-bold text-[var(--monari-hero)]">{String(primary.child.name)}</span>
+                      <span className="text-[12px] font-extrabold tabular-nums text-[var(--monari-hero)]">{formatWon(allowance)}</span>
                     </div>
                     <div className="h-2 rounded-full bg-[var(--monari-hero-lo)] overflow-hidden">
                       <div className="h-2 rounded-full bg-[var(--monari-hero)]" style={{ width: `${childAllowancePct}%` }} />
                     </div>
                   </div>
                   {allowance > 0 && (
-                    <div className={`rounded-[10px] px-3 py-2 text-[12px] font-700 ${aheadOfPeer ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]" : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"}`}>
+                    <div className={`rounded-[10px] px-3 py-2 text-[12px] font-bold ${aheadOfPeer ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]" : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"}`}>
                       {aheadOfPeer
                         ? `또래보다 ${formatWon(allowance - peer.avgAllowance)} 더 받아요`
                         : `또래 평균보다 ${formatWon(peer.avgAllowance - allowance)} 적어요`}
@@ -439,11 +439,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     <div className="space-y-2.5">
                       {peer.spendBreakdown.map((item, i) => (
                         <div key={item.label} className="flex items-center gap-3">
-                          <span className="text-[11px] font-800 text-[var(--monari-ink-muted)] w-4 shrink-0">{i + 1}</span>
+                          <span className="text-[11px] font-extrabold text-[var(--monari-ink-muted)] w-4 shrink-0">{i + 1}</span>
                           <div className="flex-1">
                             <div className="flex justify-between text-[12px] mb-1">
-                              <span className="font-600 text-[var(--monari-ink-soft)]">{item.label}</span>
-                              <span className="font-800 text-[var(--monari-ink)]">{item.pct}%</span>
+                              <span className="font-semibold text-[var(--monari-ink-soft)]">{item.label}</span>
+                              <span className="font-extrabold text-[var(--monari-ink)]">{item.pct}%</span>
                             </div>
                             <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
                               <div className="h-2 rounded-full bg-[var(--monari-hero)]" style={{ width: `${item.pct}%` }} />
@@ -468,12 +468,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               >
                 <div className="space-y-2">
                   <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-surface-soft)] px-4 py-3">
-                    <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율 {currentRate}%</span>
-                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-ink)]">월 {formatWon(actualMonthlyInterestEst)}</span>
+                    <span className="text-[12px] font-semibold text-[var(--monari-ink-muted)]">현재 이자율 {currentRate}%</span>
+                    <span className="text-[14px] font-extrabold tabular-nums text-[var(--monari-ink)]">월 {formatWon(actualMonthlyInterestEst)}</span>
                   </div>
                   <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-done-bg)] px-4 py-3">
-                    <span className="text-[12px] font-700 text-[var(--monari-done)]">달성률 100% 달성 시 {simInterestRate}%</span>
-                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-done)]">월 {formatWon(simMonthlyInterest)}</span>
+                    <span className="text-[12px] font-bold text-[var(--monari-done)]">달성률 100% 달성 시 {simInterestRate}%</span>
+                    <span className="text-[14px] font-extrabold tabular-nums text-[var(--monari-done)]">월 {formatWon(simMonthlyInterest)}</span>
                   </div>
                   <p className="text-[11px] text-center text-[var(--monari-ink-muted)]">매달 {formatWon(interestGap)} 더 받을 수 있어요</p>
                 </div>
@@ -484,10 +484,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           {/* ⑧ 코칭 포인트 */}
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">코칭</p>
-            <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">이번달 포인트</p>
+            <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">이번달 포인트</p>
             <div className="space-y-2">
               <div className="monari-card-accent p-5">
-                <p className="text-[14px] font-800 text-[var(--monari-ink)] mb-2">
+                <p className="text-[14px] font-extrabold text-[var(--monari-ink)] mb-2">
                   {saveRatio >= 30
                     ? "저축 습관이 자리잡고 있어요"
                     : spendRatio >= 80
@@ -503,14 +503,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 </p>
               </div>
               <div className="monari-card-ghost px-4 py-3.5">
-                <p className="text-[13px] font-700 text-[var(--monari-ink)] mb-1">미리쓰기는 목적 중심으로</p>
+                <p className="text-[13px] font-bold text-[var(--monari-ink)] mb-1">미리쓰기는 목적 중심으로</p>
                 <p className="text-[12px] leading-[1.6] text-[var(--monari-ink-muted)]">
                   미리쓰기 이유를 아이가 직접 쓰게 하면 충동 구매보다 계획 소비로 전환하기 쉽습니다.
                 </p>
               </div>
               {peer && (
                 <div className="monari-card-ghost px-4 py-3.5">
-                  <p className="text-[13px] font-700 text-[var(--monari-ink)] mb-1">💰 용돈 적정성 힌트</p>
+                  <p className="text-[13px] font-bold text-[var(--monari-ink)] mb-1">💰 용돈 적정성 힌트</p>
                   <p className="text-[12px] leading-[1.6] text-[var(--monari-ink-muted)]">
                     {behRate >= 85 && allowance < peer.avgAllowance
                       ? `약속을 잘 지키는 만큼, 또래 평균(${formatWon(peer.avgAllowance)})에 맞춰 용돈을 조금 올리는 것도 좋은 동기부여가 돼요.`
@@ -673,9 +673,9 @@ function TrendBars({ data }: { data: { label: string; saveRate: number; behRate:
 function HeroPill({ label, value, sub, warn }: { label: string; value: string; sub?: string; warn?: boolean }) {
   return (
     <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-3 gap-1">
-      <p className="text-[10px] font-600 text-white/55">{label}</p>
-      <p className="text-[16px] font-900 text-white leading-none tabular-nums">{value}</p>
-      {sub && <p className={`text-[9px] font-700 ${warn ? "text-rose-300" : "text-sky-300"}`}>{sub}</p>}
+      <p className="text-[10px] font-semibold text-white/55">{label}</p>
+      <p className="text-[16px] font-black text-white leading-none tabular-nums">{value}</p>
+      {sub && <p className={`text-[9px] font-bold ${warn ? "text-rose-300" : "text-sky-300"}`}>{sub}</p>}
     </div>
   );
 }
@@ -692,8 +692,8 @@ function ComparisonBarPair({
     <div className="space-y-3">
       <div>
         <div className="flex justify-between text-[12px] mb-1.5">
-          <span className="font-600 text-[var(--monari-ink-soft)]">{left.label}</span>
-          <span className="font-800 tabular-nums text-[var(--monari-ink-muted)]">{left.value.toFixed(0)}%</span>
+          <span className="font-semibold text-[var(--monari-ink-soft)]">{left.label}</span>
+          <span className="font-extrabold tabular-nums text-[var(--monari-ink-muted)]">{left.value.toFixed(0)}%</span>
         </div>
         <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
           <div className="h-2 rounded-full bg-[var(--monari-line-strong)]" style={{ width: `${Math.min(left.value, 100)}%` }} />
@@ -701,8 +701,8 @@ function ComparisonBarPair({
       </div>
       <div>
         <div className="flex justify-between text-[12px] mb-1.5">
-          <span className="font-700 text-[var(--monari-hero)]">{right.label}</span>
-          <span className="font-800 tabular-nums text-[var(--monari-hero)]">{right.value.toFixed(0)}%</span>
+          <span className="font-bold text-[var(--monari-hero)]">{right.label}</span>
+          <span className="font-extrabold tabular-nums text-[var(--monari-hero)]">{right.value.toFixed(0)}%</span>
         </div>
         <div className="h-2 w-full rounded-full bg-[var(--monari-hero-lo)]">
           <div className="h-2 rounded-full bg-[var(--monari-hero)]" style={{ width: `${Math.min(right.value, 100)}%` }} />
@@ -726,7 +726,7 @@ function PremiumLockedCard({
   if (isPremium) {
     return (
       <div className="monari-card p-5">
-        <p className="text-[14px] font-800 text-[var(--monari-ink)] mb-4">{previewLabel}</p>
+        <p className="text-[14px] font-extrabold text-[var(--monari-ink)] mb-4">{previewLabel}</p>
         {children}
       </div>
     );
@@ -736,12 +736,12 @@ function PremiumLockedCard({
     <div className="relative rounded-[20px] overflow-hidden" style={{ border: "1px solid var(--monari-line)" }}>
       <div className="p-5" style={{ background: "var(--monari-surface)" }}>
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[14px] font-800 text-[var(--monari-ink)]">{previewLabel}</p>
-          <span className="flex items-center gap-1 rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-1 text-[10px] font-800 text-[var(--monari-hero)]">
+          <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">{previewLabel}</p>
+          <span className="flex items-center gap-1 rounded-full bg-[var(--monari-hero-lo)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--monari-hero)]">
             <Sparkles size={9} strokeWidth={3} /> 플러스
           </span>
         </div>
-        <p className="text-[12px] font-600 text-[var(--monari-ink-muted)] mb-4 leading-5">
+        <p className="text-[12px] font-semibold text-[var(--monari-ink-muted)] mb-4 leading-5">
           💡 {hint}
         </p>
         <div className="pointer-events-none select-none" style={{ opacity: 0.35 }}>
@@ -754,7 +754,7 @@ function PremiumLockedCard({
       >
         <Link
           href="/settings/subscription"
-          className="flex items-center gap-2 rounded-[14px] bg-[var(--monari-hero)] px-6 py-3 text-[13px] font-800 text-white shadow-[0_4px_20px_rgba(109,40,217,0.4)] transition active:scale-[0.97]"
+          className="flex items-center gap-2 rounded-[14px] bg-[var(--monari-hero)] px-6 py-3 text-[13px] font-extrabold text-white shadow-[0_4px_20px_rgba(109,40,217,0.4)] transition active:scale-[0.97]"
         >
           <Lock size={12} strokeWidth={3} />
           전체 보기 — 모나리 플러스

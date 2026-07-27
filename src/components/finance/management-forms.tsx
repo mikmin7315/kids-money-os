@@ -272,7 +272,7 @@ function FormMessage({ state }: { state: ManagementFormState }) {
     <div
       role={state.ok ? "status" : "alert"}
       aria-live="polite"
-      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-600 ${
+      className={`flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] font-semibold ${
         state.ok
           ? "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"
           : "bg-[var(--monari-minus-bg)] text-[var(--monari-minus)]"

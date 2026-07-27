@@ -56,8 +56,8 @@ export default async function RecordsPage() {
 function HeroPill({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-2 gap-0.5">
-      <p className="text-[11px] font-600 text-white/70">{label}</p>
-      <p className="text-[14px] font-800 text-white">{value}</p>
+      <p className="text-[11px] font-semibold text-white/70">{label}</p>
+      <p className="text-[14px] font-extrabold text-white">{value}</p>
     </div>
   );
 }

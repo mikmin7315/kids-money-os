@@ -63,12 +63,12 @@ export function PaymentButton({
       <button
         onClick={handlePayment}
         disabled={loading}
-        className="w-full rounded-[16px] bg-white py-3.5 text-[15px] font-900 text-[#7C3AED] transition active:scale-[0.97] disabled:opacity-60"
+        className="w-full rounded-[16px] bg-white py-3.5 text-[15px] font-black text-[#7C3AED] transition active:scale-[0.97] disabled:opacity-60"
       >
         {loading ? "결제 진행 중..." : "월 3,900원으로 시작하기"}
       </button>
       {error && (
-        <p className="mt-3 text-center text-[13px] font-600 text-red-300">{error}</p>
+        <p className="mt-3 text-center text-[13px] font-semibold text-red-300">{error}</p>
       )}
     </div>
   );

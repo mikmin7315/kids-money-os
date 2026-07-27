@@ -52,7 +52,7 @@ export default async function ApprovalsPage() {
 
         {/* 상환 진행 중 — 대기와 성격이 달라 별도 표시 */}
         {activeBorrows.length > 0 && (
-          <p className="mt-3 text-[12px] font-600 text-white/55">
+          <p className="mt-3 text-[12px] font-semibold text-white/55">
             상환 진행 중 {activeBorrows.length}건
           </p>
         )}
@@ -64,7 +64,7 @@ export default async function ApprovalsPage() {
         {trulyEmpty && (
           <div className="monari-card px-5 py-10 text-center">
             <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
-            <p className="text-[17px] font-800 text-[var(--monari-ink)]">모두 확인 완료!</p>
+            <p className="text-[17px] font-extrabold text-[var(--monari-ink)]">모두 확인 완료!</p>
             <p className="monari-meta mt-1 mb-4">대기 중인 항목이 없어요.</p>
             <Link href="/behaviors" className="monari-btn-ghost h-10 px-5 text-[14px]">약속 관리하기</Link>
           </div>
@@ -74,7 +74,7 @@ export default async function ApprovalsPage() {
         {total === 0 && hasOngoing && (
           <div className="rounded-[16px] border border-[var(--monari-line)] bg-[var(--monari-surface-soft)] px-4 py-3 flex items-center gap-2">
             <span className="text-[18px]">✅</span>
-            <p className="text-[13px] font-600 text-[var(--monari-ink-soft)]">확인 대기 항목이 없어요. 아래 진행 중인 항목을 확인하세요.</p>
+            <p className="text-[13px] font-semibold text-[var(--monari-ink-soft)]">확인 대기 항목이 없어요. 아래 진행 중인 항목을 확인하세요.</p>
           </div>
         )}
 
@@ -90,8 +90,8 @@ export default async function ApprovalsPage() {
                   <div key={log.id} className="monari-card p-5">
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="min-w-0">
-                        <p className="text-[14px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
-                        <p className="text-[19px] font-800 text-[var(--monari-ink)] leading-tight">{rule?.title}</p>
+                        <p className="text-[14px] font-bold text-[var(--monari-primary)] mb-1">{child?.name}</p>
+                        <p className="text-[19px] font-extrabold text-[var(--monari-ink)] leading-tight">{rule?.title}</p>
                         {rule?.description && (
                           <p className="mt-1 text-[15px] text-[var(--monari-ink-soft)]">{rule.description}</p>
                         )}
@@ -112,7 +112,7 @@ export default async function ApprovalsPage() {
                                 className="w-full max-h-56 object-cover"
                               />
                               {(log as { photo_taken_at?: string }).photo_taken_at && (
-                                <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-700 text-white">
+                                <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5 text-[11px] font-bold text-white">
                                   📅 {new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date((log as { photo_taken_at?: string }).photo_taken_at!))}
                                 </div>
                               )}
@@ -121,7 +121,7 @@ export default async function ApprovalsPage() {
                         )}
                       </div>
                       {/* 날짜 — "확인 대기" 중복 배지 대신 */}
-                      <span className="shrink-0 text-[12px] font-600 text-[var(--monari-ink-muted)]">{formatShortDate(log.date)}</span>
+                      <span className="shrink-0 text-[12px] font-semibold text-[var(--monari-ink-muted)]">{formatShortDate(log.date)}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <MetricBox label="보상 금액" value={formatWon(rule?.rewardAmount ?? 0)} />
@@ -148,8 +148,8 @@ export default async function ApprovalsPage() {
                   <div key={req.id} className="monari-card p-5">
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="min-w-0">
-                        <p className="text-[14px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
-                        <p className="text-[19px] font-800 text-[var(--monari-ink)] leading-tight">
+                        <p className="text-[14px] font-bold text-[var(--monari-primary)] mb-1">{child?.name}</p>
+                        <p className="text-[19px] font-extrabold text-[var(--monari-ink)] leading-tight">
                           {formatWon(req.amount)} 현금 썼어요
                         </p>
                         {req.memo && (
@@ -158,7 +158,7 @@ export default async function ApprovalsPage() {
                           </p>
                         )}
                       </div>
-                      <span className="shrink-0 text-[12px] font-600 text-[var(--monari-ink-muted)]">{formatShortDate(req.spendDate)}</span>
+                      <span className="shrink-0 text-[12px] font-semibold text-[var(--monari-ink-muted)]">{formatShortDate(req.spendDate)}</span>
                     </div>
                     <div className="border-t border-[var(--monari-line)] pt-4">
                       <InlineCashSpendDecisionForm requestId={req.id} />
@@ -181,8 +181,8 @@ export default async function ApprovalsPage() {
                   <div key={request.id} className="monari-card p-5">
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="min-w-0">
-                        <p className="text-[12px] font-700 text-[var(--monari-primary)] mb-1">{child?.name}</p>
-                        <p className="text-[17px] font-800 text-[var(--monari-ink)] leading-tight">
+                        <p className="text-[12px] font-bold text-[var(--monari-primary)] mb-1">{child?.name}</p>
+                        <p className="text-[17px] font-extrabold text-[var(--monari-ink)] leading-tight">
                           {formatWon(request.requestedAmount)} 미리 쓰고 싶어요
                         </p>
                         {request.purpose && (
@@ -191,7 +191,7 @@ export default async function ApprovalsPage() {
                           </p>
                         )}
                       </div>
-                      <span className="shrink-0 text-[12px] font-600 text-[var(--monari-ink-muted)]">{formatShortDate(request.createdAt)}</span>
+                      <span className="shrink-0 text-[12px] font-semibold text-[var(--monari-ink-muted)]">{formatShortDate(request.createdAt)}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <MetricBox label="요청 금액" value={formatWon(request.requestedAmount)} />
@@ -214,7 +214,7 @@ export default async function ApprovalsPage() {
         {hasOngoing && (
           <div className="flex items-center gap-3 py-1">
             <div className="h-px flex-1 bg-[var(--monari-line)]" />
-            <span className="text-[11px] font-700 tracking-[0.08em] uppercase text-[var(--monari-ink-muted)]">진행 중</span>
+            <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-[var(--monari-ink-muted)]">진행 중</span>
             <div className="h-px flex-1 bg-[var(--monari-line)]" />
           </div>
         )}
@@ -233,11 +233,11 @@ export default async function ApprovalsPage() {
                   <div key={request.id} className="monari-card p-5">
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <p className="text-[12px] font-700 text-[var(--monari-primary)]">{child?.name}</p>
-                        <p className="text-[15px] font-700 text-[var(--monari-ink)] mt-0.5">{request.purpose}</p>
+                        <p className="text-[12px] font-bold text-[var(--monari-primary)]">{child?.name}</p>
+                        <p className="text-[15px] font-bold text-[var(--monari-ink)] mt-0.5">{request.purpose}</p>
                         <p className="monari-meta">{formatWon(request.requestedAmount)}</p>
                       </div>
-                      <span className="inline-flex h-[26px] items-center rounded-[10px] bg-[var(--monari-pending-bg)] px-[10px] text-[12px] font-700 text-[var(--monari-pending)]">
+                      <span className="inline-flex h-[26px] items-center rounded-[10px] bg-[var(--monari-pending-bg)] px-[10px] text-[12px] font-bold text-[var(--monari-pending)]">
                         상환 진행
                       </span>
                     </div>
@@ -284,11 +284,11 @@ export default async function ApprovalsPage() {
                       <TrendingUp size={17} />
                     </span>
                     <div>
-                      <p className="text-[14px] font-700 text-[var(--monari-ink)]">{child.name}</p>
+                      <p className="text-[14px] font-bold text-[var(--monari-ink)]">{child.name}</p>
                       <p className="text-[12px] text-[var(--monari-ink-muted)]">이자율 확정 및 지급 처리</p>
                     </div>
                   </div>
-                  <span className="text-[12px] font-700 text-[var(--monari-hero)]">확정하기 →</span>
+                  <span className="text-[12px] font-bold text-[var(--monari-hero)]">확정하기 →</span>
                 </Link>
               ))}
             </div>

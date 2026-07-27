@@ -19,7 +19,7 @@ export function SpendVsSaveSplit({ spend, save }: { spend: number; save: number 
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-[15px] font-800 text-[var(--monari-ink)]">지출과 저금 비율</p>
+        <p className="text-[15px] font-extrabold text-[var(--monari-ink)]">지출과 저금 비율</p>
         <p className="monari-meta mt-1">사용한 돈과 모은 돈의 균형을 확인해요.</p>
       </div>
 
@@ -79,7 +79,7 @@ export function ReportBarGroup({
   return (
     <div className="space-y-4" role="img" aria-label="용돈, 지출, 저금, 빌린 돈 항목별 비교">
       <div>
-        <p className="text-[15px] font-800 text-[var(--monari-ink)]">돈의 흐름 비교</p>
+        <p className="text-[15px] font-extrabold text-[var(--monari-ink)]">돈의 흐름 비교</p>
         <p className="monari-meta mt-1">가장 큰 항목을 기준으로 금액 차이를 비교해요.</p>
       </div>
       <MetricBar label="용돈" Icon={Coins} value={allowance} max={max} tone="sky" />
@@ -129,7 +129,7 @@ export function BehaviorRing({ rate }: { rate: number }) {
       <div className="flex-1">
         <div className="flex items-center gap-1.5 mb-1">
           <Icon size={15} style={{ color }} strokeWidth={2.5} />
-          <p className="text-[15px] font-800" style={{ color }}>{label}</p>
+          <p className="text-[15px] font-extrabold" style={{ color }}>{label}</p>
         </div>
         <p className="text-[12px] leading-5 text-[var(--monari-ink-soft)]">
           약속을 잘 지킬수록<br />이자 보너스가 올라가요.
@@ -164,11 +164,11 @@ function MetricBar({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-sm">
-        <span className="flex items-center gap-1.5 font-700 text-[var(--monari-ink-soft)]">
+        <span className="flex items-center gap-1.5 font-bold text-[var(--monari-ink-soft)]">
           <Icon size={13} strokeWidth={2.5} />
           {label}
         </span>
-        <span className="font-800 tabular-nums text-[var(--monari-ink)]">{formatWon(value)}</span>
+        <span className="font-extrabold tabular-nums text-[var(--monari-ink)]">{formatWon(value)}</span>
       </div>
       <div className="relative h-2.5 overflow-hidden rounded-full bg-[var(--monari-line)]">
         <div
@@ -193,15 +193,15 @@ function LegendRow({
   return (
     <div>
       <div className="mb-1 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-[12px] font-700 text-[var(--monari-ink-muted)]">
+        <span className="flex items-center gap-1.5 text-[12px] font-bold text-[var(--monari-ink-muted)]">
           <Icon size={12} strokeWidth={2.5} />
           {label}
         </span>
-        <span className="text-[12px] font-800 tabular-nums" style={{ color }}>
+        <span className="text-[12px] font-extrabold tabular-nums" style={{ color }}>
           {ratio.toFixed(0)}%
         </span>
       </div>
-      <p className="text-[16px] font-900 tabular-nums" style={{ color }}>{value}</p>
+      <p className="text-[16px] font-black tabular-nums" style={{ color }}>{value}</p>
     </div>
   );
 }

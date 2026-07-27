@@ -59,7 +59,7 @@ export default async function InterestHistoryPage() {
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
               <TrendingUp size={26} />
             </span>
-            <p className="mt-4 text-[16px] font-800 text-[var(--monari-ink)]">아직 이자 기록이 없어요</p>
+            <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 이자 기록이 없어요</p>
             <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">매달 1일 정산 후 여기서 확인할 수 있어요.</p>
           </div>
         ) : (
@@ -71,7 +71,7 @@ export default async function InterestHistoryPage() {
                   <div key={`${child?.id}-${month}`} className="monari-card overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3.5">
                       <div>
-                        <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">
+                        <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">
                           {child?.name} · {month.replace("-", "년 ")}월
                         </p>
                         <p className="mt-0.5 text-[22px] font-black tabular-nums text-[var(--monari-done)]">
@@ -79,7 +79,7 @@ export default async function InterestHistoryPage() {
                         </p>
                       </div>
                       {rate !== undefined && (
-                        <span className="rounded-full bg-[var(--monari-done-bg)] px-3 py-1 text-[12px] font-700 text-[var(--monari-done)]">
+                        <span className="rounded-full bg-[var(--monari-done-bg)] px-3 py-1 text-[12px] font-bold text-[var(--monari-done)]">
                           {formatPercent(rate)}
                         </span>
                       )}
@@ -91,7 +91,7 @@ export default async function InterestHistoryPage() {
                             <p className="text-[13px] text-[var(--monari-ink-muted)]">
                               {tx.date.slice(5).replace("-", "월 ")}일
                             </p>
-                            <p className="text-[14px] font-700 text-[var(--monari-done)]">
+                            <p className="text-[14px] font-bold text-[var(--monari-done)]">
                               +{formatWon(tx.amount)}
                             </p>
                           </div>
@@ -104,7 +104,7 @@ export default async function InterestHistoryPage() {
             </section>
 
             <div className="rounded-[14px] bg-[var(--monari-hero-lo)] px-4 py-3.5 mb-6">
-              <p className="text-[12px] font-700 text-[var(--monari-hero)] mb-0.5">💡 이자 계산 방식</p>
+              <p className="text-[12px] font-bold text-[var(--monari-hero)] mb-0.5">💡 이자 계산 방식</p>
               <p className="text-[12px] text-[var(--monari-hero)]/70 leading-relaxed">
                 매달 1일 — 지난 달 평균 잔액 × 확정 이자율 ÷ 12 로 계산돼요. 행동 약속을 지킬수록 이자율이 높아져요.
               </p>

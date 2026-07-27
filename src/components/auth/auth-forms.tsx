@@ -155,7 +155,7 @@ export function SignInForm() {
       </button>
       <StatusText state={state} />
       <p className="text-center text-[13px] text-[var(--monari-ink-muted)]">
-        <Link href="/login/reset" className="font-700 text-[var(--monari-primary)]">
+        <Link href="/login/reset" className="font-bold text-[var(--monari-primary)]">
           비밀번호를 잊어버렸어요
         </Link>
       </p>

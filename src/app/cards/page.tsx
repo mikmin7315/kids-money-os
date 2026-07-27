@@ -91,7 +91,7 @@ export default async function CardsPage() {
               className="mt-3 monari-card flex items-center justify-between px-4 py-4 transition active:scale-[0.98]"
             >
               <div>
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">심사 진행 중 {appList.length}건</p>
+                <p className="text-[14px] font-bold text-[var(--monari-ink)]">심사 진행 중 {appList.length}건</p>
                 <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)]">발급 완료 후 여기에 카드 관리 화면이 나타나요</p>
               </div>
               <ChevronRight size={16} className="shrink-0 text-[var(--monari-ink-muted)]" />
@@ -109,8 +109,8 @@ export default async function CardsPage() {
                   {/* 카드 헤더 */}
                   <div className="px-5 pt-5 pb-4">
                     <div className="flex items-start justify-between mb-1">
-                      <p className="text-[16px] font-800 text-[var(--monari-ink)]">{card.child_name} 카드</p>
-                      <span className={`rounded-full px-3 py-1 text-[11px] font-700 ${statusStyle(card.status)}`}>
+                      <p className="text-[16px] font-extrabold text-[var(--monari-ink)]">{card.child_name} 카드</p>
+                      <span className={`rounded-full px-3 py-1 text-[11px] font-bold ${statusStyle(card.status)}`}>
                         {statusLabel(card.status)}
                       </span>
                     </div>
@@ -121,12 +121,12 @@ export default async function CardsPage() {
                     {/* 한도 */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="rounded-[12px] bg-[var(--monari-hero-lo)] p-3">
-                        <p className="text-[11px] font-600 text-[var(--monari-hero)]/60">일 한도</p>
-                        <p className="mt-1 text-[14px] font-700 text-[var(--monari-hero)]">{formatWon(card.daily_limit)}</p>
+                        <p className="text-[11px] font-semibold text-[var(--monari-hero)]/60">일 한도</p>
+                        <p className="mt-1 text-[14px] font-bold text-[var(--monari-hero)]">{formatWon(card.daily_limit)}</p>
                       </div>
                       <div className="rounded-[12px] bg-[var(--monari-hero-lo)] p-3">
-                        <p className="text-[11px] font-600 text-[var(--monari-hero)]/60">월 한도</p>
-                        <p className="mt-1 text-[14px] font-700 text-[var(--monari-hero)]">{formatWon(card.monthly_limit)}</p>
+                        <p className="text-[11px] font-semibold text-[var(--monari-hero)]/60">월 한도</p>
+                        <p className="mt-1 text-[14px] font-bold text-[var(--monari-hero)]">{formatWon(card.monthly_limit)}</p>
                       </div>
                     </div>
 
@@ -137,7 +137,7 @@ export default async function CardsPage() {
                     >
                       <div className="flex items-center gap-2 text-white">
                         <Receipt size={15} aria-hidden="true" />
-                        <span className="text-[14px] font-700">카드 사용 내역</span>
+                        <span className="text-[14px] font-bold">카드 사용 내역</span>
                       </div>
                       <ChevronRight size={15} className="text-white/70" />
                     </Link>
@@ -146,7 +146,7 @@ export default async function CardsPage() {
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/cards/${card.id}/limits`}
-                        className="flex-1 rounded-[10px] border border-[var(--monari-line)] py-2.5 text-center text-[12px] font-700 text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
+                        className="flex-1 rounded-[10px] border border-[var(--monari-line)] py-2.5 text-center text-[12px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
                       >
                         한도 변경
                       </Link>
@@ -160,7 +160,7 @@ export default async function CardsPage() {
                   <div className="border-t border-[var(--monari-line)] px-5 py-3">
                     <Link
                       href={`/cards/${card.id}/lost`}
-                      className="text-[12px] font-600 text-[var(--monari-minus)] transition hover:opacity-80"
+                      className="text-[12px] font-semibold text-[var(--monari-minus)] transition hover:opacity-80"
                     >
                       분실 신고
                     </Link>
@@ -177,11 +177,11 @@ export default async function CardsPage() {
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
               <CreditCard size={26} />
             </span>
-            <p className="mt-4 text-[16px] font-800 text-[var(--monari-ink)]">아직 카드가 없어요</p>
+            <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 카드가 없어요</p>
             <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">아이를 위한 체크카드를 신청해보세요.</p>
             <Link
               href="/cards/apply"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-[14px] bg-[var(--monari-hero)] px-6 py-3 text-[14px] font-700 text-white"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-[14px] bg-[var(--monari-hero)] px-6 py-3 text-[14px] font-bold text-white"
             >
               <Plus size={15} /> 카드 신청하기
             </Link>

@@ -94,7 +94,7 @@ export default async function CardStatusPage() {
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
               <CheckCircle2 size={26} />
             </span>
-            <p className="mt-4 text-[15px] font-800 text-[var(--monari-ink)]">신청 내역이 없어요</p>
+            <p className="mt-4 text-[15px] font-extrabold text-[var(--monari-ink)]">신청 내역이 없어요</p>
             <Link href="/cards/apply" className="mt-4 inline-block text-[13px] font-bold text-[var(--monari-hero)]">
               카드 신청하기 →
             </Link>

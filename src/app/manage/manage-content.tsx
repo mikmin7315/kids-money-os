@@ -37,7 +37,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
             key={key}
             type="button"
             onClick={() => setTab(key)}
-            className={`flex-1 rounded-[14px] py-2.5 text-[13px] font-700 transition ${
+            className={`flex-1 rounded-[14px] py-2.5 text-[13px] font-bold transition ${
               tab === key
                 ? "bg-[var(--monari-hero)] text-white"
                 : "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]"
@@ -57,7 +57,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
               <button
                 type="button"
                 onClick={() => setShowBehaviorForm((v) => !v)}
-                className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-700 text-white"
+                className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-bold text-white"
               >
                 <Plus size={13} />
                 새 약속
@@ -72,7 +72,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
 
             {bundle.behaviorRules.length === 0 ? (
               <div className="monari-card mt-3 px-4 py-5 text-center">
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 약속이 없어요</p>
+                <p className="text-[14px] font-bold text-[var(--monari-ink)]">아직 약속이 없어요</p>
                 <p className="monari-meta mt-1">위의 새 약속 버튼으로 만들어보세요</p>
               </div>
             ) : (
@@ -81,7 +81,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                   <div key={rule.id} className="monari-card p-4" style={{ opacity: rule.isActive ? 1 : 0.55 }}>
                     <div className="mb-3 flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <p className="text-[15px] font-800 text-[var(--monari-ink)] leading-tight">{rule.title}</p>
+                        <p className="text-[15px] font-extrabold text-[var(--monari-ink)] leading-tight">{rule.title}</p>
                         {rule.description && (
                           <p className="mt-1 text-[12px] text-[var(--monari-ink-soft)]">{rule.description}</p>
                         )}
@@ -93,7 +93,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                     </div>
                     <div className="mb-3 flex flex-wrap gap-2">
                       <span
-                        className={`inline-flex h-[24px] items-center rounded-[8px] px-2.5 text-[11px] font-700 ${
+                        className={`inline-flex h-[24px] items-center rounded-[8px] px-2.5 text-[11px] font-bold ${
                           rule.requiresParentApproval
                             ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]"
                             : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"
@@ -102,7 +102,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                         {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                       </span>
                       {!rule.isActive && (
-                        <span className="inline-flex h-[24px] items-center rounded-[8px] px-2.5 text-[11px] font-700 bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
+                        <span className="inline-flex h-[24px] items-center rounded-[8px] px-2.5 text-[11px] font-bold bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
                           비활성
                         </span>
                       )}
@@ -137,7 +137,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                 <button
                   type="button"
                   onClick={() => setShowAllowanceForm((v) => !v)}
-                  className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-700 text-white"
+                  className="flex items-center gap-1 rounded-[10px] bg-[var(--monari-hero)] px-3 py-1.5 text-[12px] font-bold text-white"
                 >
                   <Plus size={13} />
                   새 규칙
@@ -154,14 +154,14 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
             {!hasChildren ? (
               <div className="monari-card mt-3 p-5 text-center">
                 <CircleDollarSign className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
-                <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
+                <p className="text-[14px] font-bold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
+                <Link href="/settings" className="mt-2 inline-block text-[13px] font-bold text-[var(--monari-hero)]">
                   설정으로 가기 →
                 </Link>
               </div>
             ) : bundle.allowanceRules.length === 0 ? (
               <div className="monari-card mt-3 px-4 py-5 text-center">
-                <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 설정된 용돈이 없어요</p>
+                <p className="text-[14px] font-bold text-[var(--monari-ink)]">아직 설정된 용돈이 없어요</p>
                 <p className="monari-meta mt-1">위의 새 규칙 버튼으로 추가해보세요</p>
               </div>
             ) : (
@@ -181,14 +181,14 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                           <CalendarDays size={16} />
                         </span>
                         <div>
-                          <p className="text-[14px] font-700 text-[var(--monari-ink)]">
+                          <p className="text-[14px] font-bold text-[var(--monari-ink)]">
                             {child?.name} · {rule.title}
                           </p>
                           <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)]">{cycle}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="text-[15px] font-800 text-[var(--monari-done)]">{formatWon(rule.amount)}</p>
+                        <p className="text-[15px] font-extrabold text-[var(--monari-done)]">{formatWon(rule.amount)}</p>
                         <DeleteAllowanceRuleButton ruleId={rule.id} label={rule.title} />
                       </div>
                     </div>
@@ -212,7 +212,7 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
                       <div key={exec.id} className="monari-card flex items-start gap-3 border border-[var(--monari-minus)]/20 p-4">
                         <AlertCircle size={16} className="mt-0.5 shrink-0 text-[var(--monari-minus)]" />
                         <div>
-                          <p className="text-[13px] font-700 text-[var(--monari-ink)]">
+                          <p className="text-[13px] font-bold text-[var(--monari-ink)]">
                             {child?.name} · {rule?.title ?? "삭제된 규칙"} · {exec.scheduledDate}
                           </p>
                           <p className="mt-0.5 text-[12px] text-[var(--monari-minus)]">
@@ -234,8 +234,8 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
           {!hasChildren ? (
             <div className="monari-card p-5 text-center">
               <TrendingUp className="mx-auto mb-3 text-[var(--monari-ink-muted)]" size={28} />
-              <p className="text-[14px] font-700 text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
-              <Link href="/settings" className="mt-2 inline-block text-[13px] font-700 text-[var(--monari-hero)]">
+              <p className="text-[14px] font-bold text-[var(--monari-ink)]">아이 프로필을 먼저 등록해주세요</p>
+              <Link href="/settings" className="mt-2 inline-block text-[13px] font-bold text-[var(--monari-hero)]">
                 설정으로 가기 →
               </Link>
             </div>
@@ -262,8 +262,8 @@ export function ManageContent({ bundle, initialTab = "behaviors" }: { bundle: Ap
 function MetricBox({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="rounded-[14px] bg-[var(--monari-hero-lo)] p-3">
-      <p className="text-[11px] text-[var(--monari-hero)]/60 font-600">{label}</p>
-      <p className="mt-1 text-[14px] font-800 text-[var(--monari-hero)]">{value}</p>
+      <p className="text-[11px] text-[var(--monari-hero)]/60 font-semibold">{label}</p>
+      <p className="mt-1 text-[14px] font-extrabold text-[var(--monari-hero)]">{value}</p>
       {sub && <p className="mt-0.5 text-[10px] text-[var(--monari-hero)]/50">{sub}</p>}
     </div>
   );

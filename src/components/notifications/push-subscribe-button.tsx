@@ -69,7 +69,7 @@ export function PushSubscribeButton() {
             {state === "subscribed" ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
           </span>
           <div>
-            <p className="text-[14px] font-800 text-[var(--monari-ink)]">기기 푸시 알림</p>
+            <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">기기 푸시 알림</p>
             <p className="text-[12px] text-[var(--monari-ink-muted)]">
               {state === "subscribed" ? "이 기기에서 알림을 받고 있어요" :
                state === "denied" ? "브라우저에서 알림이 차단됐어요" :

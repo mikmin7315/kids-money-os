@@ -78,7 +78,7 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
 
       <div className="rounded-[16px] bg-white/70 px-4 py-3.5 text-center text-[13px] text-[var(--color-muted)]">
         PIN을 잊었나요?{" "}
-        <span className="font-700 text-[#6C3FE8]">
+        <span className="font-bold text-[#6C3FE8]">
           부모님 설정의 아이 정보에서 PIN을 초기화할 수 있어요.
         </span>
       </div>
@@ -98,7 +98,7 @@ function NoPinView({ childId, onSuccess }: { childId: string; onSuccess: () => v
       <p className="text-center font-display text-2xl font-semibold">아이 모드로 입장</p>
       <p className="mt-3 text-center text-sm leading-6 text-[var(--color-muted)]">
         아직 PIN이 설정되지 않았어요.{" "}
-        <span className="font-700 text-[#6C3FE8]">바로 입장</span>하거나 부모님 설정에서 PIN을 먼저
+        <span className="font-bold text-[#6C3FE8]">바로 입장</span>하거나 부모님 설정에서 PIN을 먼저
         설정할 수 있어요.
       </p>
 

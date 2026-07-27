@@ -122,7 +122,7 @@ export default async function AdminWalletChargesPage() {
                 <div key={charge.id} className="rounded-[16px] bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-700 text-[var(--monari-ink)]">
+                      <p className="truncate text-[13px] font-bold text-[var(--monari-ink)]">
                         {charge.parentName} · {formatWon(charge.amount)}
                       </p>
                       <p className="text-[11px] text-[var(--monari-ink-muted)]">
@@ -138,7 +138,7 @@ export default async function AdminWalletChargesPage() {
                         <p className="mt-0.5 text-[11px] text-[var(--monari-minus)]">사유: {charge.rejectionReason}</p>
                       )}
                     </div>
-                    <span className={`ml-2 shrink-0 rounded-[8px] px-2 py-1 text-[11px] font-700 ${
+                    <span className={`ml-2 shrink-0 rounded-[8px] px-2 py-1 text-[11px] font-bold ${
                       isPaid ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]" : "bg-[var(--status-danger-solid)] text-[var(--status-danger-solid-text)]"
                     }`}>
                       {isPaid ? "승인" : "거절"}

@@ -167,7 +167,7 @@ export function NotificationList({
 
       {notifications.length === 0 ? (
         <div className="monari-card mt-3 px-4 py-5 text-center">
-          <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">새로운 알림이 없어요</p>
+          <p className="text-[14px] font-semibold text-[var(--monari-ink-muted)]">새로운 알림이 없어요</p>
           <p className="monari-meta mt-1">
             {target === "child"
               ? "약속이나 정산 소식이 오면 여기에 바로 보여요."

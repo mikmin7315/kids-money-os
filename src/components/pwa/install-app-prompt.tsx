@@ -45,10 +45,10 @@ export function InstallAppPrompt() {
         <Download className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-800 text-[var(--monari-ink)]">Monari 앱 설치</p>
+        <p className="text-[13px] font-extrabold text-[var(--monari-ink)]">Monari 앱 설치</p>
         <p className="mt-0.5 text-[11px] text-[var(--monari-ink-muted)]">홈 화면에서 더 빠르게 시작하세요.</p>
       </div>
-      <button type="button" onClick={install} className="h-9 shrink-0 rounded-[12px] bg-[var(--monari-hero)] px-3 text-[12px] font-700 text-white">
+      <button type="button" onClick={install} className="h-9 shrink-0 rounded-[12px] bg-[var(--monari-hero)] px-3 text-[12px] font-bold text-white">
         설치
       </button>
       <button type="button" onClick={dismiss} aria-label="설치 안내 닫기" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--monari-ink-muted)]">

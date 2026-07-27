@@ -95,7 +95,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
           <div className="flex items-center gap-2">
             <span className="text-[22px]">🐳</span>
-            <p className="text-[15px] font-800 text-white">{child.name}의 통장</p>
+            <p className="text-[15px] font-extrabold text-white">{child.name}의 통장</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -117,7 +117,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
         {/* 잔액 */}
         <div className="relative text-center mb-5">
-          <p className="text-[12px] font-700 tracking-[0.1em] uppercase mb-2" style={{ color: "rgba(255,255,255,0.6)" }}>
+          <p className="text-[12px] font-bold tracking-[0.1em] uppercase mb-2" style={{ color: "rgba(255,255,255,0.6)" }}>
             내 돈 💰
           </p>
           <Link
@@ -141,7 +141,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
           {/* 이자율 + 이달 예상 이자 배지 */}
           <div className="mt-3 flex justify-center gap-2 flex-wrap">
             {policy ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-bold text-white">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#C4B5FD]" />
                 이자율 {summary.wallet.currentInterestRate}%
                 {estimateInterest(summary.wallet, policy) > 0 && (
@@ -151,7 +151,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 )}
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-700 text-white">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-4 py-1.5 text-[12px] font-bold text-white">
                 <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
                 이자율 설정 전
               </span>
@@ -163,7 +163,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {streak > 0 && (
           <div className="relative mb-3 flex items-center gap-2.5 rounded-[16px] bg-white/15 px-4 py-2.5">
             <span className="text-[20px]">🔥</span>
-            <p className="text-[13px] font-800 text-white">{streak}일 연속 약속 달성 중!</p>
+            <p className="text-[13px] font-extrabold text-white">{streak}일 연속 약속 달성 중!</p>
             <Sparkles className="ml-auto h-4 w-4 text-yellow-300" />
           </div>
         )}
@@ -171,8 +171,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         {/* 오늘 약속 + 진행 원 */}
         <div className="relative flex items-center gap-4 rounded-[20px] border border-white/20 bg-white/12 p-4 mb-4">
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-700 text-white/60 mb-1">오늘 약속</p>
-            <p className="text-[20px] font-900 text-white leading-tight">
+            <p className="text-[12px] font-bold text-white/60 mb-1">오늘 약속</p>
+            <p className="text-[20px] font-black text-white leading-tight">
               {todayTotal === 0 ? "약속이 없어요" : allDone ? "모두 완료! 🎉" : `${remaining}개 남았어요`}
             </p>
           </div>
@@ -191,8 +191,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <strong className="text-[18px] font-900 text-white leading-none">{todayDone}</strong>
-                <span className="text-[9px] font-700 text-white/60 mt-0.5">/ {todayTotal}</span>
+                <strong className="text-[18px] font-black text-white leading-none">{todayDone}</strong>
+                <span className="text-[9px] font-bold text-white/60 mt-0.5">/ {todayTotal}</span>
               </div>
             </div>
           </Link>
@@ -249,8 +249,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                     </p>
                   </div>
                   <div className="border-t border-[#C4B5FD] grid grid-cols-2 divide-x divide-[#C4B5FD]">
-                    <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#6C3FE8] transition active:bg-[#C4B5FD]/40">약속 체크하기 ✅</Link>
-                    <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-800 text-[#4424B0] transition active:bg-[#C4B5FD]/40">이자율 보기 📈</Link>
+                    <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#6C3FE8] transition active:bg-[#C4B5FD]/40">약속 체크하기 ✅</Link>
+                    <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#4424B0] transition active:bg-[#C4B5FD]/40">이자율 보기 📈</Link>
                   </div>
                 </div>
               )}
@@ -283,22 +283,22 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 <div className="mb-5">
                   <div className="flex items-center justify-between mb-3">
                     <h2 style={{ fontSize: 17, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.02em" }}>이자 미리보기 📈</h2>
-                    <Link href={`${base}/interest`} className="text-[13px] font-700 text-[#6C3FE8]">자세히 <ArrowRight className="inline h-3.5 w-3.5" /></Link>
+                    <Link href={`${base}/interest`} className="text-[13px] font-bold text-[#6C3FE8]">자세히 <ArrowRight className="inline h-3.5 w-3.5" /></Link>
                   </div>
                   <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(108,63,232,0.12)] border border-[#C4B5FD]">
                     <div className="px-5 py-4" style={{ background: "linear-gradient(135deg, #3B0764 0%, #6C3FE8 100%)" }}>
-                      <p className="text-[12px] font-600 text-white/70 mb-1">이대로면 이번 달</p>
+                      <p className="text-[12px] font-semibold text-white/70 mb-1">이대로면 이번 달</p>
                       <p className="tabular-nums text-white" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em" }}>+{formatWon(estimateInterest(summary.wallet, policy))}</p>
-                      <p className="text-[12px] font-600 text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
+                      <p className="text-[12px] font-semibold text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
                     </div>
                     <div className="divide-y divide-[#F5F0FF]">
                       <div className="flex items-center justify-between px-5 py-3">
-                        <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
-                        <p className="text-[14px] font-800 text-[#1C1033]">{formatWon(summary.wallet.balance)}</p>
+                        <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
+                        <p className="text-[14px] font-extrabold text-[#1C1033]">{formatWon(summary.wallet.balance)}</p>
                       </div>
                       <div className="flex items-center justify-between px-5 py-3">
-                        <p className="text-[13px] font-600 text-[var(--monari-ink-muted)]">현재 이자율</p>
-                        <p className="text-[14px] font-800 text-[#6C3FE8]">{summary.wallet.currentInterestRate}%</p>
+                        <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">현재 이자율</p>
+                        <p className="text-[14px] font-extrabold text-[#6C3FE8]">{summary.wallet.currentInterestRate}%</p>
                       </div>
                     </div>
                   </div>
@@ -310,13 +310,13 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h2 style={{ fontSize: 17, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.02em" }}>최근 내역</h2>
-                <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-700 text-[#6C3FE8]">전체 보기 →</Link>
+                <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-bold text-[#6C3FE8]">전체 보기 →</Link>
               </div>
               <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(108,63,232,0.1)] border border-[#C4B5FD]">
                 {childTx.length === 0 ? (
                   <div className="py-10 text-center">
                     <p className="text-[32px]">🌱</p>
-                    <p className="mt-2 text-[15px] font-700 text-[#1C1033]">아직 거래 내역이 없어요</p>
+                    <p className="mt-2 text-[15px] font-bold text-[#1C1033]">아직 거래 내역이 없어요</p>
                     <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
                   </div>
                 ) : (
@@ -330,10 +330,10 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                             {minus ? "🛍️" : saved ? "🐷" : "💰"}
                           </span>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[14px] font-700 text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
+                            <p className="truncate text-[14px] font-bold text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
                             <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
                           </div>
-                          <p className={`shrink-0 tabular-nums text-[15px] font-800 ${minus ? "text-[#BE123C]" : "text-[#5530CB]"}`}>
+                          <p className={`shrink-0 tabular-nums text-[15px] font-extrabold ${minus ? "text-[#BE123C]" : "text-[#5530CB]"}`}>
                             {minus ? "-" : "+"}{formatWon(tx.amount)}
                           </p>
                         </li>
@@ -342,7 +342,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                   </ul>
                 )}
               </div>
-              <Link href={`${base}/records`} className="mt-3 flex items-center justify-center gap-2 rounded-[16px] bg-white border border-[#C4B5FD] py-3 text-[13px] font-700 text-[#6C3FE8] transition active:scale-[0.97]">
+              <Link href={`${base}/records`} className="mt-3 flex items-center justify-center gap-2 rounded-[16px] bg-white border border-[#C4B5FD] py-3 text-[13px] font-bold text-[#6C3FE8] transition active:scale-[0.97]">
                 전체 기록 보기 →
               </Link>
             </div>
@@ -356,8 +356,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#EDE9FE] text-xl flex-shrink-0">🛒</span>
                   <div className="flex-1">
-                    <p className="text-[14px] font-800 text-[#1C1033]">미리쓰기 요청하기</p>
-                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">부모님 허락 받고 먼저 쓰기</p>
+                    <p className="text-[14px] font-extrabold text-[#1C1033]">미리쓰기 요청하기</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">부모님 허락 받고 먼저 쓰기</p>
                   </div>
                   <ArrowRight className="h-4 w-4 text-[#C4B5FD]" />
                 </Link>
@@ -367,8 +367,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#FFE4E6] text-xl flex-shrink-0">📋</span>
                   <div className="flex-1">
-                    <p className="text-[14px] font-800 text-[#1C1033]">상환 현황 보기</p>
-                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">갚아야 할 금액 확인</p>
+                    <p className="text-[14px] font-extrabold text-[#1C1033]">상환 현황 보기</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">갚아야 할 금액 확인</p>
                   </div>
                   <ArrowRight className="h-4 w-4 text-[#C4B5FD]" />
                 </Link>
@@ -378,8 +378,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#EDE9FE] text-xl flex-shrink-0">⚙️</span>
                   <div className="flex-1">
-                    <p className="text-[14px] font-800 text-[#1C1033]">설정 · 도움말</p>
-                    <p className="text-[11px] font-600 text-[var(--monari-ink-muted)] mt-0.5">PIN, 금액 가리기 등</p>
+                    <p className="text-[14px] font-extrabold text-[#1C1033]">설정 · 도움말</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">PIN, 금액 가리기 등</p>
                   </div>
                   <ArrowRight className="h-4 w-4 text-[#C4B5FD]" />
                 </Link>
@@ -429,12 +429,12 @@ function SavingsRateCard({ totalSave, totalAllowance, masked, base }: {
         </svg>
         {/* 텍스트 */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-700 mb-1" style={{ color }}>
+          <p className="text-[13px] font-bold mb-1" style={{ color }}>
             목표 {TARGET}%
             {reached && <span className="ml-1.5 rounded-full bg-[#EDE9FE] px-2 py-0.5 text-[10px] text-[#5530CB]">달성 ✓</span>}
           </p>
-          <p className="text-[15px] font-900 text-[#1C1033] leading-snug">{masked ? "••••원 저금했어요" : `${formatWon(totalSave)} 저금했어요`}</p>
-          <p className="mt-1 text-[12px] font-600 text-[#94A3B8]">{message}</p>
+          <p className="text-[15px] font-black text-[#1C1033] leading-snug">{masked ? "••••원 저금했어요" : `${formatWon(totalSave)} 저금했어요`}</p>
+          <p className="mt-1 text-[12px] font-semibold text-[#94A3B8]">{message}</p>
         </div>
         <ArrowRight className="h-4 w-4 flex-shrink-0 text-[#C4B5FD]" />
       </div>
@@ -448,8 +448,8 @@ function KidFlowCard({ icon, label, value, bg, textColor }: {
   return (
     <div className="rounded-[18px] p-4" style={{ background: bg }}>
       <span className="text-[22px] mb-2 block">{icon}</span>
-      <p className="text-[11px] font-700 mb-1" style={{ color: textColor }}>{label}</p>
-      <p className="tabular-nums text-[20px] font-900 leading-none" style={{ color: textColor, letterSpacing: "-0.02em" }}>
+      <p className="text-[11px] font-bold mb-1" style={{ color: textColor }}>{label}</p>
+      <p className="tabular-nums text-[20px] font-black leading-none" style={{ color: textColor, letterSpacing: "-0.02em" }}>
         {value}
       </p>
     </div>
@@ -482,21 +482,21 @@ function CoachingTipCard({ today, childName }: { today: string; childName: strin
     <div className="mb-5 overflow-hidden rounded-[20px]" style={{ background: "linear-gradient(135deg,#F5F0FF 0%,#EDE9FE 100%)", border: "1px solid #C4B5FD" }}>
       <div className="px-4 pt-4 pb-3">
         <div className="flex items-center gap-2 mb-2.5">
-          <span className="rounded-full bg-[#6C3FE8]/10 px-2.5 py-0.5 text-[10px] font-800 text-[#6C3FE8]">💬 오늘의 대화</span>
-          <span className="text-[10px] font-600 text-[#94a3b8]">{tip.topic}</span>
+          <span className="rounded-full bg-[#6C3FE8]/10 px-2.5 py-0.5 text-[10px] font-extrabold text-[#6C3FE8]">💬 오늘의 대화</span>
+          <span className="text-[10px] font-semibold text-[#94a3b8]">{tip.topic}</span>
         </div>
         <div className="flex items-start gap-3">
           <span className="text-[32px] leading-none">{tip.emoji}</span>
           <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-900 leading-snug" style={{ color: "#1C1033", letterSpacing: "-0.02em" }}>
+            <p className="text-[15px] font-black leading-snug" style={{ color: "#1C1033", letterSpacing: "-0.02em" }}>
               {childName}야, {tip.tip}
             </p>
-            <p className="mt-1.5 text-[12px] font-600 leading-5" style={{ color: "#5530CB" }}>{tip.sub}</p>
+            <p className="mt-1.5 text-[12px] font-semibold leading-5" style={{ color: "#5530CB" }}>{tip.sub}</p>
           </div>
         </div>
       </div>
       <div className="border-t border-[#C4B5FD]/60 px-4 py-2.5">
-        <p className="text-[10px] font-600 text-[#94a3b8]">부모님과 함께 이야기 해봐요 · 내일 또 새로운 팁이 와요</p>
+        <p className="text-[10px] font-semibold text-[#94a3b8]">부모님과 함께 이야기 해봐요 · 내일 또 새로운 팁이 와요</p>
       </div>
     </div>
   );

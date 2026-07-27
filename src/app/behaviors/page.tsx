@@ -65,7 +65,7 @@ export default async function BehaviorsPage() {
         <SectionTitle>현재 약속 목록</SectionTitle>
         {bundle.behaviorRules.length === 0 ? (
           <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-700 text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
+            <p className="text-[14px] font-bold text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
             <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
           </div>
         ) : (
@@ -82,7 +82,7 @@ export default async function BehaviorsPage() {
                 {/* 상단: 제목 + 액션 버튼 */}
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-800 text-[var(--monari-ink)] leading-tight truncate">{rule.title}</p>
+                    <p className="text-[14px] font-extrabold text-[var(--monari-ink)] leading-tight truncate">{rule.title}</p>
                     {rule.description && (
                       <p className="mt-0.5 text-[12px] text-[var(--monari-ink-muted)] truncate">{rule.description}</p>
                     )}
@@ -101,11 +101,11 @@ export default async function BehaviorsPage() {
 
                 {/* 중단: 배지 */}
                 <div className="flex items-center gap-1.5 mb-2.5">
-                  <span className={`inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-700 ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
+                  <span className={`inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-bold ${rule.requiresParentApproval ? "bg-[var(--monari-pending-bg)] text-[var(--monari-pending)]" : "bg-[var(--monari-done-bg)] text-[var(--monari-done)]"}`}>
                     {rule.requiresParentApproval ? "확인 후 반영" : "자동 반영"}
                   </span>
                   {!rule.isActive && (
-                    <span className="inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-700 bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
+                    <span className="inline-flex h-[22px] items-center rounded-[8px] px-[8px] text-[11px] font-bold bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]">
                       비활성
                     </span>
                   )}
@@ -113,11 +113,11 @@ export default async function BehaviorsPage() {
 
                 {/* 하단: 보상 + 이자 인라인 */}
                 <div className="flex items-center gap-3 text-[12px]">
-                  <span className="font-600 text-[var(--monari-ink-muted)]">보상</span>
-                  <span className="font-800 text-[var(--monari-hero)]">{formatWon(rule.rewardAmount)}</span>
+                  <span className="font-semibold text-[var(--monari-ink-muted)]">보상</span>
+                  <span className="font-extrabold text-[var(--monari-hero)]">{formatWon(rule.rewardAmount)}</span>
                   <span className="text-[var(--monari-line)]">·</span>
-                  <span className="font-600 text-[var(--monari-ink-muted)]">이자</span>
-                  <span className="font-800 text-[var(--monari-done)]">
+                  <span className="font-semibold text-[var(--monari-ink-muted)]">이자</span>
+                  <span className="font-extrabold text-[var(--monari-done)]">
                     {rule.interestDelta !== 0 ? `+${formatPercent(rule.interestDelta)}` : "—"}
                   </span>
                   {rule.interestDelta !== 0 && (
@@ -136,21 +136,21 @@ export default async function BehaviorsPage() {
       {simulations.length > 0 && simulations.some((s) => s.ruleResults.length > 0) && (
         <section className="mb-5">
           <p className="monari-eyebrow mb-1">이자율 예측</p>
-          <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">다음 달 이자율 시뮬레이션</p>
+          <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">다음 달 이자율 시뮬레이션</p>
           <div className="space-y-3">
             {simulations.map(({ child, baseRate, projectedRate, ruleResults }) => (
               <div key={child.id} className="monari-card overflow-hidden">
                 {/* 헤더: 아이 이름 + 예측 이자율 */}
                 <div className="flex items-center justify-between px-5 py-4" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #4F7FFF 100%)" }}>
                   <div>
-                    <p className="text-[11px] font-700 text-white/60 mb-0.5">{child.name}의 다음 달 예상</p>
+                    <p className="text-[11px] font-bold text-white/60 mb-0.5">{child.name}의 다음 달 예상</p>
                     <div className="flex items-end gap-1.5">
-                      <p className="text-[32px] font-900 text-white tabular-nums leading-none">{projectedRate}%</p>
+                      <p className="text-[32px] font-black text-white tabular-nums leading-none">{projectedRate}%</p>
                       {projectedRate > baseRate && (
-                        <p className="mb-1 text-[13px] font-800 text-[#86efac]">+{projectedRate - baseRate}%p</p>
+                        <p className="mb-1 text-[13px] font-extrabold text-[#86efac]">+{projectedRate - baseRate}%p</p>
                       )}
                     </div>
-                    <p className="mt-1 text-[11px] font-600 text-white/55">기본 {baseRate}% + 약속 보너스</p>
+                    <p className="mt-1 text-[11px] font-semibold text-white/55">기본 {baseRate}% + 약속 보너스</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[44px] leading-none">{projectedRate >= baseRate + 2 ? "🚀" : projectedRate > baseRate ? "📈" : "📊"}</p>
@@ -165,10 +165,10 @@ export default async function BehaviorsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1.5">
                             <span className={`h-2 w-2 shrink-0 rounded-full ${willApply ? "bg-[var(--monari-done)]" : "bg-[var(--monari-minus)]"}`} />
-                            <p className="text-[13px] font-700 text-[var(--monari-ink)] truncate">{rule.title}</p>
+                            <p className="text-[13px] font-bold text-[var(--monari-ink)] truncate">{rule.title}</p>
                           </div>
                           {rule.ruleCategory === "monthly_goal" ? (
-                            <p className="text-[11px] font-600 text-[var(--monari-ink-muted)]">
+                            <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">
                               1회 달성 기준 · {willApply ? "이번 달 달성 ✓" : "아직 미달성"}
                             </p>
                           ) : (
@@ -180,16 +180,16 @@ export default async function BehaviorsPage() {
                                     style={{ width: `${Math.min(currentPct, 100)}%` }}
                                   />
                                 </div>
-                                <span className="text-[11px] font-800 tabular-nums text-[var(--monari-ink-muted)] w-[32px] text-right">{currentPct}%</span>
+                                <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-ink-muted)] w-[32px] text-right">{currentPct}%</span>
                               </div>
-                              <p className="text-[11px] font-600 text-[var(--monari-ink-muted)]">
+                              <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">
                                 목표 {rule.monthlyTargetRate ?? 80}% · {willApply ? "달성 중 ✓" : `${(rule.monthlyTargetRate ?? 80) - currentPct}%p 부족`}
                               </p>
                             </div>
                           )}
                         </div>
                         <div className={`shrink-0 rounded-[10px] px-2.5 py-1.5 text-center ${willApply ? "bg-[var(--monari-done-bg)]" : "bg-[var(--monari-surface-soft)]"}`}>
-                          <p className={`text-[11px] font-800 ${willApply ? "text-[var(--monari-done)]" : "text-[var(--monari-ink-muted)]"}`}>
+                          <p className={`text-[11px] font-extrabold ${willApply ? "text-[var(--monari-done)]" : "text-[var(--monari-ink-muted)]"}`}>
                             {willApply ? "+" : ""}{rule.interestDelta}%
                           </p>
                         </div>
@@ -233,10 +233,10 @@ export default async function BehaviorsPage() {
               return (
                 <div key={log.id} className="flex items-center justify-between py-[14px]">
                   <div>
-                    <p className="text-[14px] font-600 text-[var(--monari-ink)]">{rule?.title ?? "약속"}</p>
+                    <p className="text-[14px] font-semibold text-[var(--monari-ink)]">{rule?.title ?? "약속"}</p>
                     <p className="monari-meta mt-[2px]">{child?.name} · {log.date.slice(5).replace("-", ".")}</p>
                   </div>
-                  <span className={`text-[13px] font-700 ${display.cls}`}>{display.label}</span>
+                  <span className={`text-[13px] font-bold ${display.cls}`}>{display.label}</span>
                 </div>
               );
             })}

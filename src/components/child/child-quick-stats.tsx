@@ -27,7 +27,7 @@ export function ChildQuickStats({
             </IconCircle>
             <p className="text-[12px] font-500 text-[var(--monari-ink-soft)]">이번 주 지출</p>
           </div>
-          <p className="text-[20px] font-700 tracking-tight tabular-nums text-[var(--monari-ink)]">
+          <p className="text-[20px] font-bold tracking-tight tabular-nums text-[var(--monari-ink)]">
             {formatWon(weekSpend)}
           </p>
         </div>
@@ -40,7 +40,7 @@ export function ChildQuickStats({
             </IconCircle>
             <p className="text-[12px] font-500 text-[var(--monari-ink-soft)]">가장 많이 쓴 곳</p>
           </div>
-          <p className="text-[20px] font-700 text-[var(--monari-ink)] truncate">{topCategory}</p>
+          <p className="text-[20px] font-bold text-[var(--monari-ink)] truncate">{topCategory}</p>
         </div>
 
         {/* 저축 목표 달성률 */}
@@ -52,7 +52,7 @@ export function ChildQuickStats({
               style={{ width: `${Math.min(100, savingGoalProgress)}%` }}
             />
           </div>
-          <p className="text-[20px] font-700 text-[var(--monari-ink)]">{savingGoalProgress}%</p>
+          <p className="text-[20px] font-bold text-[var(--monari-ink)]">{savingGoalProgress}%</p>
         </div>
 
         {/* 남은 챌린지 */}
@@ -63,7 +63,7 @@ export function ChildQuickStats({
             </IconCircle>
             <p className="text-[12px] font-500 text-[var(--monari-ink-soft)]">남은 챌린지</p>
           </div>
-          <p className="text-[20px] font-700 text-[var(--monari-ink)]">{remainingChallenges}개</p>
+          <p className="text-[20px] font-bold text-[var(--monari-ink)]">{remainingChallenges}개</p>
         </div>
       </div>
     </section>

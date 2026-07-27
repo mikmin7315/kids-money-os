@@ -15,7 +15,7 @@ export function SectionTitle({
       <div className="flex items-center justify-between">
         <h2 className="monari-section-title">{children}</h2>
         {action && (
-          <span className="text-[14px] font-600 text-[var(--monari-ink-muted)]">{action}</span>
+          <span className="text-[14px] font-semibold text-[var(--monari-ink-muted)]">{action}</span>
         )}
       </div>
     </div>
@@ -56,7 +56,7 @@ export function StatusPill({
 }) {
   return (
     <span
-      className={`inline-flex h-[28px] items-center rounded-[10px] px-[11px] text-[13px] font-700 ${toneStyles[tone].pill}`}
+      className={`inline-flex h-[28px] items-center rounded-[10px] px-[11px] text-[13px] font-bold ${toneStyles[tone].pill}`}
     >
       {label}
     </span>
@@ -111,8 +111,8 @@ export function ProgressCard({
   return (
     <div className="monari-card flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
-        <p className="text-[14px] font-700 text-[var(--monari-ink)]">{label}</p>
-        <p className="text-[14px] font-800 text-[var(--monari-hero)]">{valueLabel}</p>
+        <p className="text-[14px] font-bold text-[var(--monari-ink)]">{label}</p>
+        <p className="text-[14px] font-extrabold text-[var(--monari-hero)]">{valueLabel}</p>
       </div>
       <ProgressBar value={value} label={label} />
     </div>
@@ -133,10 +133,10 @@ export function ListRow({
   return (
     <div className="flex items-center justify-between gap-3 py-[14px]">
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[16px] font-600 text-[var(--monari-ink)]">{title}</p>
+        <p className="truncate text-[16px] font-semibold text-[var(--monari-ink)]">{title}</p>
         {sub && <p className="mt-[2px] text-[13px] font-500 text-[var(--monari-ink-muted)]">{sub}</p>}
       </div>
-      <span className={`shrink-0 text-[15px] font-700 ${toneStyles[tone].value}`}>{right}</span>
+      <span className={`shrink-0 text-[15px] font-bold ${toneStyles[tone].value}`}>{right}</span>
     </div>
   );
 }

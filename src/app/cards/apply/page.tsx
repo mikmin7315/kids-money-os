@@ -72,7 +72,7 @@ export default async function CardApplyPage() {
               <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
                 <CreditCard size={26} />
               </span>
-              <p className="mt-4 text-[14px] font-800 text-[var(--monari-ink)]">아이 계정을 먼저 등록해주세요</p>
+              <p className="mt-4 text-[14px] font-extrabold text-[var(--monari-ink)]">아이 계정을 먼저 등록해주세요</p>
               <Link
                 href="/children/new"
                 className="mt-4 inline-block text-[13px] font-bold text-[var(--monari-hero)]"

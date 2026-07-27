@@ -17,7 +17,7 @@ export function ChildActivityList({ items }: ChildActivityListProps) {
   return (
     <section className="rounded-[24px] bg-[var(--monari-surface)] overflow-hidden mb-4 shadow-[var(--monari-shadow-md)]">
       <div className="px-5 pt-5 pb-2">
-        <p className="text-[16px] font-700 text-[var(--monari-ink)]">최근 거래 내역</p>
+        <p className="text-[16px] font-bold text-[var(--monari-ink)]">최근 거래 내역</p>
       </div>
 
       {displayed.length === 0 ? (
@@ -35,11 +35,11 @@ export function ChildActivityList({ items }: ChildActivityListProps) {
             >
               <CategoryIcon type={item.type} title={item.title} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[14px] font-600 text-[var(--monari-ink)]">{item.title}</p>
+                <p className="truncate text-[14px] font-semibold text-[var(--monari-ink)]">{item.title}</p>
                 <p className="mt-0.5 text-[12px] text-[var(--monari-ink-soft)]">{item.dateLabel}</p>
               </div>
               <p
-                className={`shrink-0 text-[14px] font-700 tabular-nums ${
+                className={`shrink-0 text-[14px] font-bold tabular-nums ${
                   item.rightAccent ? "text-[var(--monari-primary-strong)]" : item.rightLabel.startsWith("-") ? "text-[var(--monari-ink)]" : "text-[var(--status-info-solid-text)]"
                 }`}
               >
@@ -57,7 +57,7 @@ function CategoryIcon({ type, title }: { type?: string; title: string }) {
   const { bg, fg, symbol } = getCategoryStyle(type, title);
   return (
     <div
-      className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 text-[13px] font-700 ${bg} ${fg}`}
+      className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 text-[13px] font-bold ${bg} ${fg}`}
     >
       {symbol}
     </div>

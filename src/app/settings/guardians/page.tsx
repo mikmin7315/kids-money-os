@@ -62,7 +62,7 @@ export default async function GuardiansPage() {
         <section className="mb-6">
           <SectionTitle>보호자 초대</SectionTitle>
           <div className="mt-3 mb-3 rounded-[14px] bg-[var(--monari-hero-lo)] px-4 py-3.5">
-            <p className="text-[12px] font-700 text-[var(--monari-hero)] mb-0.5">공동 보호자란?</p>
+            <p className="text-[12px] font-bold text-[var(--monari-hero)] mb-0.5">공동 보호자란?</p>
             <p className="text-[12px] text-[var(--monari-hero)]/70 leading-relaxed">
               배우자나 다른 보호자를 초대해 아이 계정을 함께 관리할 수 있어요. 권한은 아이별로 조정 가능합니다.
             </p>
@@ -78,13 +78,13 @@ export default async function GuardiansPage() {
               {invites.map((inv) => (
                 <div key={inv.id} className="flex items-center justify-between px-4 py-3.5">
                   <div>
-                    <p className="text-[14px] font-700 text-[var(--monari-ink)]">{inv.email}</p>
+                    <p className="text-[14px] font-bold text-[var(--monari-ink)]">{inv.email}</p>
                     <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
                       {inv.expired ? "만료됨" : `${inv.expires_at.slice(0, 10)}까지`}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-700 ${
+                    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
                       inv.status === "accepted"
                         ? "bg-[var(--status-success-solid)] text-[var(--status-success-solid-text)]"
                         : inv.expired
@@ -118,7 +118,7 @@ export default async function GuardiansPage() {
                     <Users size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-700 text-[var(--monari-ink)] truncate">{g.email}</p>
+                    <p className="text-[14px] font-bold text-[var(--monari-ink)] truncate">{g.email}</p>
                     <p className="text-[12px] text-[var(--monari-ink-muted)]">{g.child_name} 담당</p>
                   </div>
                   <ChevronRight size={16} className="shrink-0 text-[var(--monari-ink-muted)]" />
@@ -134,7 +134,7 @@ export default async function GuardiansPage() {
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
               <Users size={26} />
             </span>
-            <p className="mt-4 text-[16px] font-800 text-[var(--monari-ink)]">아직 초대한 보호자가 없어요</p>
+            <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 초대한 보호자가 없어요</p>
             <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">위 폼으로 배우자나 다른 보호자를 초대해보세요.</p>
           </div>
         )}

@@ -33,7 +33,7 @@ export default async function ChildModePage() {
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-[14px] font-700 text-[var(--monari-ink)]">부모 기능은 PIN으로 보호돼요</p>
+            <p className="text-[14px] font-bold text-[var(--monari-ink)]">부모 기능은 PIN으로 보호돼요</p>
             <p className="monari-meta mt-1">아이 모드에서는 약속 체크, 저축, 미리쓰기 요청만 사용할 수 있습니다.</p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default async function ChildModePage() {
         <SectionTitle>아이 프로필</SectionTitle>
         {dashboard.children.length === 0 ? (
           <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-600 text-[var(--monari-ink-muted)]">등록된 아이가 없어요</p>
+            <p className="text-[14px] font-semibold text-[var(--monari-ink-muted)]">등록된 아이가 없어요</p>
             <p className="monari-meta mt-1 mb-4">설정 화면에서 아이를 추가해주세요.</p>
             <Link href="/settings" className="monari-btn-primary px-5 text-[13px]">설정으로 가기 →</Link>
           </div>
@@ -57,14 +57,14 @@ export default async function ChildModePage() {
                 className="monari-card flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5 hover:border-[var(--monari-line-strong)] active:translate-y-0"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-[var(--monari-plus-bg)] text-[17px] font-800 text-[var(--monari-hero)]">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-[var(--monari-plus-bg)] text-[17px] font-extrabold text-[var(--monari-hero)]">
                     {summary.child.name[0]}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[17px] font-800 tracking-tight text-[var(--monari-ink)]">{summary.child.name}</p>
+                    <p className="text-[17px] font-extrabold tracking-tight text-[var(--monari-ink)]">{summary.child.name}</p>
                     <p className="monari-meta mt-0.5">현재 잔액 {formatWon(summary.wallet.balance)}</p>
                     {summary.pendingApprovals > 0 && (
-                      <p className="mt-1 text-[12px] font-700 text-[var(--monari-pending)]">
+                      <p className="mt-1 text-[12px] font-bold text-[var(--monari-pending)]">
                         확인 대기 {summary.pendingApprovals}건
                       </p>
                     )}

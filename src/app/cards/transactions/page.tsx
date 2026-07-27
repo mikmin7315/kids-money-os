@@ -103,7 +103,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
               <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
                 <CreditCard size={26} />
               </span>
-              <p className="mt-4 text-[15px] font-800 text-[var(--monari-ink)]">카드 사용 내역이 없어요</p>
+              <p className="mt-4 text-[15px] font-extrabold text-[var(--monari-ink)]">카드 사용 내역이 없어요</p>
             </div>
           ) : (
             <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">

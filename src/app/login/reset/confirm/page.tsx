@@ -55,13 +55,13 @@ export default function ResetPasswordConfirmPage() {
         {status === "done" ? (
           <div className="monari-card px-5 py-8 text-center space-y-3">
             <div className="text-4xl">✅</div>
-            <p className="text-[17px] font-800 text-[var(--monari-ink)]">비밀번호가 변경됐어요</p>
+            <p className="text-[17px] font-extrabold text-[var(--monari-ink)]">비밀번호가 변경됐어요</p>
             <p className="text-[14px] text-[var(--monari-ink-muted)]">잠시 후 홈으로 이동해요.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-[13px] font-700 text-[var(--monari-ink)]">새 비밀번호</label>
+              <label className="mb-1.5 block text-[13px] font-bold text-[var(--monari-ink)]">새 비밀번호</label>
               <input
                 type="password"
                 value={password}
@@ -74,7 +74,7 @@ export default function ResetPasswordConfirmPage() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[13px] font-700 text-[var(--monari-ink)]">비밀번호 확인</label>
+              <label className="mb-1.5 block text-[13px] font-bold text-[var(--monari-ink)]">비밀번호 확인</label>
               <input
                 type="password"
                 value={confirm}
@@ -87,7 +87,7 @@ export default function ResetPasswordConfirmPage() {
             </div>
 
             {(status === "error") && (
-              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-600 text-[var(--status-rose-solid-text)]">
+              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-semibold text-[var(--status-rose-solid-text)]">
                 {errorMsg}
               </p>
             )}
