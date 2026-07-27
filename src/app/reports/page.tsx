@@ -4,6 +4,7 @@ import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
+import { computeMonthlyReport } from "@/lib/finance";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -93,6 +94,19 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       : behRate >= 80
       ? `이번 달 ${childName}는 약속을 잘 지킨 한 달을 보냈습니다.`
       : `이번 달도 ${childName}와 함께 성장하는 한 달이었습니다.`;
+
+  // 3개월 트렌드 계산
+  const trendMonths = Array.from({ length: 3 }, (_, i) => {
+    const d = new Date(today.getFullYear(), today.getMonth() - (2 - i), 1);
+    return { year: d.getFullYear(), month: d.getMonth() + 1, label: `${d.getMonth() + 1}월` };
+  });
+  const trendData = primary
+    ? trendMonths.map(({ year, month, label }) => {
+        const r = computeMonthlyReport(primary.child.id, year, month, bundle.moneyTransactions, bundle.behaviorLogs);
+        const sr = r.totalAllowance > 0 ? Math.round((r.totalSave / r.totalAllowance) * 100) : 0;
+        return { label, saveRate: sr, behRate: Math.round(r.behaviorSuccessRate) };
+      })
+    : [];
 
   // 이자 시뮬레이션
   const simInterestRate = Math.min(currentRate + 2, 20);
@@ -248,6 +262,54 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               <Download size={13} /> 이달 리포트 CSV 내보내기
             </Link>
           </div>
+
+          {/* ═══ 이달 분배 도넛 + 3개월 트렌드 ═══ */}
+          {allowance > 0 && (
+            <section className="mb-5">
+              <div className="grid grid-cols-2 gap-2.5">
+                {/* 도넛 차트 */}
+                <div className="monari-card p-4 flex flex-col items-center">
+                  <p className="monari-eyebrow mb-3 self-start">이달 분배</p>
+                  <DonutChart save={save} spend={spend} total={allowance} />
+                  <div className="mt-3 w-full space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-done)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">저축</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-minus)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">지출</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-line-strong)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">잔여</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3개월 트렌드 바 차트 */}
+                {trendData.length > 0 && (
+                  <div className="monari-card p-4">
+                    <p className="monari-eyebrow mb-3">3개월 트렌드</p>
+                    <TrendBars data={trendData} />
+                    <div className="mt-3 flex gap-3">
+                      <div className="flex items-center gap-1">
+                        <div className="h-[3px] w-4 rounded-full bg-[var(--monari-done)]" />
+                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">저축률</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="h-[3px] w-4 rounded-full" style={{ background: "#6366f1" }} />
+                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">약속</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
           {/* ═══ 저축 / 지출 2열 카드 ═══ */}
           <section className="mb-5">
@@ -517,6 +579,104 @@ function isSpendBreakdownItem(value: unknown): value is SpendBreakdownItem {
 }
 
 // ── 컴포넌트 ──────────────────────────────────────────────────────────────
+
+function DonutChart({ save, spend, total }: { save: number; spend: number; total: number }) {
+  const r = 36;
+  const cx = 44;
+  const cy = 44;
+  const circ = 2 * Math.PI * r;
+  const savePct = Math.min(save / Math.max(total, 1), 1);
+  const spendPct = Math.min(spend / Math.max(total, 1), 1 - savePct);
+  const restPct = Math.max(0, 1 - savePct - spendPct);
+
+  function arc(startFrac: number, lengthFrac: number) {
+    if (lengthFrac <= 0) return "";
+    const start = startFrac * circ;
+    const dash = lengthFrac * circ;
+    const gap = circ - dash;
+    return `${dash} ${gap}`;
+  }
+
+  const saveOffset = -circ * 0.25;
+  const spendOffset = -circ * 0.25 + savePct * circ;
+  const restOffset = -circ * 0.25 + (savePct + spendPct) * circ;
+
+  return (
+    <svg viewBox="0 0 88 88" width={88} height={88} style={{ overflow: "visible" }}>
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--monari-surface-soft)" strokeWidth={12} />
+      {restPct > 0 && (
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--monari-line-strong)" strokeWidth={12}
+          strokeDasharray={arc(0, restPct)} strokeDashoffset={restOffset} strokeLinecap="round" />
+      )}
+      {spendPct > 0 && (
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--monari-minus)" strokeWidth={12}
+          strokeDasharray={arc(0, spendPct)} strokeDashoffset={spendOffset} strokeLinecap="round" />
+      )}
+      {savePct > 0 && (
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--monari-done)" strokeWidth={12}
+          strokeDasharray={arc(0, savePct)} strokeDashoffset={saveOffset} strokeLinecap="round" />
+      )}
+      <text x={cx} y={cy - 4} textAnchor="middle" fontSize={14} fontWeight={900} fill="var(--monari-ink)" fontFamily="inherit">
+        {Math.round(savePct * 100)}%
+      </text>
+      <text x={cx} y={cy + 12} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--monari-ink-muted)" fontFamily="inherit">
+        저축률
+      </text>
+    </svg>
+  );
+}
+
+function TrendBars({ data }: { data: { label: string; saveRate: number; behRate: number }[] }) {
+  const barW = 14;
+  const gap = 8;
+  const maxH = 72;
+  const chartW = data.length * (barW * 2 + gap + 10);
+  const chartH = maxH + 24;
+
+  return (
+    <svg viewBox={`0 0 ${chartW} ${chartH}`} width="100%" height={chartH} style={{ overflow: "visible" }}>
+      {data.map((d, i) => {
+        const x = i * (barW * 2 + gap + 10);
+        const saveH = Math.max(2, (d.saveRate / 100) * maxH);
+        const behH = Math.max(2, (d.behRate / 100) * maxH);
+        return (
+          <g key={d.label}>
+            {/* 저축률 바 */}
+            <rect
+              x={x}
+              y={maxH - saveH}
+              width={barW}
+              height={saveH}
+              rx={4}
+              fill="var(--monari-done)"
+              opacity={0.85}
+            />
+            <text x={x + barW / 2} y={maxH - saveH - 3} textAnchor="middle" fontSize={8} fontWeight={700} fill="var(--monari-done)" fontFamily="inherit">
+              {d.saveRate}
+            </text>
+            {/* 약속달성률 바 */}
+            <rect
+              x={x + barW + 3}
+              y={maxH - behH}
+              width={barW}
+              height={behH}
+              rx={4}
+              fill="#6366f1"
+              opacity={0.75}
+            />
+            <text x={x + barW + 3 + barW / 2} y={maxH - behH - 3} textAnchor="middle" fontSize={8} fontWeight={700} fill="#6366f1" fontFamily="inherit">
+              {d.behRate}
+            </text>
+            {/* 월 라벨 */}
+            <text x={x + barW} y={maxH + 14} textAnchor="middle" fontSize={9} fontWeight={700} fill="var(--monari-ink-muted)" fontFamily="inherit">
+              {d.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
 
 function HeroPill({ label, value, sub, warn }: { label: string; value: string; sub?: string; warn?: boolean }) {
   return (
