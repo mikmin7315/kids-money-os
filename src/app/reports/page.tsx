@@ -171,7 +171,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
       {primary && (
         <>
-          {/* 이번 달의 한 문장 (Spotify Wrapped 스타일) */}
+          {/* ① 이번 달의 한 문장 */}
           <div
             className="mb-5 rounded-[20px] px-5 py-5"
             style={{ background: "linear-gradient(135deg, #6d28d9 0%, #4F7FFF 100%)" }}
@@ -185,135 +185,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             </div>
           </div>
 
-          {/* 이달 예상 결과 카드 */}
-          {daysLeft > 0 && allowance > 0 && (
-            <div className="mb-5 overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--monari-hero-lo)", background: "var(--monari-hero-lo)" }}>
-              <div className="px-4 py-3.5">
-                <p className="text-[11px] font-semibold text-[var(--monari-hero)] mb-2">📅 이달 예상 결과 · {daysLeft}일 남음</p>
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">현재 저축률</p>
-                    <p className="text-[16px] font-black text-[var(--monari-hero)] tabular-nums">{saveRatio}%</p>
-                  </div>
-                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">예상 저축률</p>
-                    <p className={`text-[16px] font-black tabular-nums ${projectedSaveRate >= 30 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink)]"}`}>
-                      {projectedSaveRate}%
-                    </p>
-                  </div>
-                  <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속 달성률</p>
-                    <p className={`text-[16px] font-black tabular-nums ${behRate >= 80 ? "text-[var(--monari-done)]" : behRate >= 50 ? "text-amber-600" : "text-rose-500"}`}>
-                      {behRate}%
-                    </p>
-                  </div>
-                </div>
-                <p className="mt-2.5 text-[11px] text-[var(--monari-ink-muted)]">
-                  {projectedSaveRate >= 30
-                    ? "이대로라면 이달 저축 목표(30%)를 달성할 수 있어요 🎉"
-                    : `저축률 30%까지 ${30 - projectedSaveRate}%p 남았어요. 함께 계획을 세워보세요.`}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* 금융 건강 점수 카드 */}
-          {healthScore > 0 && (
-            <div className="mb-5 rounded-[20px] overflow-hidden" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #4F7FFF 100%)" }}>
-              <div className="px-5 py-5">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <p className="text-[11px] font-bold text-white/60 mb-0.5 tracking-[0.06em] uppercase">금융 건강 점수</p>
-                    <p className="text-[12px] text-white/50">저축 · 약속 · 이자 종합</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[52px] font-black leading-none tabular-nums text-white">{healthScore}</p>
-                    <span className="inline-block rounded-lg bg-white/20 px-2.5 py-0.5 text-[13px] font-black text-white mt-1">{healthGrade}</span>
-                  </div>
-                </div>
-                <div className="mb-2 h-2 rounded-full bg-white/20 overflow-hidden">
-                  <div className="h-2 rounded-full bg-white transition-all duration-700" style={{ width: `${healthScore}%` }} />
-                </div>
-                <p className="text-[13px] font-semibold text-white/80">{healthMsg}</p>
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                    <p className="text-[10px] text-white/60 mb-0.5">저축률</p>
-                    <p className="text-[14px] font-black text-white tabular-nums">{saveRatio}%</p>
-                  </div>
-                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                    <p className="text-[10px] text-white/60 mb-0.5">약속 달성</p>
-                    <p className="text-[14px] font-black text-white tabular-nums">{behRate}%</p>
-                  </div>
-                  <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
-                    <p className="text-[10px] text-white/60 mb-0.5">이자</p>
-                    <p className="text-[14px] font-black text-white tabular-nums">{interest > 0 ? formatWon(interest) : "—"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* CSV 내보내기 */}
-          <div className="mb-5">
-            <Link
-              href={`/api/reports/export?child=${primary.child.id}`}
-              className="flex items-center justify-center gap-2 rounded-[14px] border border-[var(--monari-line)] bg-[var(--monari-surface)] py-2.5 text-[12px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
-            >
-              <Download size={13} /> 이달 리포트 CSV 내보내기
-            </Link>
-          </div>
-
-          {/* ═══ 이달 분배 도넛 + 3개월 트렌드 ═══ */}
-          {allowance > 0 && (
-            <section className="mb-5">
-              <div className="grid grid-cols-2 gap-2.5">
-                {/* 도넛 차트 */}
-                <div className="monari-card p-4 flex flex-col items-center">
-                  <p className="monari-eyebrow mb-3 self-start">이달 분배</p>
-                  <DonutChart save={save} spend={spend} total={allowance} />
-                  <div className="mt-3 w-full space-y-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-done)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">저축</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-minus)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">지출</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-line-strong)]" />
-                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">잔여</span>
-                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3개월 트렌드 바 차트 */}
-                {trendData.length > 0 && (
-                  <div className="monari-card p-4">
-                    <p className="monari-eyebrow mb-3">3개월 트렌드</p>
-                    <TrendBars data={trendData} />
-                    <div className="mt-3 flex gap-3">
-                      <div className="flex items-center gap-1">
-                        <div className="h-[3px] w-4 rounded-full bg-[var(--monari-done)]" />
-                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">저축률</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="h-[3px] w-4 rounded-full" style={{ background: "#6366f1" }} />
-                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">약속</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* ═══ 저축 / 지출 2열 카드 ═══ */}
+          {/* ② 이달 현황 숫자 — 저축/지출/통장 */}
           <section className="mb-5">
-            <div className="grid grid-cols-2 gap-2.5">
+            <p className="monari-eyebrow mb-1">이달 현황</p>
+            <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">저축 · 지출 · 통장</p>
+
+            <div className="grid grid-cols-2 gap-2.5 mb-2.5">
               <div className="monari-card p-4">
                 <p className="monari-eyebrow mb-2">저축</p>
                 <p className="text-[26px] font-900 tracking-[-0.03em] tabular-nums text-[var(--monari-done)] leading-tight">
@@ -333,19 +210,15 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 </div>
               </div>
             </div>
+
             {borrowed > 0 && (
-              <div className="monari-card mt-2.5 flex items-center gap-2.5 px-4 py-3">
+              <div className="monari-card mb-2.5 flex items-center gap-2.5 px-4 py-3">
                 <Coins size={14} className="shrink-0 text-[var(--monari-pending)]" />
                 <p className="text-[13px] font-600 text-[var(--monari-ink-soft)]">미리쓰기</p>
                 <p className="ml-auto text-[14px] font-800 tabular-nums text-[var(--monari-pending)]">{formatWon(borrowed)}</p>
               </div>
             )}
-          </section>
 
-          {/* ═══ 통장 상태 — 단일 카드 3열 ═══ */}
-          <section className="mb-5">
-            <p className="monari-eyebrow mb-1">현황</p>
-            <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">지금 통장 상태</p>
             <div className="monari-card px-4 py-4 grid grid-cols-3 divide-x divide-[var(--monari-line)]">
               <div className="text-center pr-3">
                 <p className="monari-eyebrow mb-1.5" style={{ fontSize: "10px" }}>잔액</p>
@@ -371,30 +244,124 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             )}
           </section>
 
-          {/* 이자 시뮬레이션 — 플러스 */}
-          {currentRate > 0 && behRate < 95 && (
+          {/* ③ 시각화 — 도넛 + 트렌드 */}
+          {allowance > 0 && (
             <section className="mb-5">
-              <PremiumLockedCard
-                isPremium={IS_PREMIUM}
-                previewLabel="이자 시뮬레이션"
-                hint={`약속 달성률을 높이면 이자가 월 +${formatWon(interestGap)} 늘어날 수 있어요`}
-              >
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-surface-soft)] px-4 py-3">
-                    <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율 {currentRate}%</span>
-                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-ink)]">월 {formatWon(actualMonthlyInterestEst)}</span>
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="monari-card p-4 flex flex-col items-center">
+                  <p className="monari-eyebrow mb-3 self-start">이달 분배</p>
+                  <DonutChart save={save} spend={spend} total={allowance} />
+                  <div className="mt-3 w-full space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-done)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">저축</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-minus)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">지출</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-line-strong)]" />
+                      <span className="text-[10px] font-600 text-[var(--monari-ink-muted)] flex-1">잔여</span>
+                      <span className="text-[11px] font-800 tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-done-bg)] px-4 py-3">
-                    <span className="text-[12px] font-700 text-[var(--monari-done)]">달성률 100% 달성 시 {simInterestRate}%</span>
-                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-done)]">월 {formatWon(simMonthlyInterest)}</span>
-                  </div>
-                  <p className="text-[11px] text-center text-[var(--monari-ink-muted)]">매달 {formatWon(interestGap)} 더 받을 수 있어요</p>
                 </div>
-              </PremiumLockedCard>
+                {trendData.length > 0 && (
+                  <div className="monari-card p-4">
+                    <p className="monari-eyebrow mb-3">3개월 트렌드</p>
+                    <TrendBars data={trendData} />
+                    <div className="mt-3 flex gap-3">
+                      <div className="flex items-center gap-1">
+                        <div className="h-[3px] w-4 rounded-full bg-[var(--monari-done)]" />
+                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">저축률</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="h-[3px] w-4 rounded-full" style={{ background: "#6366f1" }} />
+                        <span className="text-[10px] font-600 text-[var(--monari-ink-muted)]">약속</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </section>
           )}
 
-          {/* ═══ 또래 비교 ═══ */}
+          {/* ④ 이달 예상 결과 */}
+          {daysLeft > 0 && allowance > 0 && (
+            <section className="mb-5">
+              <div className="overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--monari-hero-lo)", background: "var(--monari-hero-lo)" }}>
+                <div className="px-4 py-3.5">
+                  <p className="text-[11px] font-semibold text-[var(--monari-hero)] mb-2">📅 이달 예상 결과 · {daysLeft}일 남음</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">현재 저축률</p>
+                      <p className="text-[16px] font-black text-[var(--monari-hero)] tabular-nums">{saveRatio}%</p>
+                    </div>
+                    <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">예상 저축률</p>
+                      <p className={`text-[16px] font-black tabular-nums ${projectedSaveRate >= 30 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink)]"}`}>
+                        {projectedSaveRate}%
+                      </p>
+                    </div>
+                    <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
+                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속 달성률</p>
+                      <p className={`text-[16px] font-black tabular-nums ${behRate >= 80 ? "text-[var(--monari-done)]" : behRate >= 50 ? "text-amber-600" : "text-rose-500"}`}>
+                        {behRate}%
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-2.5 text-[11px] text-[var(--monari-ink-muted)]">
+                    {projectedSaveRate >= 30
+                      ? "이대로라면 이달 저축 목표(30%)를 달성할 수 있어요 🎉"
+                      : `저축률 30%까지 ${30 - projectedSaveRate}%p 남았어요. 함께 계획을 세워보세요.`}
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ⑤ 금융 건강 점수 */}
+          {healthScore > 0 && (
+            <section className="mb-5">
+              <div className="rounded-[20px] overflow-hidden" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #4F7FFF 100%)" }}>
+                <div className="px-5 py-5">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-[11px] font-bold text-white/60 mb-0.5 tracking-[0.06em] uppercase">금융 건강 점수</p>
+                      <p className="text-[12px] text-white/50">저축 · 약속 · 이자 종합</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[52px] font-black leading-none tabular-nums text-white">{healthScore}</p>
+                      <span className="inline-block rounded-lg bg-white/20 px-2.5 py-0.5 text-[13px] font-black text-white mt-1">{healthGrade}</span>
+                    </div>
+                  </div>
+                  <div className="mb-2 h-2 rounded-full bg-white/20 overflow-hidden">
+                    <div className="h-2 rounded-full bg-white transition-all duration-700" style={{ width: `${healthScore}%` }} />
+                  </div>
+                  <p className="text-[13px] font-semibold text-white/80">{healthMsg}</p>
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">저축률</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{saveRatio}%</p>
+                    </div>
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">약속 달성</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{behRate}%</p>
+                    </div>
+                    <div className="rounded-[10px] bg-white/15 px-2 py-2 text-center">
+                      <p className="text-[10px] text-white/60 mb-0.5">이자</p>
+                      <p className="text-[14px] font-black text-white tabular-nums">{interest > 0 ? formatWon(interest) : "—"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ⑥ 또래 비교 */}
           <section className="mb-5">
             <p className="monari-eyebrow mb-1">또래 비교</p>
             <div className="flex items-center gap-2 mb-3">
@@ -403,7 +370,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 {ageGroup}세
               </span>
             </div>
-
             {!peer ? (
               <div className="monari-card p-5 text-center">
                 <p className="text-[14px] font-700 text-[var(--monari-ink)]">아직 비교 데이터가 부족해요</p>
@@ -411,7 +377,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
             ) : (
               <div className="space-y-3">
-                {/* 무료 — 용돈 바 차트 비교 */}
                 <div className="monari-card p-5">
                   <p className="text-[13px] font-800 text-[var(--monari-ink)] mb-4">이달 용돈</p>
                   <div className="mb-3">
@@ -441,8 +406,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   )}
                   <p className="mt-2 text-right text-[10px] text-[var(--monari-ink-muted)]">익명 표본 {peer.sampleSize}명</p>
                 </div>
-
-                {/* 저축률 비교 — 플러스 */}
                 <PremiumLockedCard
                   isPremium={IS_PREMIUM}
                   previewLabel="저축률 비교"
@@ -455,8 +418,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     right={{ label: String(primary.child.name), value: saveRatio }}
                   />
                 </PremiumLockedCard>
-
-                {/* 약속 달성률 비교 — 플러스 */}
                 <PremiumLockedCard
                   isPremium={IS_PREMIUM}
                   previewLabel="약속 달성률 비교"
@@ -469,8 +430,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     right={{ label: String(primary.child.name), value: behRate }}
                   />
                 </PremiumLockedCard>
-
-                {/* 지출 카테고리 — 플러스 */}
                 {peer.spendBreakdown.length > 0 && (
                   <PremiumLockedCard
                     isPremium={IS_PREMIUM}
@@ -499,8 +458,31 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             )}
           </section>
 
-          {/* ═══ 코칭 포인트 ═══ */}
-          <section className="mb-6">
+          {/* ⑦ 이자 시뮬레이션 */}
+          {currentRate > 0 && behRate < 95 && (
+            <section className="mb-5">
+              <PremiumLockedCard
+                isPremium={IS_PREMIUM}
+                previewLabel="이자 시뮬레이션"
+                hint={`약속 달성률을 높이면 이자가 월 +${formatWon(interestGap)} 늘어날 수 있어요`}
+              >
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-surface-soft)] px-4 py-3">
+                    <span className="text-[12px] font-600 text-[var(--monari-ink-muted)]">현재 이자율 {currentRate}%</span>
+                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-ink)]">월 {formatWon(actualMonthlyInterestEst)}</span>
+                  </div>
+                  <div className="flex justify-between items-center rounded-[12px] bg-[var(--monari-done-bg)] px-4 py-3">
+                    <span className="text-[12px] font-700 text-[var(--monari-done)]">달성률 100% 달성 시 {simInterestRate}%</span>
+                    <span className="text-[14px] font-800 tabular-nums text-[var(--monari-done)]">월 {formatWon(simMonthlyInterest)}</span>
+                  </div>
+                  <p className="text-[11px] text-center text-[var(--monari-ink-muted)]">매달 {formatWon(interestGap)} 더 받을 수 있어요</p>
+                </div>
+              </PremiumLockedCard>
+            </section>
+          )}
+
+          {/* ⑧ 코칭 포인트 */}
+          <section className="mb-5">
             <p className="monari-eyebrow mb-1">코칭</p>
             <p className="text-[16px] font-800 text-[var(--monari-ink)] mb-3">이번달 포인트</p>
             <div className="space-y-2">
@@ -540,6 +522,16 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               )}
             </div>
           </section>
+
+          {/* ⑨ CSV 내보내기 — 모든 데이터를 본 후 맨 아래 */}
+          <div className="mb-6">
+            <Link
+              href={`/api/reports/export?child=${primary.child.id}`}
+              className="flex items-center justify-center gap-2 rounded-[14px] border border-[var(--monari-line)] bg-[var(--monari-surface)] py-2.5 text-[12px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
+            >
+              <Download size={13} /> 이달 리포트 CSV 내보내기
+            </Link>
+          </div>
         </>
       )}
       </PageContent>
