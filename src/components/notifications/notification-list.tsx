@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { SectionTitle } from "@/components/monari/ui";
 import {
@@ -19,6 +20,26 @@ const TYPE_ICON: Record<string, string> = {
   borrow_rejected: "❌",
   monthly_settlement: "📊",
 };
+
+function getNotificationUrl(notification: AppNotification, target: "parent" | "child"): string | null {
+  const { type, childId } = notification;
+  if (target === "parent") {
+    if (type === "behavior_check_requested" || type === "stale_behavior_approval" || type === "borrow_requested") {
+      return "/approvals";
+    }
+    if (type === "allowance_failed") return "/";
+    return null;
+  }
+  // child target
+  if (!childId) return null;
+  if (type === "behavior_approved" || type === "behavior_rejected" || type === "daily_behavior_reminder") {
+    return `/child/${childId}/promise`;
+  }
+  if (type === "borrow_approved" || type === "borrow_rejected" || type === "borrow_auto_approved") {
+    return `/child/${childId}`;
+  }
+  return null;
+}
 
 type NotificationListProps = {
   initialNotifications: AppNotification[];
@@ -160,6 +181,7 @@ export function NotificationList({
               <NotificationCard
                 key={notification.id}
                 notification={notification}
+                target={target}
                 onRead={() => {
                   if (!notification.isRead) markRead([notification.id]);
                 }}
@@ -174,21 +196,31 @@ export function NotificationList({
 
 function NotificationCard({
   notification,
+  target,
   onRead,
 }: {
   notification: AppNotification;
+  target: "parent" | "child";
   onRead: () => void;
 }) {
+  const router = useRouter();
+  const linkUrl = getNotificationUrl(notification, target);
+
+  function handleClick() {
+    onRead();
+    if (linkUrl) router.push(linkUrl);
+  }
+
   return (
     <button
       type="button"
-      onClick={onRead}
+      onClick={handleClick}
       className={`w-full rounded-[24px] border p-4 text-left transition ${
         notification.isRead
           ? "border-[var(--monari-line)] bg-[var(--monari-surface-soft)] opacity-75"
           : "border-[var(--monari-line-strong)] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-card)]"
-      }`}
-      aria-label={`${notification.title}${notification.isRead ? "" : ", 읽지 않은 알림"}`}
+      } ${linkUrl ? "active:scale-[0.98] cursor-pointer" : ""}`}
+      aria-label={`${notification.title}${notification.isRead ? "" : ", 읽지 않은 알림"}${linkUrl ? ", 탭하여 이동" : ""}`}
     >
       <div className="flex items-start gap-3">
         <span className="text-xl leading-none">{TYPE_ICON[notification.type] ?? "🔔"}</span>
@@ -201,9 +233,14 @@ function NotificationCard({
           </div>
           <p className="mt-1 text-sm leading-5 text-[var(--color-muted)]">{notification.body}</p>
         </div>
-        {!notification.isRead && (
-          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-rose-500" />
-        )}
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          {!notification.isRead && (
+            <span className="h-2 w-2 rounded-full bg-rose-500" />
+          )}
+          {linkUrl && (
+            <span className="text-[10px] text-[var(--monari-ink-muted)] opacity-50">›</span>
+          )}
+        </div>
       </div>
     </button>
   );
