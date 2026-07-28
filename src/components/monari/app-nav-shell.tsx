@@ -27,15 +27,6 @@ export function AppNavShell({
 
   return (
     <>
-      {/* 알림 벨 — 전역 고정 */}
-      <div className="fixed top-3 right-4 z-50 pointer-events-none" style={{ maxWidth: 460, left: "50%", transform: "translateX(-50%)" }}>
-        <div className="relative w-full">
-          <div className="absolute right-4 top-0 pointer-events-auto">
-            <NotificationBell />
-          </div>
-        </div>
-      </div>
-
       <main
         className="relative mx-auto w-full max-w-[460px] min-h-dvh"
         style={{ paddingBottom: "calc(80px + env(safe-area-inset-bottom))" }}
@@ -116,6 +107,10 @@ export function PageHero({ children }: { children: ReactNode }) {
       {/* 배경 글로우 */}
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/[0.06] blur-3xl" />
       <div className="pointer-events-none absolute -left-8 bottom-0 h-32 w-32 rounded-full bg-white/[0.05] blur-2xl" />
+      {/* 알림 벨 */}
+      <div className="absolute top-3 right-4">
+        <NotificationBell />
+      </div>
       {children}
     </div>
   );
@@ -131,6 +126,10 @@ export function VioletHero({ children }: { children: ReactNode }) {
       }}
     >
       <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/[0.07] blur-3xl" />
+      {/* 알림 벨 */}
+      <div className="absolute top-3 right-4">
+        <NotificationBell />
+      </div>
       {children}
     </div>
   );
