@@ -79,7 +79,7 @@ export function CompleteFlow({ currentRegion }: { currentRegion: string | null }
   }
 
   return (
-    <main className="flex min-h-dvh flex-col px-5 pb-12 pt-14">
+    <main className="flex h-dvh flex-col px-5 pb-12 pt-14">
       {/* 헤더 */}
       <div className="mb-6 text-center">
         <div
