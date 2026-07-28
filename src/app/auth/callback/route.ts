@@ -24,7 +24,14 @@ export async function GET(request: Request) {
         },
       }
     );
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data } = await supabase.auth.exchangeCodeForSession(code);
+    if (data.user) {
+      const createdAt = new Date(data.user.created_at).getTime();
+      const isNewUser = Date.now() - createdAt < 5 * 60 * 1000;
+      if (isNewUser) {
+        return NextResponse.redirect(`${origin}/onboarding/complete`);
+      }
+    }
   }
 
   return NextResponse.redirect(`${origin}/`);
