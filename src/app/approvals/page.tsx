@@ -47,7 +47,7 @@ export default async function ApprovalsPage() {
         <div className="grid grid-cols-3 gap-2">
           <HeroPill label="약속 대기" value={`${pendingBehaviorLogs.length}건`} />
           <HeroPill label="현금 대기" value={`${pendingCashRequests.length}건`} />
-          <HeroPill label="미리쓰기" value={`${pendingBorrows.length}건`} />
+          <HeroPill label="미리쓰기 대기" value={`${pendingBorrows.length}건`} />
         </div>
 
         {/* 상환 진행 중 — 대기와 성격이 달라 별도 표시 */}
@@ -234,7 +234,9 @@ export default async function ApprovalsPage() {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <p className="text-[12px] font-bold text-[var(--monari-primary)]">{child?.name}</p>
-                        <p className="text-[15px] font-bold text-[var(--monari-ink)] mt-0.5">{request.purpose}</p>
+                        {request.purpose && (
+                          <p className="text-[15px] font-bold text-[var(--monari-ink)] mt-0.5">{request.purpose}</p>
+                        )}
                         <p className="monari-meta">{formatWon(request.requestedAmount)}</p>
                       </div>
                       <span className="inline-flex h-[26px] items-center rounded-[10px] bg-[var(--monari-pending-bg)] px-[10px] text-[12px] font-bold text-[var(--monari-pending)]">

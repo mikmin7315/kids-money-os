@@ -16,7 +16,7 @@ export function PublicInfoPage({
   const supportEmail = getSupportEmail();
 
   return (
-    <main className="min-h-screen bg-[var(--monari-bg)] px-4 py-8 text-[var(--monari-ink)] sm:py-12">
+    <main className="min-h-dvh bg-[var(--monari-bg)] px-4 py-8 text-[var(--monari-ink)] sm:py-12">
       <div className="mx-auto max-w-2xl">
         <Link href="/login" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[var(--monari-hero)]">
           <ArrowLeft size={17} aria-hidden="true" />

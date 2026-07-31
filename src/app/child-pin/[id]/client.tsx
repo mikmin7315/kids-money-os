@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/layout/app-header";
@@ -17,9 +17,11 @@ const initialState: ManagementFormState = { ok: false, message: "" };
 export function ChildPinClientPage({
   childId,
   hasPIN,
+  dbError,
 }: {
   childId: string;
   hasPIN: boolean;
+  dbError?: boolean;
 }) {
   const router = useRouter();
 
@@ -30,7 +32,14 @@ export function ChildPinClientPage({
           <AppHeader eyebrow="아이 모드" title="PIN 입력" />
 
           <section className="mt-10 flex flex-col items-center">
-            {hasPIN ? (
+            {dbError ? (
+              <Surface className="w-full max-w-sm border-[var(--color-chip-border)]">
+                <p className="text-center font-display text-xl font-semibold text-[var(--monari-minus)]">오류가 발생했어요</p>
+                <p className="mt-3 text-center text-sm leading-6 text-[var(--color-muted)]">
+                  일시적인 오류로 PIN을 확인하지 못했어요. 잠시 후 다시 시도해 주세요.
+                </p>
+              </Surface>
+            ) : hasPIN ? (
               <PinFormView childId={childId} onSuccess={() => router.push(`/child/${childId}`)} />
             ) : (
               <NoPinView childId={childId} onSuccess={() => router.push(`/child/${childId}`)} />
@@ -51,10 +60,18 @@ export function ChildPinClientPage({
 
 function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () => void }) {
   const [state, action] = useActionState(validateChildPinForm, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     if (state.ok) onSuccess();
   }, [state.ok, onSuccess]);
+
+  useEffect(() => {
+    if (state.message && !state.ok) {
+      setResetKey((k) => k + 1);
+    }
+  }, [state.message, state.ok]);
 
   return (
     <div className="w-full max-w-sm space-y-4">
@@ -64,9 +81,9 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
           부모님이 설정한 4자리 숫자를 입력하면 아이 통장 화면으로 이동합니다.
         </p>
 
-        <form action={action} className="mt-6 space-y-6">
+        <form ref={formRef} action={action} className="mt-6 space-y-6">
           <input type="hidden" name="childId" value={childId} />
-          <PinInput name="pin" autoFocus />
+          <PinInput key={resetKey} name="pin" autoFocus onComplete={() => formRef.current?.requestSubmit()} />
           <PinSubmitButton />
           {state.message && !state.ok && (
             <p className="text-center text-sm font-medium text-[var(--monari-minus)]">

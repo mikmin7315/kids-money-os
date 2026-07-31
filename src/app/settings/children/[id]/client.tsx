@@ -88,8 +88,10 @@ export function ChildEditClient({ childId, initialChild }: { childId: string; in
                 type="password"
                 inputMode="numeric"
                 maxLength={4}
+                minLength={4}
                 pattern="\d{4}"
                 placeholder="4자리 숫자"
+                required
                 className="monari-input w-full"
               />
             </div>

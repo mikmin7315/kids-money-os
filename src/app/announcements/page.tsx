@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bell, ChevronRight, Wrench, Zap } from "lucide-react";
+import { ArrowLeft, Bell, ChevronRight, Wrench, Zap } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -51,6 +51,9 @@ export default async function AnnouncementsPage() {
   return (
     <AppNavShell>
       <PageHero>
+        <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 설정으로
+        </Link>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">고객지원</p>
         <h1 className="text-2xl font-extrabold tracking-tight text-white mb-3">
           {announcements.length === 0 ? "공지사항" : `공지 ${announcements.length}건`}

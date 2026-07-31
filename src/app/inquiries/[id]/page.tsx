@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -29,50 +30,47 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
   if (!q) notFound();
 
   return (
-    <main className="px-4 pb-36 pt-8">
-      <Link href="/inquiries" className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">
-        <ArrowLeft size={16} /> 문의 내역
-      </Link>
-
-      <div className="mb-5">
+    <AppNavShell>
+      <PageHero>
+        <Link href="/inquiries" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 문의 내역
+        </Link>
         <div className="flex items-center gap-2 mb-2">
-          <span className="rounded-full bg-[var(--monari-hero-lo)] px-2 py-0.5 text-xs font-bold text-[var(--monari-hero)]">
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-bold text-white">
             {CATEGORY_LABEL[String(q.category)] ?? String(q.category)}
           </span>
-          <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>
+          <span className="text-[12px] text-white/60">
             {STATUS_LABEL[String(q.status)] ?? String(q.status)} · {String(q.created_at ?? "").slice(0, 10).replace(/-/g, ".")}
           </span>
         </div>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: "var(--monari-ink)", letterSpacing: "-0.02em" }}>
-          {String(q.title)}
-        </h1>
-      </div>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white">{String(q.title)}</h1>
+      </PageHero>
 
-      {/* 문의 내용 */}
-      <div className="mb-5 rounded-[24px] bg-white p-5 shadow-[var(--monari-shadow-md)]">
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-ink-muted)", marginBottom: 8 }}>문의 내용</p>
-        <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
-          {String(q.body)}
-        </p>
-      </div>
-
-      {/* 답변 */}
-      {q.admin_reply ? (
-        <div className="rounded-[24px] border-l-4 border-[var(--monari-hero)] bg-[var(--monari-hero-lo)] p-5">
-          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--monari-hero)", marginBottom: 8 }}>
-            📩 운영팀 답변 · {String(q.replied_at ?? "").slice(0, 10).replace(/-/g, ".")}
-          </p>
-          <p style={{ fontSize: 15, lineHeight: 1.75, color: "var(--monari-ink-soft)", whiteSpace: "pre-wrap" }}>
-            {String(q.admin_reply)}
+      <PageContent className="pt-5">
+        <div className="mb-5 monari-card p-5">
+          <p className="text-[13px] font-bold text-[var(--monari-ink-muted)] mb-2">문의 내용</p>
+          <p className="text-[15px] leading-[1.75] text-[var(--monari-ink-soft)] whitespace-pre-wrap">
+            {String(q.body)}
           </p>
         </div>
-      ) : (
-        <div className="rounded-[24px] bg-[var(--monari-surface-soft)] p-5 text-center">
-          <p style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>
-            아직 답변이 작성되지 않았어요. 빠르게 도움을 드릴게요 🙏
-          </p>
-        </div>
-      )}
-    </main>
+
+        {q.admin_reply ? (
+          <div className="rounded-[24px] border-l-4 border-[var(--monari-hero)] bg-[var(--monari-hero-lo)] p-5 mb-8">
+            <p className="text-[13px] font-bold text-[var(--monari-hero)] mb-2">
+              운영팀 답변 · {String(q.replied_at ?? "").slice(0, 10).replace(/-/g, ".")}
+            </p>
+            <p className="text-[15px] leading-[1.75] text-[var(--monari-ink-soft)] whitespace-pre-wrap">
+              {String(q.admin_reply)}
+            </p>
+          </div>
+        ) : (
+          <div className="monari-card p-5 text-center mb-8">
+            <p className="text-[14px] text-[var(--monari-ink-muted)]">
+              아직 답변이 작성되지 않았어요. 빠르게 도움을 드릴게요 🙏
+            </p>
+          </div>
+        )}
+      </PageContent>
+    </AppNavShell>
   );
 }

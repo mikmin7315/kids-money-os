@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { InquirySubmitForm } from "@/components/support/inquiry-form";
@@ -42,6 +42,9 @@ export default async function InquiriesPage() {
   return (
     <AppNavShell>
       <PageHero>
+        <Link href="/settings" className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-white/70">
+          <ArrowLeft size={14} /> 설정으로
+        </Link>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">고객지원</p>
         <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">문의하기</h1>
         <p className="text-[13px] text-white/65">불편한 점이나 궁금한 점을 남겨주세요</p>

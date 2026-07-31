@@ -9,17 +9,22 @@ export default async function ChildPinPage({ params }: { params: Promise<{ id: s
   await requireParentSession();
 
   let hasPIN = false;
+  let dbError = false;
   try {
     const admin = getSupabaseAdminClient();
-    const { data: child } = await admin
+    const { data: child, error } = await admin
       .from("children")
       .select("pin_code")
       .eq("id", id)
       .maybeSingle();
-    hasPIN = Boolean(child?.pin_code);
+    if (error) {
+      dbError = true;
+    } else {
+      hasPIN = Boolean(child?.pin_code);
+    }
   } catch {
-    hasPIN = false;
+    dbError = true;
   }
 
-  return <ChildPinClientPage childId={id} hasPIN={hasPIN} />;
+  return <ChildPinClientPage childId={id} hasPIN={hasPIN} dbError={dbError} />;
 }

@@ -63,7 +63,7 @@ export function EmptyState({
 
 export function PageContainer({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen bg-transparent text-[var(--text-primary)]">
+    <main className="min-h-dvh bg-transparent text-[var(--text-primary)]">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

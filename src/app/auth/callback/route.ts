@@ -24,8 +24,12 @@ export async function GET(request: Request) {
         },
       }
     );
+    const type = searchParams.get("type");
     const { data } = await supabase.auth.exchangeCodeForSession(code);
     if (data.user) {
+      if (type === "recovery") {
+        return NextResponse.redirect(`${origin}/login/reset/confirm`);
+      }
       const createdAt = new Date(data.user.created_at).getTime();
       const isNewUser = Date.now() - createdAt < 5 * 60 * 1000;
       if (isNewUser) {

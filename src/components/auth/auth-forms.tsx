@@ -18,6 +18,7 @@ const initial: AuthFormState = { ok: false, message: "" };
 type AuthTab = "social" | "phone" | "email";
 
 export function GoogleSignInButton() {
+  const [webState, webFormAction, webPending] = useActionState(signInWithGoogle, initial);
   const [isNative, setIsNative] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -69,12 +70,17 @@ export function GoogleSignInButton() {
   }
 
   return (
-    <form action={signInWithGoogle}>
-      <button type="submit" className={secondaryButtonClass}>
-        <GoogleIcon />
-        Google로 계속하기
-      </button>
-    </form>
+    <div className="space-y-3">
+      <form action={webFormAction}>
+        <button type="submit" disabled={webPending} className={secondaryButtonClass}>
+          <GoogleIcon />
+          {webPending ? "Google 연결 중..." : "Google로 계속하기"}
+        </button>
+      </form>
+      {webState.message && !webState.ok && (
+        <p role="alert" className="text-center text-xs font-semibold text-rose-700">{webState.message}</p>
+      )}
+    </div>
   );
 }
 

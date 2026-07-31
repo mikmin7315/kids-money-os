@@ -71,7 +71,10 @@ export function AppNavShell({
                     strokeWidth={active ? 2.5 : 2}
                   />
                   {hasPending && (
-                    <span className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--monari-hero)] px-0.5 text-[9px] font-black text-white">
+                    <span
+                      className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--monari-hero)] px-0.5 text-[9px] font-black text-white"
+                      aria-label={`${pendingCount}개 승인 대기`}
+                    >
                       {(pendingCount ?? 0) > 99 ? "99+" : pendingCount}
                     </span>
                   )}

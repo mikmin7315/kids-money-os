@@ -10,12 +10,18 @@ export function CompleteFlow({ currentRegion }: { currentRegion: string | null }
   const [step, setStep] = useState<"welcome" | "region" | "done">("welcome");
   const [selected, setSelected] = useState<string | null>(currentRegion);
   const [isPending, startTransition] = useTransition();
+  const [saveError, setSaveError] = useState<string | null>(null);
   const router = useRouter();
 
   function handleRegionSave() {
+    setSaveError(null);
     startTransition(async () => {
       if (selected !== currentRegion) {
-        await updateRegionAction(selected);
+        const result = await updateRegionAction(selected);
+        if (!result.ok) {
+          setSaveError("지역 저장에 실패했어요. 다시 시도해 주세요.");
+          return;
+        }
       }
       router.push("/children/new");
     });
@@ -120,6 +126,11 @@ export function CompleteFlow({ currentRegion }: { currentRegion: string | null }
 
       {/* 하단 버튼 */}
       <div className="mt-5 space-y-2.5">
+        {saveError && (
+          <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-semibold text-[var(--status-rose-solid-text)]">
+            {saveError}
+          </p>
+        )}
         <button
           type="button"
           disabled={isPending}

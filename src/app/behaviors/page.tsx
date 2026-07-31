@@ -17,6 +17,7 @@ export default async function BehaviorsPage() {
   const autoRules = activeRules.filter((r) => !r.requiresParentApproval).length;
   const reviewRules = activeRules.filter((r) => r.requiresParentApproval).length;
   const recentLogs = bundle.behaviorLogs.slice(0, 10);
+  const pendingCount = bundle.behaviorLogs.filter((l) => l.status === "pending").length;
 
   // 이자율 시뮬레이션 — 이번 달 달성률 기반 다음 달 이자율 예측
   const todayKST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
@@ -49,7 +50,7 @@ export default async function BehaviorsPage() {
   });
 
   return (
-    <AppNavShell>
+    <AppNavShell pendingCount={pendingCount}>
       <PageHero>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">행동 약속 관리</p>
         <h1 className="text-2xl font-extrabold tracking-tight text-white mb-4">아이와 함께 정한 약속이에요</h1>
@@ -90,6 +91,7 @@ export default async function BehaviorsPage() {
                   <div className="flex items-center gap-1 shrink-0">
                     <Link
                       href={`/behaviors/${rule.id}/edit`}
+                      aria-label={`${rule.title} 수정`}
                       className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)] active:scale-90 transition"
                     >
                       <Pencil size={13} />

@@ -11,7 +11,7 @@ export default async function RecordsPage() {
   await requireParentSession();
   const bundle = await getAppDataBundle();
   const pendingCount = bundle.behaviorLogs.filter((l) => l.status === "pending").length;
-  const totalRecords = bundle.moneyTransactions.length + bundle.behaviorLogs.length;
+  const totalRecords = bundle.moneyTransactions.length + bundle.behaviorLogs.length + bundle.borrowRequests.length;
   const moneyIn = bundle.moneyTransactions
     .filter((item) => !["spend", "repay", "unsave"].includes(item.type))
     .reduce((sum, item) => sum + item.amount, 0);
@@ -20,7 +20,7 @@ export default async function RecordsPage() {
     .reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <AppNavShell>
+    <AppNavShell pendingCount={pendingCount}>
       <PageHero>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">약속과 돈의 타임라인</p>
         <div className="mb-4 flex items-end justify-between gap-4">

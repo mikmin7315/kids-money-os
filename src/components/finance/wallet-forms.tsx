@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useActionState, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { CheckCircle2, AlertCircle, X } from "lucide-react";
 import {
   chargeParentWalletAction,
@@ -46,6 +47,7 @@ function FormMessage({ state }: { state: { ok: boolean; message: string } }) {
 const QUICK_AMOUNTS = [10000, 30000, 50000, 100000];
 
 export function WalletChargeForm() {
+  const router = useRouter();
   const [state, action, pending] = useActionState(chargeParentWalletAction, { ok: false, message: "" });
   const [amount, setAmount] = useState(0);
 
@@ -56,7 +58,7 @@ export function WalletChargeForm() {
         <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>충전 요청 완료!</p>
         <p style={{ fontSize: 14, fontWeight: 500, color: "var(--monari-ink-muted)", marginTop: 6 }}>{state.message}</p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => router.refresh()}
           className="mt-5 w-full rounded-[14px] bg-[var(--monari-hero)] py-3.5 text-sm font-extrabold text-white"
         >
           확인

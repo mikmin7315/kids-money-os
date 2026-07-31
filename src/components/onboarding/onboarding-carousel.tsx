@@ -44,7 +44,7 @@ export function OnboardingCarousel() {
   const isLast = current === SLIDES.length - 1;
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: "#faf5ff" }}>
+    <div className="flex min-h-dvh flex-col" style={{ background: "#faf5ff" }}>
       {/* 슬라이드 카드 */}
       <div
         className="relative flex flex-col items-center overflow-hidden px-6 pb-12 pt-16 text-white"

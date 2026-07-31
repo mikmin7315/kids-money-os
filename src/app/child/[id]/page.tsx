@@ -6,6 +6,7 @@ import {
   Bell,
   Check,
   PiggyBank,
+  Settings,
   Sparkles,
 } from "lucide-react";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
@@ -91,7 +92,15 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
             >
               <ArrowLeft className="h-5 w-5 text-white" />
             </Link>
-          ) : <span className="h-10 w-10" />}
+          ) : (
+            <Link
+              href={`/child/${id}/settings`}
+              aria-label="설정"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 transition active:scale-95"
+            >
+              <Settings className="h-5 w-5 text-white" />
+            </Link>
+          )}
 
           <div className="flex items-center gap-2">
             <span className="text-[22px]">🐳</span>

@@ -20,7 +20,14 @@ export default function ResetPasswordPage() {
     });
 
     if (error) {
-      setErrorMsg(error.message);
+      const msg = error.message;
+      if (msg.includes("60 seconds") || msg.includes("rate limit")) {
+        setErrorMsg("1분에 한 번만 요청할 수 있어요. 잠시 후 다시 시도해 주세요.");
+      } else if (msg.includes("User not found")) {
+        setErrorMsg("등록되지 않은 이메일이에요.");
+      } else {
+        setErrorMsg("재설정 이메일 전송에 실패했어요. 다시 시도해 주세요.");
+      }
       setStatus("error");
     } else {
       setStatus("sent");
@@ -61,8 +68,9 @@ export default function ResetPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-[13px] font-bold text-[var(--monari-ink)]">이메일</label>
+              <label htmlFor="reset-email" className="mb-1.5 block text-[13px] font-bold text-[var(--monari-ink)]">이메일</label>
               <input
+                id="reset-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

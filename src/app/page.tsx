@@ -334,7 +334,7 @@ function RecentRow({ href, title, sub, value, kind, isLast }: {
       className={`flex items-center gap-3 px-4 py-3.5 transition active:bg-[var(--monari-bg)] ${!isLast ? "border-b border-[var(--monari-line)]" : ""}`}
     >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-        <Icon className="h-4.5 w-4.5" />
+        <Icon className="h-[18px] w-[18px]" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[14px] font-semibold text-[var(--monari-ink)]">{title}</p>

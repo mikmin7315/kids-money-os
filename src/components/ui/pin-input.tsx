@@ -5,9 +5,11 @@ import { useRef, useState } from "react";
 export function PinInput({
   name,
   autoFocus,
+  onComplete,
 }: {
   name: string;
   autoFocus?: boolean;
+  onComplete?: () => void;
 }) {
   const [digits, setDigits] = useState(["", "", "", ""]);
   const refs = useRef<(HTMLInputElement | null)[]>([null, null, null, null]);
@@ -17,7 +19,11 @@ export function PinInput({
     const next = [...digits];
     next[i] = digit;
     setDigits(next);
-    if (digit && i < 3) refs.current[i + 1]?.focus();
+    if (digit && i < 3) {
+      refs.current[i + 1]?.focus();
+    } else if (digit && i === 3) {
+      onComplete?.();
+    }
   }
 
   function handleKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {

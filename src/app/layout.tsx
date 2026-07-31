@@ -58,7 +58,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
       </head>
-      <body data-theme="parent" className="min-h-screen antialiased">
+      <body data-theme="parent" className="min-h-dvh antialiased">
         <StartupSplash />
         <Providers>{children}</Providers>
         <NativeRuntime />

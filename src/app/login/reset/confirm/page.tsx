@@ -1,8 +1,15 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+
+function toKoreanError(msg: string): string {
+  if (msg.includes("expired") || msg.includes("invalid")) return "재설정 링크가 만료됐어요. 이메일을 다시 요청해 주세요.";
+  if (msg.includes("different")) return "이전과 다른 비밀번호를 입력해 주세요.";
+  return "비밀번호 변경에 실패했어요. 다시 시도해 주세요.";
+}
 
 export default function ResetPasswordConfirmPage() {
   const router = useRouter();
@@ -10,6 +17,22 @@ export default function ResetPasswordConfirmPage() {
   const [confirm, setConfirm] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        setErrorMsg("재설정 링크가 만료됐어요. 이메일을 다시 요청해 주세요.");
+        setStatus("error");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (status !== "done") return;
+    const id = setTimeout(() => router.push("/"), 2000);
+    return () => clearTimeout(id);
+  }, [status, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,11 +52,10 @@ export default function ResetPasswordConfirmPage() {
     const supabase = getSupabaseBrowserClient();
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
-      setErrorMsg(error.message);
+      setErrorMsg(toKoreanError(error.message));
       setStatus("error");
     } else {
       setStatus("done");
-      setTimeout(() => router.push("/"), 2000);
     }
   }
 
@@ -87,9 +109,12 @@ export default function ResetPasswordConfirmPage() {
             </div>
 
             {(status === "error") && (
-              <p className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 text-[13px] font-semibold text-[var(--status-rose-solid-text)]">
-                {errorMsg}
-              </p>
+              <div className="rounded-[12px] bg-[var(--status-danger-solid)] px-4 py-3 space-y-1.5">
+                <p className="text-[13px] font-semibold text-[var(--status-rose-solid-text)]">{errorMsg}</p>
+                <Link href="/login/reset" className="block text-[12px] font-bold text-[var(--status-rose-solid-text)] underline">
+                  재설정 이메일 다시 받기 →
+                </Link>
+              </div>
             )}
 
             <button

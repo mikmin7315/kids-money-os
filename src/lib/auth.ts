@@ -61,9 +61,9 @@ export async function requireAppConsent() {
 export async function requireAdminSession() {
   const auth = await getAuthContext();
 
-  if (auth.isConfigured && !auth.user) redirect("/admin/login");
+  if (!auth.user) redirect("/admin/login");
 
-  if (auth.isConfigured && (!auth.profile || auth.profile.role !== "admin")) {
+  if (!auth.profile || auth.profile.role !== "admin") {
     redirect("/admin/login");
   }
 

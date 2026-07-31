@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 
 export function ParentShell({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div data-theme="parent" className={clsx("min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]", className)}>
+    <div data-theme="parent" className={clsx("min-h-dvh bg-[var(--color-bg)] text-[var(--color-text)]", className)}>
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-[env(safe-area-inset-top)]">
         {children}
       </div>
