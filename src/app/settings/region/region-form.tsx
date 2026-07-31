@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { updateRegionAction } from "@/actions/management";
 
-export function RegionForm({ currentRegion, regions }: { currentRegion: string | null; regions: string[] }) {
+export function RegionForm({ currentRegion, regions }: { currentRegion: string | null; regions: readonly string[] }) {
   const [selected, setSelected] = useState<string | null>(currentRegion);
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
