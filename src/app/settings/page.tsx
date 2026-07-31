@@ -19,8 +19,10 @@ import { AccountDeletionCard } from "@/components/auth/account-deletion-card";
 import { SessionCard } from "@/components/auth/session-card";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
+import { getParentWalletAction } from "@/actions/parent-wallet";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
+import { formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -30,8 +32,12 @@ const AVATAR_COLORS = [
 
 export default async function SettingsPage() {
   const auth = await requireParentSession();
-  const bundle = await getAppDataBundle();
+  const [bundle, wallet] = await Promise.all([
+    getAppDataBundle(),
+    getParentWalletAction(),
+  ]);
   const childCount = bundle.children.length;
+  const ruleCount = bundle.allowanceRules.length;
 
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
   const currentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
@@ -128,9 +134,9 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ② 금융 설정 */}
+        {/* ② 금융 */}
         <section className="mb-6">
-          <SectionTitle>금융 설정</SectionTitle>
+          <SectionTitle>금융</SectionTitle>
           <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
             <SettingsRow
               href="/settings/wallet"
@@ -138,7 +144,7 @@ export default async function SettingsPage() {
               iconBg="var(--monari-hero-lo)"
               iconColor="var(--monari-hero)"
               label="부모 지갑"
-              sub="충전 내역 · 연결 계좌"
+              sub={formatWon(wallet.balance)}
             />
             <SettingsRow
               href="/settings/allowance"
@@ -146,7 +152,7 @@ export default async function SettingsPage() {
               iconBg="var(--monari-hero-lo)"
               iconColor="var(--monari-hero)"
               label="정기 용돈"
-              sub="자동 지급 설정"
+              sub={ruleCount > 0 ? `활성 ${ruleCount}개` : "규칙 없음"}
             />
             <SettingsRow
               href="/settings/interest"
@@ -167,36 +173,41 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ③ 계정 */}
+        {/* ③ 앱 설정 */}
+        <section className="mb-6">
+          <SectionTitle>앱 설정</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/settings/subscription"
+              icon={isPlusPlan ? <Crown size={17} className="text-yellow-500" /> : <CreditCard size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="구독 관리"
+              sub={isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
+            />
+            <SettingsRow
+              href="/settings/region"
+              icon={<MapPin size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="거주 지역"
+              sub={currentRegion ?? "미설정 · 동네 또래 비교에 사용"}
+            />
+            <SettingsRow
+              href="/settings/notifications"
+              icon={<Bell size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="알림 설정"
+              sub="받을 알림 종류 선택"
+            />
+          </div>
+        </section>
+
+        {/* ④ 계정 */}
         <section className="mb-6">
           <SectionTitle>계정</SectionTitle>
           <div className="mt-3 space-y-2">
-            <div className="monari-card divide-y divide-[var(--monari-line)]">
-              <SettingsRow
-                href="/settings/subscription"
-                icon={isPlusPlan ? <Crown size={17} className="text-yellow-500" /> : <CreditCard size={17} />}
-                iconBg="var(--monari-hero-lo)"
-                iconColor="var(--monari-hero)"
-                label="구독 관리"
-                sub={isPlusPlan ? "모나리 플러스 이용 중" : "무료 플랜 · 플러스로 업그레이드"}
-              />
-              <SettingsRow
-                href="/settings/region"
-                icon={<MapPin size={17} />}
-                iconBg="var(--monari-surface-soft)"
-                iconColor="var(--monari-ink-soft)"
-                label="거주 지역"
-                sub={currentRegion ?? "미설정 · 동네 또래 비교에 사용"}
-              />
-              <SettingsRow
-                href="/settings/notifications"
-                icon={<Bell size={17} />}
-                iconBg="var(--monari-surface-soft)"
-                iconColor="var(--monari-ink-soft)"
-                label="알림 설정"
-                sub="받을 알림 종류 선택"
-              />
-            </div>
             {auth.user && (
               <SessionCard
                 email={auth.user.email}
@@ -204,28 +215,7 @@ export default async function SettingsPage() {
                 role={auth.profile?.role ? String(auth.profile.role) : "parent"}
               />
             )}
-          </div>
-        </section>
-
-        {/* ④ 정보 · 지원 */}
-        <section className="mb-8">
-          <SectionTitle>정보 · 지원</SectionTitle>
-          <div className="mt-3 space-y-2">
             <div className="monari-card divide-y divide-[var(--monari-line)]">
-              <SettingsRow
-                href="/announcements"
-                icon={<Megaphone size={17} />}
-                iconBg="var(--monari-surface-soft)"
-                iconColor="var(--monari-ink-soft)"
-                label="공지사항"
-              />
-              <SettingsRow
-                href="/inquiries"
-                icon={<MessageSquare size={17} />}
-                iconBg="var(--monari-surface-soft)"
-                iconColor="var(--monari-ink-soft)"
-                label="문의하기"
-              />
               <SettingsRow
                 href="/settings/consent-history"
                 icon={<FileText size={17} />}
@@ -235,6 +225,27 @@ export default async function SettingsPage() {
               />
             </div>
             {auth.user && auth.profile?.role !== "admin" && <AccountDeletionCard />}
+          </div>
+        </section>
+
+        {/* ⑤ 지원 */}
+        <section className="mb-8">
+          <SectionTitle>지원</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/announcements"
+              icon={<Megaphone size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="공지사항"
+            />
+            <SettingsRow
+              href="/inquiries"
+              icon={<MessageSquare size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="문의하기"
+            />
           </div>
         </section>
 
