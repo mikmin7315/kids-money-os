@@ -29,7 +29,7 @@ export function PaymentButton({
         totalAmount: 3900,
         currency: "CURRENCY_KRW",
         payMethod: "CARD",
-        customer: { email: userEmail },
+        customer: { email: userEmail, phoneNumber: "01000000000" },
       });
 
       if (!result || result.code) {
