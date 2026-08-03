@@ -19,7 +19,7 @@ export function PaymentButton({
     setError(null);
     try {
       const { requestPayment } = await import("@portone/browser-sdk/v2");
-      const paymentId = `monari-plus-${userId}-${Date.now()}`;
+      const paymentId = `mp-${userId.slice(0, 8)}-${Date.now().toString(36)}`;
 
       const result = await requestPayment({
         storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID ?? "",
