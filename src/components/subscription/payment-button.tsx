@@ -29,7 +29,7 @@ export function PaymentButton({
         totalAmount: 3900,
         currency: "CURRENCY_KRW",
         payMethod: "CARD",
-        customer: { email: userEmail, phoneNumber: "01000000000" },
+        customer: { email: userEmail, phoneNumber: "01000000000", fullName: "모나리" },
       });
 
       if (!result || result.code) {
