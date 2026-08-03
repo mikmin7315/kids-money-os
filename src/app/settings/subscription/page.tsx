@@ -1,14 +1,32 @@
 import Link from "next/link";
-import { ArrowLeft, BarChart2, Crown, Lock, Receipt, Sparkles, TrendingUp, Users } from "lucide-react";
+import { ArrowLeft, BarChart2, Crown, Lock, Sparkles, TrendingUp, Users } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { PaymentButton } from "@/components/subscription/payment-button";
+import { CancelSubscriptionButton } from "@/components/subscription/cancel-button";
 import { requireParentSession } from "@/lib/auth";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const PORTONE_CONFIGURED =
   !!process.env.NEXT_PUBLIC_PORTONE_STORE_ID && !!process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY;
 
 export const dynamic = "force-dynamic";
+
+type PaymentRecord = {
+  id: string;
+  payment_id: string;
+  amount: number;
+  status: string;
+  period_start: string;
+  period_end: string;
+  created_at: string;
+};
+
+type Profile = {
+  subscription_tier?: string;
+  subscription_expires_at?: string | null;
+  subscription_cancelled_at?: string | null;
+};
 
 const PLUS_FEATURES = [
   {
@@ -33,9 +51,29 @@ const PLUS_FEATURES = [
   },
 ];
 
+function formatKoreanDate(iso: string) {
+  const d = new Date(iso);
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
+
 export default async function SubscriptionPage() {
   const auth = await requireParentSession();
-  const isPremium = (auth.profile as { subscription_tier?: string } | null)?.subscription_tier === "plus";
+  const profile = auth.profile as Profile | null;
+
+  const tier = profile?.subscription_tier;
+  const expiresAt = profile?.subscription_expires_at ? new Date(profile.subscription_expires_at) : null;
+  const cancelledAt = profile?.subscription_cancelled_at ? new Date(profile.subscription_cancelled_at) : null;
+
+  const isPremium = tier === "plus" && (!expiresAt || expiresAt > new Date());
+  const isCancelled = !!cancelledAt;
+
+  // 결제 내역 조회
+  const supabase = await getSupabaseServerClient();
+  const { data: paymentRecords } = await supabase
+    .from("payment_records")
+    .select("id, payment_id, amount, status, period_start, period_end, created_at")
+    .order("created_at", { ascending: false })
+    .limit(12) as { data: PaymentRecord[] | null };
 
   return (
     <AppNavShell>
@@ -60,58 +98,111 @@ export default async function SubscriptionPage() {
         {isPremium ? (
           <>
             {/* 플러스 상태 카드 */}
-            <section className="mb-6">
+            <section className="mb-5">
               <div
-                className="rounded-[20px] p-5 text-center mb-4"
+                className="rounded-[20px] p-5 text-center"
                 style={{ background: "linear-gradient(135deg,#7C3AED,#9333EA)", boxShadow: "0 8px 28px rgba(109,40,217,0.25)" }}
               >
                 <p className="text-[28px] mb-2">✨</p>
                 <p className="text-[18px] font-black text-white mb-1">모나리 플러스 이용 중</p>
-                <p className="text-[12px] text-white/70">또래 비교 리포트를 모두 확인할 수 있어요</p>
+                {expiresAt && (
+                  <div className="mt-3 inline-block rounded-[10px] border border-white/20 bg-white/15 px-3 py-1.5">
+                    {isCancelled ? (
+                      <p className="text-[12px] font-bold text-white/90">
+                        {formatKoreanDate(expiresAt.toISOString())}까지 이용 가능 · 해지 예정
+                      </p>
+                    ) : (
+                      <p className="text-[12px] font-bold text-white/90">
+                        {formatKoreanDate(expiresAt.toISOString())} 갱신 예정
+                      </p>
+                    )}
+                  </div>
+                )}
+                {isCancelled && (
+                  <p className="mt-2 text-[11px] text-white/60">해지 신청됨 · 기간 종료 후 무료 전환</p>
+                )}
               </div>
             </section>
 
             {/* 결제 내역 */}
-            <section className="mb-6">
+            <section className="mb-5">
               <SectionTitle>결제 내역</SectionTitle>
-              <div className="mt-3 monari-card px-5 py-8 text-center">
-                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-                  <Receipt size={26} />
-                </span>
-                <p className="mt-4 text-[14px] font-bold text-[var(--monari-ink)]">결제 내역 준비 중</p>
-                <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">
-                  결제 연동 완료 후 여기서 확인할 수 있어요.
-                </p>
+              <div className="mt-3 space-y-2">
+                {(!paymentRecords || paymentRecords.length === 0) ? (
+                  <div className="monari-card px-5 py-6 text-center">
+                    <p className="text-[13px] text-[var(--monari-ink-muted)]">결제 내역이 없어요.</p>
+                  </div>
+                ) : (
+                  paymentRecords.map((r) => (
+                    <div key={r.id} className="monari-card flex items-center justify-between p-4">
+                      <div>
+                        <p className="text-[13px] font-bold text-[var(--monari-ink)]">
+                          모나리 플러스 1개월
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-[var(--monari-ink-muted)]">
+                          {formatKoreanDate(r.period_start)} ~ {formatKoreanDate(r.period_end)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-[14px] font-extrabold tabular-nums ${r.status === "cancelled" ? "text-[var(--monari-ink-muted)] line-through" : "text-[var(--monari-done)]"}`}>
+                          {r.amount.toLocaleString()}원
+                        </p>
+                        {r.status === "cancelled" && (
+                          <p className="text-[10px] text-[var(--monari-minus)]">취소됨</p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </section>
 
             {/* 구독 해지 */}
-            <section className="mb-8">
-              <SectionTitle>구독 해지</SectionTitle>
-              <div className="mt-3 monari-card p-4">
-                <p className="text-[13px] text-[var(--monari-ink-soft)] mb-3">
-                  구독을 해지하면 이번 결제 기간이 끝날 때까지 플러스 기능을 계속 이용할 수 있어요.
-                </p>
-                <ul className="space-y-1.5 mb-4">
-                  {[
-                    "또래 비교 리포트 기능이 비활성화돼요.",
-                    "기존 데이터와 기록은 유지돼요.",
-                    "언제든 다시 구독할 수 있어요.",
-                  ].map((t) => (
-                    <li key={t} className="flex items-start gap-2 text-[12px] text-[var(--monari-ink-muted)]">
-                      <span className="shrink-0 mt-0.5">•</span>
-                      <span>{t}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  disabled
-                  className="w-full rounded-[12px] border border-red-200 bg-red-50 py-3 text-[13px] font-bold text-red-400 opacity-70"
-                >
-                  해지 준비 중 — 결제 연동 후 이용 가능
-                </button>
-              </div>
-            </section>
+            {!isCancelled && (
+              <section className="mb-8">
+                <SectionTitle>구독 해지</SectionTitle>
+                <div className="mt-3 monari-card p-4">
+                  <p className="text-[13px] text-[var(--monari-ink-soft)] mb-3">
+                    해지하면 {expiresAt ? formatKoreanDate(expiresAt.toISOString()) + "까지 " : ""}플러스 기능을 계속 이용할 수 있어요.
+                  </p>
+                  <ul className="space-y-1.5 mb-4">
+                    {[
+                      "또래 비교 리포트 기능이 비활성화돼요.",
+                      "기존 데이터와 기록은 유지돼요.",
+                      "언제든 다시 구독할 수 있어요.",
+                    ].map((t) => (
+                      <li key={t} className="flex items-start gap-2 text-[12px] text-[var(--monari-ink-muted)]">
+                        <span className="shrink-0 mt-0.5">•</span>
+                        <span>{t}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {PORTONE_CONFIGURED ? (
+                    <CancelSubscriptionButton />
+                  ) : (
+                    <button
+                      disabled
+                      className="w-full rounded-[12px] border border-red-200 bg-red-50 py-3 text-[13px] font-bold text-red-400 opacity-60"
+                    >
+                      해지 준비 중 — 결제 연동 후 이용 가능
+                    </button>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {isCancelled && (
+              <section className="mb-8">
+                <div className="monari-card border border-[var(--monari-line)] p-4">
+                  <p className="text-[13px] font-bold text-[var(--monari-ink)] mb-1">해지 신청 완료</p>
+                  <p className="text-[12px] text-[var(--monari-ink-muted)]">
+                    {expiresAt
+                      ? `${formatKoreanDate(expiresAt.toISOString())}까지 모든 플러스 기능을 이용할 수 있어요.`
+                      : "이용 기간이 끝나면 자동으로 무료 플랜으로 전환돼요."}
+                  </p>
+                </div>
+              </section>
+            )}
           </>
         ) : (
           <>
