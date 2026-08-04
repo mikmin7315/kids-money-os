@@ -1,5 +1,4 @@
 import Link from "next/link";
-import nextDynamic from "next/dynamic";
 import { Download, Lock, Sparkles, Coins, MessageCircle, Target, Trophy } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
@@ -7,11 +6,7 @@ import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 import { computeMonthlyReport } from "@/lib/finance";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-
-const RegionalMap = nextDynamic(
-  () => import("@/components/monari/regional-map").then((m) => m.RegionalMap),
-  { ssr: false, loading: () => <div style={{ height: 380, borderRadius: 20, background: "var(--monari-surface-soft)" }} /> }
-);
+import { RegionalMap } from "@/components/monari/regional-map-wrapper";
 
 export const dynamic = "force-dynamic";
 
