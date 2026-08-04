@@ -5,6 +5,14 @@ import Link from "next/link";
 
 const SLIDES = [
   {
+    emoji: "👨‍👧",
+    color: "linear-gradient(145deg,#1e1b4b 0%,#312e81 55%,#4338ca 100%)",
+    tag: "모나리를 만든 이유",
+    title: '"용돈 어떻게\n쓸 거야?"',
+    body: "아이에게 돈 얘기를 꺼내는 게 어색했어요. 잔소리 말고, 함께 숫자를 보고 약속을 만들고 이자로 보상받는 경험을 주고 싶었어요. 그게 모나리의 시작이에요.",
+    ex: { label: "한 부모의 고민에서", value: "모나리가 태어났어요" },
+  },
+  {
     emoji: "🐷",
     color: "linear-gradient(145deg,#5b21b6 0%,#7c3aed 55%,#a855f7 100%)",
     tag: "약속",

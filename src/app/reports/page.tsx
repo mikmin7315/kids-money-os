@@ -1,4 +1,5 @@
 import Link from "next/link";
+import nextDynamic from "next/dynamic";
 import { Download, Lock, Sparkles, Coins, MessageCircle, Target, Trophy } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
@@ -6,6 +7,11 @@ import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { formatWon } from "@/lib/format";
 import { computeMonthlyReport } from "@/lib/finance";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+const RegionalMap = nextDynamic(
+  () => import("@/components/monari/regional-map").then((m) => m.RegionalMap),
+  { ssr: false, loading: () => <div style={{ height: 380, borderRadius: 20, background: "var(--monari-surface-soft)" }} /> }
+);
 
 export const dynamic = "force-dynamic";
 
@@ -67,34 +73,6 @@ function estimatePercentile(score: number): number {
   return 15;
 }
 
-const REGION_BUBBLES: { name: string; cx: number; cy: number }[] = [
-  { name: "강원도",        cx: 214, cy: 82 },
-  { name: "경기도",        cx: 140, cy: 110 },
-  { name: "서울특별시",    cx: 128, cy: 82 },
-  { name: "인천광역시",    cx: 98,  cy: 98 },
-  { name: "세종특별자치시",cx: 126, cy: 148 },
-  { name: "대전광역시",    cx: 130, cy: 165 },
-  { name: "충청북도",      cx: 172, cy: 148 },
-  { name: "충청남도",      cx: 100, cy: 158 },
-  { name: "경상북도",      cx: 208, cy: 182 },
-  { name: "대구광역시",    cx: 196, cy: 214 },
-  { name: "울산광역시",    cx: 234, cy: 238 },
-  { name: "전라북도",      cx: 98,  cy: 210 },
-  { name: "광주광역시",    cx: 86,  cy: 252 },
-  { name: "전라남도",      cx: 80,  cy: 275 },
-  { name: "경상남도",      cx: 186, cy: 268 },
-  { name: "부산광역시",    cx: 224, cy: 278 },
-  { name: "제주특별자치도",cx: 128, cy: 355 },
-];
-
-function getAllowanceColor(amount: number, min: number, max: number): string {
-  if (max === min) return "#6366f1";
-  const t = (amount - min) / (max - min);
-  const r = Math.round(99 + t * (79 - 99));
-  const g = Math.round(102 + t * (70 - 102));
-  const b = Math.round(241 + t * (209 - 241));
-  return `rgb(${r},${g},${b})`;
-}
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<{ child?: string }> }) {
   const auth = await requireParentSession();
@@ -126,9 +104,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
     primary ? getPersonalSpendBreakdown(primary.child.id, now.getFullYear(), now.getMonth() + 1) : Promise.resolve([]),
     getRegionalMapStats(),
   ]);
-  const mapAmounts = Array.from(regionalMapStats.values()).map(v => v.avgAllowance).filter(v => v > 0);
-  const mapMin = mapAmounts.length > 0 ? Math.min(...mapAmounts) : 0;
-  const mapMax = mapAmounts.length > 0 ? Math.max(...mapAmounts) : 1;
+  const regionalMapData: Record<string, { avgAllowance: number; sampleSize: number }> = {};
+  for (const [region, stats] of regionalMapStats) {
+    regionalMapData[region] = stats;
+  }
 
   const peerMaxAllowance = peer ? Math.max(allowance, peer.avgAllowance, 1) : 1;
   const peerAllowancePct = peer ? Math.round((peer.avgAllowance / peerMaxAllowance) * 100) : 0;
@@ -686,68 +665,21 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           </section>
 
           {/* ⑧ 지역별 용돈 지도 */}
-          {regionalMapStats.size > 0 && (
+          {Object.keys(regionalMapData).length > 0 && (
             <section className="mb-5">
               <p className="monari-eyebrow mb-1">지역별 비교</p>
               <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">전국 지역별 용돈 현황</p>
-              <div className="monari-card overflow-hidden">
-                <div className="px-5 pt-5 pb-2 flex items-center gap-3 flex-wrap">
-                  <span className="flex items-center gap-1 text-[11px] text-[var(--monari-ink-muted)]">
-                    <span className="inline-block h-3 w-3 rounded-full" style={{ background: getAllowanceColor(mapMin, mapMin, mapMax) }} /> 낮음
-                  </span>
-                  <span className="flex items-center gap-1 text-[11px] text-[var(--monari-ink-muted)]">
-                    <span className="inline-block h-3 w-3 rounded-full" style={{ background: getAllowanceColor(mapMax, mapMin, mapMax) }} /> 높음
-                  </span>
-                  {parentRegion && (
-                    <span className="flex items-center gap-1 text-[11px] text-[var(--monari-ink-muted)]">
-                      <span className="inline-block h-3 w-3 rounded-full border-2 border-white shadow-sm" style={{ background: "#f59e0b" }} /> 우리 지역
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-center py-2 px-4">
-                  <svg viewBox="0 0 310 410" width="100%" style={{ maxWidth: 320 }}>
-                    <path
-                      d="M95,35 L185,25 L230,50 L260,80 L255,120 L270,155 L260,190 L250,230 L265,265 L250,295 L230,300 L210,290 L190,305 L175,295 L165,315 L150,310 L135,320 L115,305 L90,290 L70,295 L60,270 L55,240 L70,215 L60,195 L55,165 L65,140 L60,110 L70,85 L80,60 Z"
-                      fill="var(--monari-surface-soft)"
-                      stroke="var(--monari-line)"
-                      strokeWidth="1.5"
-                    />
-                    <ellipse cx="128" cy="358" rx="28" ry="14" fill="var(--monari-surface-soft)" stroke="var(--monari-line)" strokeWidth="1.5" />
-                    {REGION_BUBBLES.map(({ name, cx, cy }) => {
-                      const stat = regionalMapStats.get(name);
-                      const hasData = stat && stat.avgAllowance > 0;
-                      const isMyRegion = name === parentRegion;
-                      const color = isMyRegion
-                        ? "#f59e0b"
-                        : hasData ? getAllowanceColor(stat.avgAllowance, mapMin, mapMax) : "#cbd5e1";
-                      const isSmall = ["서울특별시","대전광역시","광주광역시","대구광역시","울산광역시","부산광역시","세종특별자치시","인천광역시"].includes(name);
-                      const r = isSmall ? 11 : 16;
-                      return (
-                        <g key={name}>
-                          <circle cx={cx} cy={cy} r={r} fill={color} opacity={hasData || isMyRegion ? 0.9 : 0.4} />
-                          <circle cx={cx} cy={cy} r={r} fill="none" stroke="white" strokeWidth={isMyRegion ? 2.5 : 1.5} opacity={0.7} />
-                          {hasData && (
-                            <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
-                              fontSize={isSmall ? 5.5 : 6} fontWeight={800} fill="white" fontFamily="inherit">
-                              {Math.round(stat.avgAllowance / 1000)}k
-                            </text>
-                          )}
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
-                {!parentRegion && (
-                  <div className="px-5 pb-4">
-                    <a href="/settings/region" className="flex items-center justify-center gap-1.5 rounded-[12px] bg-[var(--monari-hero-lo)] px-4 py-2.5 text-[12px] font-bold text-[var(--monari-hero)]">
-                      거주 지역 설정하면 내 지역이 표시돼요 →
-                    </a>
-                  </div>
-                )}
-                <p className="pb-4 text-center text-[10px] text-[var(--monari-ink-muted)]">
-                  매월 1일 업데이트 · 표본이 충분한 지역만 표시
-                </p>
+              <div className="monari-card overflow-hidden p-0">
+                <RegionalMap regionalData={regionalMapData} userRegion={parentRegion} />
               </div>
+              {!parentRegion && (
+                <a href="/settings/region" className="mt-3 flex items-center justify-center gap-1.5 rounded-[12px] bg-[var(--monari-hero-lo)] px-4 py-2.5 text-[12px] font-bold text-[var(--monari-hero)]">
+                  거주 지역 설정하면 내 지역이 표시돼요 →
+                </a>
+              )}
+              <p className="mt-2 text-center text-[10px] text-[var(--monari-ink-muted)]">
+                매월 1일 업데이트 · 버블을 누르면 상세 정보가 보여요
+              </p>
             </section>
           )}
 
