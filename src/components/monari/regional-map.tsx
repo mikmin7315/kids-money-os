@@ -71,10 +71,14 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
 
       try {
         const res = await fetch(
-          "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-municipalities-2018-geo.json"
+          "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-submunicipalities-2018-topo.json"
         );
-        const geojson = await res.json();
+        const topo = await res.json();
         if (destroyed) return;
+
+        const { feature } = await import("topojson-client");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const geojson = feature(topo as any, (topo as any).objects.skorea_submunicipalities_2018_geo);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         L.geoJSON(geojson as any, {
