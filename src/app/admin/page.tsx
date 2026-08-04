@@ -165,6 +165,7 @@ export default async function AdminDashboardPage() {
         <Section title="운영 관리">
           <div className="space-y-3">
             <MenuCard href="/admin/reports" title="시스템 리포트" description="이달 전체 통계 · 용돈 · 이자 · 달성률을 한눈에 확인합니다." badge="A-20" />
+            <MenuCard href="/admin/regional-stats" title="지역별 용돈 현황" description="지역별 평균 용돈·표본 수를 지도로 확인합니다." badge="A-21" />
             <MenuCard href="/admin/approvals" title="승인 대기 현황" description="전체 사용자의 약속·미리쓰기 승인 대기 건수를 조회합니다." badge="A-12" />
             <MenuCard href="/admin/transactions" title="전체 거래내역" description="모든 아이의 거래 기록을 유형별로 조회합니다." badge="A-05" />
             <MenuCard href="/admin/borrows" title="미리쓰기 관리" description="전체 미리쓰기 요청 상태를 확인하고 관리합니다." badge="A-06" />

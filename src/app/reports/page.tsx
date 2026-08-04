@@ -91,7 +91,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const primaryChild = primary ? bundle.children.find((c) => c.id === primary.child.id) : null;
   const ageGroup = getAgeGroup(primaryChild?.birthYear);
   const parentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
-  const peer = primary ? await getPeerStats(ageGroup, parentRegion) : null;
+  const now = new Date();
+  const [peer, personalSpend] = await Promise.all([
+    primary ? getPeerStats(ageGroup, parentRegion) : Promise.resolve(null),
+    primary ? getPersonalSpendBreakdown(primary.child.id, now.getFullYear(), now.getMonth() + 1) : Promise.resolve([]),
+  ]);
 
   const peerMaxAllowance = peer ? Math.max(allowance, peer.avgAllowance, 1) : 1;
   const peerAllowancePct = peer ? Math.round((peer.avgAllowance / peerMaxAllowance) * 100) : 0;
@@ -366,6 +370,48 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
               </div>
             )}
           </section>
+
+          {/* ③-a 나의 지출 카테고리 */}
+          {personalSpend.length > 0 && (
+            <section className="mb-5">
+              <p className="monari-eyebrow mb-1">이달 지출 분석</p>
+              <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">카테고리별 지출</p>
+              <div className="monari-card p-5">
+                <div className="space-y-3">
+                  {personalSpend.map((item, i) => (
+                    <div key={item.label} className="flex items-center gap-3">
+                      <span className="text-[11px] font-extrabold text-[var(--monari-ink-muted)] w-4 shrink-0 tabular-nums">{i + 1}</span>
+                      <div className="flex-1">
+                        <div className="flex justify-between text-[12px] mb-1">
+                          <span className="font-semibold text-[var(--monari-ink-soft)]">{item.label}</span>
+                          <span className="font-extrabold text-[var(--monari-ink)] tabular-nums">{item.pct}%</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-[var(--monari-surface-soft)]">
+                          <div
+                            className="h-2 rounded-full"
+                            style={{
+                              width: `${item.pct}%`,
+                              background: i === 0 ? "var(--monari-hero)" : i === 1 ? "#8b5cf6" : i === 2 ? "#6366f1" : "var(--monari-line-strong)",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {peer && peer.spendBreakdown.length > 0 && (
+                  <p className="mt-4 text-[11px] text-[var(--monari-ink-muted)] border-t border-[var(--monari-line)] pt-3">
+                    또래 1위: <span className="font-bold text-[var(--monari-ink-soft)]">{peer.spendBreakdown[0].label}</span>
+                    {peer.spendBreakdown[0].label !== personalSpend[0]?.label &&
+                      ` · ${childName}의 1위: `}
+                    {peer.spendBreakdown[0].label !== personalSpend[0]?.label && (
+                      <span className="font-bold text-[var(--monari-hero)]">{personalSpend[0]?.label}</span>
+                    )}
+                  </p>
+                )}
+              </div>
+            </section>
+          )}
 
           {/* ③ 소비성향 유형 배지 — 건강점수 바로 다음 */}
           {personality && (
@@ -774,6 +820,39 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       </PageContent>
     </AppNavShell>
   );
+}
+
+async function getPersonalSpendBreakdown(childId: string, year: number, month: number): Promise<SpendBreakdownItem[]> {
+  const supabase = await getSupabaseServerClient();
+  const firstDay = `${year}-${String(month).padStart(2, "0")}-01`;
+  const nextMonth = month === 12 ? 1 : month + 1;
+  const nextYear = month === 12 ? year + 1 : year;
+  const lastDay = `${nextYear}-${String(nextMonth).padStart(2, "0")}-01`;
+
+  const { data } = await supabase
+    .from("money_transactions")
+    .select("category, amount")
+    .eq("child_id", childId)
+    .eq("type", "spend")
+    .not("category", "is", null)
+    .gte("tx_date", firstDay)
+    .lt("tx_date", lastDay);
+
+  if (!data || data.length === 0) return [];
+
+  const totals = data.reduce<Record<string, number>>((acc, t) => {
+    const cat = (t.category as string) || "기타";
+    acc[cat] = (acc[cat] ?? 0) + (t.amount as number);
+    return acc;
+  }, {});
+
+  const total = Object.values(totals).reduce((s, v) => s + v, 0);
+  if (total === 0) return [];
+
+  return Object.entries(totals)
+    .map(([label, amount]) => ({ label, pct: Math.round((amount / total) * 100) }))
+    .sort((a, b) => b.pct - a.pct)
+    .slice(0, 4);
 }
 
 async function getPeerStats(ageGroup: AgeGroup, region: string | null): Promise<PeerStatsView | null> {

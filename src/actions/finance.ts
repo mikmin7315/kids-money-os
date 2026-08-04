@@ -727,6 +727,7 @@ export async function cashSpendAction(
   const amount = Math.floor(Number(formData.get("amount")));
   const date = readString(formData, "date") || new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
   const memo = readString(formData, "memo") || undefined;
+  const category = readString(formData, "category") || undefined;
 
   if (!childId) return { ok: false, message: "아이 정보가 없습니다." };
   if (!Number.isInteger(amount) || amount <= 0) return { ok: false, message: "금액을 올바르게 입력해주세요." };
@@ -765,6 +766,7 @@ export async function cashSpendAction(
     amount,
     spend_date: date,
     memo: memo ?? null,
+    category: category ?? null,
   });
 
   if (error) return { ok: false, message: "기록에 실패했어요." };
