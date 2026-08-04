@@ -20,6 +20,7 @@ export function PaymentButton({
     try {
       const { requestPayment } = await import("@portone/browser-sdk/v2");
       const paymentId = `mp-${userId.slice(0, 8)}-${Date.now().toString(36)}`;
+      console.log("[payment] channelKey:", process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY);
 
       const result = await requestPayment({
         storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID ?? "",
