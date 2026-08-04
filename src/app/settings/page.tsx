@@ -173,7 +173,22 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ③ 앱 설정 */}
+        {/* ③ 카드 */}
+        <section className="mb-6">
+          <SectionTitle>카드</SectionTitle>
+          <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
+            <SettingsRow
+              href="/cards"
+              icon={<CreditCard size={17} />}
+              iconBg="var(--monari-hero-lo)"
+              iconColor="var(--monari-hero)"
+              label="키즈 카드"
+              sub="카드 발급 · 사용 내역 조회"
+            />
+          </div>
+        </section>
+
+        {/* ④ 앱 설정 */}
         <section className="mb-6">
           <SectionTitle>앱 설정</SectionTitle>
           <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
