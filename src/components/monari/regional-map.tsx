@@ -4,14 +4,14 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import "leaflet/dist/leaflet.css";
 import { formatWon } from "@/lib/format";
 
-type RegionStats = { avgAllowance: number; sampleSize: number };
+type RegionStats = { avgAllowance: number; avgSavingsRate: number; sampleSize: number };
+type MapMode = "allowance" | "spending" | "savings";
 
 type Props = {
   regionalData: Record<string, RegionStats>;
   userRegion?: string | null;
 };
 
-// 행정구역 코드 앞 2자리 → 시/도 매핑
 const PROVINCE_CODE: Record<string, string> = {
   "11": "서울특별시",
   "21": "부산광역시",
@@ -32,10 +32,34 @@ const PROVINCE_CODE: Record<string, string> = {
   "39": "제주특별자치도",
 };
 
-function allowanceColor(t: number): string {
-  const r = Math.round(99 + t * (79 - 99));
-  const g = Math.round(102 + t * (70 - 102));
-  const b = Math.round(241 + t * (209 - 241));
+const MODE_CONFIG: Record<MapMode, { label: string; getValue: (s: RegionStats) => number; format: (v: number) => string; colorFrom: [number,number,number]; colorTo: [number,number,number] }> = {
+  allowance: {
+    label: "용돈",
+    getValue: (s) => s.avgAllowance,
+    format: (v) => formatWon(v),
+    colorFrom: [199, 210, 254], // indigo-200
+    colorTo:   [67,  56,  202], // indigo-700
+  },
+  spending: {
+    label: "지출",
+    getValue: (s) => Math.round(s.avgAllowance * (1 - s.avgSavingsRate)),
+    format: (v) => formatWon(v),
+    colorFrom: [254, 202, 202], // red-200
+    colorTo:   [185,  28,  28], // red-700
+  },
+  savings: {
+    label: "저축률",
+    getValue: (s) => s.avgSavingsRate,
+    format: (v) => `${Math.round(v * 100)}%`,
+    colorFrom: [167, 243, 208], // green-200
+    colorTo:   [4,  120,  87],  // green-700
+  },
+};
+
+function lerpColor(t: number, from: [number,number,number], to: [number,number,number]): string {
+  const r = Math.round(from[0] + t * (to[0] - from[0]));
+  const g = Math.round(from[1] + t * (to[1] - from[1]));
+  const b = Math.round(from[2] + t * (to[2] - from[2]));
   return `rgb(${r},${g},${b})`;
 }
 
@@ -43,8 +67,38 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<unknown>(null);
   const locationMarkerRef = useRef<unknown>(null);
+  const geoLayerRef = useRef<unknown>(null);
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState(false);
+  const [mode, setMode] = useState<MapMode>("allowance");
+
+  // 모드 바뀌면 레이어 스타일 갱신
+  useEffect(() => {
+    if (!geoLayerRef.current) return;
+    const layer = geoLayerRef.current as { setStyle: (fn: (f: unknown) => unknown) => void };
+    const cfg = MODE_CONFIG[mode];
+    const values = Object.values(regionalData).map(s => cfg.getValue(s)).filter(v => v > 0);
+    const min = values.length ? Math.min(...values) : 0;
+    const max = values.length ? Math.max(...values) : 1;
+
+    layer.setStyle((feature: unknown) => {
+      const f = feature as { properties?: { code?: string | number } };
+      const code = (f?.properties?.code ?? "").toString();
+      const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
+      const stats = province ? (regionalData[province] ?? null) : null;
+      const isMyProvince = province === userRegion;
+      const hasData = stats !== null && cfg.getValue(stats) > 0;
+      const t = hasData ? (cfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
+
+      return {
+        fillColor: hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0",
+        fillOpacity: hasData ? 0.65 : 0.25,
+        // 우리 시/도는 테두리로만 표시 (색상 채우기 X)
+        color: isMyProvince ? "#f59e0b" : "#ffffff",
+        weight: isMyProvince ? 2 : 0.6,
+      };
+    });
+  }, [mode, regionalData, userRegion]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -60,17 +114,10 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         scrollWheelZoom: true,
       });
 
-      // 한글 지명 표시 타일 (OpenStreetMap)
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
         maxZoom: 19,
       }).addTo(map);
-
-      const amounts = Object.values(regionalData)
-        .map((v) => v.avgAllowance)
-        .filter((v) => v > 0);
-      const min = amounts.length > 0 ? Math.min(...amounts) : 0;
-      const max = amounts.length > 0 ? Math.max(...amounts) : 1;
 
       try {
         const res = await fetch(
@@ -83,63 +130,77 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const geojson = feature(topo as any, (topo as any).objects.skorea_submunicipalities_2018_geo);
 
+        const cfg = MODE_CONFIG[mode];
+        const values = Object.values(regionalData).map(s => cfg.getValue(s)).filter(v => v > 0);
+        const min = values.length ? Math.min(...values) : 0;
+        const max = values.length ? Math.max(...values) : 1;
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        L.geoJSON(geojson as any, {
+        const geoLayer = L.geoJSON(geojson as any, {
           style: (feature) => {
-            const code: string = (feature?.properties?.code ?? "").toString();
+            const code = (feature?.properties?.code ?? "").toString();
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
             const stats = province ? (regionalData[province] ?? null) : null;
-            const isMyRegion = province === userRegion;
-            const hasData = stats !== null && stats.avgAllowance > 0;
-            const t = hasData ? (stats!.avgAllowance - min) / Math.max(max - min, 1) : 0;
+            const isMyProvince = province === userRegion;
+            const hasData = stats !== null && cfg.getValue(stats) > 0;
+            const t = hasData ? (cfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
 
             return {
-              fillColor: isMyRegion ? "#f59e0b" : hasData ? allowanceColor(t) : "#e2e8f0",
-              fillOpacity: hasData || isMyRegion ? 0.65 : 0.25,
-              color: "#ffffff",
-              weight: 0.6,
+              fillColor: hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0",
+              fillOpacity: hasData ? 0.65 : 0.25,
+              color: isMyProvince ? "#f59e0b" : "#ffffff",
+              weight: isMyProvince ? 2 : 0.6,
             };
           },
           onEachFeature: (feature, layer) => {
-            const code: string = (feature?.properties?.code ?? "").toString();
+            const code = (feature?.properties?.code ?? "").toString();
             const name: string = feature?.properties?.name ?? "";
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
-            const stats = province ? (regionalData[province] ?? null) : null;
-            const isMyRegion = province === userRegion;
-            const hasData = stats !== null && stats.avgAllowance > 0;
 
-            const html = [
-              `<div style="font-family:inherit;min-width:130px;padding:2px 0">`,
-              province ? `<p style="font-size:11px;color:#94a3b8;margin:0 0 2px">${province}</p>` : "",
-              `<p style="font-size:13px;font-weight:900;margin:0 0 5px;color:#0f172a">${name}</p>`,
-              hasData
-                ? `<p style="font-size:12px;color:#4338ca;font-weight:700;margin:0">지역 평균 ${formatWon(stats!.avgAllowance)}</p>
-                   <p style="font-size:11px;color:#64748b;margin:2px 0 0">표본 ${stats!.sampleSize}명</p>`
-                : `<p style="font-size:11px;color:#94a3b8;margin:0">데이터 수집 중</p>`,
-              isMyRegion ? `<p style="font-size:11px;color:#f59e0b;font-weight:700;margin:4px 0 0">📍 우리 지역</p>` : "",
-              `</div>`,
-            ].join("");
+            layer.on("mouseover", () => {
+              const stats = province ? (regionalData[province] ?? null) : null;
+              const isMyProvince = province === userRegion;
+              const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
+              const hasData = stats !== null && activeCfg.getValue(stats) > 0;
 
-            layer.bindPopup(html, { closeButton: false, offset: [0, -2] });
+              const html = [
+                `<div style="font-family:inherit;min-width:130px;padding:2px 0">`,
+                province ? `<p style="font-size:11px;color:#94a3b8;margin:0 0 2px">${province}</p>` : "",
+                `<p style="font-size:13px;font-weight:900;margin:0 0 5px;color:#0f172a">${name}</p>`,
+                hasData
+                  ? `<p style="font-size:12px;color:#4338ca;font-weight:700;margin:0">${activeCfg.label} 평균 ${activeCfg.format(activeCfg.getValue(stats!))}</p>
+                     <p style="font-size:11px;color:#64748b;margin:2px 0 0">표본 ${stats!.sampleSize}명</p>`
+                  : `<p style="font-size:11px;color:#94a3b8;margin:0">데이터 수집 중</p>`,
+                isMyProvince ? `<p style="font-size:11px;color:#f59e0b;font-weight:700;margin:4px 0 0">📍 우리 시/도</p>` : "",
+                `</div>`,
+              ].join("");
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            layer.on("mouseover", (e: any) => {
-              e.target.setStyle({ fillOpacity: 0.9, weight: 1.5, color: "#6366f1" });
-              (layer as L.Layer).openPopup();
+              layer.bindPopup(html, { closeButton: false, offset: [0, -2] }).openPopup();
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (layer as any).setStyle({ fillOpacity: 0.88, weight: 2, color: "#6366f1" });
             });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            layer.on("mouseout", (e: any) => {
-              e.target.setStyle({
-                fillOpacity: hasData || isMyRegion ? 0.65 : 0.25,
-                weight: 0.6,
-                color: "#ffffff",
+            layer.on("mouseout", () => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (layer as any).closePopup();
+              const stats = province ? (regionalData[province] ?? null) : null;
+              const isMyProvince = province === userRegion;
+              const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
+              const hasData = stats !== null && activeCfg.getValue(stats) > 0;
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (layer as any).setStyle({
+                fillOpacity: hasData ? 0.65 : 0.25,
+                weight: isMyProvince ? 2 : 0.6,
+                color: isMyProvince ? "#f59e0b" : "#ffffff",
               });
-              (layer as L.Layer).closePopup();
             });
           },
         }).addTo(map);
+
+        // 현재 모드를 레이어에 태그 (popup에서 읽기 위해)
+        (geoLayer as unknown as { _activeMode: MapMode })._activeMode = mode;
+        geoLayerRef.current = geoLayer;
       } catch {
-        // GeoJSON 로드 실패 시 아무것도 표시 안 함
+        // GeoJSON 로드 실패
       }
 
       mapRef.current = map;
@@ -151,9 +212,18 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (mapRef.current as any).remove();
         mapRef.current = null;
+        geoLayerRef.current = null;
       }
     };
-  }, [regionalData, userRegion]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);  // 지도는 최초 1회만 초기화
+
+  // 모드 변경 시 레이어 태그 갱신
+  useEffect(() => {
+    if (geoLayerRef.current) {
+      (geoLayerRef.current as unknown as { _activeMode: MapMode })._activeMode = mode;
+    }
+  }, [mode]);
 
   const goToMyLocation = useCallback(() => {
     if (!navigator.geolocation) return;
@@ -167,20 +237,12 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         const map = mapRef.current as L.Map | null;
         if (!map) { setLocating(false); return; }
 
-        // 기존 위치 마커 제거
         if (locationMarkerRef.current) {
           (locationMarkerRef.current as L.Layer).remove();
         }
 
-        // 파란 점 마커
         const icon = L.divIcon({
-          html: `<div style="
-            width:14px;height:14px;
-            background:#3b82f6;
-            border:3px solid #fff;
-            border-radius:50%;
-            box-shadow:0 0 0 3px rgba(59,130,246,0.35);
-          "></div>`,
+          html: `<div style="width:14px;height:14px;background:#3b82f6;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 3px rgba(59,130,246,0.35)"></div>`,
           className: "",
           iconSize: [14, 14],
           iconAnchor: [7, 7],
@@ -203,53 +265,86 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: 380, borderRadius: 20, overflow: "hidden" }}>
-      <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+    <div style={{ position: "relative" }}>
+      {/* 모드 탭 */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 10, paddingLeft: 2 }}>
+        {(["allowance", "spending", "savings"] as MapMode[]).map((m) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            style={{
+              padding: "5px 14px",
+              borderRadius: 20,
+              border: "none",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              background: mode === m ? "var(--monari-hero)" : "var(--monari-surface-soft)",
+              color: mode === m ? "#ffffff" : "var(--monari-ink-soft)",
+              transition: "background 0.15s, color 0.15s",
+            }}
+          >
+            {MODE_CONFIG[m].label}
+          </button>
+        ))}
+      </div>
 
-      {/* 현위치 버튼 */}
-      <button
-        onClick={goToMyLocation}
-        disabled={locating}
-        title="현재 위치로 이동"
-        style={{
-          position: "absolute",
-          bottom: 16,
-          right: 16,
-          zIndex: 1000,
-          width: 40,
-          height: 40,
-          borderRadius: 12,
-          border: "none",
-          background: locError ? "#ef4444" : "#ffffff",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
-          cursor: locating ? "wait" : "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "background 0.2s",
-        }}
-      >
-        {locating ? (
-          // 로딩 스피너
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
-              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/>
-            </path>
-          </svg>
-        ) : locError ? (
-          // 오류 아이콘
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-        ) : (
-          // 위치 아이콘
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-            <circle cx="12" cy="12" r="8" strokeOpacity="0.3"/>
-          </svg>
-        )}
-      </button>
+      {/* 지도 */}
+      <div style={{ position: "relative", height: 380, borderRadius: 20, overflow: "hidden" }}>
+        <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+
+        {/* 현위치 버튼 */}
+        <button
+          onClick={goToMyLocation}
+          disabled={locating}
+          title="현재 위치로 이동"
+          style={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+            width: 40,
+            height: 40,
+            borderRadius: 12,
+            border: "none",
+            background: locError ? "#ef4444" : "#ffffff",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
+            cursor: locating ? "wait" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "background 0.2s",
+          }}
+        >
+          {locating ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
+                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/>
+              </path>
+            </svg>
+          ) : locError ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+              <circle cx="12" cy="12" r="8" strokeOpacity="0.3"/>
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* 범례: 우리 시/도 안내 */}
+      {userRegion && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, paddingLeft: 2 }}>
+          <div style={{ width: 16, height: 4, borderRadius: 2, background: "#f59e0b" }} />
+          <span style={{ fontSize: 11, color: "var(--monari-ink-muted)", fontWeight: 600 }}>
+            우리 시/도 ({userRegion})
+          </span>
+        </div>
+      )}
     </div>
   );
 }

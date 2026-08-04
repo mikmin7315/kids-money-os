@@ -99,7 +99,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
     primary ? getPersonalSpendBreakdown(primary.child.id, now.getFullYear(), now.getMonth() + 1) : Promise.resolve([]),
     getRegionalMapStats(),
   ]);
-  const regionalMapData: Record<string, { avgAllowance: number; sampleSize: number }> = {};
+  const regionalMapData: Record<string, { avgAllowance: number; avgSavingsRate: number; sampleSize: number }> = {};
   for (const [region, stats] of regionalMapStats) {
     regionalMapData[region] = stats;
   }
@@ -881,11 +881,11 @@ async function getPersonalSpendBreakdown(childId: string, year: number, month: n
     .slice(0, 4);
 }
 
-async function getRegionalMapStats(): Promise<Map<string, { avgAllowance: number; sampleSize: number }>> {
+async function getRegionalMapStats(): Promise<Map<string, { avgAllowance: number; avgSavingsRate: number; sampleSize: number }>> {
   const supabase = await getSupabaseServerClient();
   const { data: rows } = await supabase
     .from("peer_stats")
-    .select("region, avg_allowance, sample_size, age_group, week_start")
+    .select("region, avg_allowance, avg_savings_rate, sample_size, age_group, week_start")
     .not("region", "is", null)
     .order("week_start", { ascending: false })
     .limit(200);
@@ -893,21 +893,26 @@ async function getRegionalMapStats(): Promise<Map<string, { avgAllowance: number
   if (!rows || rows.length === 0) return new Map();
 
   const seenWeek = rows[0].week_start;
-  const regionMap = new Map<string, { total: number; count: number; samples: number }>();
+  const regionMap = new Map<string, { totalAllowance: number; totalSavings: number; count: number; samples: number }>();
   for (const row of rows) {
     if (row.week_start !== seenWeek) continue;
     if (!row.region) continue;
-    const existing = regionMap.get(row.region as string) ?? { total: 0, count: 0, samples: 0 };
+    const existing = regionMap.get(row.region as string) ?? { totalAllowance: 0, totalSavings: 0, count: 0, samples: 0 };
     regionMap.set(row.region as string, {
-      total: existing.total + Number(row.avg_allowance ?? 0),
+      totalAllowance: existing.totalAllowance + Number(row.avg_allowance ?? 0),
+      totalSavings: existing.totalSavings + Number(row.avg_savings_rate ?? 0),
       count: existing.count + 1,
       samples: existing.samples + Number(row.sample_size ?? 0),
     });
   }
 
-  const result = new Map<string, { avgAllowance: number; sampleSize: number }>();
-  for (const [region, { total, count, samples }] of regionMap) {
-    result.set(region, { avgAllowance: Math.round(total / Math.max(count, 1)), sampleSize: samples });
+  const result = new Map<string, { avgAllowance: number; avgSavingsRate: number; sampleSize: number }>();
+  for (const [region, { totalAllowance, totalSavings, count, samples }] of regionMap) {
+    result.set(region, {
+      avgAllowance: Math.round(totalAllowance / Math.max(count, 1)),
+      avgSavingsRate: totalSavings / Math.max(count, 1),
+      sampleSize: samples,
+    });
   }
   return result;
 }
