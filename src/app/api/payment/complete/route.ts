@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "결제 검증 실패" }, { status: 400 });
   }
 
-  const payment = await portoneRes.json() as { status?: string; totalAmount?: number };
+  const payment = await portoneRes.json() as { status?: string; amount?: { total?: number } };
 
-  if (payment.status !== "PAID" || payment.totalAmount !== 3900) {
+  if (payment.status !== "PAID" || payment.amount?.total !== 3900) {
     return NextResponse.json({ message: "결제 금액 또는 상태가 올바르지 않아요" }, { status: 400 });
   }
 
