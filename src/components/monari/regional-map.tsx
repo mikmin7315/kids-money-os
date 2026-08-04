@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import "leaflet/dist/leaflet.css";
 import { formatWon } from "@/lib/format";
 
@@ -42,6 +42,9 @@ function allowanceColor(t: number): string {
 export function RegionalMap({ regionalData, userRegion }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<unknown>(null);
+  const locationMarkerRef = useRef<unknown>(null);
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -152,10 +155,101 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
     };
   }, [regionalData, userRegion]);
 
+  const goToMyLocation = useCallback(() => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    setLocError(false);
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        const L = await import("leaflet");
+        const map = mapRef.current as L.Map | null;
+        if (!map) { setLocating(false); return; }
+
+        // 기존 위치 마커 제거
+        if (locationMarkerRef.current) {
+          (locationMarkerRef.current as L.Layer).remove();
+        }
+
+        // 파란 점 마커
+        const icon = L.divIcon({
+          html: `<div style="
+            width:14px;height:14px;
+            background:#3b82f6;
+            border:3px solid #fff;
+            border-radius:50%;
+            box-shadow:0 0 0 3px rgba(59,130,246,0.35);
+          "></div>`,
+          className: "",
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        });
+
+        const marker = L.marker([lat, lng], { icon }).addTo(map);
+        marker.bindPopup("현재 내 위치", { closeButton: false }).openPopup();
+        locationMarkerRef.current = marker;
+
+        map.setView([lat, lng], 13, { animate: true });
+        setLocating(false);
+      },
+      () => {
+        setLocating(false);
+        setLocError(true);
+        setTimeout(() => setLocError(false), 3000);
+      },
+      { timeout: 8000 }
+    );
+  }, []);
+
   return (
-    <div
-      ref={containerRef}
-      style={{ height: 380, borderRadius: 20, overflow: "hidden" }}
-    />
+    <div style={{ position: "relative", height: 380, borderRadius: 20, overflow: "hidden" }}>
+      <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+
+      {/* 현위치 버튼 */}
+      <button
+        onClick={goToMyLocation}
+        disabled={locating}
+        title="현재 위치로 이동"
+        style={{
+          position: "absolute",
+          bottom: 16,
+          right: 16,
+          zIndex: 1000,
+          width: 40,
+          height: 40,
+          borderRadius: 12,
+          border: "none",
+          background: locError ? "#ef4444" : "#ffffff",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
+          cursor: locating ? "wait" : "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "background 0.2s",
+        }}
+      >
+        {locating ? (
+          // 로딩 스피너
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
+              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/>
+            </path>
+          </svg>
+        ) : locError ? (
+          // 오류 아이콘
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        ) : (
+          // 위치 아이콘
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+            <circle cx="12" cy="12" r="8" strokeOpacity="0.3"/>
+          </svg>
+        )}
+      </button>
+    </div>
   );
 }
