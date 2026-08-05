@@ -99,7 +99,7 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         weight: isMyDong ? 3 : 0.6,
       };
     });
-  }, [mode, regionalData, userRegion]);
+  }, [mode, regionalData, userRegion, userDong]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -187,9 +187,13 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
               const stats = province ? (regionalData[province] ?? null) : null;
               const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
               const hasData = stats !== null && activeCfg.getValue(stats) > 0;
+              const values = Object.values(regionalData).map(s => activeCfg.getValue(s)).filter(v => v > 0);
+              const min = values.length ? Math.min(...values) : 0;
+              const max = values.length ? Math.max(...values) : 1;
+              const t = hasData ? (activeCfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).setStyle({
-                fillColor: isMyDong ? "#fef3c7" : undefined,
+                fillColor: isMyDong ? "#fef3c7" : (hasData ? lerpColor(t, activeCfg.colorFrom, activeCfg.colorTo) : "#e2e8f0"),
                 fillOpacity: isMyDong ? 0.85 : (hasData ? 0.65 : 0.25),
                 weight: isMyDong ? 3 : 0.6,
                 color: isMyDong ? "#f59e0b" : "#ffffff",
