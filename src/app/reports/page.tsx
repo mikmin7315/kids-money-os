@@ -674,9 +674,9 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   </div>
                   {/* 위치 정보 + 설정 링크 */}
                   <div className="mt-3 flex items-center justify-between px-1">
-                    <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[var(--monari-ink-muted)]">
-                      <MapPin size={12} />
-                      <span>
+                    <div className="flex min-w-0 flex-1 items-center gap-1.5 text-[12px] font-semibold text-[var(--monari-ink-muted)]">
+                      <MapPin size={12} className="shrink-0" />
+                      <span className="truncate">
                         {parentDong
                           ? `${parentRegion} · ${parentSigungu} · ${parentDong}`
                           : parentRegion
@@ -684,7 +684,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                           : "지역 미설정"}
                       </span>
                     </div>
-                    <a href="/settings/region" className="text-[12px] font-bold text-[var(--monari-hero)]">
+                    <a href="/settings/region" className="shrink-0 py-3 -my-3 pl-2 text-[12px] font-bold text-[var(--monari-hero)]">
                       {parentRegion ? "변경" : "지역 설정하기 →"}
                     </a>
                   </div>

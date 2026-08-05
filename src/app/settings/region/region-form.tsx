@@ -46,10 +46,10 @@ function RowButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-between px-4 py-3.5 text-left transition active:scale-[0.99]"
+      className="flex w-full items-center justify-between px-4 py-4 text-left transition active:scale-[0.99]"
     >
       <span
-        className="text-[14px] font-semibold"
+        className="flex-1 truncate text-[14px] font-semibold"
         style={{ color: selected ? "var(--monari-hero)" : "var(--monari-ink)" }}
       >
         {label}
@@ -77,16 +77,19 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
   // Load initial data if the user already has a selection
   useEffect(() => {
     if (!currentRegion) return;
+    setLoadingLevel("sigungu");
     getSigungusForSido(currentRegion).then(async (result) => {
       setSigungus(result);
       if (currentSigungu) {
         const entry = result.find((e) => e.name.trim().normalize() === currentSigungu.trim().normalize());
         if (entry && currentDong) {
+          setLoadingLevel("dong");
           const dongResult = await getDongsForSigungu(entry.code);
           setDongs(dongResult);
         }
       }
-    });
+      setLoadingLevel(null);
+    }).catch(() => setLoadingLevel(null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -165,6 +168,7 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
       if (result.ok) {
         setMessage("저장되었어요.");
         router.refresh();
+        setTimeout(() => setMessage(null), 3000);
       } else {
         setMessage(result.error ?? "저장 실패");
       }
@@ -251,7 +255,7 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
         <button
           type="button"
           onClick={handleClear}
-          className="w-full rounded-[14px] border border-[var(--monari-line)] py-3 text-[13px] font-semibold text-[var(--monari-ink-muted)] transition active:scale-[0.98]"
+          className="w-full rounded-[14px] border border-[var(--monari-line)] py-3.5 text-[13px] font-semibold text-[var(--monari-ink-muted)] transition active:scale-[0.98]"
         >
           지역 정보 삭제
         </button>

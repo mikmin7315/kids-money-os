@@ -48,7 +48,7 @@ export default async function SettingsPage() {
     <AppNavShell>
       <PageHero>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">내 계정</p>
-        <h1 className="text-2xl font-extrabold tracking-tight text-white">{displayName}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-white truncate">{displayName}</h1>
         <p className="mt-0.5 text-[13px] text-white/55">{auth.user?.email}</p>
 
         {/* 플랜 + 아이 수 뱃지 */}
@@ -86,13 +86,13 @@ export default async function SettingsPage() {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <Link
                       href={`/child/${child.id}`}
-                      className="inline-flex h-8 items-center gap-1 rounded-[10px] bg-[var(--monari-plus-bg)] px-3 text-[12px] font-bold text-[var(--monari-hero)]"
+                      className="inline-flex h-11 items-center gap-1 rounded-[10px] bg-[var(--monari-plus-bg)] px-3 text-[12px] font-bold text-[var(--monari-hero)]"
                     >
                       통장 보기
                     </Link>
                     <Link
                       href={`/settings/children/${child.id}`}
-                      className="inline-flex h-8 items-center rounded-[10px] bg-[var(--monari-surface-soft)] px-3 text-[12px] font-bold text-[var(--monari-ink-soft)]"
+                      className="inline-flex h-11 items-center rounded-[10px] bg-[var(--monari-surface-soft)] px-3 text-[12px] font-bold text-[var(--monari-ink-soft)]"
                     >
                       수정
                     </Link>
@@ -219,7 +219,7 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ④ 계정 */}
+        {/* ⑤ 계정 */}
         <section className="mb-6">
           <SectionTitle>계정</SectionTitle>
           <div className="mt-3 space-y-2">
@@ -296,7 +296,7 @@ function SettingsRow({
       )}
       <div className="flex-1 min-w-0">
         <p className="text-[14px] font-bold text-[var(--monari-ink)]">{label}</p>
-        {sub && <p className="text-[12px] text-[var(--monari-ink-muted)]">{sub}</p>}
+        {sub && <p className="text-[12px] text-[var(--monari-ink-muted)] truncate">{sub}</p>}
       </div>
       <ChevronRight size={16} className="shrink-0 text-[var(--monari-ink-muted)]" />
     </Link>
