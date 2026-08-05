@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createChildAction } from "@/actions/management";
+import { createChildAction, deleteChildAction } from "@/actions/management";
 import { Plus, Trash2 } from "lucide-react";
 
 type AddedChild = { id: string; name: string; birthYear: number };
@@ -21,6 +21,7 @@ export default function Setup2Page() {
   const [name, setName] = useState("");
   const [birthYear, setBirthYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(true);
 
@@ -98,13 +99,24 @@ export default function Setup2Page() {
                 </p>
               </div>
               <button
-                onClick={() => setChildren((prev) => {
-                  const next = prev.filter((_, j) => j !== i);
-                  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-                  return next;
-                })}
+                onClick={async () => {
+                  setDeletingId(c.id);
+                  setError("");
+                  const result = await deleteChildAction(c.id);
+                  setDeletingId(null);
+                  if (result.ok) {
+                    setChildren((prev) => {
+                      const next = prev.filter((_, j) => j !== i);
+                      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+                      return next;
+                    });
+                  } else {
+                    setError("아이 삭제에 실패했어요. 다시 시도해 주세요.");
+                  }
+                }}
+                disabled={deletingId === c.id}
                 aria-label={`${c.name} 삭제`}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: "12px 8px" }}
+                style={{ background: "none", border: "none", cursor: deletingId === c.id ? "wait" : "pointer", padding: "12px 8px", opacity: deletingId === c.id ? 0.4 : 1 }}
               >
                 <Trash2 size={16} color="var(--monari-minus)" />
               </button>

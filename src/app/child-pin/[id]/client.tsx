@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileShell, PageContainer, Surface } from "@/components/ui/primitives";
 import { PinInput } from "@/components/ui/pin-input";
@@ -96,9 +97,12 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
 
       <div className="rounded-[16px] bg-white/70 px-4 py-3.5 text-center text-[13px] text-[var(--color-muted)]">
         PIN을 잊었나요?{" "}
-        <span className="font-bold text-[#6C3FE8]">
-          부모님 설정의 아이 정보에서 PIN을 초기화할 수 있어요.
-        </span>
+        <Link
+          href={`/settings/children/${childId}`}
+          className="font-bold text-[#6C3FE8] underline underline-offset-2"
+        >
+          여기서 PIN 초기화하기 →
+        </Link>
       </div>
     </div>
   );
