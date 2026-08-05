@@ -39,6 +39,7 @@ function Setup4Inner() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [customError, setCustomError] = useState("");
 
   const params = `childIds=${childIds.join(",")}&childNames=${childNames.join(",")}`;
 
@@ -59,6 +60,11 @@ function Setup4Inner() {
     const parsed = parseFloat(val);
     if (!isNaN(parsed) && parsed > 0 && parsed <= 30) {
       setRate(parsed);
+      setCustomError("");
+    } else if (val !== "" && !isNaN(parsed)) {
+      setCustomError("이자율은 0.1%~30% 사이로 입력해주세요.");
+    } else {
+      setCustomError("");
     }
   }
 
@@ -194,6 +200,9 @@ function Setup4Inner() {
             <span style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", fontSize: 18, fontWeight: 700, color: "var(--monari-hero)" }}>%</span>
           </div>
         )}
+        {customMode && customError && (
+          <p style={{ fontSize: 12, color: "var(--monari-minus)", marginBottom: 12, marginTop: -8 }}>{customError}</p>
+        )}
 
         {/* 이자율 범위 안내 */}
         <div style={{
@@ -213,7 +222,7 @@ function Setup4Inner() {
       {error && <p style={{ fontSize: 13, color: "var(--monari-minus)", marginBottom: 12 }}>{error}</p>}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
-        <button type="button" onClick={handleSubmit} disabled={loading}
+        <button type="button" onClick={handleSubmit} disabled={loading || Boolean(customError)}
           style={{
             width: "100%", padding: "16px", fontSize: 16, fontWeight: 800,
             background: "var(--monari-hero)", color: "#fff",

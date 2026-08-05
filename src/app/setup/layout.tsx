@@ -47,9 +47,10 @@ function SetupHeader() {
             onClick={() => router.push(prevPath)}
             style={{
               display: "flex", alignItems: "center", gap: 2,
-              background: "none", border: "none", padding: "4px 0",
+              background: "none", border: "none", padding: "12px 0",
               cursor: "pointer", color: "var(--monari-ink-muted)",
               fontSize: 13, fontWeight: 600, marginRight: "auto",
+              minHeight: 44,
             }}
           >
             <ChevronLeft size={18} /> 이전
@@ -64,7 +65,14 @@ function SetupHeader() {
           {currentIndex >= 0 ? STEPS[currentIndex].label : ""}
         </span>
       </div>
-      <div style={{ height: 6, background: "#F0F0F5", borderRadius: 99, overflow: "hidden" }}>
+      <div
+        role="progressbar"
+        aria-label="설정 진행률"
+        aria-valuenow={Math.round(progress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        style={{ height: 6, background: "#F0F0F5", borderRadius: 99, overflow: "hidden" }}
+      >
         <div style={{
           height: "100%", width: `${progress}%`,
           background: "var(--monari-hero)", borderRadius: 99,

@@ -6,9 +6,8 @@ export const dynamic = "force-dynamic";
 
 export default async function Setup1Page() {
   const auth = await requireParentSession();
-  if (!auth.user) redirect("/login");
 
-  const displayName = auth.profile?.name || auth.user.email?.split("@")[0] || "부모님";
+  const displayName = auth.profile?.name || auth.user?.email?.split("@")[0] || "부모님";
 
   return (
     <main className="flex flex-1 flex-col px-6 pb-10 pt-8">
@@ -33,7 +32,7 @@ export default async function Setup1Page() {
       >
         <p style={{ fontSize: 12, fontWeight: 700, color: "var(--monari-ink-muted)", marginBottom: 4 }}>로그인 계정</p>
         <p style={{ fontSize: 17, fontWeight: 800, color: "var(--monari-ink)" }}>{displayName}</p>
-        <p style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{auth.user.email}</p>
+        <p style={{ fontSize: 13, color: "var(--monari-ink-muted)" }}>{auth.user?.email}</p>
       </div>
 
       <div style={{ marginBottom: 32 }}>
@@ -70,7 +69,7 @@ export default async function Setup1Page() {
           시작하기 →
         </Link>
         <Link
-          href="/"
+          href="/children/new"
           style={{
             display: "block",
             textAlign: "center",

@@ -111,19 +111,30 @@ export function OnboardingCarousel() {
         </div>
 
         {/* 인디케이터 */}
-        <div className="relative mt-8 flex items-center gap-2">
+        <div className="relative mt-8 flex items-center">
           {SLIDES.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className="rounded-full transition-all"
-              style={{
-                width: i === current ? 24 : 8,
-                height: 8,
-                background: i === current ? "#fff" : "rgba(255,255,255,0.35)",
-              }}
               aria-label={`${i + 1}번째 슬라이드`}
-            />
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "18px 6px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <span
+                className="block rounded-full transition-all"
+                style={{
+                  width: i === current ? 24 : 8,
+                  height: 8,
+                  background: i === current ? "#fff" : "rgba(255,255,255,0.35)",
+                }}
+              />
+            </button>
           ))}
         </div>
       </div>

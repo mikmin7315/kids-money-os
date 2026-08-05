@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import { createBehaviorRuleAction } from "@/actions/management";
 
 const QUICK_PRESETS = [
@@ -15,6 +15,7 @@ function Setup5Inner() {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   function toggle(idx: number) {
     setSelected((prev) => {
@@ -28,6 +29,7 @@ function Setup5Inner() {
   async function handleSubmit() {
     if (selected.size === 0) { router.push("/setup/complete"); return; }
     setLoading(true);
+    setError("");
     try {
       await Promise.all(
         [...selected].map((idx) => {
@@ -44,6 +46,8 @@ function Setup5Inner() {
         }),
       );
       router.push("/setup/complete");
+    } catch {
+      setError("약속 저장에 실패했어요. 다시 시도해 주세요.");
     } finally {
       setLoading(false);
     }
@@ -119,6 +123,9 @@ function Setup5Inner() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {error && (
+          <p style={{ fontSize: 13, color: "var(--monari-minus)", fontWeight: 600, textAlign: "center" }}>{error}</p>
+        )}
         <button
           type="button"
           onClick={handleSubmit}
@@ -150,9 +157,5 @@ function Setup5Inner() {
 }
 
 export default function Setup5Page() {
-  return (
-    <Suspense>
-      <Setup5Inner />
-    </Suspense>
-  );
+  return <Setup5Inner />;
 }

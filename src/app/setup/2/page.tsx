@@ -103,7 +103,8 @@ export default function Setup2Page() {
                   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
                   return next;
                 })}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
+                aria-label={`${c.name} 삭제`}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "12px 8px" }}
               >
                 <Trash2 size={16} color="var(--monari-minus)" />
               </button>
@@ -211,10 +212,10 @@ export default function Setup2Page() {
       )}
 
       {/* 아이 한 명 더 추가 버튼 */}
-      {showForm ? (
+      {showForm && children.length > 0 ? (
         <button
           type="button"
-          onClick={() => setShowForm(true)}
+          disabled
           style={{
             display: "flex",
             alignItems: "center",
@@ -235,7 +236,7 @@ export default function Setup2Page() {
         >
           <Plus size={14} /> 아이 한 명 더 추가 (이 아이를 먼저 등록해주세요)
         </button>
-      ) : (
+      ) : !showForm ? (
         <button
           onClick={() => setShowForm(true)}
           style={{
@@ -257,7 +258,7 @@ export default function Setup2Page() {
         >
           <Plus size={16} /> 아이 한 명 더 추가
         </button>
-      )}
+      ) : null}
 
       <div style={{ marginTop: "auto" }}>
         <button

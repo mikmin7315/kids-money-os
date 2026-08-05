@@ -7,7 +7,7 @@ import { updateRegionAction } from "@/actions/management";
 import { REGIONS } from "@/lib/regions";
 
 export function CompleteFlow({ currentRegion }: { currentRegion: string | null }) {
-  const [step, setStep] = useState<"welcome" | "region" | "done">("welcome");
+  const [step, setStep] = useState<"welcome" | "region">("welcome");
   const [selected, setSelected] = useState<string | null>(currentRegion);
   const [isPending, startTransition] = useTransition();
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -133,12 +133,12 @@ export function CompleteFlow({ currentRegion }: { currentRegion: string | null }
         )}
         <button
           type="button"
-          disabled={isPending}
+          disabled={isPending || !selected}
           onClick={handleRegionSave}
-          className="w-full rounded-[14px] py-4 text-[15px] font-black text-white transition active:scale-[0.98] disabled:opacity-60"
+          className="w-full rounded-[14px] py-4 text-[15px] font-black text-white transition active:scale-[0.98] disabled:opacity-50"
           style={{ background: selected ? "var(--monari-hero)" : "var(--monari-line-strong)" }}
         >
-          {isPending ? "저장 중…" : selected ? "저장하고 계속" : "선택하고 계속"}
+          {isPending ? "저장 중…" : selected ? "저장하고 계속" : "지역을 선택해주세요"}
         </button>
         <button
           type="button"
