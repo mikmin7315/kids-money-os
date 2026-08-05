@@ -14,7 +14,7 @@ type DeleteProps = { ruleId: string; label: string };
 type PolicyDeleteProps = { policyId: string; label: string };
 type ToggleProps = { ruleId: string; isActive: boolean; label: string };
 
-export function DeleteAllowanceRuleButton({ ruleId, label }: DeleteProps) {
+export function DeleteAllowanceRuleButton({ ruleId }: DeleteProps) {
   const router = useRouter();
   const [state, action, pending] = useActionState(deleteAllowanceRuleAction, { ok: false, message: "" });
   const [confirming, setConfirming] = useState(false);
@@ -54,7 +54,7 @@ export function DeleteAllowanceRuleButton({ ruleId, label }: DeleteProps) {
   );
 }
 
-export function DeleteInterestPolicyButton({ policyId, label }: PolicyDeleteProps) {
+export function DeleteInterestPolicyButton({ policyId }: PolicyDeleteProps) {
   const router = useRouter();
   const [state, action, pending] = useActionState(deleteInterestPolicyAction, { ok: false, message: "" });
   const [confirming, setConfirming] = useState(false);
@@ -131,7 +131,7 @@ export function ToggleBehaviorRuleButton({ ruleId, isActive, label }: ToggleProp
   );
 }
 
-export function DeleteBehaviorRuleButton({ ruleId, label }: DeleteProps) {
+export function DeleteBehaviorRuleButton({ ruleId }: DeleteProps) {
   const router = useRouter();
   const [state, action, pending] = useActionState(deleteBehaviorRuleAction, { ok: false, message: "" });
   const [confirming, setConfirming] = useState(false);

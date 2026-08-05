@@ -260,6 +260,7 @@ function FormMessage({ state }: { state: ManagementFormState }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);
     if (!state.ok || !state.message) return;
     const t = setTimeout(() => setVisible(false), 4000);
@@ -297,5 +298,4 @@ function FormMessage({ state }: { state: ManagementFormState }) {
 }
 
 const fieldClass = "monari-input";
-const textareaClass = "monari-textarea";
 const formClass = "space-y-5";

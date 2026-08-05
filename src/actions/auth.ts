@@ -63,7 +63,7 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
   }
 }
 
-export async function signInWithGoogle(_?: AuthFormState): Promise<AuthFormState> {
+export async function signInWithGoogle(_state?: AuthFormState): Promise<AuthFormState> {
   const supabase = await getSupabaseServerClient();
   const siteUrl = getSiteUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({

@@ -13,6 +13,7 @@ function FormMessage({ state }: { state: { ok: boolean; message: string } }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);
     if (!state.ok || !state.message) return;
     const t = setTimeout(() => setVisible(false), 4000);

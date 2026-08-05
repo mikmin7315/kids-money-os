@@ -817,7 +817,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   <p className="text-[13px] font-extrabold text-[var(--monari-ink)]">이달 칭찬 포인트</p>
                 </div>
                 <div className="rounded-[12px] bg-amber-50 px-4 py-3 mb-3">
-                  <p className="text-[14px] font-black text-amber-700">"{praisePoint}"</p>
+                  <p className="text-[14px] font-black text-amber-700">&ldquo;{praisePoint}&rdquo;</p>
                   <p className="text-[11px] text-amber-600/80 mt-1">지금 바로 아이에게 전해주세요</p>
                 </div>
                 <p className="text-[12px] leading-[1.65] text-[var(--monari-ink-soft)]">

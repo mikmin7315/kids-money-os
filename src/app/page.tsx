@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
-  CheckCircle2,
   CircleDollarSign,
   ClipboardList,
   ReceiptText,
@@ -14,7 +13,7 @@ import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-
 import { requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { getParentWalletAction } from "@/actions/parent-wallet";
-import { formatWon, maskAccountNumber } from "@/lib/format";
+import { formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 

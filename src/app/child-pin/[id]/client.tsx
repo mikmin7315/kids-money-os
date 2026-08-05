@@ -69,6 +69,7 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
 
   useEffect(() => {
     if (state.message && !state.ok) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setResetKey((k) => k + 1);
     }
   }, [state.message, state.ok]);

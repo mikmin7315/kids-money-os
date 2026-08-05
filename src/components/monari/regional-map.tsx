@@ -246,7 +246,6 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         locationMarkerRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);  // 지도는 최초 1회만 초기화
 
   const goToMyLocation = useCallback(() => {

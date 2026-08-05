@@ -58,7 +58,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const streak = computeStreak(childLogs, activeRuleIds, today);
 
   const policy = bundle.interestPolicies.find((p) => p.childId === id);
-  const todayInterest = policy ? Math.round(estimateInterest(summary.wallet, policy) / 30) : 0;
+  const _todayInterest = policy ? Math.round(estimateInterest(summary.wallet, policy) / 30) : 0;
   const { totalAllowance, totalSave, totalSpend, totalInterest } = summary.monthReport;
 
   const childTx = bundle.moneyTransactions

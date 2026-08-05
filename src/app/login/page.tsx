@@ -1,7 +1,7 @@
 import { LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { GoogleSignInButton, SignInForm, SignUpForm, PhoneOtpForm } from "@/components/auth/auth-forms";
+import { GoogleSignInButton } from "@/components/auth/auth-forms";
 import { getAuthContext } from "@/lib/auth";
 import { LoginTabs } from "@/components/auth/login-tabs";
 
