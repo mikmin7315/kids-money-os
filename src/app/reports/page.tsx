@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Download, Lock, Sparkles, Coins, MessageCircle, Target, Trophy } from "lucide-react";
+import { Download, Lock, Sparkles, Coins, MessageCircle, Target, Trophy, MapPin } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
@@ -92,7 +92,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
   const primaryChild = primary ? bundle.children.find((c) => c.id === primary.child.id) : null;
   const ageGroup = getAgeGroup(primaryChild?.birthYear);
-  const parentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
+  const _profile = auth.profile as { region?: string | null; region_sigungu?: string | null; region_dong?: string | null } | null;
+  const parentRegion = _profile?.region ?? null;
+  const parentSigungu = _profile?.region_sigungu ?? null;
+  const parentDong = _profile?.region_dong ?? null;
   const now = new Date();
   const [peer, personalSpend, regionalMapStats] = await Promise.all([
     primary ? getPeerStats(ageGroup, parentRegion) : Promise.resolve(null),
@@ -664,17 +667,55 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
             <section className="mb-5">
               <p className="monari-eyebrow mb-1">지역별 비교</p>
               <p className="text-[16px] font-extrabold text-[var(--monari-ink)] mb-3">전국 지역별 용돈 현황</p>
-              <div className="monari-card overflow-hidden p-0">
-                <RegionalMap regionalData={regionalMapData} userRegion={parentRegion} />
-              </div>
-              {!parentRegion && (
-                <a href="/settings/region" className="mt-3 flex items-center justify-center gap-1.5 rounded-[12px] bg-[var(--monari-hero-lo)] px-4 py-2.5 text-[12px] font-bold text-[var(--monari-hero)]">
-                  거주 지역 설정하면 내 지역이 표시돼요 →
-                </a>
+              {IS_PREMIUM ? (
+                <>
+                  <div className="monari-card overflow-hidden p-0">
+                    <RegionalMap regionalData={regionalMapData} userRegion={parentRegion} userDong={parentDong} />
+                  </div>
+                  {/* 위치 정보 + 설정 링크 */}
+                  <div className="mt-3 flex items-center justify-between px-1">
+                    <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[var(--monari-ink-muted)]">
+                      <MapPin size={12} />
+                      <span>
+                        {parentDong
+                          ? `${parentRegion} · ${parentSigungu} · ${parentDong}`
+                          : parentRegion
+                          ? `${parentRegion} (동 미설정)`
+                          : "지역 미설정"}
+                      </span>
+                    </div>
+                    <a href="/settings/region" className="text-[12px] font-bold text-[var(--monari-hero)]">
+                      {parentRegion ? "변경" : "지역 설정하기 →"}
+                    </a>
+                  </div>
+                  <p className="mt-1 text-center text-[10px] text-[var(--monari-ink-muted)]">
+                    매월 1일 업데이트 · 동을 터치하면 상세 정보가 보여요
+                  </p>
+                </>
+              ) : (
+                <div className="relative overflow-hidden rounded-[20px]" style={{ border: "1px solid var(--monari-line)" }}>
+                  <div style={{ height: 320, background: "var(--monari-surface-soft)" }} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6">
+                    <span className="flex items-center gap-1 rounded-full bg-[var(--monari-hero-lo)] px-3 py-1.5 text-[10px] font-extrabold text-[var(--monari-hero)]">
+                      <Sparkles size={9} strokeWidth={3} /> 플러스
+                    </span>
+                    <p className="text-center text-[14px] font-extrabold text-[var(--monari-ink)]">
+                      읍/면/동 단위 지역 비교 지도
+                    </p>
+                    <p className="text-center text-[12px] leading-5 text-[var(--monari-ink-muted)]" style={{ maxWidth: 240 }}>
+                      전국 또래의 용돈·지출·저축률을<br />지도에서 한눈에 비교해보세요
+                    </p>
+                    <Link
+                      href="/settings/subscription"
+                      className="mt-2 flex items-center gap-2 rounded-[14px] bg-[var(--monari-hero)] px-6 py-3 text-[13px] font-extrabold text-white transition active:scale-[0.97]"
+                      style={{ boxShadow: "0 4px 20px rgba(109,40,217,0.4)" }}
+                    >
+                      <Lock size={12} strokeWidth={3} />
+                      모나리 플러스 시작하기
+                    </Link>
+                  </div>
+                </div>
               )}
-              <p className="mt-2 text-center text-[10px] text-[var(--monari-ink-muted)]">
-                매월 1일 업데이트 · 버블을 누르면 상세 정보가 보여요
-              </p>
             </section>
           )}
 

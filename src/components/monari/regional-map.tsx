@@ -10,6 +10,7 @@ type MapMode = "allowance" | "spending" | "savings";
 type Props = {
   regionalData: Record<string, RegionStats>;
   userRegion?: string | null;
+  userDong?: string | null;
 };
 
 const PROVINCE_CODE: Record<string, string> = {
@@ -63,7 +64,7 @@ function lerpColor(t: number, from: [number,number,number], to: [number,number,n
   return `rgb(${r},${g},${b})`;
 }
 
-export function RegionalMap({ regionalData, userRegion }: Props) {
+export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<unknown>(null);
   const locationMarkerRef = useRef<unknown>(null);
@@ -82,20 +83,20 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
     const max = values.length ? Math.max(...values) : 1;
 
     layer.setStyle((feature: unknown) => {
-      const f = feature as { properties?: { code?: string | number } };
+      const f = feature as { properties?: { code?: string | number; name?: string } };
       const code = (f?.properties?.code ?? "").toString();
+      const dongName = (f?.properties?.name ?? "") as string;
       const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
       const stats = province ? (regionalData[province] ?? null) : null;
-      const isMyProvince = province === userRegion;
+      const isMyDong = !!(userDong && dongName === userDong && province === userRegion);
       const hasData = stats !== null && cfg.getValue(stats) > 0;
       const t = hasData ? (cfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
 
       return {
-        fillColor: hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0",
-        fillOpacity: hasData ? 0.65 : 0.25,
-        // 우리 시/도는 테두리로만 표시 (색상 채우기 X)
-        color: isMyProvince ? "#f59e0b" : "#ffffff",
-        weight: isMyProvince ? 2 : 0.6,
+        fillColor: isMyDong ? "#fef3c7" : (hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0"),
+        fillOpacity: isMyDong ? 0.85 : (hasData ? 0.65 : 0.25),
+        color: isMyDong ? "#f59e0b" : "#ffffff",
+        weight: isMyDong ? 3 : 0.6,
       };
     });
   }, [mode, regionalData, userRegion]);
@@ -139,27 +140,28 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         const geoLayer = L.geoJSON(geojson as any, {
           style: (feature) => {
             const code = (feature?.properties?.code ?? "").toString();
+            const dongName: string = feature?.properties?.name ?? "";
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
             const stats = province ? (regionalData[province] ?? null) : null;
-            const isMyProvince = province === userRegion;
+            const isMyDong = !!(userDong && dongName === userDong && province === userRegion);
             const hasData = stats !== null && cfg.getValue(stats) > 0;
             const t = hasData ? (cfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
 
             return {
-              fillColor: hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0",
-              fillOpacity: hasData ? 0.65 : 0.25,
-              color: isMyProvince ? "#f59e0b" : "#ffffff",
-              weight: isMyProvince ? 2 : 0.6,
+              fillColor: isMyDong ? "#fef3c7" : (hasData ? lerpColor(t, cfg.colorFrom, cfg.colorTo) : "#e2e8f0"),
+              fillOpacity: isMyDong ? 0.85 : (hasData ? 0.65 : 0.25),
+              color: isMyDong ? "#f59e0b" : "#ffffff",
+              weight: isMyDong ? 3 : 0.6,
             };
           },
           onEachFeature: (feature, layer) => {
             const code = (feature?.properties?.code ?? "").toString();
             const name: string = feature?.properties?.name ?? "";
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
+            const isMyDong = !!(userDong && name === userDong && province === userRegion);
 
             layer.on("mouseover", () => {
               const stats = province ? (regionalData[province] ?? null) : null;
-              const isMyProvince = province === userRegion;
               const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
               const hasData = stats !== null && activeCfg.getValue(stats) > 0;
 
@@ -171,26 +173,26 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
                   ? `<p style="font-size:12px;color:#4338ca;font-weight:700;margin:0">${activeCfg.label} 평균 ${activeCfg.format(activeCfg.getValue(stats!))}</p>
                      <p style="font-size:11px;color:#64748b;margin:2px 0 0">표본 ${stats!.sampleSize}명</p>`
                   : `<p style="font-size:11px;color:#94a3b8;margin:0">데이터 수집 중</p>`,
-                isMyProvince ? `<p style="font-size:11px;color:#f59e0b;font-weight:700;margin:4px 0 0">📍 우리 시/도</p>` : "",
+                isMyDong ? `<p style="font-size:11px;color:#f59e0b;font-weight:700;margin:4px 0 0">📍 우리 동네</p>` : "",
                 `</div>`,
               ].join("");
 
               layer.bindPopup(html, { closeButton: false, offset: [0, -2] }).openPopup();
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (layer as any).setStyle({ fillOpacity: 0.88, weight: 2, color: "#6366f1" });
+              (layer as any).setStyle({ fillOpacity: 0.95, weight: 2.5, color: "#6366f1" });
             });
             layer.on("mouseout", () => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).closePopup();
               const stats = province ? (regionalData[province] ?? null) : null;
-              const isMyProvince = province === userRegion;
               const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
               const hasData = stats !== null && activeCfg.getValue(stats) > 0;
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).setStyle({
-                fillOpacity: hasData ? 0.65 : 0.25,
-                weight: isMyProvince ? 2 : 0.6,
-                color: isMyProvince ? "#f59e0b" : "#ffffff",
+                fillColor: isMyDong ? "#fef3c7" : undefined,
+                fillOpacity: isMyDong ? 0.85 : (hasData ? 0.65 : 0.25),
+                weight: isMyDong ? 3 : 0.6,
+                color: isMyDong ? "#f59e0b" : "#ffffff",
               });
             });
           },
@@ -336,12 +338,12 @@ export function RegionalMap({ regionalData, userRegion }: Props) {
         </button>
       </div>
 
-      {/* 범례: 우리 시/도 안내 */}
-      {userRegion && (
+      {/* 범례 */}
+      {(userDong || userRegion) && (
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, paddingLeft: 2 }}>
-          <div style={{ width: 16, height: 4, borderRadius: 2, background: "#f59e0b" }} />
+          <div style={{ width: 14, height: 14, borderRadius: 3, background: "#fef3c7", border: "2px solid #f59e0b", flexShrink: 0 }} />
           <span style={{ fontSize: 11, color: "var(--monari-ink-muted)", fontWeight: 600 }}>
-            우리 시/도 ({userRegion})
+            {userDong ? `우리 동네 (${userDong})` : `우리 시/도 (${userRegion})`}
           </span>
         </div>
       )}
