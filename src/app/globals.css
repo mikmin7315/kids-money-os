@@ -49,6 +49,7 @@
   --color-text: var(--monari-ink);
   --color-muted: var(--monari-ink-soft);
   --color-soft: var(--monari-ink-muted);
+  --color-text-muted: var(--monari-ink-muted);
   --color-border: var(--monari-line-strong);
   --color-accent: var(--monari-hero);
   --color-accent-fg: #ffffff;
@@ -160,6 +161,7 @@
     --color-text: var(--monari-ink);
     --color-muted: var(--monari-ink-soft);
     --color-soft: var(--monari-ink-muted);
+    --color-text-muted: var(--monari-ink-muted);
     --color-border: var(--monari-line-strong);
     --color-chip-bg: #0d2050;
     --color-chip-border: rgba(0, 102, 204, 0.25);
@@ -238,6 +240,7 @@
   --color-text: var(--monari-ink);
   --color-muted: var(--monari-ink-soft);
   --color-soft: var(--monari-ink-muted);
+  --color-text-muted: var(--monari-ink-muted);
   --color-border: var(--monari-line-strong);
   --color-chip-bg: #0d2050;
   --color-chip-border: rgba(0, 102, 204, 0.25);
@@ -308,6 +311,7 @@
   --color-text: var(--monari-ink);
   --color-muted: var(--monari-ink-soft);
   --color-soft: var(--monari-ink-muted);
+  --color-text-muted: var(--monari-ink-muted);
   --color-border: var(--monari-line-strong);
   --color-chip-bg: #e8f2ff;
   --color-chip-border: rgba(0, 102, 204, 0.14);
