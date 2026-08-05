@@ -285,6 +285,20 @@ export default async function HomePage() {
                 <p className="text-4xl mb-3">🌱</p>
                 <p className="text-[15px] font-bold text-[var(--monari-ink)]">아직 활동이 없어요</p>
                 <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">용돈을 주거나 약속을 만들어보세요</p>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Link
+                    href={`/child/${dashboard.children[0]?.child.id}/give-allowance`}
+                    className="rounded-full border border-[var(--monari-hero)] px-4 py-2 text-[12px] font-bold text-[var(--monari-hero)] transition active:bg-[var(--monari-hero-lo)]"
+                  >
+                    💸 용돈 주기
+                  </Link>
+                  <Link
+                    href="/behaviors"
+                    className="rounded-full border border-[var(--monari-hero)] px-4 py-2 text-[12px] font-bold text-[var(--monari-hero)] transition active:bg-[var(--monari-hero-lo)]"
+                  >
+                    📝 약속 만들기
+                  </Link>
+                </div>
               </div>
             )}
           </div>

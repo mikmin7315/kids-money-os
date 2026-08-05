@@ -66,7 +66,7 @@ export default async function ChildNoticesPage({ params }: { params: Promise<{ i
         <div className="rounded-[24px] bg-white p-8 text-center shadow-[var(--monari-shadow-md)]">
           <p style={{ fontSize: 48, marginBottom: 12 }}>📭</p>
           <p style={{ fontSize: 18, fontWeight: 800, color: "var(--monari-ink)" }}>공지사항이 없어요</p>
-          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>현재 새로운 공지가 없어요.</p>
+          <p className="mt-2" style={{ fontSize: 14, color: "var(--monari-ink-muted)" }}>새 공지가 올라오면 여기에 바로 보여요.</p>
         </div>
       ) : (
         <div className="space-y-3">

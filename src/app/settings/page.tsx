@@ -102,9 +102,16 @@ export default async function SettingsPage() {
             })}
 
             {childCount === 0 && (
-              <div className="monari-card px-4 py-5 text-center">
+              <div className="monari-card px-4 py-6 text-center">
+                <p className="text-[32px] mb-2">👶</p>
                 <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">아직 아이가 없어요</p>
                 <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">아이를 등록하면 용돈과 이자를 관리할 수 있어요.</p>
+                <Link
+                  href="/children/new"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--monari-hero)] px-5 py-2.5 text-[13px] font-bold text-white transition active:scale-[0.97]"
+                >
+                  <UserPlus size={14} /> 아이 추가하기
+                </Link>
               </div>
             )}
 

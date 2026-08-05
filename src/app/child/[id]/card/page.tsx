@@ -77,8 +77,10 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
             {/* 최근 내역 */}
             <p className="mb-2 text-sm font-extrabold text-[var(--color-text)]">최근 사용</p>
             {(txs ?? []).length === 0 ? (
-              <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-8 text-center text-sm text-[var(--color-muted)]">
-                아직 사용 내역이 없어요.
+              <div className="rounded-[16px] bg-[var(--monari-surface-soft)] py-10 text-center">
+                <p className="text-[28px] mb-2">🧾</p>
+                <p className="text-sm font-semibold text-[var(--monari-ink)]">아직 사용 내역이 없어요</p>
+                <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">카드를 사용하면 여기에 바로 기록돼요</p>
               </div>
             ) : (
               <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
