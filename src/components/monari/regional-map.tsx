@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import type { Map as LeafletMap, Layer } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { formatWon } from "@/lib/format";
+import { loadSubMunicipalitiesRaw } from "@/lib/region-loader";
 
 type RegionStats = { avgAllowance: number; avgSavingsRate: number; sampleSize: number };
 type MapMode = "allowance" | "spending" | "savings";
@@ -66,9 +68,10 @@ function lerpColor(t: number, from: [number,number,number], to: [number,number,n
 
 export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<unknown>(null);
-  const locationMarkerRef = useRef<unknown>(null);
-  const geoLayerRef = useRef<unknown>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const locationMarkerRef = useRef<Layer | null>(null);
+  // Structural type: only the setStyle method is used from geoLayerRef
+  const geoLayerRef = useRef<{ setStyle: (fn: (f: unknown) => Record<string, unknown>) => void } | null>(null);
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState(false);
   const [mapError, setMapError] = useState(false);
@@ -133,14 +136,12 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
       }).addTo(map);
 
       try {
-        const res = await fetch(
-          "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-submunicipalities-2018-topo.json"
-        );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const topo = await res.json();
+        // Use shared cache from region-loader — avoids double-fetching the 4MB TopoJSON
+        const [topo, { feature }] = await Promise.all([
+          loadSubMunicipalitiesRaw(),
+          import("topojson-client"),
+        ]);
         if (destroyed) return;
-
-        const { feature } = await import("topojson-client");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const geojson = feature(topo as any, (topo as any).objects.skorea_submunicipalities_2018_geo);
 
@@ -239,8 +240,7 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
     return () => {
       destroyed = true;
       if (mapRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (mapRef.current as any).remove();
+        mapRef.current.remove();
         mapRef.current = null;
         geoLayerRef.current = null;
         locationMarkerRef.current = null;
@@ -262,7 +262,7 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         if (!map) { setLocating(false); return; }
 
         if (locationMarkerRef.current) {
-          (locationMarkerRef.current as L.Layer).remove();
+          locationMarkerRef.current.remove();
         }
 
         const icon = L.divIcon({

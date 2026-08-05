@@ -17,6 +17,19 @@ const SUBMUNI_URL =
 // Promise locks prevent duplicate concurrent fetches of the same large TopoJSON
 let muniCachePromise: Promise<RegionEntry[]> | null = null;
 let submuniCachePromise: Promise<RegionEntry[]> | null = null;
+// Raw TopoJSON promise shared with the map component to avoid double-fetching the 4MB file
+let submuniRawPromise: Promise<unknown> | null = null;
+
+/** Exported so the map component can share the same cached raw TopoJSON fetch. */
+export function loadSubMunicipalitiesRaw(): Promise<unknown> {
+  if (!submuniRawPromise) {
+    submuniRawPromise = fetch(SUBMUNI_URL).then(res => {
+      if (!res.ok) throw new Error(`submunicipalities fetch failed: HTTP ${res.status}`);
+      return res.json();
+    });
+  }
+  return submuniRawPromise;
+}
 
 async function fetchMunicipalities(): Promise<RegionEntry[]> {
   const [res, { feature }] = await Promise.all([fetch(MUNI_URL), import("topojson-client")]);
@@ -33,12 +46,9 @@ async function fetchMunicipalities(): Promise<RegionEntry[]> {
 }
 
 async function fetchSubMunicipalities(): Promise<RegionEntry[]> {
-  const [res, { feature }] = await Promise.all([fetch(SUBMUNI_URL), import("topojson-client")]);
-  if (!res.ok) throw new Error(`submunicipalities fetch failed: HTTP ${res.status}`);
+  const [topo, { feature }] = await Promise.all([loadSubMunicipalitiesRaw(), import("topojson-client")]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const topo = (await res.json()) as any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const geo = feature(topo, topo.objects.skorea_submunicipalities_2018_geo) as any;
+  const geo = feature(topo as any, (topo as any).objects.skorea_submunicipalities_2018_geo) as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return geo.features.map((f: any) => ({
     code: (f.properties?.code ?? "").toString(),

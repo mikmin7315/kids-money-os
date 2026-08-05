@@ -80,7 +80,7 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
     getSigungusForSido(currentRegion).then(async (result) => {
       setSigungus(result);
       if (currentSigungu) {
-        const entry = result.find((e) => e.name === currentSigungu);
+        const entry = result.find((e) => e.name.trim().normalize() === currentSigungu.trim().normalize());
         if (entry && currentDong) {
           const dongResult = await getDongsForSigungu(entry.code);
           setDongs(dongResult);
