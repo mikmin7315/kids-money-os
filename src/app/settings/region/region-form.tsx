@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect, useCallback } from "react";
+import { useState, useTransition, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { updateRegionAction } from "@/actions/management";
@@ -67,6 +67,8 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
   const [sigungus, setSigungus] = useState<RegionEntry[]>([]);
   const [dongs, setDongs] = useState<string[]>([]);
   const [loadingLevel, setLoadingLevel] = useState<"sigungu" | "dong" | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const dongFetchToken = useRef(0);
 
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
@@ -90,21 +92,31 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
 
   const fetchSigungus = useCallback(async (newSido: string) => {
     setLoadingLevel("sigungu");
+    setLoadError(null);
     try {
       const result = await getSigungusForSido(newSido);
       setSigungus(result);
+    } catch {
+      setLoadError("시/군/구 목록을 불러오지 못했어요. 다시 시도해 주세요.");
     } finally {
       setLoadingLevel(null);
     }
   }, []);
 
   const fetchDongs = useCallback(async (sigungCode: string) => {
+    // Serial token: ignore responses from superseded requests
+    const token = ++dongFetchToken.current;
     setLoadingLevel("dong");
+    setLoadError(null);
     try {
       const result = await getDongsForSigungu(sigungCode);
+      if (token !== dongFetchToken.current) return;
       setDongs(result);
+    } catch {
+      if (token !== dongFetchToken.current) return;
+      setLoadError("읍/면/동 목록을 불러오지 못했어요. 다시 시도해 주세요.");
     } finally {
-      setLoadingLevel(null);
+      if (token === dongFetchToken.current) setLoadingLevel(null);
     }
   }, []);
 
@@ -255,6 +267,12 @@ export function RegionForm({ currentRegion, currentSigungu, currentDong, regions
         >
           {isPending ? "저장 중…" : "저장하기"}
         </button>
+      )}
+
+      {loadError && (
+        <p className="text-center text-[13px] font-semibold text-red-500">
+          {loadError}
+        </p>
       )}
 
       {message && (

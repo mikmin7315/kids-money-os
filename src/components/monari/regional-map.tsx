@@ -38,22 +38,22 @@ const MODE_CONFIG: Record<MapMode, { label: string; getValue: (s: RegionStats) =
     label: "용돈",
     getValue: (s) => s.avgAllowance,
     format: (v) => formatWon(v),
-    colorFrom: [199, 210, 254], // indigo-200
-    colorTo:   [67,  56,  202], // indigo-700
+    colorFrom: [199, 210, 254],
+    colorTo:   [67,  56,  202],
   },
   spending: {
     label: "지출",
     getValue: (s) => Math.round(s.avgAllowance * (1 - s.avgSavingsRate)),
     format: (v) => formatWon(v),
-    colorFrom: [254, 202, 202], // red-200
-    colorTo:   [185,  28,  28], // red-700
+    colorFrom: [254, 202, 202],
+    colorTo:   [185,  28,  28],
   },
   savings: {
     label: "저축률",
     getValue: (s) => s.avgSavingsRate,
     format: (v) => `${Math.round(v * 100)}%`,
-    colorFrom: [167, 243, 208], // green-200
-    colorTo:   [4,  120,  87],  // green-700
+    colorFrom: [167, 243, 208],
+    colorTo:   [4,  120,  87],
   },
 };
 
@@ -71,7 +71,19 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
   const geoLayerRef = useRef<unknown>(null);
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState(false);
+  const [mapError, setMapError] = useState(false);
   const [mode, setMode] = useState<MapMode>("allowance");
+
+  // Refs for values read inside Leaflet event handler closures (avoids stale captures)
+  const modeRef = useRef<MapMode>(mode);
+  const regionalDataRef = useRef(regionalData);
+  const userDongRef = useRef(userDong);
+  const userRegionRef = useRef(userRegion);
+
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { regionalDataRef.current = regionalData; }, [regionalData]);
+  useEffect(() => { userDongRef.current = userDong; }, [userDong]);
+  useEffect(() => { userRegionRef.current = userRegion; }, [userRegion]);
 
   // 모드 바뀌면 레이어 스타일 갱신
   useEffect(() => {
@@ -124,6 +136,7 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         const res = await fetch(
           "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-submunicipalities-2018-topo.json"
         );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const topo = await res.json();
         if (destroyed) return;
 
@@ -131,8 +144,9 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const geojson = feature(topo as any, (topo as any).objects.skorea_submunicipalities_2018_geo);
 
-        const cfg = MODE_CONFIG[mode];
-        const values = Object.values(regionalData).map(s => cfg.getValue(s)).filter(v => v > 0);
+        // Read current mode from ref — avoids stale closure if user switched mode during fetch
+        const cfg = MODE_CONFIG[modeRef.current];
+        const values = Object.values(regionalDataRef.current).map(s => cfg.getValue(s)).filter(v => v > 0);
         const min = values.length ? Math.min(...values) : 0;
         const max = values.length ? Math.max(...values) : 1;
 
@@ -142,8 +156,8 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
             const code = (feature?.properties?.code ?? "").toString();
             const dongName: string = feature?.properties?.name ?? "";
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
-            const stats = province ? (regionalData[province] ?? null) : null;
-            const isMyDong = !!(userDong && dongName === userDong && province === userRegion);
+            const stats = province ? (regionalDataRef.current[province] ?? null) : null;
+            const isMyDong = !!(userDongRef.current && dongName === userDongRef.current && province === userRegionRef.current);
             const hasData = stats !== null && cfg.getValue(stats) > 0;
             const t = hasData ? (cfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
 
@@ -158,11 +172,15 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
             const code = (feature?.properties?.code ?? "").toString();
             const name: string = feature?.properties?.name ?? "";
             const province = PROVINCE_CODE[code.substring(0, 2)] ?? null;
-            const isMyDong = !!(userDong && name === userDong && province === userRegion);
 
             layer.on("mouseover", () => {
-              const stats = province ? (regionalData[province] ?? null) : null;
-              const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
+              // Read all mutable values from refs — not stale mount-time closures
+              const currentDong = userDongRef.current;
+              const currentRegion = userRegionRef.current;
+              const currentData = regionalDataRef.current;
+              const isMyDong = !!(currentDong && name === currentDong && province === currentRegion);
+              const stats = province ? (currentData[province] ?? null) : null;
+              const activeCfg = MODE_CONFIG[modeRef.current];
               const hasData = stats !== null && activeCfg.getValue(stats) > 0;
 
               const html = [
@@ -181,16 +199,21 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).setStyle({ fillOpacity: 0.95, weight: 2.5, color: "#6366f1" });
             });
+
             layer.on("mouseout", () => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).closePopup();
-              const stats = province ? (regionalData[province] ?? null) : null;
-              const activeCfg = MODE_CONFIG[(geoLayerRef.current as { _activeMode?: MapMode })?._activeMode ?? "allowance"];
+              const currentDong = userDongRef.current;
+              const currentRegion = userRegionRef.current;
+              const currentData = regionalDataRef.current;
+              const isMyDong = !!(currentDong && name === currentDong && province === currentRegion);
+              const stats = province ? (currentData[province] ?? null) : null;
+              const activeCfg = MODE_CONFIG[modeRef.current];
               const hasData = stats !== null && activeCfg.getValue(stats) > 0;
-              const values = Object.values(regionalData).map(s => activeCfg.getValue(s)).filter(v => v > 0);
-              const min = values.length ? Math.min(...values) : 0;
-              const max = values.length ? Math.max(...values) : 1;
-              const t = hasData ? (activeCfg.getValue(stats!) - min) / Math.max(max - min, 1) : 0;
+              const vals = Object.values(currentData).map(s => activeCfg.getValue(s)).filter(v => v > 0);
+              const mn = vals.length ? Math.min(...vals) : 0;
+              const mx = vals.length ? Math.max(...vals) : 1;
+              const t = hasData ? (activeCfg.getValue(stats!) - mn) / Math.max(mx - mn, 1) : 0;
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (layer as any).setStyle({
                 fillColor: isMyDong ? "#fef3c7" : (hasData ? lerpColor(t, activeCfg.colorFrom, activeCfg.colorTo) : "#e2e8f0"),
@@ -202,11 +225,12 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
           },
         }).addTo(map);
 
-        // 현재 모드를 레이어에 태그 (popup에서 읽기 위해)
-        (geoLayer as unknown as { _activeMode: MapMode })._activeMode = mode;
         geoLayerRef.current = geoLayer;
-      } catch {
-        // GeoJSON 로드 실패
+      } catch (err) {
+        if (!destroyed) {
+          console.error("[RegionalMap] 지도 로드 실패:", err);
+          setMapError(true);
+        }
       }
 
       mapRef.current = map;
@@ -219,17 +243,11 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
         (mapRef.current as any).remove();
         mapRef.current = null;
         geoLayerRef.current = null;
+        locationMarkerRef.current = null;
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);  // 지도는 최초 1회만 초기화
-
-  // 모드 변경 시 레이어 태그 갱신
-  useEffect(() => {
-    if (geoLayerRef.current) {
-      (geoLayerRef.current as unknown as { _activeMode: MapMode })._activeMode = mode;
-    }
-  }, [mode]);
 
   const goToMyLocation = useCallback(() => {
     if (!navigator.geolocation) return;
@@ -298,6 +316,19 @@ export function RegionalMap({ regionalData, userRegion, userDong }: Props) {
       {/* 지도 */}
       <div style={{ position: "relative", height: 380, borderRadius: 20, overflow: "hidden" }}>
         <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+
+        {/* 지도 로드 실패 */}
+        {mapError && (
+          <div style={{
+            position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+            background: "var(--monari-surface-soft)", borderRadius: 20,
+            flexDirection: "column", gap: 8,
+          }}>
+            <span style={{ fontSize: 28 }}>🗺️</span>
+            <p style={{ fontSize: 13, color: "var(--monari-ink-muted)", margin: 0 }}>지도를 불러오지 못했어요</p>
+            <p style={{ fontSize: 11, color: "var(--monari-ink-muted)", margin: 0 }}>잠시 후 새로고침해 주세요</p>
+          </div>
+        )}
 
         {/* 현위치 버튼 */}
         <button

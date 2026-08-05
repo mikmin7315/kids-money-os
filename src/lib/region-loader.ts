@@ -14,37 +14,46 @@ const MUNI_URL =
 const SUBMUNI_URL =
   "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-submunicipalities-2018-topo.json";
 
-let muniCache: RegionEntry[] | null = null;
-let submuniCache: RegionEntry[] | null = null;
+// Promise locks prevent duplicate concurrent fetches of the same large TopoJSON
+let muniCachePromise: Promise<RegionEntry[]> | null = null;
+let submuniCachePromise: Promise<RegionEntry[]> | null = null;
 
-async function loadMunicipalities(): Promise<RegionEntry[]> {
-  if (muniCache) return muniCache;
+async function fetchMunicipalities(): Promise<RegionEntry[]> {
   const [res, { feature }] = await Promise.all([fetch(MUNI_URL), import("topojson-client")]);
+  if (!res.ok) throw new Error(`municipalities fetch failed: HTTP ${res.status}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const topo = (await res.json()) as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const geo = feature(topo, topo.objects.skorea_municipalities_2018_geo) as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  muniCache = geo.features.map((f: any) => ({
+  return geo.features.map((f: any) => ({
     code: (f.properties?.code ?? "").toString(),
     name: (f.properties?.name ?? "") as string,
   }));
-  return muniCache!;
 }
 
-async function loadSubMunicipalities(): Promise<RegionEntry[]> {
-  if (submuniCache) return submuniCache;
+async function fetchSubMunicipalities(): Promise<RegionEntry[]> {
   const [res, { feature }] = await Promise.all([fetch(SUBMUNI_URL), import("topojson-client")]);
+  if (!res.ok) throw new Error(`submunicipalities fetch failed: HTTP ${res.status}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const topo = (await res.json()) as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const geo = feature(topo, topo.objects.skorea_submunicipalities_2018_geo) as any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submuniCache = geo.features.map((f: any) => ({
+  return geo.features.map((f: any) => ({
     code: (f.properties?.code ?? "").toString(),
     name: (f.properties?.name ?? "") as string,
   }));
-  return submuniCache!;
+}
+
+function loadMunicipalities(): Promise<RegionEntry[]> {
+  if (!muniCachePromise) muniCachePromise = fetchMunicipalities();
+  return muniCachePromise;
+}
+
+function loadSubMunicipalities(): Promise<RegionEntry[]> {
+  if (!submuniCachePromise) submuniCachePromise = fetchSubMunicipalities();
+  return submuniCachePromise;
 }
 
 export async function getSigungusForSido(sido: string): Promise<RegionEntry[]> {
