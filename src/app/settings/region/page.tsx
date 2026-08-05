@@ -10,7 +10,14 @@ export const dynamic = "force-dynamic";
 
 export default async function RegionPage() {
   const auth = await requireParentSession();
-  const currentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
+  const profile = auth.profile as {
+    region?: string | null;
+    region_sigungu?: string | null;
+    region_dong?: string | null;
+  } | null;
+  const currentRegion = profile?.region ?? null;
+  const currentSigungu = profile?.region_sigungu ?? null;
+  const currentDong = profile?.region_dong ?? null;
 
   return (
     <AppNavShell>
@@ -27,7 +34,12 @@ export default async function RegionPage() {
         <section className="mb-5">
           <SectionTitle>지역 선택</SectionTitle>
           <div className="mt-3">
-            <RegionForm currentRegion={currentRegion} regions={REGIONS} />
+            <RegionForm
+              currentRegion={currentRegion}
+              currentSigungu={currentSigungu}
+              currentDong={currentDong}
+              regions={REGIONS}
+            />
           </div>
         </section>
 
@@ -40,7 +52,7 @@ export default async function RegionPage() {
               <p className="text-[13px] font-bold text-[var(--monari-ink)] mb-1">개인정보 안내</p>
               <ul className="space-y-1">
                 {[
-                  "시/도 단위로만 수집됩니다.",
+                  "읍/면/동까지 선택할 수 있으며, 또래 비교는 시/도 단위로 이루어집니다.",
                   "통계 목적으로만 사용되며 개별 식별은 불가해요.",
                   "같은 지역에 최소 5명 이상일 때 동네 비교가 활성화돼요.",
                   "언제든 삭제할 수 있어요.",

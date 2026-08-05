@@ -1,24 +1,155 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { updateRegionAction } from "@/actions/management";
+import { getSigungusForSido, getDongsForSigungu } from "@/lib/region-loader";
+import type { RegionEntry } from "@/lib/region-loader";
 
-export function RegionForm({ currentRegion, regions }: { currentRegion: string | null; regions: readonly string[] }) {
-  const [selected, setSelected] = useState<string | null>(currentRegion);
+interface Props {
+  currentRegion: string | null;
+  currentSigungu: string | null;
+  currentDong: string | null;
+  regions: readonly string[];
+}
+
+function Spinner() {
+  return (
+    <div className="flex justify-center py-6">
+      <svg
+        className="animate-spin"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="var(--monari-hero)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      >
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+      </svg>
+    </div>
+  );
+}
+
+function RowButton({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center justify-between px-4 py-3.5 text-left transition active:scale-[0.99]"
+    >
+      <span
+        className="text-[14px] font-semibold"
+        style={{ color: selected ? "var(--monari-hero)" : "var(--monari-ink)" }}
+      >
+        {label}
+      </span>
+      {selected && <Check size={17} className="text-[var(--monari-hero)] shrink-0" />}
+    </button>
+  );
+}
+
+export function RegionForm({ currentRegion, currentSigungu, currentDong, regions }: Props) {
+  const [sido, setSido] = useState<string | null>(currentRegion);
+  const [sigunguName, setSigunguName] = useState<string | null>(currentSigungu);
+  const [dongName, setDongName] = useState<string | null>(currentDong);
+
+  const [sigungus, setSigungus] = useState<RegionEntry[]>([]);
+  const [dongs, setDongs] = useState<string[]>([]);
+  const [loadingLevel, setLoadingLevel] = useState<"sigungu" | "dong" | null>(null);
+
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  function handleSelect(region: string) {
-    setSelected((prev) => (prev === region ? null : region));
+  // Load initial data if the user already has a selection
+  useEffect(() => {
+    if (!currentRegion) return;
+    getSigungusForSido(currentRegion).then(async (result) => {
+      setSigungus(result);
+      if (currentSigungu) {
+        const entry = result.find((e) => e.name === currentSigungu);
+        if (entry && currentDong) {
+          const dongResult = await getDongsForSigungu(entry.code);
+          setDongs(dongResult);
+        }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchSigungus = useCallback(async (newSido: string) => {
+    setLoadingLevel("sigungu");
+    try {
+      const result = await getSigungusForSido(newSido);
+      setSigungus(result);
+    } finally {
+      setLoadingLevel(null);
+    }
+  }, []);
+
+  const fetchDongs = useCallback(async (sigungCode: string) => {
+    setLoadingLevel("dong");
+    try {
+      const result = await getDongsForSigungu(sigungCode);
+      setDongs(result);
+    } finally {
+      setLoadingLevel(null);
+    }
+  }, []);
+
+  function handleSidoSelect(r: string) {
+    const next = r === sido ? null : r;
+    setSido(next);
+    setSigunguName(null);
+    setDongName(null);
+    setSigungus([]);
+    setDongs([]);
+    setMessage(null);
+    if (next) fetchSigungus(next);
+  }
+
+  function handleSigungSelect(entry: RegionEntry) {
+    const next = entry.name === sigunguName ? null : entry.name;
+    setSigunguName(next);
+    setDongName(null);
+    setDongs([]);
+    setMessage(null);
+    if (next) fetchDongs(entry.code);
+  }
+
+  function handleDongSelect(name: string) {
+    setDongName((prev) => (prev === name ? null : name));
     setMessage(null);
   }
 
+  function handleClear() {
+    setSido(null);
+    setSigunguName(null);
+    setDongName(null);
+    setSigungus([]);
+    setDongs([]);
+    setMessage(null);
+  }
+
+  const hasChanged =
+    sido !== currentRegion ||
+    sigunguName !== (currentSigungu ?? null) ||
+    dongName !== (currentDong ?? null);
+
   function handleSave() {
     startTransition(async () => {
-      const result = await updateRegionAction(selected);
+      const result = await updateRegionAction(sido, sigunguName, dongName);
       if (result.ok) {
         setMessage("저장되었어요.");
         router.refresh();
@@ -28,39 +159,93 @@ export function RegionForm({ currentRegion, regions }: { currentRegion: string |
     });
   }
 
-  const hasChanged = selected !== currentRegion;
+  const anySelected = sido || sigunguName || dongName;
 
   return (
-    <div className="space-y-3">
-      <div className="monari-card divide-y divide-[var(--monari-line)]">
-        {regions.map((r) => (
-          <button
-            key={r}
-            type="button"
-            onClick={() => handleSelect(r)}
-            className="flex w-full items-center justify-between px-4 py-3.5 text-left transition active:scale-[0.99]"
-          >
-            <span
-              className="text-[14px] font-semibold"
-              style={{ color: selected === r ? "var(--monari-hero)" : "var(--monari-ink)" }}
-            >
-              {r}
-            </span>
-            {selected === r && <Check size={17} className="text-[var(--monari-hero)] shrink-0" />}
-          </button>
-        ))}
-
-        {selected && (
-          <button
-            type="button"
-            onClick={() => { setSelected(null); setMessage(null); }}
-            className="flex w-full items-center px-4 py-3.5 text-left"
-          >
-            <span className="text-[13px] text-[var(--monari-ink-muted)]">지역 정보 삭제</span>
-          </button>
-        )}
+    <div className="space-y-5">
+      {/* ── 시/도 ── */}
+      <div>
+        <p className="mb-2 px-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--monari-ink-muted)]">
+          시 · 도
+        </p>
+        <div className="monari-card divide-y divide-[var(--monari-line)]">
+          {regions.map((r) => (
+            <RowButton
+              key={r}
+              label={r}
+              selected={sido === r}
+              onClick={() => handleSidoSelect(r)}
+            />
+          ))}
+        </div>
       </div>
 
+      {/* ── 시/군/구 ── */}
+      {sido && (
+        <div>
+          <p className="mb-2 px-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--monari-ink-muted)]">
+            시 · 군 · 구
+          </p>
+          <div className="monari-card divide-y divide-[var(--monari-line)] max-h-72 overflow-y-auto">
+            {loadingLevel === "sigungu" ? (
+              <Spinner />
+            ) : sigungus.length === 0 ? (
+              <p className="px-4 py-4 text-[13px] text-[var(--monari-ink-muted)]">
+                데이터 없음
+              </p>
+            ) : (
+              sigungus.map((e) => (
+                <RowButton
+                  key={e.code}
+                  label={e.name}
+                  selected={sigunguName === e.name}
+                  onClick={() => handleSigungSelect(e)}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── 읍/면/동 ── */}
+      {sigunguName && (
+        <div>
+          <p className="mb-2 px-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--monari-ink-muted)]">
+            읍 · 면 · 동
+          </p>
+          <div className="monari-card divide-y divide-[var(--monari-line)] max-h-72 overflow-y-auto">
+            {loadingLevel === "dong" ? (
+              <Spinner />
+            ) : dongs.length === 0 ? (
+              <p className="px-4 py-4 text-[13px] text-[var(--monari-ink-muted)]">
+                데이터 없음
+              </p>
+            ) : (
+              dongs.map((name) => (
+                <RowButton
+                  key={name}
+                  label={name}
+                  selected={dongName === name}
+                  onClick={() => handleDongSelect(name)}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── 삭제 ── */}
+      {anySelected && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="w-full rounded-[14px] border border-[var(--monari-line)] py-3 text-[13px] font-semibold text-[var(--monari-ink-muted)] transition active:scale-[0.98]"
+        >
+          지역 정보 삭제
+        </button>
+      )}
+
+      {/* ── 저장 ── */}
       {hasChanged && (
         <button
           type="button"
@@ -73,7 +258,9 @@ export function RegionForm({ currentRegion, regions }: { currentRegion: string |
       )}
 
       {message && (
-        <p className="text-center text-[13px] font-semibold text-[var(--monari-hero)]">{message}</p>
+        <p className="text-center text-[13px] font-semibold text-[var(--monari-hero)]">
+          {message}
+        </p>
       )}
     </div>
   );

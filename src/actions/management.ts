@@ -908,7 +908,11 @@ export async function updateChildAction(input: {
 // 지역 설정
 // ────────────────────────────────────────────────────────────
 
-export async function updateRegionAction(region: string | null): Promise<ActionResult<void>> {
+export async function updateRegionAction(
+  region: string | null,
+  regionSigungu: string | null = null,
+  regionDong: string | null = null,
+): Promise<ActionResult<void>> {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
 
@@ -918,7 +922,7 @@ export async function updateRegionAction(region: string | null): Promise<ActionR
     const supabase = await getSupabaseServerClient();
     const { error } = await supabase
       .from("profiles")
-      .update({ region })
+      .update({ region, region_sigungu: regionSigungu, region_dong: regionDong })
       .eq("id", auth.user.id);
     if (error) throw error;
     revalidatePath("/settings");
