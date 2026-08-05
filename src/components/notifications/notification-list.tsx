@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { SectionTitle } from "@/components/monari/ui";
 import {
@@ -13,11 +14,15 @@ import { type AppNotification, mapNotificationRow } from "@/lib/supabase/notific
 
 const TYPE_ICON: Record<string, string> = {
   behavior_check_requested: "📝",
+  stale_behavior_approval: "⏰",
   behavior_approved: "✅",
   behavior_rejected: "❌",
+  daily_behavior_reminder: "📅",
   borrow_requested: "💸",
+  borrow_auto_approved: "✅",
   borrow_approved: "✅",
   borrow_rejected: "❌",
+  allowance_failed: "⚠️",
   monthly_settlement: "📊",
 };
 
@@ -50,7 +55,9 @@ type NotificationListProps = {
 
 function formatDate(iso: string) {
   const date = new Date(iso);
-  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  const now = new Date();
+  const prefix = date.getFullYear() !== now.getFullYear() ? `${date.getFullYear()}년 ` : "";
+  return `${prefix}${date.getMonth() + 1}월 ${date.getDate()}일`;
 }
 
 function isVisibleNotification(
@@ -158,7 +165,7 @@ export function NotificationList({
             type="button"
             onClick={() => markRead(unreadIds)}
             disabled={pending}
-            className="rounded-full border border-[var(--color-border)] bg-white/80 px-4 py-2 text-xs font-medium text-[var(--color-muted)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50"
+            className="rounded-full border border-[var(--monari-line-strong)] bg-white/80 px-4 py-3 text-xs font-medium text-[var(--monari-ink-soft)] transition hover:border-[var(--monari-hero)] hover:text-[var(--monari-hero)] disabled:opacity-50"
           >
             {pending ? "처리 중..." : `모두 읽음 (${unreadIds.length})`}
           </button>
@@ -238,7 +245,7 @@ function NotificationCard({
             <span className="h-2 w-2 rounded-full bg-rose-500" />
           )}
           {linkUrl && (
-            <span className="text-[10px] text-[var(--monari-ink-muted)] opacity-50">›</span>
+            <ChevronRight size={14} className="text-[var(--monari-ink-muted)] opacity-50" />
           )}
         </div>
       </div>
