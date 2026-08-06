@@ -6,6 +6,7 @@ import {
   Crown,
   FileText,
   History,
+  Lock,
   MapPin,
   Megaphone,
   MessageSquare,
@@ -224,6 +225,14 @@ export default async function SettingsPage() {
               iconColor="var(--monari-ink-soft)"
               label="알림 설정"
               sub="받을 알림 종류 선택"
+            />
+            <SettingsRow
+              href="/settings/app-lock"
+              icon={<Lock size={17} />}
+              iconBg="var(--monari-surface-soft)"
+              iconColor="var(--monari-ink-soft)"
+              label="앱 잠금"
+              sub="자동 잠금 · 생체인증"
             />
           </div>
         </section>

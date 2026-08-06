@@ -1,8 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
+import { AppLockProvider } from "@/components/auth/app-lock-provider";
 
 export default function Providers({ children }: { children: ReactNode }) {
-  // Keep this wrapper so query state, theme, or browser-side auth listeners can be added later.
-  return <>{children}</>;
+  return <AppLockProvider>{children}</AppLockProvider>;
 }
