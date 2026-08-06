@@ -25,6 +25,7 @@ export async function GET(request: Request) {
       }
     );
     const type = searchParams.get("type");
+    const next = searchParams.get("next") ?? "";
     const { data } = await supabase.auth.exchangeCodeForSession(code);
     if (data.user) {
       if (type === "recovery") {
@@ -39,6 +40,10 @@ export async function GET(request: Request) {
           .maybeSingle();
         if (!profile?.consent_at) {
           return NextResponse.redirect(`${origin}/onboarding/complete`);
+        }
+        // Existing user — return to the page that triggered the auth check.
+        if (next && next.startsWith("/")) {
+          return NextResponse.redirect(`${origin}${next}`);
         }
     }
   }

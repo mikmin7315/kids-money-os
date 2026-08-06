@@ -69,12 +69,17 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
   }
 }
 
-export async function signInWithGoogle(_state?: AuthFormState): Promise<AuthFormState> {
+export async function signInWithGoogle(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
+  const next = readString(formData, "next");
   const supabase = await getSupabaseServerClient();
   const siteUrl = getSiteUrl();
+  const callbackUrl =
+    next && next.startsWith("/")
+      ? `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`
+      : `${siteUrl}/auth/callback`;
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${siteUrl}/auth/callback` },
+    options: { redirectTo: callbackUrl },
   });
   if (error || !data.url) return { ok: false, message: "구글 로그인에 실패했습니다." };
   redirect(data.url);

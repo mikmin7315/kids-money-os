@@ -54,7 +54,7 @@ export default async function LoginPage({
           {/* Google 로그인 — 최우선 노출 */}
           <div className="rounded-[22px] border border-[var(--monari-line)] bg-[var(--monari-surface)] p-5 shadow-[var(--monari-shadow-card)]">
             <p className="mb-3 text-[13px] font-bold text-[var(--monari-ink-muted)]">빠른 시작</p>
-            <GoogleSignInButton />
+            <GoogleSignInButton next={next} />
             <p className="mt-2.5 text-center text-[11px] leading-5 text-[var(--monari-ink-muted)]">
               별도 비밀번호 없이 Google 계정으로 바로 시작해요
             </p>

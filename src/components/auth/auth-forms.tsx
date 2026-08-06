@@ -17,7 +17,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 const initial: AuthFormState = { ok: false, message: "" };
 type AuthTab = "social" | "phone" | "email";
 
-export function GoogleSignInButton() {
+export function GoogleSignInButton({ next = "" }: { next?: string }) {
   const [webState, webFormAction, webPending] = useActionState(signInWithGoogle, initial);
   const [isNative, setIsNative] = useState(false);
   const [pending, setPending] = useState(false);
@@ -72,6 +72,7 @@ export function GoogleSignInButton() {
   return (
     <div className="space-y-3">
       <form action={webFormAction}>
+        {next && <input type="hidden" name="next" value={next} />}
         <button type="submit" disabled={webPending} className={secondaryButtonClass}>
           <GoogleIcon />
           {webPending ? "Google 연결 중..." : "Google로 계속하기"}
