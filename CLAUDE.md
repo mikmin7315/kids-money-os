@@ -77,6 +77,7 @@ supabase/
 - Edge Function은 `CRON_SECRET` 환경변수 설정 시 `x-cron-secret` 헤더 검증
 - cron.sql에서 vault의 `cron_secret` 값을 헤더로 전달
 - Supabase vault에 `cron_secret`, `supabase_url`, `supabase_service_role_key` 저장 필요
+- 상세 설정·검증·트러블슈팅 → **[docs/cron-ops.md](docs/cron-ops.md)**
 
 #### 새 환경 크론 설정 체크리스트
 
