@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import webpush from "npm:web-push@3.6.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,6 +9,23 @@ const corsHeaders = {
 function getSecret(primaryName: string, fallbackName: string): string {
   return Deno.env.get(primaryName) ?? Deno.env.get(fallbackName) ?? "";
 }
+
+type ExecRow = {
+  status: string;
+  failure_reason: string | null;
+  allowance_rules: { child_id: string; title: string; children: { parent_id: string; name: string } } | null;
+};
+
+type PushSubRow = { user_id: string; endpoint: string; p256dh: string; auth: string };
+
+type NotifRow = {
+  parent_id: string;
+  child_id: string;
+  target: "parent";
+  type: string;
+  title: string;
+  body: string;
+};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -34,15 +52,11 @@ Deno.serve(async (req) => {
   const serviceRoleKey = getSecret("SUPABASE_SERVICE_ROLE_KEY", "supabase_service_role_key");
 
   if (!supabaseUrl || !serviceRoleKey) {
-    return new Response(JSON.stringify({ ok: false, error: "Missing Supabase function secrets." }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ ok: false, error: "Missing Supabase function secrets." }, 500);
   }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-  // Today's date in KST.
   const nowKst = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const targetDate = nowKst.toISOString().slice(0, 10);
 
@@ -51,25 +65,26 @@ Deno.serve(async (req) => {
   });
 
   if (error) {
-    return new Response(JSON.stringify({ ok: false, error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ ok: false, error: error.message }, 500);
   }
 
-  // Notify parents when scheduled allowance processing has failures.
   const result = data as { success: number; skipped: number; failed: number; errors: unknown[] };
-  if (result.failed > 0) {
-    const { data: failedExecs } = await supabase
-      .from("allowance_executions")
-      .select("allowance_rule_id, failure_reason, allowance_rules(child_id, title, children(parent_id))")
-      .eq("scheduled_date", targetDate)
-      .eq("status", "failed");
 
-    for (const exec of failedExecs ?? []) {
-      const rule = exec.allowance_rules as { child_id: string; title: string; children: { parent_id: string } };
-      if (!rule?.children?.parent_id) continue;
-      await supabase.from("notifications").insert({
+  // Query today's executions (success + failed) for notifications
+  const { data: todayExecs } = await supabase
+    .from("allowance_executions")
+    .select("status, failure_reason, allowance_rules(child_id, title, children(parent_id, name))")
+    .eq("scheduled_date", targetDate)
+    .in("status", ["success", "failed"]);
+
+  const notifications: NotifRow[] = [];
+
+  for (const exec of (todayExecs ?? []) as ExecRow[]) {
+    const rule = exec.allowance_rules;
+    if (!rule?.children?.parent_id) continue;
+
+    if (exec.status === "failed") {
+      notifications.push({
         parent_id: rule.children.parent_id,
         child_id: rule.child_id,
         target: "parent",
@@ -77,11 +92,61 @@ Deno.serve(async (req) => {
         title: "정기 용돈 지급 실패",
         body: `'${rule.title}' 용돈 지급에 실패했어요. 사유: ${exec.failure_reason ?? "잔액 부족"}. 지갑을 충전해주세요.`,
       });
+    } else if (exec.status === "success") {
+      notifications.push({
+        parent_id: rule.children.parent_id,
+        child_id: rule.child_id,
+        target: "parent",
+        type: "allowance_paid",
+        title: "용돈 지급 완료",
+        body: `${rule.children.name}에게 '${rule.title}' 용돈이 지급됐어요!`,
+      });
     }
   }
 
-  return new Response(
-    JSON.stringify({ ok: true, date: targetDate, ...result }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-  );
+  if (notifications.length > 0) {
+    await supabase.from("notifications").insert(notifications);
+  }
+
+  // Send push notifications
+  let pushesSent = 0;
+  const vapidSubject = getSecret("VAPID_SUBJECT", "vapid_subject");
+  const vapidPublicKey = getSecret("VAPID_PUBLIC_KEY", "vapid_public_key");
+  const vapidPrivateKey = getSecret("VAPID_PRIVATE_KEY", "vapid_private_key");
+
+  if (vapidSubject && vapidPublicKey && vapidPrivateKey && notifications.length > 0) {
+    webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+
+    const { data: subs } = await supabase
+      .from("push_subscriptions")
+      .select("user_id,endpoint,p256dh,auth");
+
+    const subsByParent = new Map<string, PushSubRow[]>();
+    for (const sub of (subs ?? []) as PushSubRow[]) {
+      const list = subsByParent.get(sub.user_id) ?? [];
+      list.push(sub);
+      subsByParent.set(sub.user_id, list);
+    }
+
+    const pushResults = await Promise.allSettled(
+      notifications.flatMap((notif) =>
+        (subsByParent.get(notif.parent_id) ?? []).map((sub) =>
+          webpush.sendNotification(
+            { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+            JSON.stringify({ title: notif.title, body: notif.body, target: "parent", childId: notif.child_id }),
+          )
+        )
+      ),
+    );
+    pushesSent = pushResults.filter((r) => r.status === "fulfilled").length;
+  }
+
+  return jsonResponse({ ok: true, date: targetDate, ...result, notificationsCreated: notifications.length, pushesSent });
 });
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}

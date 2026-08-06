@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import webpush from "npm:web-push@3.6.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,6 +23,9 @@ function verifyCronSecret(req: Request): boolean {
   return diff === 0;
 }
 
+type ChildRow = { id: string; parent_id: string; name: string };
+type PushSubRow = { user_id: string; endpoint: string; p256dh: string; auth: string };
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
@@ -31,10 +35,7 @@ Deno.serve(async (req) => {
   const serviceRoleKey = getSecret("SUPABASE_SERVICE_ROLE_KEY", "supabase_service_role_key");
 
   if (!supabaseUrl || !serviceRoleKey) {
-    return new Response(JSON.stringify({ ok: false, error: "Missing Supabase function secrets." }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ ok: false, error: "Missing Supabase function secrets." }, 500);
   }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -51,13 +52,67 @@ Deno.serve(async (req) => {
 
   if (error) {
     console.error("monthly-settlement RPC failed:", error);
-    return new Response(JSON.stringify({ ok: false, error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ ok: false, error: error.message }, 500);
   }
 
-  return new Response(JSON.stringify(data), {
+  // Notify each parent that interest has been settled for their children
+  const { data: children } = await supabase
+    .from("children")
+    .select("id, parent_id, name")
+    .is("deleted_at", null);
+
+  const notifications = ((children ?? []) as ChildRow[]).map((child) => ({
+    parent_id: child.parent_id,
+    child_id: child.id,
+    target: "parent" as const,
+    type: "interest_paid",
+    title: "이자 정산 완료",
+    body: `${child.name}의 ${month}월 이자가 지급됐어요. 통장을 확인해보세요!`,
+  }));
+
+  if (notifications.length > 0) {
+    await supabase.from("notifications").insert(notifications);
+  }
+
+  // Send push notifications
+  let pushesSent = 0;
+  const vapidSubject = getSecret("VAPID_SUBJECT", "vapid_subject");
+  const vapidPublicKey = getSecret("VAPID_PUBLIC_KEY", "vapid_public_key");
+  const vapidPrivateKey = getSecret("VAPID_PRIVATE_KEY", "vapid_private_key");
+
+  if (vapidSubject && vapidPublicKey && vapidPrivateKey && notifications.length > 0) {
+    webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+
+    const { data: subs } = await supabase
+      .from("push_subscriptions")
+      .select("user_id,endpoint,p256dh,auth");
+
+    const subsByParent = new Map<string, PushSubRow[]>();
+    for (const sub of (subs ?? []) as PushSubRow[]) {
+      const list = subsByParent.get(sub.user_id) ?? [];
+      list.push(sub);
+      subsByParent.set(sub.user_id, list);
+    }
+
+    const pushResults = await Promise.allSettled(
+      notifications.flatMap((notif) =>
+        (subsByParent.get(notif.parent_id) ?? []).map((sub) =>
+          webpush.sendNotification(
+            { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+            JSON.stringify({ title: notif.title, body: notif.body, target: "parent", childId: notif.child_id }),
+          )
+        )
+      ),
+    );
+    pushesSent = pushResults.filter((r) => r.status === "fulfilled").length;
+  }
+
+  return jsonResponse({ ...(data as object), notificationsCreated: notifications.length, pushesSent });
+});
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
-});
+}
