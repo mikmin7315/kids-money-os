@@ -54,6 +54,7 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
       email,
       password,
       options: {
+        emailRedirectTo: `${getSiteUrl()}/auth/callback`,
         data: {
           name,
           consent_version: CURRENT_CONSENT_VERSION,
@@ -62,8 +63,7 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
       },
     });
     if (error) return { ok: false, message: error.message };
-    revalidatePath("/");
-    return { ok: true, message: "계정이 생성됐습니다. 이메일 인증 후 로그인해주세요." };
+    return { ok: true, message: "인증 메일을 보냈습니다. 메일함에서 링크를 누르면 바로 시작돼요." };
   } catch {
     return { ok: false, message: "계정 생성에 실패했습니다." };
   }

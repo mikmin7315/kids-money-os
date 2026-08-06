@@ -31,17 +31,16 @@ export async function GET(request: Request) {
       if (type === "recovery") {
         return NextResponse.redirect(`${origin}/login/reset/confirm`);
       }
-        // Check DB state rather than a fragile time window: new OAuth users have no
-        // consent_at because the trigger creates the profile but consent is set later.
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("consent_at")
-          .eq("id", data.user.id)
-          .maybeSingle();
-        if (!profile?.consent_at) {
+        // Determine routing: new OAuth user (no consent_at) → onboarding.
+        // New email user (consent_at set by trigger, but no children yet) → onboarding.
+        // Returning user (has children) → next or home.
+        const [profileResult, childResult] = await Promise.all([
+          supabase.from("profiles").select("consent_at").eq("id", data.user.id).maybeSingle(),
+          supabase.from("children").select("id", { count: "exact", head: true }).eq("parent_id", data.user.id),
+        ]);
+        if (!profileResult.data?.consent_at || !childResult.count) {
           return NextResponse.redirect(`${origin}/onboarding/complete`);
         }
-        // Existing user — return to the page that triggered the auth check.
         if (next && next.startsWith("/")) {
           return NextResponse.redirect(`${origin}${next}`);
         }
