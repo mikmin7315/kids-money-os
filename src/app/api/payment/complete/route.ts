@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
   const periodEnd = new Date(now);
   periodEnd.setDate(periodEnd.getDate() + 31);
 
-  // 결제 기록 저장 (중복 paymentId는 무시)
+  // 결제 기록 저장
   const { error: recordError } = await adminSupabase.from("payment_records").insert({
     user_id: auth.user!.id,
     payment_id: paymentId,
@@ -59,8 +59,21 @@ export async function POST(req: NextRequest) {
     period_end: periodEnd.toISOString(),
   });
 
-  if (recordError && recordError.code !== "23505") {
-    return NextResponse.json({ message: "결제 기록 저장 실패" }, { status: 500 });
+  if (recordError) {
+    if (recordError.code === "23505") {
+      // paymentId가 이미 존재 — 다른 사용자의 결제 재사용 시도 차단
+      const { data: existing } = await adminSupabase
+        .from("payment_records")
+        .select("user_id")
+        .eq("payment_id", paymentId)
+        .single();
+      if (!existing || existing.user_id !== auth.user!.id) {
+        return NextResponse.json({ message: "이미 처리된 결제입니다." }, { status: 400 });
+      }
+      // 동일 사용자 멱등 재시도는 허용 (아래 update 계속 진행)
+    } else {
+      return NextResponse.json({ message: "결제 기록 저장 실패" }, { status: 500 });
+    }
   }
 
   // 구독 티어·만료일 업데이트
