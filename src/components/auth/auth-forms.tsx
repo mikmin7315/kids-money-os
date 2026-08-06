@@ -84,7 +84,7 @@ export function GoogleSignInButton() {
   );
 }
 
-export function PhoneOtpForm() {
+export function PhoneOtpForm({ next = "" }: { next?: string }) {
   const [sendState, sendAction, sendPending] = useActionState(sendPhoneOtp, initial);
   const [verifyState, verifyAction, verifyPending] = useActionState(verifyPhoneOtp, initial);
   const phoneId = useId();
@@ -117,6 +117,7 @@ export function PhoneOtpForm() {
   return (
     <form action={verifyAction} className="space-y-4">
       <input type="hidden" name="phone" value={phone} />
+      {next && <input type="hidden" name="next" value={next} />}
       <div className="rounded-2xl bg-[var(--monari-plus-bg)] px-4 py-3 text-sm leading-6 text-[var(--monari-ink-soft)]">
         <strong className="block text-[var(--monari-ink)]">{phone}</strong>
         문자로 받은 6자리 인증번호를 입력해주세요.
@@ -143,13 +144,14 @@ export function PhoneOtpForm() {
   );
 }
 
-export function SignInForm() {
+export function SignInForm({ next = "" }: { next?: string }) {
   const [state, action, pending] = useActionState(signInWithPassword, initial);
   const emailId = useId();
   const passwordId = useId();
 
   return (
     <form action={action} className="space-y-4">
+      {next && <input type="hidden" name="next" value={next} />}
       <FormField id={emailId} label="이메일">
         <input id={emailId} className={fieldClass} name="email" type="email" placeholder="parent@example.com" autoComplete="email" required />
       </FormField>

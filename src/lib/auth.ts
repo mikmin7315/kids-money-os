@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { hasCurrentConsent } from "@/lib/consent";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -38,7 +38,17 @@ export const getChildModeContext = cache(async () => {
 export async function requireParentSession() {
   const auth = await getAuthContext();
 
-  if (auth.isConfigured && !auth.user) redirect("/login");
+  if (auth.isConfigured && !auth.user) {
+    const h = await headers();
+    const pathname = h.get("x-pathname") ?? "";
+    const search = h.get("x-search") ?? "";
+    const current = pathname + search;
+    const loginUrl =
+      current && current !== "/" && !pathname.startsWith("/login")
+        ? `/login?next=${encodeURIComponent(current)}`
+        : "/login";
+    redirect(loginUrl);
+  }
 
   if (
     auth.isConfigured &&

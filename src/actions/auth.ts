@@ -13,20 +13,26 @@ export type AuthFormState = {
 export async function signInWithPassword(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const email = readString(formData, "email");
   const password = readString(formData, "password");
+  const next = readString(formData, "next");
 
   if (!email || !password) {
     return { ok: false, message: "이메일과 비밀번호를 입력해주세요." };
   }
 
+  let failed = false;
   try {
     const supabase = await getSupabaseServerClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { ok: false, message: "이메일 또는 비밀번호가 틀렸습니다." };
-    revalidatePath("/");
-    return { ok: true, message: "로그인 성공!" };
+    if (error) failed = true;
   } catch {
     return { ok: false, message: "로그인에 실패했습니다." };
   }
+
+  if (failed) return { ok: false, message: "이메일 또는 비밀번호가 틀렸습니다." };
+
+  // Redirect outside try/catch so Next.js NEXT_REDIRECT propagates correctly.
+  // Validate next is a relative path to prevent open redirect.
+  redirect(next && next.startsWith("/") ? next : "/");
 }
 
 export async function signUpWithPassword(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -93,18 +99,22 @@ export async function sendPhoneOtp(_: AuthFormState, formData: FormData): Promis
 export async function verifyPhoneOtp(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const phone = readString(formData, "phone");
   const token = readString(formData, "token");
+  const next = readString(formData, "next");
 
   if (!phone || !token) return { ok: false, message: "인증번호를 입력해주세요." };
 
+  let failed = false;
   try {
     const supabase = await getSupabaseServerClient();
     const { error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
-    if (error) return { ok: false, message: "인증번호가 틀렸습니다." };
-    revalidatePath("/");
-    return { ok: true, message: "로그인 성공!" };
+    if (error) failed = true;
   } catch {
     return { ok: false, message: "인증에 실패했습니다." };
   }
+
+  if (failed) return { ok: false, message: "인증번호가 틀렸습니다." };
+
+  redirect(next && next.startsWith("/") ? next : "/");
 }
 
 export async function signOut() {

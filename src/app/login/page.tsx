@@ -8,11 +8,13 @@ import { LoginTabs } from "@/components/auth/login-tabs";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ accountDeleted?: string; authError?: string }>;
+  searchParams: Promise<{ accountDeleted?: string; authError?: string; next?: string }>;
 }) {
   const params = await searchParams;
   const auth = await getAuthContext();
   if (auth.user) redirect("/");
+
+  const next = params.next ?? "";
 
   return (
     <div className="flex min-h-dvh flex-col bg-[var(--monari-bg)]">
@@ -66,7 +68,7 @@ export default async function LoginPage({
           </div>
 
           {/* 이메일 / 휴대폰 탭 */}
-          <LoginTabs />
+          <LoginTabs next={next} />
 
           {/* 알림 배너 */}
           {params.accountDeleted === "1" && (

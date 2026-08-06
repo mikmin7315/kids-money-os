@@ -5,7 +5,7 @@ import { PhoneOtpForm, SignInForm, SignUpForm } from "./auth-forms";
 
 type Tab = "email" | "phone";
 
-export function LoginTabs() {
+export function LoginTabs({ next = "" }: { next?: string }) {
   const [tab, setTab] = useState<Tab>("email");
   const [showSignUp, setShowSignUp] = useState(false);
 
@@ -39,7 +39,7 @@ export function LoginTabs() {
 
       {tab === "email" && !showSignUp && (
         <div className="space-y-4">
-          <SignInForm />
+          <SignInForm next={next} />
           <div className="flex items-center gap-3">
             <div className="h-px flex-1 bg-[var(--monari-line)]" />
             <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">처음이라면</span>
@@ -68,7 +68,7 @@ export function LoginTabs() {
         </div>
       )}
 
-      {tab === "phone" && <PhoneOtpForm />}
+      {tab === "phone" && <PhoneOtpForm next={next} />}
     </section>
   );
 }
