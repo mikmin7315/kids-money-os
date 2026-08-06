@@ -12,6 +12,7 @@ import {
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { countUnreadChildNotificationsAction } from "@/lib/supabase/actions/notifications";
+import { getPeerComparisonAction, type PeerComparisonData } from "@/actions/management";
 import { estimateInterest } from "@/lib/finance";
 import { formatWon, formatWonParts } from "@/lib/format";
 import type { BehaviorLog } from "@/lib/types";
@@ -42,6 +43,8 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const child = bundle.children.find((c) => c.id === id);
   const summary = dashboard.children.find((c) => c.child.id === id);
   if (!child || !summary) notFound();
+
+  const peerData = isParentOrAdmin ? await getPeerComparisonAction(child.birthYear) : null;
 
   const activeRules = bundle.behaviorRules.filter((r) => r.isActive);
   const childLogs = bundle.behaviorLogs.filter((l) => l.childId === id);
@@ -301,6 +304,18 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
                 <div className="mb-5">
                   <h2 className="mb-3" style={{ fontSize: 17, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.02em" }}>저금 달성률 🐷</h2>
                   <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
+                </div>
+              )}
+
+              {/* 또래 비교 */}
+              {peerData && !isNewChild && totalAllowance > 0 && (
+                <div className="mb-5">
+                  <PeerComparisonCard
+                    peer={peerData}
+                    childSaveRate={Math.round((totalSave / Math.max(totalAllowance, 1)) * 100)}
+                    childName={child.name}
+                    masked={masked}
+                  />
                 </div>
               )}
 
@@ -616,4 +631,84 @@ function completedAllRules(logs: BehaviorLog[], activeRuleIds: string[], date: s
     .filter((l) => l.date === date && (l.status === "approved" || l.status === "completed"))
     .map((l) => l.behaviorRuleId);
   return activeRuleIds.every((id) => dayApproved.includes(id));
+}
+
+function PeerComparisonCard({
+  peer, childSaveRate, childName, masked,
+}: {
+  peer: PeerComparisonData;
+  childSaveRate: number;
+  childName: string;
+  masked: boolean;
+}) {
+  const diff = childSaveRate - peer.avgSavingsRate;
+  const isAhead = diff >= 0;
+  const bar = (v: number) => Math.min(100, Math.max(0, v));
+
+  return (
+    <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(108,63,232,0.10)] border border-[#EDE9FE]">
+      {/* 헤더 */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#F5F0FF]">
+        <div className="flex items-center gap-2">
+          <span style={{ fontSize: 20 }}>🗺️</span>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#1C1033" }}>
+            {peer.isRegional ? `${peer.regionLabel} 또래 비교` : "전국 또래 비교"}
+          </p>
+        </div>
+        <span style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8" }}>
+          {peer.sampleSize}명 참여
+        </span>
+      </div>
+
+      {/* 비교 바 */}
+      <div className="px-5 py-4 space-y-3">
+        {/* 또래 평균 */}
+        <div>
+          <div className="flex justify-between mb-1.5">
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#94A3B8" }}>또래 평균</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#94A3B8" }}>
+              {masked ? "••%" : `${peer.avgSavingsRate.toFixed(1)}%`}
+            </span>
+          </div>
+          <div className="h-2 w-full rounded-full bg-[#F1F5F9] overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${bar(peer.avgSavingsRate)}%`, background: "#CBD5E1" }}
+            />
+          </div>
+        </div>
+
+        {/* 우리 아이 */}
+        <div>
+          <div className="flex justify-between mb-1.5">
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#6C3FE8" }}>{childName}</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#6C3FE8" }}>
+              {masked ? "••%" : `${childSaveRate}%`}
+            </span>
+          </div>
+          <div className="h-2 w-full rounded-full bg-[#EDE9FE] overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${bar(childSaveRate)}%`, background: "linear-gradient(90deg, #6C3FE8, #A78BFA)" }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 결과 메시지 */}
+      {!masked && (
+        <div
+          className="flex items-center gap-2 px-5 py-3 border-t border-[#F5F0FF]"
+          style={{ background: isAhead ? "#F0FDF4" : "#FFF7ED" }}
+        >
+          <span style={{ fontSize: 18 }}>{isAhead ? "🌟" : "💪"}</span>
+          <p style={{ fontSize: 13, fontWeight: 700, color: isAhead ? "#15803D" : "#C2410C" }}>
+            {isAhead
+              ? `또래보다 ${diff.toFixed(1)}% 더 저금하고 있어요!`
+              : `또래보다 ${Math.abs(diff).toFixed(1)}% 낮아요. 조금 더 도전해봐요!`}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }

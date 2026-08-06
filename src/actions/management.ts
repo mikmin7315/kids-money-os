@@ -934,6 +934,74 @@ export async function updateRegionAction(
   }
 }
 
+// ────────────────────────────────────────────────────────────
+// 지역 또래 비교
+// ────────────────────────────────────────────────────────────
+
+export type PeerComparisonData = {
+  avgSavingsRate: number;
+  sampleSize: number;
+  isRegional: boolean;
+  regionLabel: string;
+};
+
+function getAgeGroup(birthYear?: number | null): "7-9" | "10-13" | "14-16" {
+  const age = birthYear ? new Date().getFullYear() - birthYear : 10;
+  if (age <= 9) return "7-9";
+  if (age <= 13) return "10-13";
+  return "14-16";
+}
+
+export async function getPeerComparisonAction(
+  birthYear: number | null | undefined,
+): Promise<PeerComparisonData | null> {
+  const auth = await requireParentSession();
+  if (!auth.user) return null;
+
+  const ageGroup = getAgeGroup(birthYear);
+  const region = (auth.profile as { region?: string | null } | null)?.region ?? null;
+  const supabase = await getSupabaseServerClient();
+
+  if (region) {
+    const { data } = await supabase
+      .from("peer_stats")
+      .select("avg_savings_rate,sample_size")
+      .eq("age_group", ageGroup)
+      .eq("region", region)
+      .gte("sample_size", 2)
+      .order("week_start", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (data) {
+      return {
+        avgSavingsRate: Number(data.avg_savings_rate ?? 0),
+        sampleSize: Number(data.sample_size ?? 0),
+        isRegional: true,
+        regionLabel: region,
+      };
+    }
+  }
+
+  // 전국 데이터 폴백
+  const { data } = await supabase
+    .from("peer_stats")
+    .select("avg_savings_rate,sample_size")
+    .eq("age_group", ageGroup)
+    .is("region", null)
+    .gte("sample_size", 1)
+    .order("week_start", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!data) return null;
+
+  return {
+    avgSavingsRate: Number(data.avg_savings_rate ?? 0),
+    sampleSize: Number(data.sample_size ?? 0),
+    isRegional: false,
+    regionLabel: "전국",
+  };
+}
+
 export async function deleteChildAction(childId: string): Promise<ActionResult<void>> {
   const auth = await requireParentSession();
   if (!auth.user) return { ok: false, error: "부모 세션이 없습니다." };
