@@ -30,9 +30,7 @@ export async function signInWithPassword(_: AuthFormState, formData: FormData): 
 
   if (failed) return { ok: false, message: "이메일 또는 비밀번호가 틀렸습니다." };
 
-  // Redirect outside try/catch so Next.js NEXT_REDIRECT propagates correctly.
-  // Validate next is a relative path to prevent open redirect.
-  redirect(next && next.startsWith("/") ? next : "/");
+  redirect(isSafeInternalPath(next) ? next : "/");
 }
 
 export async function signUpWithPassword(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -119,7 +117,7 @@ export async function verifyPhoneOtp(_: AuthFormState, formData: FormData): Prom
 
   if (failed) return { ok: false, message: "인증번호가 틀렸습니다." };
 
-  redirect(next && next.startsWith("/") ? next : "/");
+  redirect(isSafeInternalPath(next) ? next : "/");
 }
 
 export async function signOut() {
@@ -132,6 +130,11 @@ export async function signOut() {
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
+}
+
+// Prevents open redirect via protocol-relative URLs like //evil.com
+function isSafeInternalPath(next: string): boolean {
+  return next.startsWith("/") && !next.startsWith("//");
 }
 
 function getSiteUrl() {
