@@ -5,6 +5,10 @@ import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle, getDashboardView } from "@/lib/data";
 import { estimateInterest } from "@/lib/finance";
 import { formatWon } from "@/lib/format";
+import type { TransactionType } from "@/lib/types";
+
+const BALANCE_PLUS: TransactionType[] = ["allowance", "reward", "interest", "unsave"];
+const BALANCE_MINUS: TransactionType[] = ["spend", "borrow", "save", "repay"];
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +38,30 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   const activeBorrow = bundle.borrowRequests.find(
     (r) => r.childId === id && (r.status === "approved" || r.status === "partial"),
   );
+
+  // 월별 잔액 추이 계산 (최근 6개월)
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const months: string[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(`${today}T00:00:00+09:00`);
+    d.setMonth(d.getMonth() - i);
+    months.push(d.toISOString().slice(0, 7));
+  }
+  const txsSorted = bundle.moneyTransactions
+    .filter((t) => t.childId === id)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  let running = 0;
+  let txIdx = 0;
+  const monthBalances = months.map((month) => {
+    while (txIdx < txsSorted.length && txsSorted[txIdx].date <= `${month}-99`) {
+      const tx = txsSorted[txIdx];
+      if (BALANCE_PLUS.includes(tx.type as TransactionType)) running += tx.amount;
+      else if (BALANCE_MINUS.includes(tx.type as TransactionType)) running -= tx.amount;
+      txIdx++;
+    }
+    return { month, balance: Math.max(0, running) };
+  });
 
   return (
     <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
@@ -95,6 +123,9 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         />
       </div>
 
+      {/* 잔액 추이 차트 */}
+      <BalanceHistoryChart monthBalances={monthBalances} />
+
       {/* 설명 */}
       <div className="detail-info-box">
         <p className="detail-info-title">💡 남긴 돈이란?</p>
@@ -122,6 +153,98 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         </Link>
       </div>
     </div>
+    </div>
+  );
+}
+
+function BalanceHistoryChart({ monthBalances }: {
+  monthBalances: { month: string; balance: number }[];
+}) {
+  const hasData = monthBalances.some((m) => m.balance > 0);
+  if (!hasData) return null;
+
+  const W = 300;
+  const H = 100;
+  const PAD = { top: 12, right: 8, bottom: 28, left: 8 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+
+  const maxBalance = Math.max(...monthBalances.map((m) => m.balance), 1);
+  const n = monthBalances.length;
+
+  const points = monthBalances.map((m, i) => ({
+    x: PAD.left + (i / Math.max(n - 1, 1)) * chartW,
+    y: PAD.top + chartH - (m.balance / maxBalance) * chartH,
+    balance: m.balance,
+    label: m.month.slice(5) + "월",
+  }));
+
+  const polylinePoints = points.map((p) => `${p.x},${p.y}`).join(" ");
+  const areaPath = [
+    `M ${points[0].x},${PAD.top + chartH}`,
+    ...points.map((p) => `L ${p.x},${p.y}`),
+    `L ${points[points.length - 1].x},${PAD.top + chartH}`,
+    "Z",
+  ].join(" ");
+
+  const lastPoint = points[points.length - 1];
+
+  return (
+    <div className="detail-card mb-4">
+      <div className="detail-card-head">
+        <p className="detail-section-label">잔액 추이</p>
+        <p style={{ fontSize: 11, color: "var(--monari-ink-muted)", fontWeight: 600 }}>최근 6개월</p>
+      </div>
+      <hr className="detail-card-divider" />
+      <div className="px-4 py-3">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: "block", overflow: "visible" }} aria-label="최근 6개월 잔액 추이">
+          <defs>
+            <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6C3FE8" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#6C3FE8" stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+          {/* 격자선 */}
+          {[0.5, 1].map((t) => (
+            <line
+              key={t}
+              x1={PAD.left} y1={PAD.top + chartH * (1 - t)}
+              x2={W - PAD.right} y2={PAD.top + chartH * (1 - t)}
+              stroke="#EDE9FE" strokeWidth="1"
+            />
+          ))}
+          {/* 면적 */}
+          <path d={areaPath} fill="url(#balanceGrad)" />
+          {/* 라인 */}
+          <polyline
+            points={polylinePoints}
+            fill="none"
+            stroke="#6C3FE8"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          {/* 데이터 포인트 */}
+          {points.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r="4" fill="white" stroke="#6C3FE8" strokeWidth="2" />
+          ))}
+          {/* 현재 잔액 강조 */}
+          <circle cx={lastPoint.x} cy={lastPoint.y} r="5" fill="#6C3FE8" />
+          {/* X축 라벨 */}
+          {points.map((p, i) => (
+            <text key={i} x={p.x} y={H - 2} textAnchor="middle" style={{ fontSize: 9, fill: "#94A3B8", fontWeight: 600 }}>
+              {p.label}
+            </text>
+          ))}
+          {/* 최대값 라벨 */}
+          <text x={PAD.left + 2} y={PAD.top + 9} style={{ fontSize: 9, fill: "#94A3B8", fontWeight: 600 }}>
+            {formatWon(maxBalance)}
+          </text>
+        </svg>
+        <p className="mt-1 text-center" style={{ fontSize: 11, color: "var(--monari-ink-muted)", fontWeight: 600 }}>
+          현재 잔액 <strong style={{ color: "#6C3FE8" }}>{formatWon(monthBalances[monthBalances.length - 1].balance)}</strong>
+        </p>
+      </div>
     </div>
   );
 }
