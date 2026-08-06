@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ChildBehaviorCheckForm } from "@/components/finance/action-forms";
+import { CelebrationBurst } from "@/components/child/celebration-burst";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import type { BehaviorLog } from "@/lib/types";
@@ -71,26 +72,82 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
 
       {/* 상태 배너 */}
       {todayTotal > 0 && (
-        <div
-          className="mb-5 rounded-[24px] p-4"
-          style={{ background: allDone ? "linear-gradient(135deg,#C4B5FD,#A78BFA)" : "linear-gradient(135deg,#EDE9FE,#DDD6FE)" }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: allDone ? "var(--status-success-solid-text)" : "var(--monari-hero)", opacity: 0.7 }}>
-                {allDone ? "오늘 모두 완료! 🎉" : "오늘 약속"}
+        allDone ? (
+          <>
+            <CelebrationBurst active />
+            <div
+              className="mb-5 rounded-[28px] p-5 text-center"
+              style={{
+                background: "linear-gradient(145deg, #3B0764, #5530CB 50%, #6C3FE8)",
+                boxShadow: "0 8px 32px rgba(108,63,232,0.45)",
+              }}
+            >
+              <style>{`
+                @keyframes trophy-bounce {
+                  0%, 100% { transform: translateY(0) scale(1); }
+                  40%       { transform: translateY(-10px) scale(1.1); }
+                  70%       { transform: translateY(-4px) scale(1.05); }
+                }
+                @keyframes done-glow {
+                  0%, 100% { opacity: 1; }
+                  50%       { opacity: 0.75; }
+                }
+                .trophy-anim { display: inline-block; animation: trophy-bounce 1.6s ease-in-out infinite; }
+                .done-glow   { animation: done-glow 2s ease-in-out infinite; }
+              `}</style>
+              <div className="trophy-anim mb-1" style={{ fontSize: 56 }}>🏆</div>
+              <p className="done-glow" style={{ fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>
+                오늘 모든 약속 완료!
               </p>
-              <p style={{ fontSize: 26, fontWeight: 900, color: allDone ? "#1C1033" : "#6C3FE8", letterSpacing: "-0.03em" }}>
-                {todayDone}/{todayTotal}개 완료
+              <p style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.65)", marginTop: 4 }}>
+                {todayDone}개 약속을 다 지켰어요 🎉
               </p>
               {streak > 0 && (
-                <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: allDone ? "#4424B0" : "#6C3FE8" }}>
-                  🔥 {streak}일 연속 달성 중!
+                <p className="mt-3" style={{ fontSize: 13, fontWeight: 800, color: "#C4B5FD" }}>
+                  🔥 {streak}일 연속 달성 중! 대단해요!
                 </p>
               )}
+              <Link
+                href={`/child/${id}`}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-5 py-2.5 text-[13px] font-bold text-white transition active:scale-95"
+              >
+                홈으로 돌아가기
+              </Link>
             </div>
-            <span style={{ fontSize: 52 }}>{allDone ? "🏆" : "💪"}</span>
+          </>
+        ) : (
+          <div
+            className="mb-5 rounded-[24px] p-4"
+            style={{ background: "linear-gradient(135deg,#EDE9FE,#DDD6FE)" }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", opacity: 0.7 }}>오늘 약속</p>
+                <p style={{ fontSize: 26, fontWeight: 900, color: "#6C3FE8", letterSpacing: "-0.03em" }}>
+                  {todayDone}/{todayTotal}개 완료
+                </p>
+                {streak > 0 && (
+                  <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: "#6C3FE8" }}>
+                    🔥 {streak}일 연속 달성 중!
+                  </p>
+                )}
+              </div>
+              <span style={{ fontSize: 52 }}>💪</span>
+            </div>
           </div>
+        )
+      )}
+
+      {/* 오늘 승인된 약속 알림 배너 */}
+      {!allDone && todayDone > 0 && (
+        <div
+          className="mb-4 flex items-center gap-3 rounded-[20px] px-4 py-3"
+          style={{ background: "linear-gradient(135deg,#F0FDF4,#DCFCE7)", border: "1.5px solid #86EFAC" }}
+        >
+          <span style={{ fontSize: 22, flexShrink: 0 }}>✅</span>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#15803D" }}>
+            {todayDone}개 약속이 승인됐어요! 잘 하고 있어요 🌟
+          </p>
         </div>
       )}
 
