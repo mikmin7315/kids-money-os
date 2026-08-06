@@ -115,17 +115,19 @@ export default async function SettingsPage() {
               </div>
             )}
 
-            {/* 아이 추가 */}
-            <Link
-              href="/children/new"
-              className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.99]"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-[var(--monari-hero)] text-[var(--monari-hero)]">
-                <UserPlus size={16} />
-              </span>
-              <span className="text-[14px] font-bold text-[var(--monari-hero)]">아이 추가하기</span>
-              <ChevronRight size={16} className="ml-auto text-[var(--monari-hero)]" />
-            </Link>
+            {/* 아이 추가 — 아이가 있을 때만 표시 */}
+            {childCount > 0 && (
+              <Link
+                href="/children/new"
+                className="monari-card flex items-center gap-3 px-4 py-3.5 transition active:scale-[0.99]"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-[var(--monari-hero)] text-[var(--monari-hero)]">
+                  <UserPlus size={16} />
+                </span>
+                <span className="text-[14px] font-bold text-[var(--monari-hero)]">아이 추가하기</span>
+                <ChevronRight size={16} className="ml-auto text-[var(--monari-hero)]" />
+              </Link>
+            )}
 
             {/* 공동 보호자 — 가족 관리의 일부 */}
             <div className="monari-card divide-y divide-[var(--monari-line)]">
@@ -250,7 +252,7 @@ export default async function SettingsPage() {
           </div>
         </section>
 
-        {/* ⑤ 지원 */}
+        {/* ⑥ 지원 */}
         <section className="mb-8">
           <SectionTitle>지원</SectionTitle>
           <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
