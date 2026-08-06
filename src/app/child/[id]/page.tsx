@@ -57,6 +57,21 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
   const activeRuleIds = activeRules.map((r) => r.id);
   const streak = computeStreak(childLogs, activeRuleIds, today);
 
+  // 이번 달 행동 달성률 (이자율 반영 기준)
+  const thisMonth = today.slice(0, 7);
+  const recurringRules = activeRules.filter((r) => r.ruleCategory === "recurring");
+  const daysElapsed = new Date(today).getDate();
+  const monthLogsApproved = childLogs.filter(
+    (l) => l.date.startsWith(thisMonth) && (l.status === "approved" || l.status === "completed"),
+  );
+  const monthRecurringAchieved = monthLogsApproved.filter((l) =>
+    recurringRules.some((r) => r.id === l.behaviorRuleId),
+  ).length;
+  const monthRecurringPossible = daysElapsed * recurringRules.length;
+  const monthAchievementRate =
+    monthRecurringPossible > 0 ? Math.min(100, Math.round((monthRecurringAchieved / monthRecurringPossible) * 100)) : null;
+  const targetRate = recurringRules[0]?.monthlyTargetRate ?? 80;
+
   const policy = bundle.interestPolicies.find((p) => p.childId === id);
   const _todayInterest = policy ? Math.round(estimateInterest(summary.wallet, policy) / 30) : 0;
   const { totalAllowance, totalSave, totalSpend, totalInterest } = summary.monthReport;
@@ -266,6 +281,11 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
               {/* 이자율 리포트 */}
               {!isNewChild && <ChildInterestReportCard childId={id} />}
+
+              {/* 이번 달 행동 달성률 */}
+              {monthAchievementRate !== null && (
+                <MonthAchievementCard rate={monthAchievementRate} targetRate={targetRate} daysElapsed={daysElapsed} base={base} />
+              )}
 
               {/* 이번 달 흐름 */}
               <h2 className="mb-3 mt-5" style={{ fontSize: 17, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.02em" }}>이번 달 흐름</h2>
@@ -526,6 +546,58 @@ function relativeDate(date: string, today: string): string {
   if (diff === 1) return "어제";
   if (diff >= 0 && diff <= 6) return `${diff}일 전`;
   return date.slice(5).replace("-", ".");
+}
+
+function MonthAchievementCard({ rate, targetRate, daysElapsed, base }: {
+  rate: number; targetRate: number; daysElapsed: number; base: string;
+}) {
+  const reached = rate >= targetRate;
+  const color = reached ? "#059669" : rate >= targetRate * 0.6 ? "#D97706" : "#94A3B8";
+  const bg = reached ? "#ECFDF5" : rate >= targetRate * 0.6 ? "#FFFBEB" : "#F8FAFC";
+  const borderColor = reached ? "#6EE7B7" : rate >= targetRate * 0.6 ? "#FCD34D" : "#E2E8F0";
+  const label = reached ? `목표 달성! 이자율 상승 🎉` : `목표까지 ${targetRate - rate}% 더 필요해요`;
+
+  return (
+    <div className="mb-5">
+      <h2 className="mb-3" style={{ fontSize: 17, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.02em" }}>이번 달 약속 달성률 🎯</h2>
+      <a href={`${base}/promise-month`} className="block overflow-hidden rounded-[20px] border transition active:scale-[0.98]" style={{ background: bg, borderColor }}>
+        <div className="px-5 py-4 flex items-center gap-4">
+          {/* 원형 진행 */}
+          <svg width="72" height="72" viewBox="0 0 72 72" aria-label={`이번 달 달성률 ${rate}%`}>
+            <circle cx="36" cy="36" r="28" fill="none" stroke={reached ? "#D1FAE5" : rate >= targetRate * 0.6 ? "#FEF3C7" : "#F1F5F9"} strokeWidth="8" />
+            <circle
+              cx="36" cy="36" r="28"
+              fill="none"
+              stroke={color}
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 28}`}
+              strokeDashoffset={`${2 * Math.PI * 28 * (1 - Math.min(rate, 100) / 100)}`}
+              style={{ transform: "rotate(-90deg)", transformOrigin: "center" }}
+            />
+            <text x="36" y="32" textAnchor="middle" style={{ fontSize: 16, fontWeight: 900, fill: color }}>{rate}%</text>
+            <text x="36" y="46" textAnchor="middle" style={{ fontSize: 9, fontWeight: 700, fill: "#94A3B8" }}>달성률</text>
+          </svg>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="text-[11px] font-extrabold rounded-full px-2 py-0.5" style={{ background: color + "22", color }}>
+                목표 {targetRate}%
+              </span>
+              {reached && <span className="text-[11px] font-extrabold text-emerald-600">✓ 달성</span>}
+            </div>
+            <p className="text-[14px] font-black leading-snug" style={{ color: "#1C1033" }}>{label}</p>
+            <p className="mt-1 text-[11px] font-semibold" style={{ color: "#94A3B8" }}>{daysElapsed}일째 기준 · 목표 달성 시 이자율 올라가요</p>
+          </div>
+        </div>
+        {/* 하단 안내 */}
+        <div className="border-t px-5 py-2.5" style={{ borderColor }}>
+          <p className="text-[11px] font-semibold" style={{ color }}>
+            {reached ? "이번 달 말 이자 정산 때 이자율이 올라가요! 🚀" : "매일 약속을 지키면 다음 달 이자율이 올라가요"}
+          </p>
+        </div>
+      </a>
+    </div>
+  );
 }
 
 function computeStreak(logs: BehaviorLog[], activeRuleIds: string[], today: string): number {
