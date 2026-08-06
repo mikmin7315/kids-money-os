@@ -30,11 +30,16 @@ export async function GET(request: Request) {
       if (type === "recovery") {
         return NextResponse.redirect(`${origin}/login/reset/confirm`);
       }
-      const createdAt = new Date(data.user.created_at).getTime();
-      const isNewUser = Date.now() - createdAt < 5 * 60 * 1000;
-      if (isNewUser) {
-        return NextResponse.redirect(`${origin}/onboarding/complete`);
-      }
+        // Check DB state rather than a fragile time window: new OAuth users have no
+        // consent_at because the trigger creates the profile but consent is set later.
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("consent_at")
+          .eq("id", data.user.id)
+          .maybeSingle();
+        if (!profile?.consent_at) {
+          return NextResponse.redirect(`${origin}/onboarding/complete`);
+        }
     }
   }
 
