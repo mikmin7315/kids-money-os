@@ -366,6 +366,14 @@ body {
   font-synthesis-weight: none;
 }
 
+/* ── 가독성 향상: 소형 텍스트 전역 스케일업 ── */
+/* Tailwind arbitrary size classes → 2px씩 확대 */
+.text-\[11px\] { font-size: 13px !important; }
+.text-\[12px\] { font-size: 14px !important; }
+.text-\[13px\] { font-size: 15px !important; }
+.text-\[14px\] { font-size: 16px !important; }
+.text-\[15px\] { font-size: 17px !important; }
+
 body {
   margin: 0;
   background:
@@ -945,7 +953,7 @@ a {
 
   .monari-page-subtitle {
     margin: 0 0 2px 0;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.4;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -973,7 +981,7 @@ a {
 
   .monari-meta {
     margin: 0;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.55;
     font-weight: 600;
     color: var(--monari-ink-soft);
@@ -998,7 +1006,7 @@ a {
   /* ── Eyebrow label ── */
   .monari-eyebrow {
     margin: 0 0 3px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1174,7 +1182,7 @@ a {
     height: 36px;
     padding: 0 14px;
     border-radius: 999px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     white-space: nowrap;
     text-decoration: none;
@@ -1241,7 +1249,7 @@ a {
     gap: 4px;
     padding: 10px 8px;
     border-radius: 18px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     line-height: 1.1;
     color: var(--monari-ink-muted);
@@ -1355,7 +1363,7 @@ a {
   }
 
   .detail-section-label {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
     letter-spacing: 0.07em;
     text-transform: uppercase;
@@ -1384,7 +1392,7 @@ a {
   }
 
   .detail-row-sub {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--monari-ink-muted);
     margin-top: 2px;
@@ -1410,7 +1418,7 @@ a {
   }
 
   .detail-kpi-label {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.65);
     margin-bottom: 8px;
