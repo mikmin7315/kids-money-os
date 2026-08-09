@@ -17,7 +17,7 @@ function applyTheme(theme: Theme) {
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window === "undefined") return "system";
-    return (localStorage.getItem("monari-theme") as Theme) || "system";
+    return (localStorage.getItem("monari-theme") as Theme) || "light";
   });
 
   useEffect(() => {
