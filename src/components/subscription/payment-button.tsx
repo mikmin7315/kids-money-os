@@ -6,9 +6,11 @@ import { useState } from "react";
 export function PaymentButton({
   userId,
   userEmail,
+  userName,
 }: {
   userId: string;
   userEmail: string;
+  userName?: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ export function PaymentButton({
         totalAmount: 3900,
         currency: "CURRENCY_KRW",
         payMethod: "CARD",
-        customer: { email: userEmail, phoneNumber: "01000000000", fullName: "모나리" },
+        customer: { email: userEmail, ...(userName ? { fullName: userName } : {}) },
       });
 
       if (!result || result.code) {

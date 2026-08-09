@@ -225,7 +225,7 @@ export default async function SubscriptionPage() {
                   <span className="text-[15px] font-bold text-white/70">원 / 월</span>
                 </div>
                 {PORTONE_CONFIGURED ? (
-                  <PaymentButton userId={auth.user!.id} userEmail={auth.user!.email ?? ""} />
+                  <PaymentButton userId={auth.user!.id} userEmail={auth.user!.email ?? ""} userName={auth.profile?.name ? String(auth.profile.name) : undefined} />
                 ) : (
                   <button
                     disabled
