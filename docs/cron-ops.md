@@ -155,7 +155,7 @@ supabase functions logs monthly-settlement --project-ref <project-ref>
 1. Edge Function Secrets의 `CRON_SECRET` 값을 복사
 2. Vault의 `cron_secret` 값 확인:
    ```sql
-   SELECT value FROM vault.decrypted_secrets WHERE name = 'cron_secret';
+   SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret';
    ```
 3. 두 값이 다르면 Vault 시크릿을 삭제 후 재등록:
    ```sql
