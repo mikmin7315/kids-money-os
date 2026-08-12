@@ -68,7 +68,7 @@ export default async function Setup1Page() {
           시작하기 →
         </Link>
         <Link
-          href="/children/new"
+          href="/"
           style={{
             display: "block",
             textAlign: "center",
