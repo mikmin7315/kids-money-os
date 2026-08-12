@@ -119,7 +119,7 @@ export default async function AdminWalletChargesPage() {
             {processed.map((charge) => {
               const isPaid = charge.status === "paid";
               return (
-                <div key={charge.id} className="rounded-[16px] bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
+                <div key={charge.id} className="rounded-[16px] bg-white p-4 shadow-[var(--monari-shadow-md)]">
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-bold text-[var(--monari-ink)]">

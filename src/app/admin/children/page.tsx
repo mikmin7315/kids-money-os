@@ -109,7 +109,7 @@ export default async function AdminChildrenPage() {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={r.id} className={`cursor-pointer hover:bg-[#fafafa] ${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}>
+                  <tr key={r.id} className={`cursor-pointer hover:bg-[var(--monari-surface-soft)] ${i < rows.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}>
                     <td className="px-4 py-3">
                       <Link href={`/admin/children/${r.id}`} className="block">
                         <p className="font-semibold text-[var(--color-text)]">{r.name}</p>
