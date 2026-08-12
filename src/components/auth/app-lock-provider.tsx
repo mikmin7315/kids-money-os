@@ -44,13 +44,8 @@ export function AppLockProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isExcluded = LOCK_EXCLUDED_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
   const [locked, setLocked] = useState(false);
-  const [settings, setSettings] = useState<LockSettings>({ enabled: false, timeoutMinutes: 5 });
+  const [settings, setSettings] = useState<LockSettings>(() => getSettings());
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Initialize settings from localStorage
-  useEffect(() => {
-    setSettings(getSettings());
-  }, []);
 
   const markActive = useCallback(() => {
     sessionStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));

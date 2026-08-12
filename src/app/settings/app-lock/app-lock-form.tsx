@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Lock, Unlock } from 'lucide-react';
 import { useAppLock } from '@/components/auth/app-lock-provider';
 
@@ -17,12 +17,7 @@ export function AppLockSettingsForm() {
   const [enabled, setEnabled] = useState(settings.enabled);
   const [timeout, setTimeout_] = useState(settings.timeoutMinutes);
 
-  useEffect(() => {
-    setEnabled(settings.enabled);
-    setTimeout_(settings.timeoutMinutes);
-  }, [settings.enabled, settings.timeoutMinutes]);
-
-  function handleToggle() {
+function handleToggle() {
     const next = !enabled;
     setEnabled(next);
     saveSettings({ enabled: next, timeoutMinutes: timeout });
