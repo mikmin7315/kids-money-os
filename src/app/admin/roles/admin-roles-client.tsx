@@ -37,7 +37,7 @@ export function AdminRolesClient() {
         <AppHeader eyebrow="Admin / RBAC" title="역할 관리" />
 
         <section className="mt-6">
-          <Surface className="bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))]">
+          <Surface className="bg-[var(--monari-hero-lo)]">
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">RBAC</p>
             <p className="mt-3 font-display text-2xl font-semibold tracking-tight text-[var(--color-text)]">
               사용자 역할을
@@ -109,7 +109,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
       </form>
 
       {state.message && (
-        <p className={`mt-2 text-xs ${state.ok ? "text-emerald-700" : "text-rose-700"}`}>
+        <p className={`mt-2 text-xs ${state.ok ? "text-[var(--color-success)]" : "text-[var(--color-danger)]"}`}>
           {state.message}
         </p>
       )}

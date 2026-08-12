@@ -69,7 +69,7 @@ export default async function AdminDashboardPage() {
         <AppHeader eyebrow="Admin" title="운영 대시보드" />
 
         <section className="mt-6">
-          <Surface className="bg-[linear-gradient(135deg,rgba(255,248,236,0.98),rgba(232,244,240,0.92))]">
+          <Surface className="bg-[var(--monari-hero-lo)]">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">Monari Admin</p>
@@ -356,13 +356,13 @@ function StatChip({
 }) {
   const toneClass =
     tone === "emerald"
-      ? "text-emerald-700"
+      ? "text-[var(--color-success)]"
       : tone === "amber"
-        ? "text-amber-700"
+        ? "text-[var(--color-warn)]"
         : "text-[var(--color-text)]";
 
   return (
-    <div className="rounded-[24px] border border-[rgba(87,70,49,0.08)] bg-white/70 p-3">
+    <div className="rounded-[24px] border border-[var(--border-soft)] bg-[var(--monari-surface)] p-3">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-soft)]">{label}</p>
       <p className={`mt-2 font-display text-lg font-semibold ${toneClass}`}>{value}</p>
     </div>
