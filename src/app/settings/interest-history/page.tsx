@@ -61,6 +61,12 @@ export default async function InterestHistoryPage() {
             </span>
             <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 이자 기록이 없어요</p>
             <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">매달 1일 정산 후 여기서 확인할 수 있어요.</p>
+            <Link
+              href="/settings/interest"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--monari-hero)] px-5 py-2.5 text-[13px] font-bold text-white transition active:scale-[0.97]"
+            >
+              이자율 설정 보기
+            </Link>
           </div>
         ) : (
           <>

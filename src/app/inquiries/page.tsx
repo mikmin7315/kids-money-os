@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight, MessageSquare } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { InquirySubmitForm } from "@/components/support/inquiry-form";
@@ -64,9 +64,12 @@ export default async function InquiriesPage() {
           <SectionTitle>내 문의 내역</SectionTitle>
           <div className="mt-3">
           {inquiries.length === 0 ? (
-            <div className="monari-card p-8 text-center">
-              <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">문의 내역이 없어요</p>
-              <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">위 양식으로 문의를 남겨주세요.</p>
+            <div className="monari-card px-5 py-10 text-center">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+                <MessageSquare size={26} />
+              </span>
+              <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 문의 내역이 없어요</p>
+              <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">위 양식으로 첫 문의를 남겨보세요.</p>
             </div>
           ) : (
             <div className="space-y-2">

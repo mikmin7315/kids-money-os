@@ -67,9 +67,12 @@ export default async function AnnouncementsPage() {
 
       <PageContent className="pt-5">
       {announcements.length === 0 ? (
-        <div className="monari-card p-8 text-center">
-          <p className="text-[18px] font-black text-[var(--monari-ink)] mb-2">공지사항이 없어요</p>
-          <p className="text-[14px] text-[var(--monari-ink-muted)]">현재 진행 중인 공지나 점검 안내가 없어요.</p>
+        <div className="monari-card px-5 py-10 text-center">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+            <Bell size={26} />
+          </span>
+          <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">현재 공지사항이 없어요</p>
+          <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">점검이나 새 기능 안내가 생기면 여기에 올라와요.</p>
         </div>
       ) : (
         <div className="space-y-3">

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import { Bell, ChevronRight } from "lucide-react";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { SectionTitle } from "@/components/monari/ui";
 import {
@@ -173,9 +173,12 @@ export function NotificationList({
       </div>
 
       {notifications.length === 0 ? (
-        <div className="monari-card mt-3 px-4 py-5 text-center">
-          <p className="text-[14px] font-semibold text-[var(--monari-ink-muted)]">새로운 알림이 없어요</p>
-          <p className="monari-meta mt-1">
+        <div className="monari-card mt-3 px-5 py-10 text-center">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+            <Bell size={26} />
+          </span>
+          <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">새로운 알림이 없어요</p>
+          <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">
             {target === "child"
               ? "약속이나 정산 소식이 오면 여기에 바로 보여요."
               : "아이가 요청하거나 약속을 체크하면 여기에 바로 보여요."}

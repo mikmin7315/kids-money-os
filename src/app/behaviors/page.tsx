@@ -3,7 +3,7 @@ import { DeleteBehaviorRuleButton, ToggleBehaviorRuleButton } from "@/components
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { ClipboardList, Pencil } from "lucide-react";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatPercent, formatWon } from "@/lib/format";
@@ -65,9 +65,13 @@ export default async function BehaviorsPage() {
       <section className="mb-4">
         <SectionTitle>현재 약속 목록</SectionTitle>
         {bundle.behaviorRules.length === 0 ? (
-          <div className="monari-card mt-3 px-4 py-5 text-center">
-            <p className="text-[14px] font-bold text-[var(--monari-ink)]">첫 약속을 만들어 보세요</p>
-            <p className="monari-meta mt-1">아래에서 첫 번째 약속을 만들어보세요</p>
+          <div className="monari-card mt-3 px-5 py-10 text-center">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              <ClipboardList size={26} />
+            </span>
+            <p className="mt-4 text-[16px] font-extrabold text-[var(--monari-ink)]">아직 약속이 없어요</p>
+            <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">아이와 함께 지킬 약속을 만들면 이자율이 올라가요.</p>
+            <p className="mt-4 text-[12px] font-bold text-[var(--monari-hero)]">↓ 아래에서 약속 만들기</p>
           </div>
         ) : (
           <div className="space-y-2 mt-3">
