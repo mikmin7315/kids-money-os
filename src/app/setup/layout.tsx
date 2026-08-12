@@ -24,15 +24,17 @@ function SetupHeader() {
   const childIds = searchParams.get("childIds") || "";
   const childNames = searchParams.get("childNames") || "";
   const childIndex = Number(searchParams.get("childIndex") || "0");
+  const childCount = childIds ? childIds.split(",").filter(Boolean).length : 1;
+  const encodedNames = childNames.split(",").map((n) => encodeURIComponent(n)).join(",");
 
   const hasPrevChild = childIndex > 0 && ["/setup/3", "/setup/4"].includes(pathname);
   const prevStepPath = currentIndex > 0 ? STEPS[currentIndex - 1].path : null;
   const sharedParams = childIds
-    ? `?childIds=${childIds}&childNames=${childNames}&childIndex=${Math.max(0, childIndex - 1)}`
+    ? `?childIds=${childIds}&childNames=${encodedNames}&childIndex=${Math.max(0, childCount - 1)}`
     : "";
 
   const prevPath = hasPrevChild
-    ? `${pathname}?childIds=${childIds}&childNames=${childNames}&childIndex=${childIndex - 1}`
+    ? `${pathname}?childIds=${childIds}&childNames=${encodedNames}&childIndex=${childIndex - 1}`
     : prevStepPath
     ? `${prevStepPath}${sharedParams}`
     : null;

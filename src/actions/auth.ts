@@ -60,7 +60,7 @@ export async function signUpWithPassword(_: AuthFormState, formData: FormData): 
         },
       },
     });
-    if (error) return { ok: false, message: error.message };
+    if (error) return { ok: false, message: translateSignUpError(error.message) };
     return { ok: true, message: "인증 메일을 보냈습니다. 메일함에서 링크를 누르면 바로 시작돼요." };
   } catch {
     return { ok: false, message: "계정 생성에 실패했습니다." };
@@ -125,6 +125,15 @@ export async function signOut() {
   await supabase.auth.signOut();
   revalidatePath("/");
   redirect("/login");
+}
+
+function translateSignUpError(msg: string): string {
+  if (msg.includes("User already registered")) return "이미 가입된 이메일이에요.";
+  if (msg.includes("Password should be at least")) return "비밀번호는 6자 이상이어야 해요.";
+  if (msg.includes("Unable to validate email address")) return "이메일 형식이 올바르지 않아요.";
+  if (msg.includes("Email rate limit exceeded")) return "너무 많은 요청이 있어요. 잠시 후 다시 시도해주세요.";
+  if (msg.includes("Signup requires a valid password")) return "비밀번호를 입력해주세요.";
+  return "계정 생성에 실패했습니다.";
 }
 
 function readString(formData: FormData, key: string) {

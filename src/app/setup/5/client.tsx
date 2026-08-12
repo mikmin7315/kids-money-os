@@ -31,7 +31,7 @@ function Setup5Inner() {
     setLoading(true);
     setError("");
     try {
-      await Promise.all(
+      const results = await Promise.all(
         [...selected].map((idx) => {
           const p = QUICK_PRESETS[idx];
           return createBehaviorRuleAction({
@@ -45,6 +45,7 @@ function Setup5Inner() {
           });
         }),
       );
+      if (results.some((r) => !r.ok)) throw new Error("일부 약속 저장에 실패했어요.");
       router.push("/setup/complete");
     } catch {
       setError("약속 저장에 실패했어요. 다시 시도해 주세요.");

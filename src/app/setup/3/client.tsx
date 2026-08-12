@@ -57,7 +57,7 @@ function Setup3Inner() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!rawAmount || !currentChildId) { goNext(); return; }
+    if (!rawAmount || Number(rawAmount) <= 0 || !currentChildId) { goNext(); return; }
     setLoading(true);
     setError("");
     try {

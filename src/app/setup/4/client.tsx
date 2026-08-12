@@ -222,7 +222,7 @@ function Setup4Inner() {
       {error && <p style={{ fontSize: 13, color: "var(--monari-minus)", marginBottom: 12 }}>{error}</p>}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
-        <button type="button" onClick={handleSubmit} disabled={loading || Boolean(customError)}
+        <button type="button" onClick={handleSubmit} disabled={loading || Boolean(customError) || (customMode && isNaN(parseFloat(customInput)))}
           style={{
             width: "100%", padding: "16px", fontSize: 16, fontWeight: 800,
             background: "var(--monari-hero)", color: "#fff",
