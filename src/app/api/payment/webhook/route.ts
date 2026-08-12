@@ -59,11 +59,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Invalid JSON" }, { status: 400 });
   }
 
-  const configuredStoreId = process.env.NEXT_PUBLIC_PORTONE_STORE_ID;
-  if (configuredStoreId && payload.data.storeId && payload.data.storeId !== configuredStoreId) {
-    return NextResponse.json({ message: "Store ID mismatch" }, { status: 400 });
-  }
-
   const portoneApiSecret = process.env.PORTONE_API_SECRET;
   if (!portoneApiSecret) return NextResponse.json({ ok: true });
 
