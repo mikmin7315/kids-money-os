@@ -64,9 +64,9 @@ SELECT vault.create_secret('<service_role_key>', 'supabase_service_role_key');
 Vault 등록 확인:
 
 ```sql
-SELECT name FROM vault.decrypted_secrets
+SELECT name, decrypted_secret FROM vault.decrypted_secrets
 WHERE name IN ('cron_secret', 'supabase_url', 'supabase_service_role_key');
--- 3행이 반환되어야 한다
+-- 3행이 반환되어야 한다 (decrypted_secret 컬럼으로 조회; value 컬럼은 존재하지 않음)
 ```
 
 ### 5단계 — 크론 잡 등록

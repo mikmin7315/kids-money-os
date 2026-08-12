@@ -11,11 +11,11 @@ select cron.schedule(
   '5 0 1 * *',
   $$
   select net.http_post(
-    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/monthly-settlement',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/monthly-settlement',
     headers := jsonb_build_object(
       'Content-Type',   'application/json',
-      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
-      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -31,11 +31,11 @@ select cron.schedule(
   '5 15 * * *',
   $$
   select net.http_post(
-    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/process-allowances',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/process-allowances',
     headers := jsonb_build_object(
       'Content-Type',   'application/json',
-      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
-      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -51,11 +51,11 @@ select cron.schedule(
   '0 23 * * *',
   $$
   select net.http_post(
-    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/process-behavior-reminders',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/process-behavior-reminders',
     headers := jsonb_build_object(
       'Content-Type',   'application/json',
-      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
-      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -71,11 +71,11 @@ select cron.schedule(
   '5 0 * * 1',
   $$
   select net.http_post(
-    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/aggregate-peer-stats',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/aggregate-peer-stats',
     headers := jsonb_build_object(
       'Content-Type',   'application/json',
-      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
-      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -91,11 +91,11 @@ select cron.schedule(
   '5 1 * * *',
   $$
   select net.http_post(
-    url     := (select value from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/expire-subscriptions',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/expire-subscriptions',
     headers := jsonb_build_object(
       'Content-Type',   'application/json',
-      'Authorization',  'Bearer ' || (select value from vault.decrypted_secrets where name = 'supabase_service_role_key'),
-      'x-cron-secret',  (select value from vault.decrypted_secrets where name = 'cron_secret')
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
     ),
     body    := '{}'::jsonb
   );
