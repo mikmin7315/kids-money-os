@@ -24,6 +24,7 @@ import { getParentWalletAction } from "@/actions/parent-wallet";
 import { requireParentSession } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
 import { formatWon } from "@/lib/format";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -33,12 +34,18 @@ const AVATAR_COLORS = [
 
 export default async function SettingsPage() {
   const auth = await requireParentSession();
-  const [bundle, wallet] = await Promise.all([
+  const supabase = await getSupabaseServerClient();
+  const [bundle, wallet, guardianRes] = await Promise.all([
     getAppDataBundle(),
     getParentWalletAction(),
+    supabase
+      .from("child_guardians")
+      .select("*", { count: "exact", head: true })
+      .eq("invited_by", auth.user!.id),
   ]);
   const childCount = bundle.children.length;
   const ruleCount = bundle.allowanceRules.length;
+  const guardianCount = guardianRes.count ?? 0;
 
   const isPlusPlan = auth.profile?.subscription_tier === "plus";
   const currentRegion = (auth.profile as { region?: string | null } | null)?.region ?? null;
@@ -138,7 +145,7 @@ export default async function SettingsPage() {
                 iconBg="var(--monari-surface-soft)"
                 iconColor="var(--monari-ink-soft)"
                 label="공동 보호자"
-                sub="배우자나 다른 보호자 초대"
+                sub={guardianCount > 0 ? `보호자 ${guardianCount}명 초대됨` : "배우자나 다른 보호자 초대"}
               />
             </div>
           </div>
