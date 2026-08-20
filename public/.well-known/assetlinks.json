@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.monari.family",
-    "sha256_cert_fingerprints": ["2A:06:84:C3:6F:BA:B0:8B:34:64:20:E8:76:7D:19:36:3B:C0:5E:67:F7:9C:D2:48:7E:3A:08:B1:E8:F5:97:59"]
+    "sha256_cert_fingerprints": ["6B:F1:F4:F1:85:28:1E:C5:7B:81:9F:9E:3A:FC:39:99:E9:66:6F:97:F9:23:67:4F:B9:F5:60:22:93:D4:C0:C6"]
   }
 }]
