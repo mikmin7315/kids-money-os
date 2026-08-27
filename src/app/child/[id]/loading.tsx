@@ -1,8 +1,8 @@
-export default function Loading() {
+﻿export default function Loading() {
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
       {/* 히어로 */}
-      <div className="animate-pulse px-4 pb-4 pt-10" style={{ background: "linear-gradient(160deg,#3B0764,#6C3FE8)" }}>
+      <div className="animate-pulse px-4 pb-4 pt-10" style={{ background: "linear-gradient(160deg,#0C4B78,#0EA5E9)" }}>
         <div className="mb-2 h-3 w-20 rounded-full bg-white/30" />
         <div className="mb-4 h-8 w-32 rounded-lg bg-white/30" />
         <div className="flex gap-3">

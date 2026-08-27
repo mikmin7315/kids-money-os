@@ -1,4 +1,4 @@
-import { ChildBottomNav } from "@/components/child/child-bottom-nav";
+﻿import { ChildBottomNav } from "@/components/child/child-bottom-nav";
 import type { ReactNode } from "react";
 
 export default async function ChildLayout({
@@ -10,7 +10,7 @@ export default async function ChildLayout({
 }) {
   const { id } = await params;
   return (
-    <div className="mx-auto min-h-dvh max-w-[460px] overflow-hidden bg-[#F5F0FF] shadow-[0_0_70px_rgba(108,63,232,0.14)] sm:border-x sm:border-[rgba(108,63,232,0.12)]">
+    <div className="mx-auto min-h-dvh max-w-[460px] overflow-hidden bg-[#E0F2FE] shadow-[0_0_70px_rgba(14,165,233,0.14)] sm:border-x sm:border-[rgba(14,165,233,0.12)]">
       {children}
       <ChildBottomNav childId={id} />
     </div>

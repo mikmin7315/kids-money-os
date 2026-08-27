@@ -37,7 +37,7 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
     : { data: [] };
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <PageContainer>
       <MobileShell>
         <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--monari-hero)]">

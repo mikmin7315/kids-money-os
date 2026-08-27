@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Download, Lock, Sparkles, Coins, MessageCircle, Target, Trophy, MapPin } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { requireParentSession } from "@/lib/auth";
@@ -51,7 +51,7 @@ function getPersonalityType(saveRatio: number, spendRatio: number, behRate: numb
   if (saveRatio >= 25 && behRate >= 70)
     return { emoji: "⭐", label: "균형형", color: "#4F7FFF", bg: "#eff6ff", desc: "저축과 소비를 균형있게 관리하는 안정형이에요. 약속도 잘 지켜요." };
   if (behRate >= 80)
-    return { emoji: "✨", label: "약속왕", color: "#8b5cf6", bg: "#f5f3ff", desc: "약속을 잘 지키는 성실형이에요. 저축 목표를 정하면 금방 달라질 거예요." };
+    return { emoji: "✨", label: "약속왕", color: "#8b5cf6", bg: "#e0f2fe", desc: "약속을 잘 지키는 성실형이에요. 저축 목표를 정하면 금방 달라질 거예요." };
   if (spendRatio >= 75)
     return { emoji: "🌊", label: "소비형", color: "#FFAA33", bg: "#fff7ed", desc: "소비가 활발한 편이에요. '필요한가?' 한 번 더 생각하는 연습이 도움돼요." };
   return { emoji: "🌱", label: "성장형", color: "#64748b", bg: "#f8fafc", desc: "금융 습관을 만들어가는 중이에요. 작은 목표부터 함께 시작해봐요." };

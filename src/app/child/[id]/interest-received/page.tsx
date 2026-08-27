@@ -41,9 +41,9 @@ export default async function InterestReceivedPage({ params }: { params: Promise
   const months = Object.values(byMonth).sort((a, b) => b.month.localeCompare(a.month));
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/interest`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}/interest`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 이자 미리보기로
       </Link>
 
@@ -57,7 +57,7 @@ export default async function InterestReceivedPage({ params }: { params: Promise
       {/* 총계 히어로 */}
       <div
         className="mb-6 overflow-hidden rounded-[24px] p-5 text-white"
-        style={{ background: "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" }}
+        style={{ background: "linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 80%, #38BDF8 100%)" }}
       >
         <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.65)" }}>지금까지 받은 이자</p>
         <p className="tabular-nums mt-1" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em" }}>

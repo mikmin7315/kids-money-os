@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ChildBehaviorCheckForm } from "@/components/finance/action-forms";
@@ -47,10 +47,10 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
   const totalReward = activeRules.reduce((sum, r) => sum + (r.rewardAmount ?? 0), 0);
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       {/* 헤더 */}
-      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-5 flex items-start justify-between">
@@ -64,7 +64,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         </div>
         <Link
           href={`/child/${id}/history`}
-          style={{ fontSize: 13, fontWeight: 700, color: "#6C3FE8", marginTop: 6, whiteSpace: "nowrap" }}
+          style={{ fontSize: 13, fontWeight: 700, color: "#0EA5E9", marginTop: 6, whiteSpace: "nowrap" }}
         >
           기록 보기 →
         </Link>
@@ -78,8 +78,8 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
             <div
               className="mb-5 rounded-[28px] p-5 text-center"
               style={{
-                background: "linear-gradient(145deg, #3B0764, #5530CB 50%, #6C3FE8)",
-                boxShadow: "0 8px 32px rgba(108,63,232,0.45)",
+                background: "linear-gradient(145deg, #0C4B78, #0369A1 50%, #0EA5E9)",
+                boxShadow: "0 8px 32px rgba(14,165,233,0.45)",
               }}
             >
               <style>{`
@@ -103,7 +103,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
                 {todayDone}개 약속을 다 지켰어요 🎉
               </p>
               {streak > 0 && (
-                <p className="mt-3" style={{ fontSize: 13, fontWeight: 800, color: "#C4B5FD" }}>
+                <p className="mt-3" style={{ fontSize: 13, fontWeight: 800, color: "#7DD3FC" }}>
                   🔥 {streak}일 연속 달성 중! 대단해요!
                 </p>
               )}
@@ -118,16 +118,16 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         ) : (
           <div
             className="mb-5 rounded-[24px] p-4"
-            style={{ background: "linear-gradient(135deg,#EDE9FE,#DDD6FE)" }}
+            style={{ background: "linear-gradient(135deg,#BAE6FD,#DDD6FE)" }}
           >
             <div className="flex items-center justify-between">
               <div>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "var(--monari-hero)", opacity: 0.7 }}>오늘 약속</p>
-                <p style={{ fontSize: 26, fontWeight: 900, color: "#6C3FE8", letterSpacing: "-0.03em" }}>
+                <p style={{ fontSize: 26, fontWeight: 900, color: "#0EA5E9", letterSpacing: "-0.03em" }}>
                   {todayDone}/{todayTotal}개 완료
                 </p>
                 {streak > 0 && (
-                  <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: "#6C3FE8" }}>
+                  <p className="mt-1" style={{ fontSize: 13, fontWeight: 700, color: "#0EA5E9" }}>
                     🔥 {streak}일 연속 달성 중!
                   </p>
                 )}
@@ -157,7 +157,7 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
         <div className="grid grid-cols-7 gap-1">
           {week.map(({ label, done, isToday }) => (
             <div key={label} className="flex flex-col items-center gap-1.5">
-              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "#6C3FE8" : "#d1d5db" }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: isToday ? "#0EA5E9" : "#d1d5db" }}>
                 {["일", "월", "화", "수", "목", "금", "토"][new Date(
                   // label은 날짜 숫자(day)
                   today.slice(0, 8) + String(label).padStart(2, "0")
@@ -166,9 +166,9 @@ export default async function ChildPromisePage({ params }: { params: Promise<{ i
               <span
                 className="flex h-9 w-9 items-center justify-center rounded-full"
                 style={{
-                  background: done ? "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" : isToday ? "#F5F0FF" : "#f9fafb",
+                  background: done ? "linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 80%, #38BDF8 100%)" : isToday ? "#E0F2FE" : "#f9fafb",
                   fontSize: 18,
-                  border: isToday && !done ? "2px solid #C4B5FD" : "none",
+                  border: isToday && !done ? "2px solid #7DD3FC" : "none",
                 }}
               >
                 {done ? "⭐" : isToday ? "👀" : <span style={{ fontSize: 12, color: "var(--monari-ink-muted)" }}>{label}</span>}

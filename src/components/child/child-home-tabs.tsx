@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, type ReactNode } from "react";
 
@@ -25,8 +25,8 @@ export function ChildHomeTabs({
             onClick={() => setTab(t)}
             className="flex-1 rounded-[12px] py-2 text-[13px] font-bold transition"
             style={{
-              background: tab === t ? "#6C3FE8" : "rgba(108,63,232,0.10)",
-              color: tab === t ? "#fff" : "#6C3FE8",
+              background: tab === t ? "#0EA5E9" : "rgba(14,165,233,0.10)",
+              color: tab === t ? "#fff" : "#0EA5E9",
             }}
           >
             {t}

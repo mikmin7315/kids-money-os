@@ -107,7 +107,7 @@ export function GiveAllowanceForm({
         type="submit"
         disabled={pending || !amount || insufficient}
         className="w-full rounded-[16px] py-4 text-base font-extrabold text-white transition-opacity disabled:opacity-50"
-        style={{ background: "linear-gradient(135deg,#3B0764,#6C3FE8)" }}
+        style={{ background: "linear-gradient(135deg,#0C4B78,#0EA5E9)" }}
       >
         {pending ? "처리 중..." : `💰 ${childName}에게 바로 주기`}
       </button>

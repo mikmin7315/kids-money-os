@@ -1,17 +1,17 @@
-export default function Loading() {
+﻿export default function Loading() {
   return (
-    <div data-theme="child-violet" className="min-h-dvh bg-[#F5F0FF] px-4 pb-28 pt-5">
+    <div data-theme="child-violet" className="min-h-dvh bg-[#E0F2FE] px-4 pb-28 pt-5">
       <div className="mb-5 h-7 w-24 animate-pulse rounded-xl bg-[#34d399]/30" />
       <div className="mb-4 rounded-[24px] bg-white/80 p-6 space-y-3">
         <div className="h-4 w-20 animate-pulse rounded-md bg-[#34d399]/20" />
-        <div className="h-10 w-40 animate-pulse rounded-lg bg-[#6C3FE8]/20" />
+        <div className="h-10 w-40 animate-pulse rounded-lg bg-[#0EA5E9]/20" />
         <div className="h-3 w-28 animate-pulse rounded-md bg-[#34d399]/15" />
       </div>
       <div className="grid grid-cols-2 gap-3 mb-4">
         {Array.from({ length: 2 }).map((_, i) => (
           <div key={i} className="rounded-[20px] bg-white/70 p-4 space-y-2">
             <div className="h-3 w-16 animate-pulse rounded-md bg-[#34d399]/20" />
-            <div className="h-7 w-20 animate-pulse rounded-md bg-[#6C3FE8]/20" />
+            <div className="h-7 w-20 animate-pulse rounded-md bg-[#0EA5E9]/20" />
           </div>
         ))}
       </div>

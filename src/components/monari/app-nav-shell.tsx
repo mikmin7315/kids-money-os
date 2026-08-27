@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -119,13 +119,13 @@ export function PageHero({ children }: { children: ReactNode }) {
   );
 }
 
-/** Figma 스타일 full-bleed 바이올렛 히어로 (아이 테마) */
-export function VioletHero({ children }: { children: ReactNode }) {
+/** Figma 스타일 full-bleed 오션 히어로 (아이 테마) */
+export function OceanHero({ children }: { children: ReactNode }) {
   return (
     <div
       className="relative overflow-hidden px-5 pt-14 pb-8"
       style={{
-        background: "linear-gradient(160deg, #3B1FA8 0%, #6C3FE8 55%, #8B5CF6 100%)",
+        background: "linear-gradient(160deg, #0C4B78 0%, #0EA5E9 55%, #38BDF8 100%)",
       }}
     >
       <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/[0.07] blur-3xl" />

@@ -1,6 +1,6 @@
-export default function Loading() {
+﻿export default function Loading() {
   return (
-    <div data-theme="child-violet" className="min-h-dvh bg-[#F5F0FF] px-4 pb-28 pt-5">
+    <div data-theme="child-violet" className="min-h-dvh bg-[#E0F2FE] px-4 pb-28 pt-5">
       <div className="mb-5 h-7 w-24 animate-pulse rounded-xl bg-[#34d399]/30" />
       <div className="mb-4 h-6 w-40 animate-pulse rounded-lg bg-[#34d399]/25" />
       <div className="space-y-3">
@@ -11,7 +11,7 @@ export default function Loading() {
               <div className="h-6 w-14 animate-pulse rounded-full bg-[#34d399]/20" />
             </div>
             <div className="h-3 w-full animate-pulse rounded-md bg-[#34d399]/15" />
-            <div className="h-8 w-full animate-pulse rounded-xl bg-[#6C3FE8]/15 mt-3" />
+            <div className="h-8 w-full animate-pulse rounded-xl bg-[#0EA5E9]/15 mt-3" />
           </div>
         ))}
       </div>

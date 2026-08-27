@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition } from 'react';
 import { Lock, Fingerprint, RefreshCw } from 'lucide-react';
@@ -35,7 +35,7 @@ export function AppLockOverlay({ onUnlock }: AppLockOverlayProps) {
         position: 'fixed',
         inset: 0,
         zIndex: 9999,
-        background: 'linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 100%)',
+        background: 'linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -81,7 +81,7 @@ export function AppLockOverlay({ onUnlock }: AppLockOverlayProps) {
           alignItems: 'center',
           gap: 8,
           background: 'white',
-          color: '#6C3FE8',
+          color: '#0EA5E9',
           border: 'none',
           borderRadius: 9999,
           padding: '16px 40px',

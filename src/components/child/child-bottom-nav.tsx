@@ -20,7 +20,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 z-50 w-full max-w-[460px] -translate-x-1/2 border-t border-[rgba(108,63,232,0.12)] bg-white/96 backdrop-blur-xl"
+      className="fixed bottom-0 left-1/2 z-50 w-full max-w-[460px] -translate-x-1/2 border-t border-[rgba(14,165,233,0.12)] bg-white/96 backdrop-blur-xl"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="아이 메뉴"
     >
@@ -42,14 +42,14 @@ export function ChildBottomNav({ childId }: { childId: string }) {
                   style={{
                     width: 44,
                     height: 44,
-                    background: active ? "linear-gradient(145deg, #6C3FE8, #8B5CF6)" : "transparent",
-                    boxShadow: active ? "0 6px 16px rgba(108,63,232,0.40)" : "none",
+                    background: active ? "linear-gradient(145deg, #0EA5E9, #38BDF8)" : "transparent",
+                    boxShadow: active ? "0 6px 16px rgba(14,165,233,0.40)" : "none",
                   }}
                 >
                   {active ? (
                     <span style={{ fontSize: 22 }}>{emoji}</span>
                   ) : (
-                    <Icon style={{ width: 24, height: 24, color: "#A78BFA" }} strokeWidth={2} />
+                    <Icon style={{ width: 24, height: 24, color: "#60A5FA" }} strokeWidth={2} />
                   )}
                 </span>
                 {/* 레이블 */}
@@ -57,7 +57,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
                   style={{
                     fontSize: 13,
                     fontWeight: active ? 800 : 600,
-                    color: active ? "#6C3FE8" : "#8B7FA8",
+                    color: active ? "#0EA5E9" : "#8B7FA8",
                     letterSpacing: "-0.02em",
                   }}
                 >

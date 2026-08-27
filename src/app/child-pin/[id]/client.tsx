@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -99,7 +99,7 @@ function PinFormView({ childId, onSuccess }: { childId: string; onSuccess: () =>
         PIN을 잊었나요?{" "}
         <Link
           href={`/settings/children/${childId}`}
-          className="font-bold text-[#6C3FE8] underline underline-offset-2"
+          className="font-bold text-[#0EA5E9] underline underline-offset-2"
         >
           여기서 PIN 초기화하기 →
         </Link>
@@ -120,7 +120,7 @@ function NoPinView({ childId, onSuccess }: { childId: string; onSuccess: () => v
       <p className="text-center font-display text-2xl font-semibold">아이 모드로 입장</p>
       <p className="mt-3 text-center text-sm leading-6 text-[var(--color-muted)]">
         아직 PIN이 설정되지 않았어요.{" "}
-        <span className="font-bold text-[#6C3FE8]">바로 입장</span>하거나 부모님 설정에서 PIN을 먼저
+        <span className="font-bold text-[#0EA5E9]">바로 입장</span>하거나 부모님 설정에서 PIN을 먼저
         설정할 수 있어요.
       </p>
 
@@ -156,7 +156,7 @@ function DirectEntryButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-full bg-[#6C3FE8] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
+      className="w-full rounded-full bg-[#0EA5E9] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
     >
       {pending ? "입장 중..." : "아이 모드로 입장하기"}
     </button>

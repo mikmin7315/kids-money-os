@@ -36,9 +36,9 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}/borrow`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}/borrow`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 미리쓰기로
       </Link>
 
@@ -138,7 +138,7 @@ export default async function BorrowStatusPage({ params }: { params: Promise<{ i
                   <div className="h-3 rounded-full bg-[var(--monari-surface-soft)] overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
-                      style={{ background: "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)", width: `${paidRatio}%` }}
+                      style={{ background: "linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 80%, #38BDF8 100%)", width: `${paidRatio}%` }}
                     />
                   </div>
                   <div className="mt-2 flex justify-between">

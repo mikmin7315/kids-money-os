@@ -22,7 +22,7 @@ const SLIDES = [
   },
   {
     emoji: "💰",
-    color: "linear-gradient(145deg,#3B0764 0%,#5530CB 60%,#6C3FE8 100%)",
+    color: "linear-gradient(145deg,#0C4B78 0%,#0369A1 60%,#0EA5E9 100%)",
     tag: "이자",
     title: "남긴 돈에\n이자가 붙어요",
     body: "쓰고 남은 용돈을 그냥 두면 매달 이자가 더해져요. 아이가 저축의 힘을 몸으로 느껴요.",

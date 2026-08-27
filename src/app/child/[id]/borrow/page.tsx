@@ -34,14 +34,14 @@ export default async function ChildBorrowPage({ params }: { params: Promise<{ id
   const totalActive = activeBorrows.length + pendingBorrows.length;
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.03em" }}>🛒 미리쓰기</h1>
           <p className="mt-2" style={{ fontSize: 14, fontWeight: 600, color: "#6B7280" }}>
             부모님이 허락하면 용돈 전에 미리 쓸 수 있어요
           </p>

@@ -50,9 +50,9 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
   }, 0);
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}`} className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
@@ -73,7 +73,7 @@ export default async function ChildInterestPage({ params }: { params: Promise<{ 
       {/* 이자 미리보기 히어로 */}
       <div
         className="mb-5 overflow-hidden rounded-[24px] p-5 text-white"
-        style={{ background: "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" }}
+        style={{ background: "linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 80%, #38BDF8 100%)" }}
       >
         <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.65)" }}>
           이번 달 이대로면
@@ -194,7 +194,7 @@ function CalcRow({
     <div className="flex items-center justify-between gap-2">
       <div>
         <p style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: bold ? "var(--monari-ink)" : "var(--monari-ink-muted)" }}>{label}</p>
-        <p style={{ fontSize: 11, color: "#C4B5FD", marginTop: 1 }}>{desc}</p>
+        <p style={{ fontSize: 11, color: "#7DD3FC", marginTop: 1 }}>{desc}</p>
       </div>
       <p style={{ fontSize: 16, fontWeight: 800, color }}>{value}</p>
     </div>

@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -18,7 +18,7 @@ import { formatWon } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 const CHILD_COLORS = [
-  { bg: "linear-gradient(135deg,#6C3FE8,#8B5CF6)", dot: "#6C3FE8" },
+  { bg: "linear-gradient(135deg,#0EA5E9,#38BDF8)", dot: "#0EA5E9" },
   { bg: "linear-gradient(135deg,#EC4899,#F43F5E)", dot: "#EC4899" },
   { bg: "linear-gradient(135deg,#0D9488,#0EA5E9)", dot: "#0D9488" },
   { bg: "linear-gradient(135deg,#D97706,#F59E0B)", dot: "#D97706" },

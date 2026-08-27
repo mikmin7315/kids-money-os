@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Lock, Unlock } from 'lucide-react';
@@ -36,7 +36,7 @@ function handleToggle() {
           <div className="flex items-center gap-3">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-[14px]"
-              style={{ background: enabled ? 'linear-gradient(135deg,#7C3AED,#6C3FE8)' : '#F3F4F6' }}
+              style={{ background: enabled ? 'linear-gradient(135deg,#7C3AED,#0EA5E9)' : '#F3F4F6' }}
             >
               {enabled ? (
                 <Lock size={18} color="white" strokeWidth={2.5} />
@@ -79,7 +79,7 @@ function handleToggle() {
                   className="rounded-[12px] py-2.5 text-[12px] font-bold transition-colors"
                   style={
                     timeout === opt.value
-                      ? { background: 'linear-gradient(135deg,#7C3AED,#6C3FE8)', color: '#fff' }
+                      ? { background: 'linear-gradient(135deg,#7C3AED,#0EA5E9)', color: '#fff' }
                       : { background: '#F3F4F6', color: '#6B7280' }
                   }
                 >
@@ -92,7 +92,7 @@ function handleToggle() {
           <button
             onClick={lockNow}
             className="w-full rounded-[16px] py-3.5 text-[14px] font-bold transition-opacity active:opacity-70"
-            style={{ background: 'linear-gradient(135deg,#3B0764,#6C3FE8)', color: '#fff' }}
+            style={{ background: 'linear-gradient(135deg,#0C4B78,#0EA5E9)', color: '#fff' }}
           >
             지금 잠금
           </button>

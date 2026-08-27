@@ -64,7 +64,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
   });
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기
@@ -78,7 +78,7 @@ export default async function ChildBalancePage({ params }: { params: Promise<{ i
         <p className="detail-kpi-label">총 보유 금액</p>
         <p className="detail-kpi">{formatWon(totalAssets)}</p>
         <p className="detail-kpi-sub">
-          이대로면 이번 달 이자 <strong style={{ color: "#C4B5FD" }}>+{formatWon(estimated)}</strong>
+          이대로면 이번 달 이자 <strong style={{ color: "#7DD3FC" }}>+{formatWon(estimated)}</strong>
         </p>
       </div>
 
@@ -200,8 +200,8 @@ function BalanceHistoryChart({ monthBalances }: {
         <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: "block", overflow: "visible" }} aria-label="최근 6개월 잔액 추이">
           <defs>
             <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6C3FE8" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#6C3FE8" stopOpacity="0.02" />
+              <stop offset="0%" stopColor="#0EA5E9" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#0EA5E9" stopOpacity="0.02" />
             </linearGradient>
           </defs>
           {/* 격자선 */}
@@ -210,7 +210,7 @@ function BalanceHistoryChart({ monthBalances }: {
               key={t}
               x1={PAD.left} y1={PAD.top + chartH * (1 - t)}
               x2={W - PAD.right} y2={PAD.top + chartH * (1 - t)}
-              stroke="#EDE9FE" strokeWidth="1"
+              stroke="#BAE6FD" strokeWidth="1"
             />
           ))}
           {/* 면적 */}
@@ -219,17 +219,17 @@ function BalanceHistoryChart({ monthBalances }: {
           <polyline
             points={polylinePoints}
             fill="none"
-            stroke="#6C3FE8"
+            stroke="#0EA5E9"
             strokeWidth="2.5"
             strokeLinejoin="round"
             strokeLinecap="round"
           />
           {/* 데이터 포인트 */}
           {points.map((p, i) => (
-            <circle key={i} cx={p.x} cy={p.y} r="4" fill="white" stroke="#6C3FE8" strokeWidth="2" />
+            <circle key={i} cx={p.x} cy={p.y} r="4" fill="white" stroke="#0EA5E9" strokeWidth="2" />
           ))}
           {/* 현재 잔액 강조 */}
-          <circle cx={lastPoint.x} cy={lastPoint.y} r="5" fill="#6C3FE8" />
+          <circle cx={lastPoint.x} cy={lastPoint.y} r="5" fill="#0EA5E9" />
           {/* X축 라벨 */}
           {points.map((p, i) => (
             <text key={i} x={p.x} y={H - 2} textAnchor="middle" style={{ fontSize: 9, fill: "#94A3B8", fontWeight: 600 }}>
@@ -242,7 +242,7 @@ function BalanceHistoryChart({ monthBalances }: {
           </text>
         </svg>
         <p className="mt-1 text-center" style={{ fontSize: 11, color: "var(--monari-ink-muted)", fontWeight: 600 }}>
-          현재 잔액 <strong style={{ color: "#6C3FE8" }}>{formatWon(monthBalances[monthBalances.length - 1].balance)}</strong>
+          현재 잔액 <strong style={{ color: "#0EA5E9" }}>{formatWon(monthBalances[monthBalances.length - 1].balance)}</strong>
         </p>
       </div>
     </div>

@@ -60,7 +60,7 @@ export default async function ChildRecordsPage({ params }: { params: Promise<{ i
   const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <div className="detail-shell">
       <Link href={`/child/${id}`} className="detail-back">
         <ArrowLeft size={16} /> 돌아가기

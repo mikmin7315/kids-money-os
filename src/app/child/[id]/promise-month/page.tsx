@@ -39,11 +39,11 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
   const baseRate = policy?.baseInterestRate ?? 0;
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
       <Link
         href={`/child/${id}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]"
       >
         <ArrowLeft size={16} /> 돌아가기
       </Link>
@@ -61,7 +61,7 @@ export default async function ChildPromiseMonthPage({ params }: { params: Promis
       {/* 약속 요약 카드 */}
       <div
         className="mb-5 overflow-hidden rounded-[24px] p-5 text-white"
-        style={{ background: "linear-gradient(145deg, #3B0764 0%, #5530CB 45%, #6C3FE8 80%, #8B5CF6 100%)" }}
+        style={{ background: "linear-gradient(145deg, #0C4B78 0%, #0369A1 45%, #0EA5E9 80%, #38BDF8 100%)" }}
       >
         <div className="flex items-center gap-2 mb-3">
           <Lock size={14} className="text-white/70" />

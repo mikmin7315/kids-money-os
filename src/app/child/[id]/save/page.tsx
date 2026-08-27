@@ -30,21 +30,21 @@ export default async function ChildSavePage({ params }: { params: Promise<{ id: 
   const savingsBalance = summary.wallet.savingsBalance;
 
   return (
-    <div data-theme="child-violet" style={{ background: "#F5F0FF", minHeight: "100dvh" }}>
+    <div data-theme="child-violet" style={{ background: "#E0F2FE", minHeight: "100dvh" }}>
     <main className="px-4 pb-36 pt-8">
-      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#6C3FE8]">
+      <Link href={`/child/${id}`} className="mb-6 inline-flex items-center gap-1.5 text-sm font-bold text-[#0EA5E9]">
         <ArrowLeft size={16} /> 홈으로
       </Link>
       <div className="mb-6">
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#1C1033", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.03em" }}>🐷 저금하기</h1>
         <p className="mt-2" style={{ fontSize: 15, fontWeight: 600, color: "#6B7280" }}>
-          지금 쓸 수 있는 돈 <span style={{ color: "#6C3FE8", fontWeight: 800 }}>{formatWon(summary.wallet.balance)}</span>
+          지금 쓸 수 있는 돈 <span style={{ color: "#0EA5E9", fontWeight: 800 }}>{formatWon(summary.wallet.balance)}</span>
         </p>
       </div>
 
       {totalSaved > 0 && (
         <div className="mb-4 rounded-[24px] bg-[#DDD6FE] p-4">
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#6C3FE899" }}>이번 달 저금 총액</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#0EA5E999" }}>이번 달 저금 총액</p>
           <p className="mt-1 tabular-nums" style={{ fontSize: 24, fontWeight: 900, color: "var(--status-info-solid-text)", letterSpacing: "-0.03em" }}>
             {formatWon(totalSaved)}
           </p>
