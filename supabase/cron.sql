@@ -82,7 +82,27 @@ select cron.schedule(
   $$
 );
 
--- ⑤ expire-subscriptions: 매일 01:05 UTC (KST 10:05)
+-- ⑤ auto-renew-subscriptions: 매일 00:30 UTC (KST 09:30) — expire보다 먼저 갱신 시도
+select cron.unschedule('daily-auto-renew-subscriptions')
+where exists (select 1 from cron.job where jobname = 'daily-auto-renew-subscriptions');
+
+select cron.schedule(
+  'daily-auto-renew-subscriptions',
+  '30 0 * * *',
+  $$
+  select net.http_post(
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_url') || '/functions/v1/auto-renew-subscriptions',
+    headers := jsonb_build_object(
+      'Content-Type',   'application/json',
+      'Authorization',  'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'supabase_service_role_key'),
+      'x-cron-secret',  (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
+    ),
+    body    := '{}'::jsonb
+  );
+  $$
+);
+
+-- ⑥ expire-subscriptions: 매일 01:05 UTC (KST 10:05)
 select cron.unschedule('daily-expire-subscriptions')
 where exists (select 1 from cron.job where jobname = 'daily-expire-subscriptions');
 
