@@ -1,4 +1,5 @@
 import {
+  Baby,
   Bell,
   CalendarClock,
   ChevronRight,
@@ -111,7 +112,9 @@ export default async function SettingsPage() {
 
             {childCount === 0 && (
               <div className="monari-card px-4 py-6 text-center">
-                <p className="text-[32px] mb-2">👶</p>
+                <div className="flex justify-center mb-2">
+                  <Baby size={40} className="text-[var(--monari-ink-muted)]" />
+                </div>
                 <p className="text-[14px] font-extrabold text-[var(--monari-ink)]">아직 아이가 없어요</p>
                 <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">아이를 등록하면 용돈과 이자를 관리할 수 있어요.</p>
                 <Link

@@ -98,6 +98,8 @@
   --shadow-card: var(--monari-shadow-card);
   --shadow-soft: var(--monari-shadow-soft);
   --transition-fast: 160ms;
+  --transition-normal: 240ms;
+  --transition-slow: 400ms;
   --font-sans: "Pretendard Variable", Pretendard, "Noto Sans KR", "Apple SD Gothic Neo",
     Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-display: var(--font-sans);
@@ -360,6 +362,12 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+:focus-visible {
+  outline: 2px solid var(--monari-hero);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 html,
