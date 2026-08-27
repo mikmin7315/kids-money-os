@@ -47,7 +47,7 @@ function StatChip({ emoji, label, value }: { emoji: string; label: string; value
   return (
     <div className="flex min-w-[96px] shrink-0 flex-col items-center gap-1.5 rounded-[16px] border border-[var(--color-chip-border)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98),rgba(255,242,203,0.88))] px-3 py-3 shadow-[var(--shadow-soft)]">
       <span className="text-xl">{emoji}</span>
-      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">{label}</p>
+      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--color-muted)]">{label}</p>
       <p className="text-sm font-extrabold text-[var(--color-text)]">{value}</p>
     </div>
   );

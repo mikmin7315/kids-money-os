@@ -330,7 +330,7 @@ export default async function HomePage() {
 function BalancePill({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div className="flex flex-col items-center py-2.5 px-1">
-      <p className="text-[9px] font-semibold text-[var(--monari-ink-muted)] mb-0.5">{label}</p>
+      <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-0.5">{label}</p>
       <p className="text-[11px] font-black tabular-nums leading-tight" style={{ color }}>{value}</p>
     </div>
   );

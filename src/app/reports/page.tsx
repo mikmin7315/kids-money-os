@@ -451,15 +451,15 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 </div>
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[var(--monari-line)]">
                   <div className="text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">저축률</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">저축률</p>
                     <p className="text-[16px] font-black tabular-nums" style={{ color: saveRatio >= 25 ? "#36C275" : "var(--monari-ink-muted)" }}>{saveRatio}%</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">지출률</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">지출률</p>
                     <p className="text-[16px] font-black tabular-nums" style={{ color: spendRatio >= 75 ? "#FFAA33" : "var(--monari-ink-muted)" }}>{spendRatio}%</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속달성</p>
+                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속달성</p>
                     <p className="text-[16px] font-black tabular-nums" style={{ color: behRate >= 70 ? "#4F7FFF" : "var(--monari-ink-muted)" }}>{behRate}%</p>
                   </div>
                 </div>
@@ -477,17 +477,17 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   <div className="mt-3 w-full space-y-1.5">
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-done)]" />
-                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">저축</span>
+                      <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)] flex-1">저축</span>
                       <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-done)]">{saveRatio}%</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-minus)]" />
-                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">지출</span>
+                      <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)] flex-1">지출</span>
                       <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-minus)]">{spendRatio}%</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--monari-line-strong)]" />
-                      <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)] flex-1">잔여</span>
+                      <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)] flex-1">잔여</span>
                       <span className="text-[11px] font-extrabold tabular-nums text-[var(--monari-ink-muted)]">{Math.max(0, 100 - saveRatio - spendRatio)}%</span>
                     </div>
                   </div>
@@ -499,11 +499,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                     <div className="mt-2 flex gap-3">
                       <div className="flex items-center gap-1">
                         <div className="h-[3px] w-4 rounded-full bg-[var(--monari-done)]" />
-                        <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)]">저축</span>
+                        <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">저축</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <div className="h-[3px] w-4 rounded-full" style={{ background: "#6366f1" }} />
-                        <span className="text-[10px] font-semibold text-[var(--monari-ink-muted)]">약속</span>
+                        <span className="text-[11px] font-semibold text-[var(--monari-ink-muted)]">약속</span>
                       </div>
                     </div>
                   </div>
@@ -520,17 +520,17 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                   <p className="text-[11px] font-semibold text-[var(--monari-hero)] mb-2">📅 이달 예상 결과 · {daysLeft}일 남음</p>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">현재 저축률</p>
+                      <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">현재 저축률</p>
                       <p className="text-[16px] font-black text-[var(--monari-hero)] tabular-nums">{saveRatio}%</p>
                     </div>
                     <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">예상 저축률</p>
+                      <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">예상 저축률</p>
                       <p className={`text-[16px] font-black tabular-nums ${projectedSaveRate >= 30 ? "text-[var(--monari-done)]" : "text-[var(--monari-ink)]"}`}>
                         {projectedSaveRate}%
                       </p>
                     </div>
                     <div className="rounded-[12px] bg-white/70 px-3 py-2.5 text-center">
-                      <p className="text-[10px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속 달성률</p>
+                      <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mb-1">약속 달성률</p>
                       <p className={`text-[16px] font-black tabular-nums ${behRate >= 80 ? "text-[var(--monari-done)]" : behRate >= 50 ? "text-amber-600" : "text-rose-500"}`}>
                         {behRate}%
                       </p>
@@ -1109,9 +1109,9 @@ function TrendBars({ data }: { data: { label: string; saveRate: number; behRate:
 function HeroPill({ label, value, sub, warn }: { label: string; value: string; sub?: string; warn?: boolean }) {
   return (
     <div className="flex flex-col items-center rounded-[14px] bg-white/10 border border-white/15 px-2 py-3 gap-1">
-      <p className="text-[10px] font-semibold text-white/55">{label}</p>
+      <p className="text-[11px] font-semibold text-white/55">{label}</p>
       <p className="text-[16px] font-black text-white leading-none tabular-nums">{value}</p>
-      {sub && <p className={`text-[9px] font-bold ${warn ? "text-rose-300" : "text-sky-300"}`}>{sub}</p>}
+      {sub && <p className={`text-[10px] font-bold ${warn ? "text-rose-300" : "text-sky-300"}`}>{sub}</p>}
     </div>
   );
 }

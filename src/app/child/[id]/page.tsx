@@ -219,7 +219,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <strong className="text-[18px] font-black text-white leading-none">{todayDone}</strong>
-                <span className="text-[9px] font-bold text-white/60 mt-0.5">/ {todayTotal}</span>
+                <span className="text-[10px] font-bold text-white/60 mt-0.5">/ {todayTotal}</span>
               </div>
             </div>
           </Link>
@@ -526,8 +526,8 @@ function CoachingTipCard({ today, childName }: { today: string; childName: strin
     <div className="mb-5 overflow-hidden rounded-[20px]" style={{ background: "linear-gradient(135deg,#E0F2FE 0%,#BAE6FD 100%)", border: "1px solid #7DD3FC" }}>
       <div className="px-4 pt-4 pb-3">
         <div className="flex items-center gap-2 mb-2.5">
-          <span className="rounded-full bg-[#0EA5E9]/10 px-2.5 py-0.5 text-[10px] font-extrabold text-[#0EA5E9]">💬 오늘의 대화</span>
-          <span className="text-[10px] font-semibold text-[#94a3b8]">{tip.topic}</span>
+          <span className="rounded-full bg-[#0EA5E9]/10 px-2.5 py-0.5 text-[11px] font-extrabold text-[#0EA5E9]">💬 오늘의 대화</span>
+          <span className="text-[11px] font-semibold text-[#94a3b8]">{tip.topic}</span>
         </div>
         <div className="flex items-start gap-3">
           <span className="text-[32px] leading-none">{tip.emoji}</span>
@@ -540,7 +540,7 @@ function CoachingTipCard({ today, childName }: { today: string; childName: strin
         </div>
       </div>
       <div className="border-t border-[#7DD3FC]/60 px-4 py-2.5">
-        <p className="text-[10px] font-semibold text-[#94a3b8]">부모님과 함께 이야기 해봐요 · 내일 또 새로운 팁이 와요</p>
+        <p className="text-[11px] font-semibold text-[#94a3b8]">부모님과 함께 이야기 해봐요 · 내일 또 새로운 팁이 와요</p>
       </div>
     </div>
   );

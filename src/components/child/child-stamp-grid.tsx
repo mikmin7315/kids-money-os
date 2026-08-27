@@ -33,7 +33,7 @@ export function ChildStampGrid({ logs, rules }: ChildStampGridProps) {
               <p className="line-clamp-2 text-[11px] font-semibold leading-tight text-[var(--color-text)]">
                 {rule?.title ?? "약속"}
               </p>
-              <p className="text-[10px] text-[var(--color-muted)]">{log.date.slice(5)}</p>
+              <p className="text-[11px] text-[var(--color-muted)]">{log.date.slice(5)}</p>
             </div>
           );
         })}

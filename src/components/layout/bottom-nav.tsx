@@ -21,7 +21,7 @@ export function BottomNav({ pathname }: { pathname: string }) {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-[10px] font-semibold transition ${
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-[11px] font-semibold transition ${
                   active
                     ? "bg-[var(--status-review-bg)] text-[var(--brand-primary)]"
                     : "text-[var(--color-soft)] hover:text-[var(--color-text)]"
