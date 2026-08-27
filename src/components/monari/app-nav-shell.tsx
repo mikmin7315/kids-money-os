@@ -60,7 +60,7 @@ export function AppNavShell({
               <Link
                 key={tab.href}
                 href={tab.href}
-                className="flex flex-1 flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold transition"
+                className="flex flex-1 flex-col items-center justify-center gap-1 py-3 text-[11px] font-bold transition"
                 style={{ color: active ? "var(--monari-hero)" : "var(--monari-ink-muted)" }}
                 aria-current={active ? "page" : undefined}
               >
