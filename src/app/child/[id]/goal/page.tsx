@@ -10,7 +10,7 @@ function formatAmount(n: number) {
   return n.toLocaleString("ko-KR") + "원";
 }
 
-function GoalCard({ goal, childId, isParent }: { goal: GoalRow; childId: string; isParent: boolean }) {
+function GoalCard({ goal, childId, isParent, isChild }: { goal: GoalRow; childId: string; isParent: boolean; isChild: boolean }) {
   const pct = Math.min(100, Math.round((goal.current_amount / goal.target_amount) * 100));
   const remaining = Math.max(0, goal.target_amount - goal.current_amount);
   const achieved = goal.status === "achieved";
@@ -74,15 +74,32 @@ function GoalCard({ goal, childId, isParent }: { goal: GoalRow; childId: string;
         </p>
       )}
 
-      {/* 부모 전용: 기여하기 버튼 */}
-      {isParent && !achieved && (
-        <Link
-          href={`/child/${childId}/goal/${goal.id}/contribute`}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] py-2.5 text-sm font-bold text-white transition active:scale-[0.97]"
-          style={{ background: "linear-gradient(135deg,#0EA5E9,#38BDF8)" }}
-        >
-          🎁 응원하기
-        </Link>
+      {/* 버튼 영역 */}
+      {!achieved && (
+        <div className={`mt-4 ${isParent && isChild ? "grid grid-cols-2 gap-2" : ""}`}>
+          {isChild && (
+            <Link
+              href={`/child/${childId}/goal/${goal.id}/save`}
+              className="flex w-full items-center justify-center gap-2 rounded-[14px] py-2.5 text-sm font-bold text-white transition active:scale-[0.97]"
+              style={{ background: "linear-gradient(135deg,#0EA5E9,#38BDF8)" }}
+            >
+              🐷 저금하기
+            </Link>
+          )}
+          {isParent && (
+            <Link
+              href={`/child/${childId}/goal/${goal.id}/contribute`}
+              className="flex w-full items-center justify-center gap-2 rounded-[14px] py-2.5 text-sm font-bold transition active:scale-[0.97]"
+              style={{
+                background: isChild ? "rgba(14,165,233,0.08)" : "linear-gradient(135deg,#0EA5E9,#38BDF8)",
+                color: isChild ? "#0EA5E9" : "#fff",
+                border: isChild ? "1.5px solid rgba(14,165,233,0.3)" : "none",
+              }}
+            >
+              🎁 응원하기
+            </Link>
+          )}
+        </div>
       )}
     </div>
   );
@@ -96,6 +113,8 @@ export default async function ChildGoalPage({ params }: { params: Promise<{ id: 
   const isParentOrAdmin = auth.user && (auth.profile?.role === "parent" || auth.profile?.role === "admin");
   const isChildMode = childMode.childId === id;
   if (!isParentOrAdmin && !isChildMode) redirect("/login");
+
+  const isChild = isChildMode && !isParentOrAdmin;
 
   const child = bundle.children.find((c) => c.id === id);
   if (!child) notFound();
@@ -166,7 +185,7 @@ export default async function ChildGoalPage({ params }: { params: Promise<{ id: 
             </p>
             <div className="space-y-4">
               {activeGoals.map((goal) => (
-                <GoalCard key={goal.id} goal={goal} childId={id} isParent={!!isParentOrAdmin} />
+                <GoalCard key={goal.id} goal={goal} childId={id} isParent={!!isParentOrAdmin} isChild={isChild} />
               ))}
             </div>
           </div>
@@ -180,7 +199,7 @@ export default async function ChildGoalPage({ params }: { params: Promise<{ id: 
             </p>
             <div className="space-y-4 opacity-70">
               {achievedGoals.map((goal) => (
-                <GoalCard key={goal.id} goal={goal} childId={id} isParent={!!isParentOrAdmin} />
+                <GoalCard key={goal.id} goal={goal} childId={id} isParent={!!isParentOrAdmin} isChild={isChild} />
               ))}
             </div>
           </div>

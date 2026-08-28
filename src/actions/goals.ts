@@ -110,6 +110,37 @@ export async function contributeToGoalAction(input: {
 }
 
 // ────────────────────────────────────────────────────────────
+// 아이 직접 저금 — 아이 모드 (child mode) 에서 호출
+// 지갑 잔액 차감 + 목표 기여 동시 처리 (child_save_to_goal RPC)
+// ────────────────────────────────────────────────────────────
+
+export async function childSaveToGoalAction(input: {
+  goalId: string;
+  childId: string;
+  amount: number;
+}): Promise<ActionResult> {
+  const auth = await requireParentSession();
+  if (!auth.user) return { ok: false, error: "세션이 없습니다." };
+
+  const { goalId, childId, amount } = input;
+  if (amount < 100) return { ok: false, error: "최소 100원 이상 저금할 수 있어요." };
+
+  const supabase = await getSupabaseServerClient();
+  const { data, error } = await supabase.rpc("child_save_to_goal", {
+    p_goal_id: goalId,
+    p_amount: amount,
+  });
+
+  if (error) return { ok: false, error: error.message };
+  const result = data as { ok: boolean; error?: string };
+  if (!result.ok) return { ok: false, error: result.error ?? "저금에 실패했어요." };
+
+  revalidatePath(`/child/${childId}/goal`);
+  revalidatePath(`/child/${childId}`);
+  return { ok: true };
+}
+
+// ────────────────────────────────────────────────────────────
 // 목표 상태 변경 — 부모만
 // ────────────────────────────────────────────────────────────
 
