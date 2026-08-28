@@ -229,18 +229,24 @@ export default async function HomePage() {
                     );
                   })()}
 
-                  <div className="border-t border-[var(--monari-line)] grid grid-cols-2">
+                  <div className="border-t border-[var(--monari-line)] grid grid-cols-3">
                     <Link
                       href={`/child/${summary.child.id}/give-allowance`}
-                      className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold text-emerald-600 border-r border-[var(--monari-line)] transition active:bg-emerald-50"
+                      className="flex items-center justify-center gap-1 py-3 text-[12px] font-bold text-emerald-600 border-r border-[var(--monari-line)] transition active:bg-emerald-50"
                     >
-                      <CircleDollarSign className="h-4 w-4" /> 용돈 주기
+                      <CircleDollarSign className="h-3.5 w-3.5" /> 용돈
+                    </Link>
+                    <Link
+                      href={`/child/${summary.child.id}/goal`}
+                      className="flex items-center justify-center gap-1 py-3 text-[12px] font-bold text-[#0EA5E9] border-r border-[var(--monari-line)] transition active:bg-[var(--monari-hero-lo)]"
+                    >
+                      <span className="text-sm">🎯</span> 목표
                     </Link>
                     <Link
                       href={`/child-pin/${summary.child.id}`}
-                      className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold text-[var(--monari-hero)] transition active:bg-[var(--monari-hero-lo)]"
+                      className="flex items-center justify-center gap-1 py-3 text-[12px] font-bold text-[var(--monari-hero)] transition active:bg-[var(--monari-hero-lo)]"
                     >
-                      <Smartphone className="h-4 w-4" /> 아이 모드
+                      <Smartphone className="h-3.5 w-3.5" /> 아이
                     </Link>
                   </div>
                 </div>
