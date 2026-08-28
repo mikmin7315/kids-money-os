@@ -21,7 +21,7 @@ type PushSubRow = { user_id: string; endpoint: string; p256dh: string; auth: str
 type NotifRow = {
   parent_id: string;
   child_id: string;
-  target: "parent";
+  target: "parent" | "child";
   type: string;
   title: string;
   body: string;
@@ -100,6 +100,14 @@ Deno.serve(async (req) => {
         type: "allowance_paid",
         title: "용돈 지급 완료",
         body: `${rule.children.name}에게 '${rule.title}' 용돈이 지급됐어요!`,
+      });
+      notifications.push({
+        parent_id: rule.children.parent_id,
+        child_id: rule.child_id,
+        target: "child",
+        type: "allowance_received",
+        title: "용돈이 도착했어요! 🎉",
+        body: `'${rule.title}' 용돈이 내 통장에 들어왔어요. 확인해볼까요?`,
       });
     }
   }

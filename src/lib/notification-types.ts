@@ -15,4 +15,6 @@ export const NOTIFICATION_TYPES: NotifTypeMeta[] = [
   { type: "borrow_approved", label: "미리쓰기 승인", target: "child" },
   { type: "borrow_rejected", label: "미리쓰기 반려", target: "child" },
   { type: "allowance_failed", label: "용돈 지급 실패", target: "parent" },
+  { type: "allowance_received", label: "용돈 받음", target: "child" },
+  { type: "interest_settled", label: "이자 정산", target: "child" },
 ];

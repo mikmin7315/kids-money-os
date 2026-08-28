@@ -61,14 +61,24 @@ Deno.serve(async (req) => {
     .select("id, parent_id, name")
     .is("deleted_at", null);
 
-  const notifications = ((children ?? []) as ChildRow[]).map((child) => ({
-    parent_id: child.parent_id,
-    child_id: child.id,
-    target: "parent" as const,
-    type: "interest_paid",
-    title: "이자 정산 완료",
-    body: `${child.name}의 ${month}월 이자가 지급됐어요. 통장을 확인해보세요!`,
-  }));
+  const notifications = ((children ?? []) as ChildRow[]).flatMap((child) => [
+    {
+      parent_id: child.parent_id,
+      child_id: child.id,
+      target: "parent" as const,
+      type: "interest_paid",
+      title: "이자 정산 완료",
+      body: `${child.name}의 ${month}월 이자가 지급됐어요. 통장을 확인해보세요!`,
+    },
+    {
+      parent_id: child.parent_id,
+      child_id: child.id,
+      target: "child" as const,
+      type: "interest_settled",
+      title: "이자가 생겼어요! 📈",
+      body: `${month}월 이자가 내 통장에 들어왔어요. 잔액을 확인해볼까요?`,
+    },
+  ]);
 
   if (notifications.length > 0) {
     await supabase.from("notifications").insert(notifications);
