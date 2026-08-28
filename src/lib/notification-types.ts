@@ -17,4 +17,6 @@ export const NOTIFICATION_TYPES: NotifTypeMeta[] = [
   { type: "allowance_failed", label: "용돈 지급 실패", target: "parent" },
   { type: "allowance_received", label: "용돈 받음", target: "child" },
   { type: "interest_settled", label: "이자 정산", target: "child" },
+  { type: "goal_achieved", label: "목표 달성 (부모)", target: "parent" },
+  { type: "goal_achieved_child", label: "목표 달성 (아이)", target: "child" },
 ];
