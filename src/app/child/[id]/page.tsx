@@ -19,7 +19,6 @@ import type { BehaviorLog } from "@/lib/types";
 import { getAmountMasked } from "@/actions/child-prefs";
 import { AmountMaskToggle } from "@/components/child/amount-mask-toggle";
 import { ChildInterestReportCard } from "@/components/settlement/child-interest-report-card";
-import { ChildHomeTabs } from "@/components/child/child-home-tabs";
 
 export const dynamic = "force-dynamic";
 
@@ -261,176 +260,167 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
         </div>
       </section>
 
-      {/* ── 본문 (3탭) ── */}
+      {/* ── 본문 (단일 스크롤) ── */}
       <main className="px-4 pb-36 pt-5">
-        <ChildHomeTabs
-          statContent={
-            <div>
-              {/* 신규 아이 온보딩 배너 */}
-              {isNewChild && (
-                <div className="mb-6 overflow-hidden rounded-[22px] border border-[#7DD3FC]" style={{ background: "linear-gradient(135deg,#e0f2fe 0%,#bae6fd 100%)" }}>
-                  <div className="px-5 py-5">
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#0EA5E9", marginBottom: 6 }}>👋 통장 개설 완료!</p>
-                    <p style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em", lineHeight: 1.4 }}>
-                      이제 용돈을 받으면<br />여기서 확인할 수 있어요
-                    </p>
-                  </div>
-                  <div className="border-t border-[#7DD3FC] grid grid-cols-2 divide-x divide-[#7DD3FC]">
-                    <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#0EA5E9] transition active:bg-[#7DD3FC]/40">약속 체크하기 ✅</Link>
-                    <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#4424B0] transition active:bg-[#7DD3FC]/40">이자율 보기 📈</Link>
-                  </div>
-                </div>
-              )}
 
-              {/* 이자율 리포트 */}
-              {!isNewChild && <ChildInterestReportCard childId={id} />}
+        {/* 목표 저금통 카드 */}
+        <Link
+          href={`${base}/goal`}
+          className="mb-5 flex items-center gap-3 rounded-[20px] bg-white px-4 py-4 shadow-[0_2px_10px_rgba(14,165,233,0.12)] border border-[#7DD3FC] transition active:scale-[0.97]"
+        >
+          <span className="flex h-12 w-12 items-center justify-center rounded-[16px] bg-[#E0F2FE] text-2xl flex-shrink-0">🎯</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-bold text-[#0EA5E9] mb-0.5">목표 저금통</p>
+            <p className="text-[15px] font-black text-[#0C2D4E]">꿈을 위해 모아봐요!</p>
+          </div>
+          <ArrowRight className="h-4 w-4 text-[#7DD3FC] flex-shrink-0" />
+        </Link>
 
-              {/* 이번 달 행동 달성률 */}
-              {monthAchievementRate !== null && (
-                <MonthAchievementCard rate={monthAchievementRate} targetRate={targetRate} daysElapsed={daysElapsed} base={base} />
-              )}
+        {/* 신규 아이 온보딩 배너 */}
+        {isNewChild && (
+          <div className="mb-5 overflow-hidden rounded-[22px] border border-[#7DD3FC]" style={{ background: "linear-gradient(135deg,#e0f2fe 0%,#bae6fd 100%)" }}>
+            <div className="px-5 py-5">
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#0EA5E9", marginBottom: 6 }}>👋 통장 개설 완료!</p>
+              <p style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em", lineHeight: 1.4 }}>
+                이제 용돈을 받으면<br />여기서 확인할 수 있어요
+              </p>
+            </div>
+            <div className="border-t border-[#7DD3FC] grid grid-cols-2 divide-x divide-[#7DD3FC]">
+              <Link href={`${base}/promise`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#0EA5E9] transition active:bg-[#7DD3FC]/40">약속 체크하기 ✅</Link>
+              <Link href={`${base}/interest`} className="flex items-center justify-center gap-1.5 py-3 text-[13px] font-extrabold text-[#4424B0] transition active:bg-[#7DD3FC]/40">이자율 보기 📈</Link>
+            </div>
+          </div>
+        )}
 
-              {/* 이번 달 흐름 */}
-              <h2 className="mb-3 mt-5" style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>이번 달 흐름</h2>
-              <div className="mb-5 grid grid-cols-2 gap-2.5">
-                <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#BAE6FD" textColor="#4424B0" />
-                <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#DDD6FE" textColor="#0C4B78" />
-                <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#F5F3FF" textColor="#0EA5E9" />
-                <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
+        {/* 이자율 리포트 */}
+        {!isNewChild && <ChildInterestReportCard childId={id} />}
+
+        {/* 이번 달 행동 달성률 */}
+        {monthAchievementRate !== null && (
+          <MonthAchievementCard rate={monthAchievementRate} targetRate={targetRate} daysElapsed={daysElapsed} base={base} />
+        )}
+
+        {/* 이번 달 흐름 */}
+        <h2 className="mb-3 mt-2" style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>이번 달 흐름</h2>
+        <div className="mb-5 grid grid-cols-2 gap-2.5">
+          <KidFlowCard icon="💰" label="받은 용돈" value={masked ? "••••" : formatWon(totalAllowance)} bg="#BAE6FD" textColor="#4424B0" />
+          <KidFlowCard icon="✨" label="이자" value={masked ? "••••" : formatWon(totalInterest)} bg="#DDD6FE" textColor="#0C4B78" />
+          <KidFlowCard icon="🐷" label="저금" value={masked ? "••••" : formatWon(totalSave)} bg="#F5F3FF" textColor="#0EA5E9" />
+          <KidFlowCard icon="🛍️" label="사용" value={masked ? "••••" : formatWon(totalSpend)} bg="#FFE4E6" textColor="#BE123C" />
+        </div>
+
+        {/* 저금 달성률 */}
+        {totalAllowance > 0 && !isNewChild && (
+          <div className="mb-5">
+            <h2 className="mb-3" style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>저금 달성률 🐷</h2>
+            <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
+          </div>
+        )}
+
+        {/* 또래 비교 */}
+        {peerData && !isNewChild && totalAllowance > 0 && (
+          <div className="mb-5">
+            <PeerComparisonCard
+              peer={peerData}
+              childSaveRate={Math.round((totalSave / Math.max(totalAllowance, 1)) * 100)}
+              childName={child.name}
+              masked={masked}
+            />
+          </div>
+        )}
+
+        {/* 오늘의 금융 대화 팁 */}
+        <CoachingTipCard today={today} childName={child.name} />
+
+        {/* 이자 미리보기 */}
+        {policy && summary.wallet.balance > 0 && (
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-3">
+              <h2 style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>이자 미리보기 📈</h2>
+              <Link href={`${base}/interest`} className="text-[13px] font-bold text-[#0EA5E9]">자세히 <ArrowRight className="inline h-3.5 w-3.5" /></Link>
+            </div>
+            <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(14,165,233,0.12)] border border-[#7DD3FC]">
+              <div className="px-5 py-4" style={{ background: "linear-gradient(135deg, #0C4B78 0%, #0EA5E9 100%)" }}>
+                <p className="text-[12px] font-semibold text-white/70 mb-1">이대로면 이번 달</p>
+                <p className="tabular-nums text-white" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em" }}>+{formatWon(estimateInterest(summary.wallet, policy))}</p>
+                <p className="text-[12px] font-semibold text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
               </div>
-
-              {/* 저금 달성률 */}
-              {totalAllowance > 0 && !isNewChild && (
-                <div className="mb-5">
-                  <h2 className="mb-3" style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>저금 달성률 🐷</h2>
-                  <SavingsRateCard totalSave={totalSave} totalAllowance={totalAllowance} masked={masked} base={base} />
+              <div className="divide-y divide-[#E0F2FE]">
+                <div className="flex items-center justify-between px-5 py-3">
+                  <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
+                  <p className="text-[14px] font-extrabold text-[#0C2D4E]">{formatWon(summary.wallet.balance)}</p>
                 </div>
-              )}
-
-              {/* 또래 비교 */}
-              {peerData && !isNewChild && totalAllowance > 0 && (
-                <div className="mb-5">
-                  <PeerComparisonCard
-                    peer={peerData}
-                    childSaveRate={Math.round((totalSave / Math.max(totalAllowance, 1)) * 100)}
-                    childName={child.name}
-                    masked={masked}
-                  />
+                <div className="flex items-center justify-between px-5 py-3">
+                  <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">현재 이자율</p>
+                  <p className="text-[14px] font-extrabold text-[#0EA5E9]">{summary.wallet.currentInterestRate}%</p>
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        )}
 
-              {/* 오늘의 금융 대화 팁 */}
-              <CoachingTipCard today={today} childName={child.name} />
-
-              {/* 이자 미리보기 */}
-              {policy && summary.wallet.balance > 0 && (
-                <div className="mb-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>이자 미리보기 📈</h2>
-                    <Link href={`${base}/interest`} className="text-[13px] font-bold text-[#0EA5E9]">자세히 <ArrowRight className="inline h-3.5 w-3.5" /></Link>
-                  </div>
-                  <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_12px_rgba(14,165,233,0.12)] border border-[#7DD3FC]">
-                    <div className="px-5 py-4" style={{ background: "linear-gradient(135deg, #0C4B78 0%, #0EA5E9 100%)" }}>
-                      <p className="text-[12px] font-semibold text-white/70 mb-1">이대로면 이번 달</p>
-                      <p className="tabular-nums text-white" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em" }}>+{formatWon(estimateInterest(summary.wallet, policy))}</p>
-                      <p className="text-[12px] font-semibold text-white/65 mt-1">이자가 더 생겨요! 🎉</p>
-                    </div>
-                    <div className="divide-y divide-[#E0F2FE]">
-                      <div className="flex items-center justify-between px-5 py-3">
-                        <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">지금 남긴 돈</p>
-                        <p className="text-[14px] font-extrabold text-[#0C2D4E]">{formatWon(summary.wallet.balance)}</p>
+        {/* 최근 내역 */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>최근 내역</h2>
+            <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-bold text-[#0EA5E9]">전체 보기 →</Link>
+          </div>
+          <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(14,165,233,0.1)] border border-[#7DD3FC]">
+            {childTx.length === 0 ? (
+              <div className="py-10 text-center">
+                <p className="text-[32px]">🌱</p>
+                <p className="mt-2 text-[15px] font-bold text-[#0C2D4E]">아직 거래 내역이 없어요</p>
+                <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
+              </div>
+            ) : (
+              <ul>
+                {childTx.map((tx, i) => {
+                  const minus = tx.type === "spend" || tx.type === "borrow";
+                  const saved = tx.type === "save";
+                  return (
+                    <li key={tx.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#F0EEFF]" : ""}`}>
+                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-lg ${minus ? "bg-[#FFE4E6]" : saved ? "bg-[#DDD6FE]" : "bg-[#BAE6FD]"}`}>
+                        {minus ? "🛍️" : saved ? "🐷" : "💰"}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[14px] font-bold text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
+                        <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
                       </div>
-                      <div className="flex items-center justify-between px-5 py-3">
-                        <p className="text-[13px] font-semibold text-[var(--monari-ink-muted)]">현재 이자율</p>
-                        <p className="text-[14px] font-extrabold text-[#0EA5E9]">{summary.wallet.currentInterestRate}%</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                      <p className={`shrink-0 tabular-nums text-[15px] font-extrabold ${minus ? "text-[#BE123C]" : "text-[#0369A1]"}`}>
+                        {minus ? "-" : "+"}{formatWon(tx.amount)}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {/* 빠른 메뉴 */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            href={`${base}/save`}
+            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(14,165,233,0.10)] border border-[#7DD3FC] transition active:scale-[0.97]"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#F5F3FF] text-xl flex-shrink-0">🐷</span>
+            <div className="flex-1">
+              <p className="text-[13px] font-extrabold text-[#0C2D4E]">저금하기</p>
+              <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">돈 모으기</p>
             </div>
-          }
-          recordContent={
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 style={{ fontSize: 17, fontWeight: 900, color: "#0C2D4E", letterSpacing: "-0.02em" }}>최근 내역</h2>
-                <Link href={`${base}/records`} prefetch={false} className="text-[13px] font-bold text-[#0EA5E9]">전체 보기 →</Link>
-              </div>
-              <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_10px_rgba(14,165,233,0.1)] border border-[#7DD3FC]">
-                {childTx.length === 0 ? (
-                  <div className="py-10 text-center">
-                    <p className="text-[32px]">🌱</p>
-                    <p className="mt-2 text-[15px] font-bold text-[#0C2D4E]">아직 거래 내역이 없어요</p>
-                    <p className="mt-1 text-[12px] text-[var(--monari-ink-muted)]">용돈을 받거나 저금을 해봐요!</p>
-                  </div>
-                ) : (
-                  <ul>
-                    {childTx.map((tx, i) => {
-                      const minus = tx.type === "spend" || tx.type === "borrow";
-                      const saved = tx.type === "save";
-                      return (
-                        <li key={tx.id} className={`flex items-center gap-3 px-4 py-3.5 ${i < childTx.length - 1 ? "border-b border-[#F0EEFF]" : ""}`}>
-                          <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-lg ${minus ? "bg-[#FFE4E6]" : saved ? "bg-[#DDD6FE]" : "bg-[#BAE6FD]"}`}>
-                            {minus ? "🛍️" : saved ? "🐷" : "💰"}
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-[14px] font-bold text-[#052E16]">{txLabel(tx.type, tx.memo)}</p>
-                            <p className="mt-0.5 text-[11px] text-[#94a3b8]">{relativeDate(tx.date, today)}</p>
-                          </div>
-                          <p className={`shrink-0 tabular-nums text-[15px] font-extrabold ${minus ? "text-[#BE123C]" : "text-[#0369A1]"}`}>
-                            {minus ? "-" : "+"}{formatWon(tx.amount)}
-                          </p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-              </div>
-              <Link href={`${base}/records`} className="mt-3 flex items-center justify-center gap-2 rounded-[16px] bg-white border border-[#7DD3FC] py-3 text-[13px] font-bold text-[#0EA5E9] transition active:scale-[0.97]">
-                전체 기록 보기 →
-              </Link>
+          </Link>
+          <Link
+            href={`${base}/borrow`}
+            className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(14,165,233,0.10)] border border-[#7DD3FC] transition active:scale-[0.97]"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#BAE6FD] text-xl flex-shrink-0">🛒</span>
+            <div className="flex-1">
+              <p className="text-[13px] font-extrabold text-[#0C2D4E]">미리쓰기</p>
+              <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">먼저 쓰고 나중에 갚기</p>
             </div>
-          }
-          borrowContent={
-            <div>
-              <div className="space-y-3">
-                <Link
-                  href={`${base}/borrow`}
-                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(14,165,233,0.10)] border border-[#7DD3FC] transition active:scale-[0.97]"
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#BAE6FD] text-xl flex-shrink-0">🛒</span>
-                  <div className="flex-1">
-                    <p className="text-[14px] font-extrabold text-[#0C2D4E]">미리쓰기 요청하기</p>
-                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">부모님 허락 받고 먼저 쓰기</p>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-[#7DD3FC]" />
-                </Link>
-                <Link
-                  href={`${base}/borrow-status`}
-                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(14,165,233,0.10)] border border-[#7DD3FC] transition active:scale-[0.97]"
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#FFE4E6] text-xl flex-shrink-0">📋</span>
-                  <div className="flex-1">
-                    <p className="text-[14px] font-extrabold text-[#0C2D4E]">상환 현황 보기</p>
-                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">갚아야 할 금액 확인</p>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-[#7DD3FC]" />
-                </Link>
-                <Link
-                  href={`${base}/settings`}
-                  className="flex items-center gap-3 rounded-[18px] bg-white p-4 shadow-[0_2px_10px_rgba(14,165,233,0.10)] border border-[#7DD3FC] transition active:scale-[0.97]"
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#BAE6FD] text-xl flex-shrink-0">⚙️</span>
-                  <div className="flex-1">
-                    <p className="text-[14px] font-extrabold text-[#0C2D4E]">설정 · 도움말</p>
-                    <p className="text-[11px] font-semibold text-[var(--monari-ink-muted)] mt-0.5">PIN, 금액 가리기 등</p>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-[#7DD3FC]" />
-                </Link>
-              </div>
-            </div>
-          }
-        />
+          </Link>
+        </div>
+
       </main>
 
     </div>
