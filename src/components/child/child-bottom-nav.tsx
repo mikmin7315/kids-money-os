@@ -1,22 +1,21 @@
 ﻿"use client";
 
-import { CheckCircle2, House, PiggyBank, Settings, WalletCards } from "lucide-react";
+import { House, ScrollText, Target, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { label: "홈",     icon: House,         emoji: "🏠" },
-  { label: "약속",   icon: CheckCircle2,  emoji: "✅" },
-  { label: "저금",   icon: PiggyBank,     emoji: "🐷" },
-  { label: "미리쓰기", icon: WalletCards, emoji: "🛒" },
-  { label: "설정",   icon: Settings,      emoji: "⚙️" },
+  { label: "목표", icon: Target,      emoji: "🎯" },
+  { label: "홈",   icon: House,       emoji: "🏠" },
+  { label: "기록", icon: ScrollText,  emoji: "📝" },
+  { label: "나",   icon: UserCircle,  emoji: "🙋" },
 ];
 
 export function ChildBottomNav({ childId }: { childId: string }) {
   const pathname = usePathname();
   const base = `/child/${childId}`;
 
-  const hrefs = [base, `${base}/promise`, `${base}/save`, `${base}/borrow`, `${base}/settings`];
+  const hrefs = [`${base}/goal`, base, `${base}/records`, `${base}/settings`];
 
   return (
     <nav
@@ -24,7 +23,7 @@ export function ChildBottomNav({ childId }: { childId: string }) {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="아이 메뉴"
     >
-      <ul className="grid grid-cols-5">
+      <ul className="grid grid-cols-4">
         {TABS.map(({ label, icon: Icon, emoji }, i) => {
           const href = hrefs[i];
           const active = pathname === href;
