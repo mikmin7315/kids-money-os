@@ -3,21 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession, getChildModeContext } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { invalidateAppData, type GoalRow } from "@/lib/data";
+
+export type { GoalRow };
 
 type ActionResult<T = void> = { ok: boolean; data?: T; error?: string };
-
-export type GoalRow = {
-  id: string;
-  child_id: string;
-  title: string;
-  target_amount: number;
-  current_amount: number;
-  deadline: string | null;
-  image_emoji: string;
-  status: "active" | "achieved" | "paused" | "cancelled";
-  created_at: string;
-  achieved_at: string | null;
-};
 
 // ────────────────────────────────────────────────────────────
 // 목표 조회 — 부모 또는 아이 모드 모두 사용
@@ -73,6 +63,7 @@ export async function createGoalAction(input: {
 
   if (error) return { ok: false, error: error.message };
   revalidatePath(`/child/${childId}/goal`);
+  await invalidateAppData();
   return { ok: true, data: { id: data.id } };
 }
 
@@ -106,6 +97,7 @@ export async function contributeToGoalAction(input: {
   if (!result.ok) return { ok: false, error: result.error ?? "기여에 실패했어요." };
 
   revalidatePath(`/child/${childId}/goal`);
+  await invalidateAppData();
   return { ok: true };
 }
 
@@ -137,6 +129,7 @@ export async function childSaveToGoalAction(input: {
 
   revalidatePath(`/child/${childId}/goal`);
   revalidatePath(`/child/${childId}`);
+  await invalidateAppData();
   return { ok: true };
 }
 
@@ -160,5 +153,6 @@ export async function updateGoalStatusAction(input: {
 
   if (error) return { ok: false, error: error.message };
   revalidatePath(`/child/${input.childId}/goal`);
+  await invalidateAppData();
   return { ok: true };
 }

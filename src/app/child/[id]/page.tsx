@@ -19,19 +19,17 @@ import type { BehaviorLog } from "@/lib/types";
 import { getAmountMasked } from "@/actions/child-prefs";
 import { AmountMaskToggle } from "@/components/child/amount-mask-toggle";
 import { ChildInterestReportCard } from "@/components/settlement/child-interest-report-card";
-import { getChildGoalsAction } from "@/actions/goals";
 
 export const dynamic = "force-dynamic";
 
 export default async function ChildHomePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await requireAppConsent();
-  const [childMode, bundle, dashboard, masked, goalsResult] = await Promise.all([
+  const [childMode, bundle, dashboard, masked] = await Promise.all([
     getChildModeContext(),
     getAppDataBundle(),
     getDashboardView(),
     getAmountMasked(),
-    getChildGoalsAction(id),
   ]);
 
   const isParentOrAdmin = auth.user && (auth.profile?.role === "parent" || auth.profile?.role === "admin");
@@ -47,7 +45,7 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
 
   const peerData = isParentOrAdmin ? await getPeerComparisonAction(child.birthYear) : null;
 
-  const activeGoals = (goalsResult.data ?? []).filter((g) => g.status === "active");
+  const activeGoals = bundle.goals.filter((g) => g.child_id === id && g.status === "active");
   const topGoal = activeGoals[0] ?? null;
 
   const activeRules = bundle.behaviorRules.filter((r) => r.isActive);

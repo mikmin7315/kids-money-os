@@ -30,6 +30,19 @@ import {
   Wallet,
 } from "@/lib/types";
 
+export type GoalRow = {
+  id: string;
+  child_id: string;
+  title: string;
+  target_amount: number;
+  current_amount: number;
+  deadline: string | null;
+  image_emoji: string;
+  status: "active" | "achieved" | "paused" | "cancelled";
+  created_at: string;
+  achieved_at: string | null;
+};
+
 export type AppDataBundle = {
   parent: ParentProfile;
   children: ChildProfile[];
@@ -43,6 +56,7 @@ export type AppDataBundle = {
   walletSnapshots: Wallet[];
   cashSpendRequests: CashSpendRequest[];
   allowanceExecutions: AllowanceExecution[];
+  goals: GoalRow[];
 };
 
 type DatabaseRow = Record<string, unknown>;
@@ -116,7 +130,7 @@ const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
 
   // cash_spend_requests, allowance_executions: fetch separately
   const childIds = mappedChildren.map((c) => c.id);
-  const [cashResult, execResult] = await Promise.all([
+  const [cashResult, execResult, goalsResult] = await Promise.all([
     childIds.length > 0
       ? supabase
           .from("cash_spend_requests")
@@ -133,6 +147,14 @@ const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
             (rows.allowance_rules ?? []).map((row) => String(row.id)))
           .order("scheduled_date", { ascending: false })
           .limit(60)
+      : Promise.resolve({ data: [] }),
+    childIds.length > 0
+      ? supabase
+          .from("goals")
+          .select("id,child_id,title,target_amount,current_amount,deadline,image_emoji,status,created_at,achieved_at")
+          .in("child_id", childIds)
+          .in("status", ["active", "achieved"])
+          .order("created_at", { ascending: false })
       : Promise.resolve({ data: [] }),
   ]);
 
@@ -161,6 +183,7 @@ const fetchAppDataFromSupabase = async (): Promise<AppDataBundle> => {
     walletSnapshots: mappedWalletSnapshots,
     cashSpendRequests: mappedCashRequests,
     allowanceExecutions: mappedExecutions,
+    goals: (goalsResult.data ?? []) as GoalRow[],
   };
 };
 
@@ -224,6 +247,7 @@ function getMockBundle(): AppDataBundle {
     walletSnapshots: [],
     cashSpendRequests: [],
     allowanceExecutions: [],
+    goals: [],
   };
 }
 

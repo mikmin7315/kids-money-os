@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getChildModeContext, requireAppConsent } from "@/lib/auth";
 import { getAppDataBundle } from "@/lib/data";
-import { getChildGoalsAction, type GoalRow } from "@/actions/goals";
+import type { GoalRow } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -119,8 +119,7 @@ export default async function ChildGoalPage({ params }: { params: Promise<{ id: 
   const child = bundle.children.find((c) => c.id === id);
   if (!child) notFound();
 
-  const goalsResult = await getChildGoalsAction(id);
-  const goals = goalsResult.data ?? [];
+  const goals = bundle.goals.filter((g) => g.child_id === id);
   const activeGoals = goals.filter((g) => g.status === "active");
   const achievedGoals = goals.filter((g) => g.status === "achieved");
 
