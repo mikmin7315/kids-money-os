@@ -269,37 +269,50 @@ export default async function ChildHomePage({ params }: { params: Promise<{ id: 
       <main className="px-4 pb-36 pt-5">
 
         {/* 목표 저금통 카드 */}
-        <Link
-          href={`${base}/goal`}
-          className="mb-5 flex items-center gap-3 rounded-[20px] bg-white px-4 py-4 shadow-[0_2px_10px_rgba(14,165,233,0.12)] border border-[#7DD3FC] transition active:scale-[0.97]"
-        >
-          <span className="flex h-12 w-12 items-center justify-center rounded-[16px] bg-[#E0F2FE] text-2xl flex-shrink-0">
-            {topGoal ? topGoal.image_emoji : "🎯"}
-          </span>
-          <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-bold text-[#0EA5E9] mb-0.5">목표 저금통</p>
-            {topGoal ? (
-              <>
-                <p className="text-[14px] font-black text-[#0C2D4E] truncate">{topGoal.title}</p>
-                <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[rgba(14,165,233,0.12)]">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${Math.min(100, Math.round((topGoal.current_amount / topGoal.target_amount) * 100))}%`,
-                      background: "linear-gradient(90deg,#0EA5E9,#38BDF8)",
-                    }}
-                  />
-                </div>
-                <p className="mt-1 text-[11px] text-[#64B5D9]">
-                  {Math.min(100, Math.round((topGoal.current_amount / topGoal.target_amount) * 100))}% 달성
-                </p>
-              </>
-            ) : (
-              <p className="text-[15px] font-black text-[#0C2D4E]">꿈을 위해 모아봐요!</p>
-            )}
-          </div>
-          <ArrowRight className="h-4 w-4 text-[#7DD3FC] flex-shrink-0" />
-        </Link>
+        <div className="mb-5">
+          <Link
+            href={`${base}/goal`}
+            className="flex items-center gap-3 rounded-[20px] bg-white px-4 py-4 shadow-[0_2px_10px_rgba(14,165,233,0.12)] border border-[#7DD3FC] transition active:scale-[0.97]"
+            style={{ borderBottomLeftRadius: isChildMode && topGoal ? 0 : undefined, borderBottomRightRadius: isChildMode && topGoal ? 0 : undefined }}
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-[16px] bg-[#E0F2FE] text-2xl flex-shrink-0">
+              {topGoal ? topGoal.image_emoji : "🎯"}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] font-bold text-[#0EA5E9] mb-0.5">목표 저금통</p>
+              {topGoal ? (
+                <>
+                  <p className="text-[14px] font-black text-[#0C2D4E] truncate">{topGoal.title}</p>
+                  <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[rgba(14,165,233,0.12)]">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${Math.min(100, Math.round((topGoal.current_amount / topGoal.target_amount) * 100))}%`,
+                        background: "linear-gradient(90deg,#0EA5E9,#38BDF8)",
+                      }}
+                    />
+                  </div>
+                  <p className="mt-1 text-[11px] text-[#64B5D9]">
+                    {Math.min(100, Math.round((topGoal.current_amount / topGoal.target_amount) * 100))}% 달성
+                  </p>
+                </>
+              ) : (
+                <p className="text-[15px] font-black text-[#0C2D4E]">꿈을 위해 모아봐요!</p>
+              )}
+            </div>
+            <ArrowRight className="h-4 w-4 text-[#7DD3FC] flex-shrink-0" />
+          </Link>
+          {/* 아이 모드 + 목표 있을 때: 빠른 저금 버튼 */}
+          {isChildMode && topGoal && (
+            <Link
+              href={`${base}/goal/${topGoal.id}/save`}
+              className="flex w-full items-center justify-center gap-2 rounded-b-[20px] py-3 text-sm font-extrabold text-white transition active:scale-[0.98]"
+              style={{ background: "linear-gradient(135deg,#0EA5E9,#38BDF8)", boxShadow: "0 4px 12px rgba(14,165,233,0.25)" }}
+            >
+              🐷 목표에 저금하기
+            </Link>
+          )}
+        </div>
 
         {/* 신규 아이 온보딩 배너 */}
         {isNewChild && (
