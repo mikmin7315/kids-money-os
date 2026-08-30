@@ -129,7 +129,13 @@ export default async function ChildGoalPage({ params }: { params: Promise<{ id: 
         {/* 헤더 */}
         <div className="mb-6 flex items-start justify-between">
           <div>
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#64B5D9", marginBottom: 4 }}>{child.name}</p>
+            <Link
+              href={`/child/${id}`}
+              className="mb-3 inline-flex items-center gap-1 text-[13px] font-semibold"
+              style={{ color: "#64B5D9" }}
+            >
+              ← 홈으로
+            </Link>
             <h1 style={{ fontSize: 26, fontWeight: 900, color: "#0C4B78", letterSpacing: "-0.03em" }}>
               목표 저금통
             </h1>
