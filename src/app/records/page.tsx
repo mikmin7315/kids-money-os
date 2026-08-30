@@ -10,7 +10,10 @@ export const dynamic = "force-dynamic";
 export default async function RecordsPage() {
   await requireParentSession();
   const bundle = await getAppDataBundle();
-  const pendingCount = bundle.behaviorLogs.filter((l) => l.status === "pending").length;
+  const pendingCount =
+    bundle.behaviorLogs.filter((l) => l.status === "pending").length +
+    bundle.borrowRequests.filter((r) => r.status === "pending").length +
+    bundle.cashSpendRequests.filter((r) => r.status === "pending").length;
   const totalRecords = bundle.moneyTransactions.length + bundle.behaviorLogs.length + bundle.borrowRequests.length;
   const moneyIn = bundle.moneyTransactions
     .filter((item) => !["spend", "repay", "unsave"].includes(item.type))

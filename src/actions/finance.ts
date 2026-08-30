@@ -76,7 +76,7 @@ export async function createBehaviorLogAction(input: {
       });
     }
 
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/behaviors");
     revalidatePath(`/child/${input.childId}`);
@@ -128,7 +128,7 @@ export async function approveBehaviorLogAction(input: {
       });
     }
 
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/behaviors");
     revalidatePath("/approvals");
@@ -177,7 +177,7 @@ export async function rejectBehaviorLogAction(input: {
 
     revalidatePath("/behaviors");
     revalidatePath("/approvals");
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath(`/child/${log.childId}`);
     return { ok: true, data: { id: log.id } };
@@ -226,7 +226,7 @@ export async function createMoneyTransactionAction(input: {
       .single();
 
     if (error) throw error;
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/records");
     revalidatePath(`/child/${input.childId}`);
@@ -316,6 +316,7 @@ export async function createBorrowRequestAction(input: {
             body: `${input.requestedAmount.toLocaleString()}원 미리쓰기가 자동 승인 기준(${autoApproveBelow.toLocaleString()}원 이하)으로 자동 승인됐어요.`,
           });
         }
+        await invalidateAppData();
         revalidatePath("/approvals");
         revalidatePath(`/child/${input.childId}`);
         return { ok: true, data: { id: String(data.id) } };
@@ -335,6 +336,7 @@ export async function createBorrowRequestAction(input: {
       });
     }
 
+    await invalidateAppData();
     revalidatePath("/approvals");
     revalidatePath(`/child/${input.childId}`);
     return { ok: true, data: { id: String(data.id) } };
@@ -386,7 +388,7 @@ export async function approveBorrowRequestAction(input: {
       });
     }
 
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/approvals");
     revalidatePath(`/child/${request.childId}`);
@@ -436,7 +438,7 @@ export async function rejectBorrowRequestAction(input: {
     }
 
     revalidatePath("/approvals");
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath(`/child/${request.childId}`);
     return { ok: true, data: { id: request.id } };
@@ -670,7 +672,7 @@ export async function giveAllowanceForm(
     if (error) throw error;
     if (!data) return { ok: false, message: "용돈 지급 결과를 확인하지 못했어요." };
 
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/records");
     revalidatePath("/settings/wallet");
@@ -709,7 +711,7 @@ export async function confirmInterestRateAction(
       return { ok: false, message: "확정할 이자율을 찾지 못했어요." };
     }
 
-    void invalidateAppData();
+    await invalidateAppData();
     revalidatePath("/");
     revalidatePath("/settings");
     revalidatePath(`/child/${childId}`);
@@ -770,6 +772,7 @@ export async function cashSpendAction(
   });
 
   if (error) return { ok: false, message: "기록에 실패했어요." };
+  await invalidateAppData();
   revalidatePath("/approvals");
   if (auth?.user) revalidatePath("/");
   return { ok: true, message: `${amount.toLocaleString()}원 현금 사용을 부모에게 알렸어요. 승인 후 잔액에 반영돼요.` };
@@ -793,6 +796,7 @@ export async function approveCashSpendAction(
   const { error } = await supabase.rpc("approve_cash_spend", { p_request_id: requestId });
   if (error) return { ok: false, message: error.message.includes("Not authorized") ? "권한이 없어요." : "승인에 실패했어요." };
 
+  await invalidateAppData();
   revalidatePath("/approvals");
   revalidatePath("/");
   return { ok: true, message: "현금 사용을 승인했어요." };
@@ -817,6 +821,7 @@ export async function rejectCashSpendAction(
   const { error } = await supabase.rpc("reject_cash_spend", { p_request_id: requestId, p_reason: reason ?? null });
   if (error) return { ok: false, message: "반려에 실패했어요." };
 
+  await invalidateAppData();
   revalidatePath("/approvals");
   return { ok: true, message: "현금 사용을 반려했어요." };
 }
@@ -858,6 +863,7 @@ export async function cancelBorrowRequestAction(
     .eq("status", "pending");
   if (error) return { ok: false, message: "취소 처리에 실패했어요." };
 
+  await invalidateAppData();
   revalidatePath(`/child/${request.childId}/borrow-status`);
   revalidatePath(`/child/${request.childId}`);
   revalidatePath("/approvals");
@@ -953,6 +959,7 @@ export async function repayBorrowInstallmentAction(
   const { error } = await supabase.rpc("repay_borrow_installment", { p_repayment_id: repaymentId });
   if (error) return { ok: false, message: error.message.includes("not found") ? "상환 정보를 찾을 수 없어요." : "상환 처리에 실패했어요." };
 
+  await invalidateAppData();
   revalidatePath("/approvals");
   revalidatePath("/");
   return { ok: true, message: "상환 완료했어요." };

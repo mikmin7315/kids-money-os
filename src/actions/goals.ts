@@ -111,8 +111,12 @@ export async function childSaveToGoalAction(input: {
   childId: string;
   amount: number;
 }): Promise<ActionResult> {
-  const auth = await requireParentSession();
-  if (!auth.user) return { ok: false, error: "세션이 없습니다." };
+  // 아이 모드 또는 부모 세션 모두 허용
+  const [parentAuth, childMode] = await Promise.all([
+    requireParentSession().catch(() => null),
+    getChildModeContext().catch(() => null),
+  ]);
+  if (!parentAuth?.user && !childMode?.childId) return { ok: false, error: "세션이 없습니다." };
 
   const { goalId, childId, amount } = input;
   if (amount < 100) return { ok: false, error: "최소 100원 이상 저금할 수 있어요." };
