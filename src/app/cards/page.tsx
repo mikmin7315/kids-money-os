@@ -54,6 +54,12 @@ export default async function CardsPage() {
   return (
     <AppNavShell>
       <PageHero>
+        <Link
+          href="/settings"
+          className="mb-2 inline-flex items-center gap-1 text-[13px] font-semibold text-white/70"
+        >
+          ← 설정
+        </Link>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">금융</p>
         <div className="flex items-end justify-between gap-3">
           <div>
