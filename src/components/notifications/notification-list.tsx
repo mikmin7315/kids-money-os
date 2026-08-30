@@ -26,6 +26,7 @@ const TYPE_ICON: Record<string, string> = {
   monthly_settlement: "📊",
   goal_achieved: "🎊",
   goal_achieved_child: "🎉",
+  subscription_renewal_failed: "💳",
 };
 
 function getNotificationUrl(notification: AppNotification, target: "parent" | "child"): string | null {

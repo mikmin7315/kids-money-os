@@ -19,4 +19,5 @@ export const NOTIFICATION_TYPES: NotifTypeMeta[] = [
   { type: "interest_settled", label: "이자 정산", target: "child" },
   { type: "goal_achieved", label: "목표 달성 (부모)", target: "parent" },
   { type: "goal_achieved_child", label: "목표 달성 (아이)", target: "child" },
+  { type: "subscription_renewal_failed", label: "구독 자동 갱신 실패", target: "parent" },
 ];
