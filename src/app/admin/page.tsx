@@ -20,6 +20,8 @@ type AdminStats = {
   totalBorrowed: number;
   recentTransactions: RecentTransaction[];
   recentBorrowRequests: RecentBorrowRequest[];
+  plusSubscribers: number;
+  recentPaymentFailures: number;
 };
 
 type RecentTransaction = {
@@ -51,6 +53,8 @@ const emptyStats: AdminStats = {
   totalBorrowed: 0,
   recentTransactions: [],
   recentBorrowRequests: [],
+  plusSubscribers: 0,
+  recentPaymentFailures: 0,
 };
 
 export default async function AdminDashboardPage() {
@@ -177,6 +181,16 @@ export default async function AdminDashboardPage() {
           </div>
         </Section>
 
+        <Section title="구독 현황" description="플러스 구독 현황을 확인합니다.">
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <MetricCard label="플러스 구독자" value={`${stats.plusSubscribers}명`} hint="현재 활성 plus 플랜" />
+            <MetricCard label="최근 결제 실패" value={`${stats.recentPaymentFailures}건`} hint="최근 30일 기준" />
+          </div>
+          <div className="space-y-3">
+            <MenuCard href="/admin/subscriptions" title="구독 관리" description="전체 구독자 목록·결제 내역·갱신 실패를 조회합니다." badge="A-SUB" />
+          </div>
+        </Section>
+
         <Section title="카드 운영">
           <div className="space-y-3">
             <MenuCard href="/admin/cards" title="카드 목록" description="전체 아이 카드 상태·한도·활성 여부를 조회합니다." badge="A-C-01" />
@@ -247,6 +261,7 @@ export default async function AdminDashboardPage() {
 async function loadAdminStats(): Promise<{ stats: AdminStats; loadError: string | null }> {
   try {
     const admin = getSupabaseAdminClient();
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
     const [
       parentsRes,
       adminsRes,
@@ -258,6 +273,8 @@ async function loadAdminStats(): Promise<{ stats: AdminStats; loadError: string 
       recentTransactionsRes,
       recentBorrowsRes,
       childrenNamesRes,
+      plusSubsRes,
+      paymentFailureRes,
     ] = await Promise.all([
       admin.from("profiles").select("id", { count: "exact", head: true }).eq("role", "parent"),
       admin.from("profiles").select("id", { count: "exact", head: true }).eq("role", "admin"),
@@ -278,6 +295,16 @@ async function loadAdminStats(): Promise<{ stats: AdminStats; loadError: string 
         .order("created_at", { ascending: false })
         .limit(5),
       admin.from("children").select("id, name"),
+      admin
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .eq("subscription_tier", "plus")
+        .gt("subscription_expires_at", new Date().toISOString()),
+      admin
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("type", "subscription_renewal_failed")
+        .gte("created_at", thirtyDaysAgo),
     ]);
 
     const firstError = [
@@ -319,6 +346,8 @@ async function loadAdminStats(): Promise<{ stats: AdminStats; loadError: string 
         totalBalance: walletTotals.balance,
         totalSavings: walletTotals.savings,
         totalBorrowed: walletTotals.borrowed,
+        plusSubscribers: plusSubsRes.count ?? 0,
+        recentPaymentFailures: paymentFailureRes.count ?? 0,
         recentTransactions: (recentTransactionsRes.data ?? []).map((row) => ({
           id: String(row.id),
           childName: childNames.get(String(row.child_id)) ?? "알 수 없는 아이",
