@@ -575,6 +575,7 @@ function CoachingTipCard({ today, childName }: { today: string; childName: strin
 }
 
 function txLabel(type: string, memo: string): string {
+  if (type === "save" && memo?.startsWith("목표 저금:")) return memo;
   const labels: Record<string, string> = {
     allowance: "용돈", reward: "약속 보상", spend: memo || "사용",
     save: "저금하기", unsave: "저금 해제", borrow: "미리쓰기",
