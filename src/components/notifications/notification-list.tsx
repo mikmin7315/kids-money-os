@@ -24,6 +24,8 @@ const TYPE_ICON: Record<string, string> = {
   borrow_rejected: "❌",
   allowance_failed: "⚠️",
   monthly_settlement: "📊",
+  goal_achieved: "🎊",
+  goal_achieved_child: "🎉",
 };
 
 function getNotificationUrl(notification: AppNotification, target: "parent" | "child"): string | null {
@@ -33,6 +35,7 @@ function getNotificationUrl(notification: AppNotification, target: "parent" | "c
       return "/approvals";
     }
     if (type === "allowance_failed") return "/";
+    if (type === "goal_achieved" && childId) return `/child/${childId}/goal`;
     return null;
   }
   // child target
@@ -42,6 +45,9 @@ function getNotificationUrl(notification: AppNotification, target: "parent" | "c
   }
   if (type === "borrow_approved" || type === "borrow_rejected" || type === "borrow_auto_approved") {
     return `/child/${childId}`;
+  }
+  if (type === "goal_achieved_child") {
+    return `/child/${childId}/goal`;
   }
   return null;
 }
@@ -221,19 +227,23 @@ function NotificationCard({
     if (linkUrl) router.push(linkUrl);
   }
 
+  const isGoalAchieved = notification.type === "goal_achieved" || notification.type === "goal_achieved_child";
+
   return (
     <button
       type="button"
       onClick={handleClick}
       className={`w-full rounded-[24px] border p-4 text-left transition ${
-        notification.isRead
+        isGoalAchieved && !notification.isRead
+          ? "border-emerald-300 shadow-[0_4px_16px_rgba(52,211,153,0.18)]"
+          : notification.isRead
           ? "border-[var(--monari-line)] bg-[var(--monari-surface-soft)] opacity-75"
           : "border-[var(--monari-line-strong)] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-card)]"
-      } ${linkUrl ? "active:scale-[0.98] cursor-pointer" : ""}`}
+      } ${isGoalAchieved && !notification.isRead ? "bg-gradient-to-br from-emerald-50 to-teal-50" : ""} ${linkUrl ? "active:scale-[0.98] cursor-pointer" : ""}`}
       aria-label={`${notification.title}${notification.isRead ? "" : ", 읽지 않은 알림"}${linkUrl ? ", 탭하여 이동" : ""}`}
     >
       <div className="flex items-start gap-3">
-        <span className="text-xl leading-none">{TYPE_ICON[notification.type] ?? "🔔"}</span>
+        <span className={`leading-none ${isGoalAchieved ? "text-2xl" : "text-xl"}`}>{TYPE_ICON[notification.type] ?? "🔔"}</span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
             <p className={`text-sm font-semibold ${notification.isRead ? "text-[var(--color-muted)]" : "text-[var(--color-text)]"}`}>

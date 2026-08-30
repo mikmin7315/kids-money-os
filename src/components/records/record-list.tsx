@@ -7,6 +7,7 @@ type RecordItem = {
   description: string;
   amount?: number;
   tone: "plus" | "minus" | "pending" | "done";
+  icon?: string;
 };
 
 const transactionLabels: Record<MoneyTransaction["type"], string> = {
@@ -70,7 +71,7 @@ export function RecordList(props: {
                   className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[14px] font-extrabold ${toneClasses(item.tone)}`}
                   aria-hidden="true"
                 >
-                  {item.tone === "minus" ? "−" : item.tone === "pending" ? "…" : "＋"}
+                  {item.icon ?? (item.tone === "minus" ? "−" : item.tone === "pending" ? "…" : "＋")}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
@@ -112,16 +113,20 @@ function buildGroups(props: {
     : props.borrowRequests;
 
   const flat: { date: string; item: RecordItem }[] = [
-    ...filteredTransactions.map((tx) => ({
-      date: tx.date,
-      item: {
-        id: tx.id,
-        title: transactionLabels[tx.type],
-        description: tx.memo || "메모 없음",
-        amount: tx.amount,
-        tone: toneForTx(tx.type),
-      },
-    })),
+    ...filteredTransactions.map((tx) => {
+      const isGoalSave = tx.type === "save" && tx.memo?.startsWith("목표 저금:");
+      return {
+        date: tx.date,
+        item: {
+          id: tx.id,
+          title: isGoalSave ? (tx.memo ?? transactionLabels[tx.type]) : transactionLabels[tx.type],
+          description: isGoalSave ? "목표 저금통에 저금" : (tx.memo || "메모 없음"),
+          amount: tx.amount,
+          tone: toneForTx(tx.type),
+          icon: isGoalSave ? "🎯" : undefined,
+        },
+      };
+    }),
     ...filteredLogs.map((log) => ({
       date: log.date,
       item: {
