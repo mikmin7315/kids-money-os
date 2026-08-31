@@ -36,6 +36,31 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
         </select>
       </div>
 
+      <div>
+        <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">생년월일 * <span className="font-normal">(8자리, 예: 20150301)</span></label>
+        <input
+          name="birth_date"
+          type="text"
+          inputMode="numeric"
+          maxLength={8}
+          placeholder="20150301"
+          required
+          className="w-full rounded-[10px] border border-[var(--color-border)] px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs font-semibold text-[var(--color-muted)]">성별 *</label>
+        <div className="flex gap-3">
+          <label className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-[var(--color-border)] py-2 text-sm has-[:checked]:border-[var(--color-accent)] has-[:checked]:bg-[var(--color-accent)] has-[:checked]:text-white">
+            <input type="radio" name="gender" value="M" className="sr-only" required /> 남자
+          </label>
+          <label className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-[var(--color-border)] py-2 text-sm has-[:checked]:border-[var(--color-accent)] has-[:checked]:bg-[var(--color-accent)] has-[:checked]:text-white">
+            <input type="radio" name="gender" value="F" className="sr-only" /> 여자
+          </label>
+        </div>
+      </div>
+
       <div className="rounded-[10px] bg-[var(--monari-surface-soft)] p-3 text-xs text-[var(--color-muted)]">
         신청 전 <span className="font-bold text-[var(--color-text)]">서비스 이용약관</span> 및{" "}
         <span className="font-bold text-[var(--color-text)]">개인정보 처리방침</span>에 동의하는 것으로 간주됩니다.
@@ -46,7 +71,7 @@ export function CardApplyForm({ childOptions }: { childOptions: { id: string; na
         disabled={pending}
         className="w-full rounded-[10px] bg-[var(--color-accent)] py-3 text-sm font-bold text-white disabled:opacity-50"
       >
-        {pending ? "신청 중..." : "카드 신청 시작하기"}
+        {pending ? "발급 중..." : "선불카드 발급 신청"}
       </button>
     </form>
   );
