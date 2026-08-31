@@ -1,6 +1,6 @@
 "use server";
 
-import { konaPost } from "./client";
+import { konaPost, konaPostEncrypted } from "./client";
 
 export interface KonaUserRegistrationRequest {
   loginId: string;       // 아이 UUID (고유 식별자)
@@ -23,15 +23,19 @@ export interface KonaUserRegistrationResponse {
 export async function registerKonaUser(
   req: KonaUserRegistrationRequest,
 ): Promise<KonaUserRegistrationResponse> {
-  return konaPost<KonaUserRegistrationResponse>("/api/v1/user/registration", {
-    loginId: req.loginId,
-    loginPassword: req.loginPassword,
-    birthDate: req.birthDate,
-    userName: req.userName,
-    email: req.email,
-    nationality: req.nationality,
-    gender: req.gender,
-  });
+  return konaPostEncrypted<KonaUserRegistrationResponse>(
+    "/api/v1/user/registration",
+    {
+      loginId: req.loginId,
+      loginPassword: req.loginPassword,
+      birthDate: req.birthDate,
+      userName: req.userName,
+      email: req.email,
+      nationality: req.nationality,
+      gender: req.gender,
+      serviceProductId: process.env.KONAPLATE_CARD_PRODUCT_ID,
+    },
+  );
 }
 
 export interface KonaCardBalanceResponse {
