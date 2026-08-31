@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, CreditCard } from "lucide-react";
+import { ArrowLeft, BookOpen, Bus, CreditCard, Gamepad2, Heart, HelpCircle, Pill, ShoppingBag, ShoppingCart, Store, Utensils } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
 import { requireParentSession } from "@/lib/auth";
@@ -8,14 +8,23 @@ import { formatWon } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
+const CATEGORY_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
+  convenience:      { label: "편의점",          icon: <Store size={13} />,       color: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400" },
+  convenience_top_up: { label: "편의점 충전",   icon: <Store size={13} />,       color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400" },
+  food:             { label: "음식·식당",        icon: <Utensils size={13} />,    color: "bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400" },
+  education:        { label: "교육",             icon: <BookOpen size={13} />,    color: "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400" },
+  transport:        { label: "교통",             icon: <Bus size={13} />,         color: "bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-400" },
+  entertainment:    { label: "엔터테인먼트",     icon: <Gamepad2 size={13} />,    color: "bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400" },
+  shopping:         { label: "쇼핑",             icon: <ShoppingBag size={13} />, color: "bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400" },
+  mart:             { label: "마트·슈퍼",        icon: <ShoppingCart size={13} />,color: "bg-lime-100 text-lime-600 dark:bg-lime-900/40 dark:text-lime-400" },
+  pharmacy:         { label: "약국",             icon: <Pill size={13} />,        color: "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400" },
+  medical:          { label: "의료",             icon: <Heart size={13} />,       color: "bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400" },
+};
+
+const DEFAULT_META = { label: "기타",     icon: <HelpCircle size={13} />,  color: "bg-[var(--monari-surface-soft)] text-[var(--monari-ink-muted)]" };
+
 const STATUS_LABEL: Record<string, string> = {
   approved: "승인", declined: "거절", cancelled: "취소", reversed: "환불",
-};
-const STATUS_COLOR: Record<string, string> = {
-  approved: "text-[var(--monari-done)]",
-  declined: "text-[var(--monari-minus)]",
-  cancelled: "text-[var(--monari-ink-muted)]",
-  reversed: "text-blue-600",
 };
 
 export default async function CardTransactionsPage({ searchParams }: { searchParams: Promise<{ child?: string }> }) {
@@ -42,7 +51,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
     .from("card_transactions")
     .select("id, card_id, merchant_name, merchant_category, amount, status, approved_at")
     .order("approved_at", { ascending: false })
-    .limit(50);
+    .limit(100);
 
   if (cardIds.length > 0) txQuery = txQuery.in("card_id", cardIds);
 
@@ -55,6 +64,14 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
   });
   const uniqueChildren = [...new Map(childList.map((c) => [c.id, c])).values()];
 
+  // 월별 그룹
+  const groups: Record<string, typeof txList> = {};
+  for (const t of txList) {
+    const key = String(t.approved_at ?? "").slice(0, 7); // YYYY-MM
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(t);
+  }
+
   return (
     <AppNavShell>
       <PageHero>
@@ -63,7 +80,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
         </Link>
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">카드</p>
         <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">카드 사용 내역</h1>
-        <p className="text-[13px] text-white/65">최근 50건</p>
+        <p className="text-[13px] text-white/65">최근 100건</p>
       </PageHero>
 
       <PageContent className="pt-5">
@@ -96,38 +113,63 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
           </div>
         )}
 
-        <section className="mb-6">
-          <SectionTitle>내역</SectionTitle>
-          {txList.length === 0 ? (
-            <div className="mt-3 monari-card px-5 py-12 text-center">
-              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
-                <CreditCard size={26} />
-              </span>
-              <p className="mt-4 text-[15px] font-extrabold text-[var(--monari-ink)]">카드 사용 내역이 없어요</p>
-            </div>
-          ) : (
-            <div className="mt-3 monari-card divide-y divide-[var(--monari-line)]">
-              {txList.map((t) => (
-                <div key={t.id} className="flex items-center justify-between px-4 py-3.5">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[14px] font-semibold text-[var(--monari-ink)] truncate">
-                      {t.merchant_name || "가맹점 미상"}
-                    </p>
-                    <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
-                      {t.child_name} · {t.merchant_category} · {String(t.approved_at ?? "").slice(0, 10)}
-                    </p>
-                  </div>
-                  <div className="ml-3 shrink-0 text-right">
-                    <p className={`tabular-nums text-[14px] font-bold ${STATUS_COLOR[t.status] ?? ""}`}>
-                      {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
-                    </p>
-                    <p className="text-[11px] text-[var(--monari-ink-muted)]">{STATUS_LABEL[t.status] ?? t.status}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        {txList.length === 0 ? (
+          <div className="monari-card px-5 py-12 text-center">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--monari-hero-lo)] text-[var(--monari-hero)]">
+              <CreditCard size={26} />
+            </span>
+            <p className="mt-4 text-[15px] font-extrabold text-[var(--monari-ink)]">카드 사용 내역이 없어요</p>
+            <p className="mt-1 text-[13px] text-[var(--monari-ink-muted)]">카드 결제 시 여기에 내역이 표시돼요</p>
+          </div>
+        ) : (
+          Object.entries(groups).map(([month, items]) => (
+            <section key={month} className="mb-5">
+              <SectionTitle>{month.replace("-", "년 ")}월</SectionTitle>
+              <div className="mt-2 monari-card divide-y divide-[var(--monari-line)]">
+                {items.map((t) => {
+                  const isTopUp = t.merchant_category === "convenience_top_up";
+                  const meta = CATEGORY_META[t.merchant_category] ?? DEFAULT_META;
+                  const amountNum = Number(t.amount);
+
+                  return (
+                    <div key={t.id} className="flex items-center gap-3 px-4 py-3.5">
+                      {/* 카테고리 아이콘 */}
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] ${meta.color}`}>
+                        {meta.icon}
+                      </span>
+
+                      {/* 정보 */}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[14px] font-semibold text-[var(--monari-ink)] truncate">
+                          {t.merchant_name || (isTopUp ? "편의점 충전" : "가맹점 미상")}
+                        </p>
+                        <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
+                          {t.child_name} · {meta.label} · {String(t.approved_at ?? "").slice(0, 10)}
+                        </p>
+                      </div>
+
+                      {/* 금액 */}
+                      <div className="ml-1 shrink-0 text-right">
+                        <p className={`tabular-nums text-[14px] font-bold ${
+                          isTopUp
+                            ? "text-[var(--monari-done)]"
+                            : t.status === "cancelled" || t.status === "reversed"
+                            ? "text-[var(--monari-ink-muted)] line-through"
+                            : "text-[var(--monari-ink)]"
+                        }`}>
+                          {isTopUp ? "+" : t.status === "approved" ? "-" : ""}{formatWon(amountNum)}
+                        </p>
+                        <p className="text-[11px] text-[var(--monari-ink-muted)]">
+                          {isTopUp ? "충전" : (STATUS_LABEL[t.status] ?? t.status)}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ))
+        )}
       </PageContent>
     </AppNavShell>
   );
