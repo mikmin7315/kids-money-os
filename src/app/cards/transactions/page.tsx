@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen, Bus, CreditCard, Gamepad2, Heart, HelpCircle, Pill, ShoppingBag, ShoppingCart, Store, Utensils } from "lucide-react";
 import { AppNavShell, PageHero, PageContent } from "@/components/monari/app-nav-shell";
 import { SectionTitle } from "@/components/monari/ui";
+import { CardSyncButton } from "@/components/cards/card-sync-button";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
@@ -81,6 +82,22 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
         <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/60 mb-1">카드</p>
         <h1 className="text-2xl font-extrabold tracking-tight text-white mb-1">카드 사용 내역</h1>
         <p className="text-[13px] text-white/65">최근 100건</p>
+
+        {/* 카드별 동기화 버튼 */}
+        {(cards ?? []).length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(cards ?? []).map((c) => {
+              const child = Array.isArray(c.children) ? c.children[0] : c.children;
+              return (
+                <CardSyncButton
+                  key={c.id}
+                  cardId={c.id}
+                  childName={String(child?.name ?? "-")}
+                />
+              );
+            })}
+          </div>
+        )}
       </PageHero>
 
       <PageContent className="pt-5">
