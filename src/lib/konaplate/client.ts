@@ -48,14 +48,15 @@ function nowKSTShort(): string {
   return nowKSTLong().slice(0, 14);
 }
 
-// yyMMddHHmmssSSS-xxxxxxx (23자)
+// yyMMddHHmmss-xxxxxxx (20자) — KONA 스펙: 정확히 20자, 밀리초 제외
 function correlationId(): string {
-  const ts = nowKSTLong().slice(2); // 15자 yyMMddHHmmssSSS
+  const ts = nowKSTLong().slice(2, 14); // 12자 yyMMddHHmmss (SSS 밀리초 제거)
   const rand = randomBytes(4).toString("hex").slice(0, 7);
   return `${ts}-${rand}`;
 }
 
 // KMV1:yyyyMMddHHmmssSSS:Base64(HMAC-SHA256(secretKey, bodyString))
+// 500 "tid too long" 시절에 이 형식(67자, 표준 base64 with = 패딩)으로 KONA 인증 통과 확인됨
 function makeTranToken(bodyString: string): string {
   const sig = createHmac("sha256", SECRET_KEY)
     .update(bodyString)
