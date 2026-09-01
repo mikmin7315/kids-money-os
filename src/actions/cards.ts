@@ -316,6 +316,50 @@ export async function rechargeCardAction(
   redirect("/cards");
 }
 
+export async function verifyKycAction(verificationId: string): Promise<{
+  ok: boolean;
+  ci?: string;
+  name?: string;
+  birthDate?: string;
+  gender?: string;
+  message?: string;
+}> {
+  await requireParentSession();
+
+  const apiSecret = process.env.PORTONE_API_SECRET;
+  if (!apiSecret) return { ok: false, message: "KYC 서비스 설정이 되어있지 않아요." };
+
+  try {
+    const res = await fetch(
+      `https://api.portone.io/identity-verifications/${encodeURIComponent(verificationId)}`,
+      { headers: { Authorization: `PortOne ${apiSecret}` } },
+    );
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({})) as { message?: string };
+      return { ok: false, message: body.message ?? "본인인증 결과 조회에 실패했어요." };
+    }
+
+    const data = await res.json() as {
+      status: string;
+      identityInfo?: { ci?: string; name?: string; birthdate?: string; gender?: string };
+      verifiedCustomer?: { ci?: string; name?: string; birthdate?: string; gender?: string };
+    };
+
+    if (data.status !== "VERIFIED") return { ok: false, message: "본인인증이 완료되지 않았어요." };
+
+    const info = data.identityInfo ?? data.verifiedCustomer ?? {};
+    const ci = info.ci ?? "";
+    const name = info.name ?? "";
+    const birthDate = (info.birthdate ?? "").replace(/-/g, ""); // YYYY-MM-DD → YYYYMMDD
+    const gender = info.gender === "MALE" ? "M" : info.gender === "FEMALE" ? "F" : "";
+
+    return { ok: true, ci, name, birthDate, gender };
+  } catch {
+    return { ok: false, message: "본인인증 중 오류가 발생했어요." };
+  }
+}
+
 export async function getCardBalanceAction(cardId: string): Promise<{ ok: boolean; balance?: number; message?: string }> {
   const auth = await requireParentSession();
   const supabase = await getSupabaseServerClient();
