@@ -396,7 +396,7 @@ export interface KonaRechargeRequest {
 export interface KonaRechargeResponse {
   nrNumber: string;                              // KONA 거래 참조번호
   response: { code: string; description: string };
-  isPending: boolean;
+  result: "COMPLETED" | "FAILED" | "PENDING";
 }
 
 export async function rechargeKonaCard(

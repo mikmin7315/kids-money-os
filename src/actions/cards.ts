@@ -283,12 +283,12 @@ export async function rechargeCardAction(
       oneTimeToken: token.oneTimeToken,
     });
 
-    // isPending: true 이면 결과 확인 (최대 3회 폴링)
-    if (result.isPending) {
+    // PENDING 이면 결과 확인 (최대 3회 폴링)
+    if (result.result === "PENDING") {
       for (let i = 0; i < 3; i++) {
         await new Promise((r) => setTimeout(r, 2000));
         const check = await checkKonaRechargeResult(sequenceId);
-        if (!check.isPending) break;
+        if (check.result !== "PENDING") break;
       }
     }
 
