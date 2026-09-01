@@ -6,6 +6,7 @@ import { CardToggleForm } from "@/components/cards/card-toggle-form";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
+import { getKonaCards } from "@/lib/konaplate/cards";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export default async function CardsPage() {
 
   const { data: cards } = await supabase
     .from("child_cards")
-    .select("id, status, is_enabled, daily_limit, monthly_limit, last4, issued_at, child_id, children(name)")
+    .select("id, status, is_enabled, daily_limit, monthly_limit, last4, issued_at, child_id, application_id, children(name)")
     .eq("parent_id", auth.user!.id)
     .not("status", "in", '("cancelled")')
     .order("issued_at", { ascending: false });
@@ -27,9 +28,26 @@ export default async function CardsPage() {
     .not("status", "in", '("cancelled","rejected")')
     .order("created_at", { ascending: false });
 
+  // 카드별 KONA 잔액 조회 (application_id → external_reference → getKonaCards)
+  const appIds = (cards ?? []).map((c) => c.application_id).filter(Boolean) as string[];
+  const { data: appRows } = appIds.length > 0
+    ? await supabase.from("card_applications").select("id, external_reference").in("id", appIds)
+    : { data: [] };
+
+  const balanceMap: Record<string, number> = {};
+  await Promise.allSettled(
+    (appRows ?? []).map(async (app) => {
+      if (!app.external_reference) return;
+      const result = await getKonaCards(Number(app.external_reference));
+      const b = result.cardDataInfo?.[0]?.balance ?? 0;
+      // appId → balance 매핑
+      balanceMap[app.id] = b;
+    })
+  );
+
   const cardList = (cards ?? []).map((c) => {
     const child = Array.isArray(c.children) ? c.children[0] : c.children;
-    return { ...c, child_name: String(child?.name ?? "-") };
+    return { ...c, child_name: String(child?.name ?? "-"), balance: balanceMap[c.application_id ?? ""] ?? null };
   });
 
   const appList = (apps ?? []).map((a) => {
@@ -121,8 +139,15 @@ export default async function CardsPage() {
                       </span>
                     </div>
                     {card.last4 && (
-                      <p className="text-[12px] text-[var(--monari-ink-muted)] mb-4">**** **** **** {card.last4}</p>
+                      <p className="text-[12px] text-[var(--monari-ink-muted)]">**** **** **** {card.last4}</p>
                     )}
+                    {card.balance !== null && (
+                      <p className="mt-1 text-[22px] font-extrabold text-[var(--monari-ink)] mb-3">
+                        {formatWon(card.balance)}
+                        <span className="ml-1 text-[13px] font-semibold text-[var(--monari-ink-muted)]">잔액</span>
+                      </p>
+                    )}
+                    {card.balance === null && <div className="mb-4" />}
 
                     {/* 한도 */}
                     <div className="grid grid-cols-2 gap-3 mb-4">

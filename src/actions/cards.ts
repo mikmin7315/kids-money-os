@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { registerKonaUser, KONA_TC_IDS } from "@/lib/konaplate/cards";
+import { registerKonaUser, KONA_TC_IDS, changeKonaCardStatus, getKonaCards } from "@/lib/konaplate/cards";
 
 export type CardFormState = { ok: boolean; message: string };
 
@@ -145,12 +145,44 @@ export async function toggleCardAction(
   const enabled = formData.get("is_enabled") === "true";
 
   const supabase = await getSupabaseServerClient();
+
+  // DB 먼저 업데이트
   const { error } = await supabase
     .from("child_cards")
     .update({ is_enabled: enabled })
     .eq("id", cardId)
     .eq("parent_id", auth.user!.id);
   if (error) return { ok: false, message: "변경에 실패했어요." };
+
+  // KONA PLATE API로 실제 카드 상태 변경
+  try {
+    const { data: card } = await supabase
+      .from("child_cards")
+      .select("application_id")
+      .eq("id", cardId)
+      .single();
+
+    if (card?.application_id) {
+      const { data: app } = await supabase
+        .from("card_applications")
+        .select("external_reference, notes")
+        .eq("id", card.application_id)
+        .single();
+
+      if (app?.external_reference) {
+        const notes = typeof app.notes === "string" ? JSON.parse(app.notes) : (app.notes ?? {});
+        const userId = Number(app.external_reference);
+        const par: string = notes.par ?? "";
+        const cardNo: string = notes.cardNo ?? "";
+
+        if (par && cardNo) {
+          await changeKonaCardStatus(userId, par, cardNo, enabled ? "ACTIVE" : "SUSPEND");
+        }
+      }
+    }
+  } catch {
+    // KONA API 실패해도 DB 변경은 유지 (재시도 가능)
+  }
 
   revalidatePath("/cards");
   return { ok: true, message: enabled ? "카드를 활성화했어요." : "카드를 일시 정지했어요." };
@@ -179,6 +211,34 @@ export async function updateCardLimitsAction(
 
   revalidatePath("/cards");
   return { ok: true, message: "한도를 변경했어요." };
+}
+
+export async function getCardBalanceAction(cardId: string): Promise<{ ok: boolean; balance?: number; message?: string }> {
+  const auth = await requireParentSession();
+  const supabase = await getSupabaseServerClient();
+
+  const { data: card } = await supabase
+    .from("child_cards")
+    .select("application_id")
+    .eq("id", cardId)
+    .eq("parent_id", auth.user!.id)
+    .single();
+  if (!card?.application_id) return { ok: false, message: "카드 정보를 찾을 수 없어요." };
+
+  const { data: app } = await supabase
+    .from("card_applications")
+    .select("external_reference")
+    .eq("id", card.application_id)
+    .single();
+  if (!app?.external_reference) return { ok: false, message: "연동 정보가 없어요." };
+
+  try {
+    const result = await getKonaCards(Number(app.external_reference));
+    const balance = result.cardDataInfo?.[0]?.balance ?? 0;
+    return { ok: true, balance };
+  } catch {
+    return { ok: false, message: "잔액 조회에 실패했어요." };
+  }
 }
 
 export async function reportCardLostAction(
