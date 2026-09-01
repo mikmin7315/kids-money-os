@@ -171,7 +171,7 @@ function decryptJWE(jwe: string): string {
   );
 }
 
-/** 평문 JSON 요청 (암호화 불필요 엔드포인트) */
+/** 평문 JSON 요청 — request는 평문이지만 response가 encData로 올 수 있음 (예: /api/v1/payment/no-hce) */
 export async function konaPost<T>(path: string, body: unknown): Promise<T> {
   const bodyString = JSON.stringify(body);
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -181,7 +181,12 @@ export async function konaPost<T>(path: string, body: unknown): Promise<T> {
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`KONA PLATE ${res.status}: ${text}`);
-  return JSON.parse(text) as T;
+  const parsed = JSON.parse(text) as Record<string, unknown>;
+  if (parsed.encData && typeof parsed.encData === "string" && CLIENT_PRIVATE_KEY) {
+    const plaintext = decryptJWE(parsed.encData);
+    return JSON.parse(plaintext) as T;
+  }
+  return parsed as T;
 }
 
 /** JWE 암호화 요청 (개인정보 포함 엔드포인트) + 응답 복호화 */

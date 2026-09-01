@@ -348,7 +348,7 @@ export interface KonaPaymentCancelNoHceResponse {
 export async function cancelKonaPayment(
   req: KonaPaymentCancelNoHceRequest,
 ): Promise<KonaPaymentCancelNoHceResponse> {
-  return konaPost<KonaPaymentCancelNoHceResponse>(
+  return konaPostEncrypted<KonaPaymentCancelNoHceResponse>(
     "/api/v1/payment/cancel/no-hce",
     req,
   );
@@ -444,7 +444,7 @@ export async function cancelKonaRecharge(
 export interface KonaRechargeResultResponse {
   nrNumber?: string;
   response: { code: string; description: string };
-  isPending: boolean;
+  result: "COMPLETED" | "FAILED" | "PENDING";
 }
 
 export async function checkKonaRechargeResult(

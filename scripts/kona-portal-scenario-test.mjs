@@ -421,6 +421,7 @@ if (dcvv && oneTimeToken) {
   if (s5.code === SUCCESS) {
     if (s5.data?.isPending === true) {
       // 비동기 처리 중 — 결과 polling
+      // /result/inquiry 응답: result = "COMPLETED" | "FAILED" | "PENDING"
       console.log("  isPending=true → 충전 결과 polling...");
       for (let attempt = 0; attempt < 10; attempt++) {
         await sleep(2000);
@@ -430,10 +431,11 @@ if (dcvv && oneTimeToken) {
           { sequenceId: CHARGE_SEQ_ID },
           false,
         );
-        const pending = s5p.data?.isPending;
-        console.log(`  isPending=${pending} code=${s5p.code}`);
-        if (s5p.code === SUCCESS && pending === false) { chargeOk = true; passed++; break; }
-        if (s5p.code !== SUCCESS && s5p.code !== "?") { console.log(`  ⛔ 충전 최종 실패: ${s5p.code}`); break; }
+        const result = s5p.data?.result;
+        console.log(`  result=${result ?? "?"} code=${s5p.code}`);
+        if (result === "COMPLETED") { chargeOk = true; passed++; break; }
+        if (result === "FAILED")    { console.log("  ⛔ 충전 최종 실패: FAILED"); break; }
+        // result === "PENDING" → 계속 polling
       }
       if (!chargeOk) console.log("  ⚠ 충전 결과 미확정 (timeout)");
     } else {
@@ -514,7 +516,7 @@ if (s8.code === SUCCESS) passed++;
 await sleep(500);
 
 // ─────────────────────────────────────────────────────────
-//  9/9  결제 취소 (No-HCE)  POST /api/v1/payment/cancel/no-hce  (reqEncrypt: N)
+//  9/9  결제 취소 (No-HCE)  POST /api/v1/payment/cancel/no-hce  (reqEncrypt: Y)
 // ─────────────────────────────────────────────────────────
 attempted++;
 if (nrNumber) {
@@ -524,7 +526,7 @@ if (nrNumber) {
     nrNumber,
     merchantId: MERCHANT.merchantId,
     channel:    "OPENAPI",
-  }, false);
+  }, true);
   if (s9.code === SUCCESS) passed++;
 } else {
   console.log("\n  [9/9 결제 취소] 결제 승인 없음 → 건너뜀");
