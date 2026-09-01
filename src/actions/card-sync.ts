@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { getKonaTransactions } from "@/lib/konaplate/cards";
+import { getKonaTransactions, KonaTransactionItem } from "@/lib/konaplate/cards";
 
 // KONA PLATE API에서 거래 내역을 가져와 card_transactions에 동기화
 export async function syncCardTransactionsAction(cardId: string): Promise<{ ok: boolean; message: string; count?: number }> {
@@ -21,10 +21,16 @@ export async function syncCardTransactionsAction(cardId: string): Promise<{ ok: 
 
   const { data: app } = await supabase
     .from("card_applications")
-    .select("external_reference")
+    .select("external_reference, notes")
     .eq("id", card.application_id!)
     .single();
   if (!app?.external_reference) return { ok: false, message: "카드 연동 정보가 없어요." };
+
+  const notes = typeof app.notes === "string" ? JSON.parse(app.notes) : (app.notes ?? {});
+  const par: string = notes.par ?? "";
+  if (!par) return { ok: false, message: "카드 PAR 정보가 없어요." };
+
+  const userId = Number(app.external_reference);
 
   // 최근 3개월 조회
   const now = new Date();
@@ -32,10 +38,10 @@ export async function syncCardTransactionsAction(cardId: string): Promise<{ ok: 
     .toISOString().slice(0, 10).replace(/-/g, "");
   const toDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
-  let txList: Awaited<ReturnType<typeof getKonaTransactions>>["transactions"];
+  let txList: KonaTransactionItem[];
   try {
-    const result = await getKonaTransactions(app.external_reference, fromDate, toDate);
-    txList = result.transactions;
+    const result = await getKonaTransactions(userId, par, fromDate, toDate);
+    txList = result.transactionInfo;
   } catch (err) {
     return { ok: false, message: `코나플레이트 API 오류: ${String(err).slice(0, 80)}` };
   }
@@ -51,21 +57,21 @@ export async function syncCardTransactionsAction(cardId: string): Promise<{ ok: 
   const existingIds = new Set(
     (existing ?? []).map((r) => {
       const p = r.raw_payload as Record<string, unknown> | null;
-      return String(p?.transactionId ?? "");
+      return String(p?.approvalCode ?? "");
     }).filter(Boolean)
   );
 
-  const newTxs = txList.filter((t) => !existingIds.has(t.transactionId));
+  const newTxs = txList.filter((t: KonaTransactionItem) => !existingIds.has(t.approvalCode));
   if (!newTxs.length) return { ok: true, message: "이미 최신 상태예요.", count: 0 };
 
-  const rows = newTxs.map((t) => ({
+  const rows = newTxs.map((t: KonaTransactionItem) => ({
     card_id: card.id,
     child_id: card.child_id,
     merchant_name: t.merchantName || "가맹점 미상",
-    merchant_category: mapCategory(t.merchantCategory),
-    amount: Math.abs(t.amount),
-    status: mapStatus(t.status),
-    approved_at: parseKonaTime(t.approvedAt),
+    merchant_category: mapCategory(""),
+    amount: Math.abs(t.trAmount),
+    status: mapStatus(t.authCancelType),
+    approved_at: parseKonaTime(t.approvalDateTime),
     raw_payload: t as unknown as Record<string, unknown>,
   }));
 

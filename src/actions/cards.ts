@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { registerKonaUser } from "@/lib/konaplate/cards";
+import { registerKonaUser, KONA_TC_IDS } from "@/lib/konaplate/cards";
 
 export type CardFormState = { ok: boolean; message: string };
 
@@ -67,6 +67,7 @@ export async function applyCardAction(
   try {
     const konaEmail = `${childId.replace(/-/g, "").slice(0, 12)}@monari.card`;
     const kona = await registerKonaUser({
+      ci: String(formData.get("ci") ?? ""),
       loginId: childId.replace(/-/g, "").slice(0, 20),
       loginPassword: birthDate.slice(2), // 생년월일 6자리 (YYMMDD)
       birthDate,
@@ -76,15 +77,23 @@ export async function applyCardAction(
         : konaEmail,
       nationality: "KOR",
       gender,
+      mobileNumber: String(formData.get("mobile_number") ?? "01000000000"),
+      addressInfo: {
+        address: String(formData.get("address") ?? "서울특별시 강남구 테헤란로 1"),
+        zipCode: String(formData.get("zip_code") ?? "06234"),
+      },
+      joinChannel: "KONA",
+      tcIdList: KONA_TC_IDS,
     });
 
     // 신청 상태 → submitted, external_reference에 코나 userId 저장
+    const { cardNo, expiryDate, par } = kona.basicCardInfo;
     await supabase
       .from("card_applications")
       .update({
         status: "submitted",
         external_reference: kona.userId,
-        notes: JSON.stringify({ cardNo: kona.cardNo, expiryDate: kona.expiryDate }),
+        notes: JSON.stringify({ cardNo, expiryDate, par }),
       })
       .eq("id", application.id);
 
@@ -95,16 +104,16 @@ export async function applyCardAction(
       application_id: application.id,
       status: "active",
       partner: "konaplate",
-      last4: kona.cardNo.slice(-4),
+      last4: cardNo.slice(-4),
       issued_at: new Date().toISOString(),
-      expires_at: `20${kona.expiryDate.slice(0, 2)}-${kona.expiryDate.slice(2)}-01`,
+      expires_at: `20${expiryDate.slice(0, 2)}-${expiryDate.slice(2)}-01`,
     });
 
     // 연동 로그
     await supabase.from("card_integration_logs").insert({
       event_type: "user_registration",
       request: { loginId: childId.slice(0, 8), childId },
-      response: { userId: kona.userId, cardNo: `****${kona.cardNo.slice(-4)}` },
+      response: { userId: kona.userId, cardNo: `****${cardNo.slice(-4)}` },
       status_code: 200,
     });
   } catch (err) {
