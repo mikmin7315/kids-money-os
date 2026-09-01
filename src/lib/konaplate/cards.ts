@@ -231,12 +231,15 @@ export async function requestKonaBankAccountArs(
   );
 }
 
-// ARS 등록: userId + bankCode + bankAccount
+// ARS 등록: 공식 필수 파라미터 6개
 // response에 bankAccRegNo 포함
 export interface KonaBankAccountArsRegisterRequest {
   userId: number;
   bankCode: string;
   bankAccount: string;
+  bankName: string;  // 은행명 (예: "IBK기업은행")
+  userName: string;  // 예금주 성명
+  birthDate: string; // YYYYMMDD
 }
 
 export interface KonaBankAccountArsRegisterResponse {

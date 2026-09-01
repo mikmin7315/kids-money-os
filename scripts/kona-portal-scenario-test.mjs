@@ -1,9 +1,12 @@
 // scripts/kona-portal-scenario-test.mjs
 // KONA PLATE 포털 테스트 데이터 — 전체 결제 시나리오
-// 회원가입 → 은행계좌 등록 → 발급카드 연결 → 충전 → 잔액조회 → 결제승인 → 거래내역 → 결제취소
+// 회원가입 → 은행계좌 등록(ARS) → 실물카드 연결 → 충전 → 잔액조회 → 결제승인 → 거래내역 → 결제취소
 
 import { readFileSync } from "fs";
-import { createHmac, publicEncrypt, randomBytes, createCipheriv, constants } from "crypto";
+import {
+  createHmac, publicEncrypt, privateDecrypt,
+  randomBytes, createCipheriv, createDecipheriv, constants,
+} from "crypto";
 
 // ── 환경 변수 로드 ─────────────────────────────────────────
 function loadEnv(path) {
@@ -36,12 +39,17 @@ function loadEnv(path) {
 }
 
 const env = loadEnv(".env.local");
-const BASE_URL   = env.KONAPLATE_BASE_URL       ?? "https://sandbox.konaplate.com/open-api";
-const ASP_ID     = env.KONAPLATE_ASP_ID         ?? "";
-const ACCESS_KEY = env.KONAPLATE_ACCESS_KEY      ?? "";
-const SECRET_KEY = env.KONAPLATE_SECRET_KEY      ?? "";
-const CRYPTO_KEY_ID    = env.KONAPLATE_CRYPTO_KEY_ID    ?? "";
+const BASE_URL          = env.KONAPLATE_BASE_URL          ?? "https://sandbox.konaplate.com/open-api";
+const ASP_ID            = env.KONAPLATE_ASP_ID            ?? "";
+const ACCESS_KEY        = env.KONAPLATE_ACCESS_KEY        ?? "";
+const SECRET_KEY        = env.KONAPLATE_SECRET_KEY        ?? "";
+const CRYPTO_KEY_ID     = env.KONAPLATE_CRYPTO_KEY_ID     ?? "";
 const SERVER_PUBLIC_KEY = env.KONAPLATE_SERVER_PUBLIC_KEY ?? "";
+const CLIENT_PRIVATE_KEY = env.KONAPLATE_CLIENT_PRIVATE_KEY ?? "";
+
+if (!CLIENT_PRIVATE_KEY) {
+  console.warn("⚠  KONAPLATE_CLIENT_PRIVATE_KEY 미설정 — 응답 복호화 불가 (encData 원문 노출)");
+}
 
 // ── KST 타임스탬프 ────────────────────────────────────────
 function nowKST() {
@@ -59,10 +67,14 @@ function makeCorr20() {
   return `${ts17.slice(2, 14)}-${randomBytes(4).toString("hex").slice(0, 7)}`;
 }
 
-// ── JWE 암호화 (RSA-OAEP-256 + A128GCM) ─────────────────
+// ── JWE 유틸 ──────────────────────────────────────────────
 function b64url(buf) {
   return buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
+function fromB64url(s) {
+  return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+}
+
 function encryptJWE(plaintext) {
   const header = { enc: "A128GCM", alg: "RSA-OAEP-256" };
   const encodedHeader = b64url(Buffer.from(JSON.stringify(header)));
@@ -77,18 +89,33 @@ function encryptJWE(plaintext) {
   return [encodedHeader, b64url(encryptedKey), b64url(iv), b64url(ciphertext), b64url(tag)].join(".");
 }
 
+// 응답 JWE 복호화 (resEncrypt: Y — RSA-OAEP-256 + A128GCM / A256GCM)
+function decryptJWE(jwe) {
+  const parts = jwe.split(".");
+  if (parts.length !== 5) throw new Error(`Invalid JWE (${parts.length} parts)`);
+  const [encodedHeader, encKeyB64, ivB64, ciphertextB64, tagB64] = parts;
+  const header = JSON.parse(fromB64url(encodedHeader).toString("utf8"));
+  const cipherAlgo = header.enc === "A256GCM" ? "aes-256-gcm" : "aes-128-gcm";
+  const cek = privateDecrypt(
+    { key: CLIENT_PRIVATE_KEY, oaepHash: "sha256", padding: constants.RSA_PKCS1_OAEP_PADDING },
+    fromB64url(encKeyB64));
+  const decipher = createDecipheriv(cipherAlgo, cek, fromB64url(ivB64));
+  decipher.setAuthTag(fromB64url(tagB64));
+  decipher.setAAD(Buffer.from(encodedHeader));
+  return Buffer.concat([decipher.update(fromB64url(ciphertextB64)), decipher.final()]).toString("utf8");
+}
+
 // ── API 호출 래퍼 ─────────────────────────────────────────
+const SUCCESS = "000_000";  // KONA 공식 성공 코드
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function apiPost(label, path, bodyObj, encrypted = false) {
-  let bodyStr, sendBody;
+  let bodyStr;
   if (encrypted) {
     const jwe = encryptJWE(JSON.stringify(bodyObj));
-    sendBody = { encData: jwe };
-    bodyStr = JSON.stringify(sendBody);
+    bodyStr = JSON.stringify({ encData: jwe });
   } else {
-    sendBody = bodyObj;
-    bodyStr = JSON.stringify(sendBody);
+    bodyStr = JSON.stringify(bodyObj);
   }
 
   const { ts17, ts14 } = nowKST();
@@ -109,20 +136,33 @@ async function apiPost(label, path, bodyObj, encrypted = false) {
   console.log(`▶ ${label}`);
   console.log(`  POST ${path}${encrypted ? "  🔒" : "  📄"}`);
   console.log(`  corrId[${corrId.length}]: ${corrId}`);
-  console.log(`  token[${(`KMV1:${ts17}:${hmac}`).length}]`);
 
   const res  = await fetch(`${BASE_URL}${path}`, { method: "POST", headers, body: bodyStr });
   const text = await res.text();
-  let json; try { json = JSON.parse(text); } catch { json = null; }
+
+  // 응답 복호화: encData 있으면 클라이언트 개인키로 JWE 복호화
+  let json = null;
+  try {
+    const raw = JSON.parse(text);
+    if (raw?.encData && typeof raw.encData === "string" && CLIENT_PRIVATE_KEY) {
+      const plaintext = decryptJWE(raw.encData);
+      json = JSON.parse(plaintext);
+      console.log("  🔓 응답 복호화 완료");
+    } else {
+      json = raw;
+    }
+  } catch (e) {
+    console.warn(`  ⚠ 파싱/복호화 실패: ${e.message}`);
+    json = null;
+  }
 
   const code = json?.response?.code ?? "?";
   const desc = json?.response?.description ?? (json ? "" : text.slice(0, 100));
-  const ok   = code === "00";
+  const ok   = code === SUCCESS;
   console.log(`  ${ok ? "✅" : "❌"} HTTP ${res.status}  code=${code}  ${desc}`);
 
   if (json && typeof json === "object") {
     const d = JSON.parse(JSON.stringify(json));
-    // 민감 필드 마스킹
     const mask4 = v => v ? `****${String(v).slice(-4)}` : v;
     if (d.cardNo)          d.cardNo       = mask4(d.cardNo);
     if (d.bankAccount)     d.bankAccount  = mask4(d.bankAccount);
@@ -145,8 +185,19 @@ async function apiPost(label, path, bodyObj, encrypted = false) {
 //  포털 테스트 데이터 (2026-09-01 캡처)
 // ═══════════════════════════════════════════════════════════
 
+// 은행코드 → 은행명 매핑 (ARS register bankName 파라미터용)
+const BANK_NAMES = {
+  "002": "KDB산업은행", "003": "IBK기업은행", "004": "KB국민은행",
+  "005": "KEB하나은행", "007": "수협은행",    "010": "NH농협",
+  "020": "우리은행",    "021": "씨티은행",    "023": "SC제일은행",
+  "031": "DGB대구은행", "032": "BNK부산은행", "034": "광주은행",
+  "035": "제주은행",    "037": "전북은행",    "039": "경남은행",
+  "045": "새마을금고",  "048": "신협",        "071": "우체국",
+  "081": "하나은행",    "088": "신한은행",    "090": "카카오뱅크",
+  "092": "토스뱅크",
+};
+
 // 회원 데이터 — joinChannel: OPENAPI
-// balance=Y: 은행계좌에 잔액 있음 → 충전 가능
 const MEMBERS = {
   김코나: { birthDate: "19751112", bankCode: "003", bankAccount: "333015555557",  balanceY: true  },
   김코코: { birthDate: "19890530", bankCode: "010", bankAccount: "11112333333",   balanceY: true  },
@@ -173,10 +224,9 @@ const PORTAL_CARDS = [
   { cardNo: "9491339401250831", cvc: "561", par: "Q1898E85DBF1BBD8B2A4E910953" },
   { cardNo: "9491339401250823", cvc: "951", par: "Q181B56345F1BBD8AC43331C59C" },
 ];
-const CARD_SERVICE_ID = "000170000002000";
-const CARD_EXPIRY     = "3108"; // YYMM: 2031.08
+const CARD_EXPIRY = "3108"; // YYMM: 2031.08
 
-// 가맹점 데이터 — 코나 acquirer 우선 사용
+// 가맹점 데이터 — 코나 acquirer 우선
 const MERCHANTS = [
   { merchantId: "410195430033901", name: "네네치킨 청학점",     acquirer: "코나" },
   { merchantId: "410894040073801", name: "본죽 김포전원마을점", acquirer: "코나" },
@@ -189,61 +239,58 @@ const TC_IDS = ["29184","29186","29187","29188","601151","601152","604150","6061
 
 // ═══════════════════════════════════════════════════════════
 //  시나리오 설정
-//  - 회원: 김코나 (balance=Y, 충전 가능)
-//  - 카드: 9491339401250765 (첫 번째 ACTIVE 카드)
-//  - 가맹점: 410195430033901 (코나 acquirer)
 // ═══════════════════════════════════════════════════════════
-const M_NAME       = "김코나";
-const M            = MEMBERS[M_NAME];
-const CARD         = PORTAL_CARDS[0];
-const MERCHANT     = MERCHANTS[0];
+const M_NAME         = "김코나";
+const M              = MEMBERS[M_NAME];
+const CARD           = PORTAL_CARDS[0];
+const MERCHANT       = MERCHANTS[0];
 const CHARGE_AMOUNT  = 10000;
 const PAYMENT_AMOUNT = 1000;
 const UID = Date.now().toString().slice(-9);
+const CHARGE_SEQ_ID  = `MNR${UID}CR`;
 
 console.log("═".repeat(60));
 console.log("  KONA PLATE 포털 데이터 — 전체 결제 시나리오 테스트");
 console.log("═".repeat(60));
 console.log(`  회원   : ${M_NAME}  birthDate=${M.birthDate}`);
-console.log(`  은행   : ${M.bankCode}  ****${M.bankAccount.slice(-4)}  balance=${M.balanceY?"Y":"N"}`);
+console.log(`  은행   : ${M.bankCode}(${BANK_NAMES[M.bankCode] ?? "?"})  ****${M.bankAccount.slice(-4)}  balance=${M.balanceY?"Y":"N"}`);
 console.log(`  카드   : ****${CARD.cardNo.slice(-4)}  expiry=${CARD_EXPIRY}  cvc=${CARD.cvc}`);
 console.log(`  가맹점 : ${MERCHANT.name}  ${MERCHANT.merchantId}`);
 console.log(`  UID    : ${UID}`);
+console.log(`  복호화 : ${CLIENT_PRIVATE_KEY ? "✅ 개인키 있음" : "⚠ 개인키 없음"}`);
 console.log();
 
-// 실행 중 상태
-let userId      = null;
+let userId       = null;
 let activeCardNo = CARD.cardNo;
-let activePar   = CARD.par;
-let nrNumber    = null;
+let activePar    = CARD.par;
+let nrNumber     = null;
 let passed = 0, attempted = 0;
 
 // ─────────────────────────────────────────────────────────
-//  1/9  회원가입  POST /api/v1/user/registration  (reqEncrypt: Y)
+//  1/9  회원가입  POST /api/v1/user/registration  (reqEncrypt: Y, resEncrypt: Y)
 // ─────────────────────────────────────────────────────────
 attempted++;
 const s1 = await apiPost("1/9  회원가입", "/api/v1/user/registration", {
-  loginId:        `km${UID}@kona.test`,
-  loginPassword:  "111111",
-  birthDate:      M.birthDate,
-  userName:       M_NAME,
-  email:          `km${UID}@kona.test`,
-  nationality:    "Korean",
-  gender:         "Male",
-  mobileNumber:   "01012341234",
-  addressInfo:    { address: "서울특별시 강남구 테헤란로 1", zipCode: "06234" },
-  joinChannel:    "OPENAPI",
-  tcIdList:       TC_IDS,
+  loginId:       `km${UID}@kona.test`,
+  loginPassword: "111111",
+  birthDate:     M.birthDate,
+  userName:      M_NAME,
+  email:         `km${UID}@kona.test`,
+  nationality:   "Korean",
+  gender:        "Male",
+  mobileNumber:  "01012341234",
+  addressInfo:   { address: "서울특별시 강남구 테헤란로 1", zipCode: "06234" },
+  joinChannel:   "OPENAPI",
+  tcIdList:      TC_IDS,
 }, true);
 
-if (s1.code !== "00") {
+if (s1.code !== SUCCESS) {
   console.log(`\n⛔ 회원가입 실패 (code=${s1.code}) → 시나리오 중단`);
-  console.log("   ※ 실패 원인이 ci 필드라면 ci=\"A\".repeat(88)로 재시도 필요");
   process.exit(1);
 }
 passed++;
-userId = s1.data.userId;
-if (s1.data.basicCardInfo?.cardNo) {
+userId = s1.data?.userId;
+if (s1.data?.basicCardInfo?.cardNo) {
   activeCardNo = s1.data.basicCardInfo.cardNo;
   if (s1.data.basicCardInfo.par) activePar = s1.data.basicCardInfo.par;
   console.log(`  → 자동발급 카드 ****${activeCardNo.slice(-4)}`);
@@ -253,10 +300,10 @@ await sleep(500);
 
 // ─────────────────────────────────────────────────────────
 //  2/9  은행계좌 등록 (4단계 ARS 플로우)
-//  2a: 실명검증  /api/v1/bankaccounts/user/valid  (reqEncrypt: Y)
-//  2b: ARS 인증  /api/v1/bankaccounts/ars/auth    (reqEncrypt: Y)
-//  2c: ARS 등록  /api/v1/bankaccounts/ars/register (reqEncrypt: Y)
-//  2d: 결과조회  /api/v1/bankaccounts/ars/register/inquiry (reqEncrypt: N)
+//  2a: 실명검증  /api/v1/bankaccounts/user/valid     (reqEncrypt: Y)
+//  2b: ARS 인증  /api/v1/bankaccounts/ars/auth       (reqEncrypt: Y)  req={userId}
+//  2c: ARS 등록  /api/v1/bankaccounts/ars/register   (reqEncrypt: Y)  res={bankAccRegNo}
+//  2d: 결과조회  /api/v1/bankaccounts/ars/register/inquiry  (polling, req={regNo})
 // ─────────────────────────────────────────────────────────
 attempted++;
 const s2a = await apiPost("2a/9  은행계좌 실명검증", "/api/v1/bankaccounts/user/valid", {
@@ -268,79 +315,97 @@ const s2a = await apiPost("2a/9  은행계좌 실명검증", "/api/v1/bankaccoun
 }, true);
 await sleep(400);
 
-// 2b: ARS 인증 — request: { userId } 만 전송, response: authNumber(2자리)
-if (s2a.code === "00" || s2a.status < 500) {
+if (s2a.code === SUCCESS) {
+  // 2b: ARS 인증 — request: { userId } 만 전송, response: authNumber(2자리)
   const s2b = await apiPost("2b/9  ARS 인증 요청", "/api/v1/bankaccounts/ars/auth", {
     userId,
   }, true);
   await sleep(400);
-  const authNumber = s2b.data?.authNumber;
+  console.log(`  authNumber=${s2b.data?.authNumber ?? "(없음)"}`);
 
-  // 2c: ARS 등록 — request: userId + bankCode + bankAccount, response: bankAccRegNo
+  // 2c: ARS 등록
+  // 공식 필수: userId, bankAccount, bankCode, bankName, userName, birthDate
   const s2c = await apiPost("2c/9  ARS 등록", "/api/v1/bankaccounts/ars/register", {
     userId,
     bankCode:    M.bankCode,
     bankAccount: M.bankAccount,
+    bankName:    BANK_NAMES[M.bankCode] ?? "",
+    userName:    M_NAME,
+    birthDate:   M.birthDate,
   }, true);
   await sleep(400);
-  console.log(`  authNumber=${authNumber ?? "(없음)"}`);
+
   const bankAccRegNo = s2c.data?.bankAccRegNo;
 
-  // 2d: 등록 결과 조회 — request: { regNo: bankAccRegNo }
   if (bankAccRegNo) {
-    const s2d = await apiPost("2d/9  ARS 등록 결과조회", "/api/v1/bankaccounts/ars/register/inquiry", {
-      regNo: bankAccRegNo,
-    }, false);
-    if (s2d.code === "00") passed++;
-    await sleep(400);
+    // 2d: 결과 polling — ARS는 비동기, status가 BANK_ACC_REGISTERED될 때까지 대기
+    console.log(`  → bankAccRegNo=${bankAccRegNo}  polling 시작...`);
+    const ARS_DONE = "BANK_ACC_REGISTERED";
+    const ARS_FAIL = ["ARS_AUTH_FAILED", "BANK_ACC_REG_FAILED"];
+    let arsOk = false;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await sleep(2000);
+      const s2d = await apiPost(
+        `2d/9  ARS 결과 조회 (${attempt + 1}/10)`,
+        "/api/v1/bankaccounts/ars/register/inquiry",
+        { regNo: bankAccRegNo },
+        false,
+      );
+      const status = s2d.data?.status;
+      console.log(`  status=${status ?? "?"}`);
+      if (status === ARS_DONE) { arsOk = true; passed++; break; }
+      if (ARS_FAIL.includes(status)) { console.log(`  ⛔ ARS 실패: ${status}`); break; }
+    }
+    if (!arsOk) console.log("  ⚠ ARS 등록 미완료 (timeout 또는 실패)");
   } else {
-    if (s2c.code === "00") passed++;
+    // bankAccRegNo 없이 성공 코드면 동기 완료로 간주
+    if (s2c.code === SUCCESS) passed++;
   }
 } else {
-  console.log("\n[2/9 은행계좌] 실명검증 실패 — ARS 단계 건너뜀");
+  console.log(`\n  ⚠ 실명검증 실패 (code=${s2a.code}) — ARS 단계 건너뜀`);
 }
 await sleep(300);
 
 // ─────────────────────────────────────────────────────────
 //  3/9  실물카드 회원 연결  POST /api/v1/prepay-card/physical/register  (reqEncrypt: Y)
-//  physicalCardExpDate: YYMM (expiryDate 3108 → "3108")
 // ─────────────────────────────────────────────────────────
 attempted++;
 const s3 = await apiPost("3/9  실물카드 회원 연결", "/api/v1/prepay-card/physical/register", {
   userId,
   physicalCardNo:      CARD.cardNo,
-  physicalCardExpDate: CARD_EXPIRY,   // "3108" (YYMM)
+  physicalCardExpDate: CARD_EXPIRY,  // YYMM
   physicalCardCVC:     CARD.cvc,
 }, true);
 
-if (s3.code === "00") {
+if (s3.code === SUCCESS) {
   passed++;
-  if (s3.data?.par)       activePar    = s3.data.par;
+  if (s3.data?.par) activePar = s3.data.par;
 }
 await sleep(500);
 
 // ─────────────────────────────────────────────────────────
-//  4/9  일회용 토큰 발급  POST /api/v2/payment/generate/onetimetoken  (reqEncrypt: Y)
+//  4/9  충전용 일회용 토큰 발급  POST /api/v2/payment/generate/onetimetoken  (reqEncrypt: Y)
+//  은행계좌 충전용 — type 생략
 // ─────────────────────────────────────────────────────────
 attempted++;
-const s4 = await apiPost("4/9  일회용 토큰 발급 (충전용, type 생략)", "/api/v2/payment/generate/onetimetoken", {
+const s4 = await apiPost("4/9  충전용 토큰 발급", "/api/v2/payment/generate/onetimetoken", {
   cardNo: activeCardNo,
 }, true);
 
 const dcvv         = s4.data?.dcvv;
 const oneTimeToken = s4.data?.oneTimeToken;
-if (s4.code === "00") passed++;
+if (s4.code === SUCCESS) passed++;
 await sleep(500);
 
 // ─────────────────────────────────────────────────────────
 //  5/9  은행계좌 충전  POST /api/v1/recharges/by-bank-accounts/no-hce  (reqEncrypt: N)
-//  balance=Y 계좌만 충전 가능 — 김코나 003/333015555557 사용
+//  balance=Y 계좌만 충전 가능. isPending=true면 결과조회 polling
 // ─────────────────────────────────────────────────────────
 let chargeOk = false;
 attempted++;
 if (dcvv && oneTimeToken) {
   const s5 = await apiPost(
-    `5/9  은행계좌 충전 (${CHARGE_AMOUNT.toLocaleString()}원, balance=Y)`,
+    `5/9  은행계좌 충전 (${CHARGE_AMOUNT.toLocaleString()}원)`,
     "/api/v1/recharges/by-bank-accounts/no-hce",
     {
       dcvv,
@@ -348,14 +413,35 @@ if (dcvv && oneTimeToken) {
       userId,
       merchantId: MERCHANT.merchantId,
       amount:     CHARGE_AMOUNT,
-      sequenceId: `MNR${UID}CR`,
+      sequenceId: CHARGE_SEQ_ID,
     },
     false,
   );
-  chargeOk = s5.code === "00";
-  if (chargeOk) passed++;
+
+  if (s5.code === SUCCESS) {
+    if (s5.data?.isPending === true) {
+      // 비동기 처리 중 — 결과 polling
+      console.log("  isPending=true → 충전 결과 polling...");
+      for (let attempt = 0; attempt < 10; attempt++) {
+        await sleep(2000);
+        const s5p = await apiPost(
+          `5p 충전 결과 조회 (${attempt + 1}/10)`,
+          "/api/v1/recharges/by-bank-account/result/inquiry",
+          { sequenceId: CHARGE_SEQ_ID },
+          false,
+        );
+        const pending = s5p.data?.isPending;
+        console.log(`  isPending=${pending} code=${s5p.code}`);
+        if (s5p.code === SUCCESS && pending === false) { chargeOk = true; passed++; break; }
+        if (s5p.code !== SUCCESS && s5p.code !== "?") { console.log(`  ⛔ 충전 최종 실패: ${s5p.code}`); break; }
+      }
+      if (!chargeOk) console.log("  ⚠ 충전 결과 미확정 (timeout)");
+    } else {
+      chargeOk = true; passed++;
+    }
+  }
 } else {
-  console.log("\n[5/9 충전] 토큰 미발급 → 건너뜀");
+  console.log("\n  [5/9 충전] 토큰 미발급 → 건너뜀");
 }
 await sleep(500);
 
@@ -366,17 +452,16 @@ attempted++;
 const s6 = await apiPost("6/9  카드 잔액 조회", "/api/v1/user/card/info", {
   cardNo: activeCardNo,
 }, true);
-if (s6.code === "00") passed++;
+if (s6.code === SUCCESS) passed++;
 await sleep(500);
 
 // ─────────────────────────────────────────────────────────
 //  7/9  결제 승인 (No-HCE)
-//  7a: 결제용 일회용 토큰 발급  POST /api/v2/payment/generate/onetimetoken (reqEncrypt: Y)
-//  7b: 결제 승인  POST /api/v1/payment/no-hce  (reqEncrypt: N)
+//  7a: 결제용 토큰 발급  (충전용 토큰과 별개로 재발급)
+//  7b: POST /api/v1/payment/no-hce  (reqEncrypt: N)
 // ─────────────────────────────────────────────────────────
 attempted++;
 if (chargeOk) {
-  // 7a: 결제용 토큰 — 충전용 토큰과 별개로 새로 발급
   const s7a = await apiPost("7a/9  결제용 토큰 발급", "/api/v2/payment/generate/onetimetoken", {
     cardNo: activeCardNo,
   }, true);
@@ -399,16 +484,16 @@ if (chargeOk) {
       },
       false,
     );
-    if (s7.code === "00") {
+    if (s7.code === SUCCESS) {
       passed++;
       nrNumber = s7.data?.nrNumber;
       console.log(`  → nrNumber = ${nrNumber ? String(nrNumber).slice(0,6)+"..." : "없음"}`);
     }
   } else {
-    console.log("\n[7/9 결제 승인] 결제용 토큰 발급 실패 → 건너뜀");
+    console.log("\n  [7/9 결제] 결제용 토큰 발급 실패 → 건너뜀");
   }
 } else {
-  console.log("\n[7/9 결제 승인] 충전 미완료 → 건너뜀");
+  console.log("\n  [7/9 결제] 충전 미완료 → 건너뜀");
 }
 await sleep(500);
 
@@ -420,17 +505,16 @@ const kd = new Date(Date.now() + 9 * 3600000);
 const todayStr = `${kd.getUTCFullYear()}${String(kd.getUTCMonth()+1).padStart(2,"0")}${String(kd.getUTCDate()).padStart(2,"0")}`;
 const s8 = await apiPost("8/9  거래내역 조회", "/api/v1/transaction/card", {
   userId,
-  par:       activePar,
-  startDate: todayStr,
-  endDate:   todayStr,
+  par:         activePar,
+  startDate:   todayStr,
+  endDate:     todayStr,
   pageRequest: { page: 0, pageSize: 10, sort: "approvalDateTime", orderByDirection: "DESC" },
 }, false);
-if (s8.code === "00") passed++;
+if (s8.code === SUCCESS) passed++;
 await sleep(500);
 
 // ─────────────────────────────────────────────────────────
 //  9/9  결제 취소 (No-HCE)  POST /api/v1/payment/cancel/no-hce  (reqEncrypt: N)
-//  필수: cardNo, amount(원거래금액), nrNumber, merchantId, channel
 // ─────────────────────────────────────────────────────────
 attempted++;
 if (nrNumber) {
@@ -441,9 +525,9 @@ if (nrNumber) {
     merchantId: MERCHANT.merchantId,
     channel:    "OPENAPI",
   }, false);
-  if (s9.code === "00") passed++;
+  if (s9.code === SUCCESS) passed++;
 } else {
-  console.log("\n[9/9 결제 취소] 결제 승인 없음 → 건너뜀");
+  console.log("\n  [9/9 결제 취소] 결제 승인 없음 → 건너뜀");
 }
 
 // ─────────────────────────────────────────────────────────
