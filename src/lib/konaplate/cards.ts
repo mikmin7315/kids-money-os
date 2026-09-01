@@ -1,5 +1,3 @@
-"use server";
-
 import { konaPost, konaPostEncrypted } from "./client";
 
 // ──────────────────────────────────────────
