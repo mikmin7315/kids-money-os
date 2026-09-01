@@ -22,7 +22,10 @@
     "native:android": "cap open android",
     "native:ios": "cap open ios",
     "native:doctor": "cap doctor",
-    "smoke:android-device": "powershell -ExecutionPolicy Bypass -File scripts/android-device-smoke.ps1"
+    "smoke:android-device": "powershell -ExecutionPolicy Bypass -File scripts/android-device-smoke.ps1",
+    "kona:registration": "node scripts/kona-portal-scenario-test.mjs --registration-only",
+    "kona:registration:dynamic": "node scripts/kona-portal-scenario-test.mjs --registration-only --dynamic-registration",
+    "kona:scenario": "node scripts/kona-portal-scenario-test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.2",

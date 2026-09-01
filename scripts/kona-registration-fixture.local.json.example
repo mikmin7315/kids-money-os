@@ -1,0 +1,10 @@
+{
+  "loginId": "__KONA_200_SUCCESS_FIXTURE__",
+  "loginPassword": "__KONA_200_SUCCESS_FIXTURE__",
+  "birthDate": "19751112",
+  "nationality": "__KONA_200_SUCCESS_FIXTURE__",
+  "gender": "__KONA_200_SUCCESS_FIXTURE__",
+  "userName": "김코나",
+  "email": "__KONA_200_SUCCESS_FIXTURE__",
+  "joinChannel": "OPENAPI"
+}

@@ -46,6 +46,9 @@ next-env.d.ts
 # Claude Code local settings
 .claude/settings.local.json
 
+# KONA PLATE local fixture (포털 테스트 데이터 — 커밋 금지)
+scripts/kona-registration-fixture.local.json
+
 # Local collaboration worktrees
 /worktrees/
 
