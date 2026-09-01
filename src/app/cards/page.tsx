@@ -176,6 +176,12 @@ export default async function CardsPage() {
                     {/* 보조 액션 */}
                     <div className="flex items-center gap-2">
                       <Link
+                        href={`/cards/${card.id}/recharge`}
+                        className="flex-1 rounded-[10px] bg-[var(--monari-hero)] py-2.5 text-center text-[12px] font-bold text-white transition active:scale-[0.97]"
+                      >
+                        충전
+                      </Link>
+                      <Link
                         href={`/cards/${card.id}/limits`}
                         className="flex-1 rounded-[10px] border border-[var(--monari-line)] py-2.5 text-center text-[12px] font-bold text-[var(--monari-ink-soft)] transition active:scale-[0.97]"
                       >

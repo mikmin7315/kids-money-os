@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { registerKonaUser, KONA_TC_IDS, changeKonaCardStatus, getKonaCards } from "@/lib/konaplate/cards";
+import { registerKonaUser, KONA_TC_IDS, changeKonaCardStatus, getKonaCards, issueKonaOneTimeToken, rechargeKonaCard, checkKonaRechargeResult } from "@/lib/konaplate/cards";
 
 export type CardFormState = { ok: boolean; message: string };
 
@@ -211,6 +211,108 @@ export async function updateCardLimitsAction(
 
   revalidatePath("/cards");
   return { ok: true, message: "한도를 변경했어요." };
+}
+
+export async function rechargeCardAction(
+  _prev: CardFormState,
+  formData: FormData,
+): Promise<CardFormState> {
+  const auth = await requireParentSession();
+  const cardId = String(formData.get("card_id") ?? "");
+  const amount = parseInt(String(formData.get("amount") ?? "0"), 10);
+
+  if (!cardId) return { ok: false, message: "카드를 찾을 수 없어요." };
+  if (!amount || amount < 1000) return { ok: false, message: "최소 충전 금액은 1,000원이에요." };
+  if (amount > 1_000_000) return { ok: false, message: "1회 최대 충전 금액은 100만원이에요." };
+
+  const supabase = await getSupabaseServerClient();
+
+  // 카드 + 신청 정보 조회
+  const { data: card } = await supabase
+    .from("child_cards")
+    .select("application_id")
+    .eq("id", cardId)
+    .eq("parent_id", auth.user!.id)
+    .single();
+  if (!card?.application_id) return { ok: false, message: "카드 정보를 찾을 수 없어요." };
+
+  const { data: app } = await supabase
+    .from("card_applications")
+    .select("external_reference, notes")
+    .eq("id", card.application_id)
+    .single();
+  if (!app?.external_reference) return { ok: false, message: "카드 연동 정보가 없어요." };
+
+  const notes = typeof app.notes === "string" ? JSON.parse(app.notes) : (app.notes ?? {});
+  const cardNo: string = notes.cardNo ?? "";
+  const userId = Number(app.external_reference);
+  if (!cardNo) return { ok: false, message: "카드 번호 정보가 없어요." };
+
+  // 부모 지갑 잔액 확인 (낙관적 잠금으로 차감)
+  const { data: wallet } = await supabase
+    .from("parent_wallets")
+    .select("balance")
+    .eq("parent_id", auth.user!.id)
+    .single();
+  const currentBalance: number = wallet?.balance ?? 0;
+  if (currentBalance < amount) return { ok: false, message: "지갑 잔액이 부족해요. 먼저 충전해주세요." };
+
+  // 잔액 선차감 (낙관적 잠금: balance가 동일할 때만 업데이트)
+  const { data: deducted } = await supabase
+    .from("parent_wallets")
+    .update({ balance: currentBalance - amount })
+    .eq("parent_id", auth.user!.id)
+    .eq("balance", currentBalance)
+    .select("id");
+
+  if (!deducted?.length) return { ok: false, message: "잔액이 변경됐어요. 다시 시도해주세요." };
+
+  // KONA PLATE 충전 실행
+  const merchantId = process.env.KONAPLATE_MERCHANT_ID ?? process.env.KONAPLATE_ASP_ID ?? "";
+  const sequenceId = `${Date.now()}-${cardId.slice(0, 8)}`;
+
+  try {
+    const token = await issueKonaOneTimeToken(cardNo, "CREDIT");
+    const result = await rechargeKonaCard({
+      dcvv: token.dcvv,
+      amount,
+      userId,
+      merchantId,
+      sequenceId,
+      oneTimeToken: token.oneTimeToken,
+    });
+
+    // isPending: true 이면 결과 확인 (최대 3회 폴링)
+    if (result.isPending) {
+      for (let i = 0; i < 3; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const check = await checkKonaRechargeResult(sequenceId);
+        if (!check.isPending) break;
+      }
+    }
+
+    // 충전 거래 기록
+    await supabase.from("card_transactions").insert({
+      card_id: cardId,
+      merchant_name: "모나리 충전",
+      merchant_category: "recharge",
+      amount,
+      status: "approved",
+      approved_at: new Date().toISOString(),
+      raw_payload: { sequenceId, nrNumber: result.nrNumber, type: "recharge" },
+    });
+
+  } catch (err) {
+    // KONA API 실패 시 차감한 잔액 환불
+    await supabase
+      .from("parent_wallets")
+      .update({ balance: currentBalance })
+      .eq("parent_id", auth.user!.id);
+    return { ok: false, message: `충전에 실패했어요: ${String(err).slice(0, 60)}` };
+  }
+
+  revalidatePath("/cards");
+  return { ok: true, message: `${amount.toLocaleString("ko-KR")}원 충전 완료!` };
 }
 
 export async function getCardBalanceAction(cardId: string): Promise<{ ok: boolean; balance?: number; message?: string }> {
