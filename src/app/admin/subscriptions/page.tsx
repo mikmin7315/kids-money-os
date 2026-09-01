@@ -39,8 +39,9 @@ export default async function AdminSubscriptionsPage() {
   await requireAdminSession();
 
   const admin = getSupabaseAdminClient();
-  const now = new Date().toISOString();
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const nowDate = new Date();
+  const now = nowDate.toISOString();
+  const thirtyDaysAgo = new Date(nowDate.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
   const [activeSubsRes, cancelledSubsRes, recentPaymentsRes, failedNotifRes, parentEmailsRes] = await Promise.all([
     admin
@@ -159,7 +160,7 @@ export default async function AdminSubscriptionsPage() {
                 {activeSubscribers.map((s) => {
                   const isCancelled = !!s.subscription_cancelled_at;
                   const expiresAt = s.subscription_expires_at ? new Date(s.subscription_expires_at) : null;
-                  const daysLeft = expiresAt ? Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
+                  const daysLeft = expiresAt ? Math.ceil((expiresAt.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24)) : null;
                   return (
                     <div key={s.id} className="flex items-start justify-between gap-3 rounded-2xl bg-white/65 px-4 py-3">
                       <div className="min-w-0 flex-1">

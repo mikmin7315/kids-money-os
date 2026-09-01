@@ -3,9 +3,6 @@
  *
  * X-KM-Tran-Token: "KMV1:" + yyyyMMddHHmmssSSS + ":" + Base64(HMAC-SHA256(secretKey, bodyString))
  * Message Encryption: JWE (RSA-OAEP-256 + A128GCM), 요청 형식: {"encData":"<JWE>"}
- *
- * 샌드박스 주의: sandbox.konaplate.com 의 `tid` 컬럼 오버플로우 버그로
- * 회원가입 등 INSERT 요청이 500을 반환함. 암호화 자체는 정상.
  */
 
 import {
