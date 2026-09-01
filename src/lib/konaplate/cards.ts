@@ -189,75 +189,133 @@ export async function getKonaTransactions(
 }
 
 // ──────────────────────────────────────────
-// 은행계좌 등록  POST /api/v1/user/bank-account
-// 회원가입 후 충전용 계좌 연결 (이름+생년월일 실명 검증)
+// 은행계좌 등록 — 4단계 ARS 플로우
+// Step 1: 실명 검증  POST /api/v1/bankaccounts/user/valid (reqEncrypt: Y)
+// Step 2: ARS 인증 요청  POST /api/v1/bankaccounts/ars/auth (reqEncrypt: Y)
+// Step 3: ARS 등록  POST /api/v1/bankaccounts/ars/register (reqEncrypt: Y)
+// Step 4: 등록 결과 조회  POST /api/v1/bankaccounts/ars/register/inquiry (reqEncrypt: N)
 // ──────────────────────────────────────────
 
-export interface KonaBankAccountRequest {
+export interface KonaBankAccountValidRequest {
   userId: number;
-  bankCode: string;   // "003"=IBK, "004"=KB, "005"=KEB하나, "010"=NH, "020"=우리 등
+  bankCode: string;
   bankAccount: string;
   userName: string;
   birthDate: string;  // YYYYMMDD
 }
 
-export interface KonaBankAccountResponse {
+export interface KonaBankAccountValidResponse {
   response: { code: string; description: string };
+}
+
+export async function validateKonaBankAccount(
+  req: KonaBankAccountValidRequest,
+): Promise<KonaBankAccountValidResponse> {
+  return konaPostEncrypted<KonaBankAccountValidResponse>(
+    "/api/v1/bankaccounts/user/valid",
+    req,
+  );
+}
+
+export interface KonaBankAccountArsAuthRequest {
+  userId: number;
+  bankCode: string;
+  bankAccount: string;
+  mobileNumber: string;
+}
+
+export interface KonaBankAccountArsAuthResponse {
+  arsAuthKey: string;
+  response: { code: string; description: string };
+}
+
+export async function requestKonaBankAccountArs(
+  req: KonaBankAccountArsAuthRequest,
+): Promise<KonaBankAccountArsAuthResponse> {
+  return konaPostEncrypted<KonaBankAccountArsAuthResponse>(
+    "/api/v1/bankaccounts/ars/auth",
+    req,
+  );
+}
+
+export interface KonaBankAccountArsRegisterRequest {
+  userId: number;
+  bankCode: string;
+  bankAccount: string;
+  arsAuthKey: string;
+}
+
+export interface KonaBankAccountArsRegisterResponse {
+  response: { code: string; description: string };
+  registrationKey?: string;
 }
 
 export async function registerKonaBankAccount(
-  req: KonaBankAccountRequest,
-): Promise<KonaBankAccountResponse> {
-  return konaPostEncrypted<KonaBankAccountResponse>(
-    "/api/v1/user/bank-account",
+  req: KonaBankAccountArsRegisterRequest,
+): Promise<KonaBankAccountArsRegisterResponse> {
+  return konaPostEncrypted<KonaBankAccountArsRegisterResponse>(
+    "/api/v1/bankaccounts/ars/register",
     req,
   );
 }
 
-// ──────────────────────────────────────────
-// 발급카드 회원 연결  POST /api/v1/user/card/apply
-// 기존 발급 카드(serviceId 기반)를 등록 회원에게 연결
-// ──────────────────────────────────────────
-
-export interface KonaCardApplyRequest {
-  userId: number;
-  serviceId: string;  // "000170000002000"
-  cardNo?: string;    // 포털 제공 카드번호 (있는 경우)
-}
-
-export interface KonaCardApplyResponse {
+export interface KonaBankAccountInquiryResponse {
   response: { code: string; description: string };
-  cardNo?: string;
-  par?: string;
-  expiryDate?: string;
+  status: string;
 }
 
-export async function applyKonaCard(
-  req: KonaCardApplyRequest,
-): Promise<KonaCardApplyResponse> {
-  return konaPostEncrypted<KonaCardApplyResponse>(
-    "/api/v1/user/card/apply",
+export async function inquireKonaBankAccountRegistration(
+  userId: number,
+  registrationKey: string,
+): Promise<KonaBankAccountInquiryResponse> {
+  return konaPost<KonaBankAccountInquiryResponse>(
+    "/api/v1/bankaccounts/ars/register/inquiry",
+    { userId, registrationKey },
+  );
+}
+
+// ──────────────────────────────────────────
+// 실물카드 회원 연결  POST /api/v1/prepay-card/physical/register (reqEncrypt: Y)
+// 포털 발급 실물카드를 등록 회원에게 연결
+// ──────────────────────────────────────────
+
+export interface KonaPhysicalCardRegisterRequest {
+  userId: number;
+  physicalCardNo: string;      // 카드번호 16자리
+  physicalCardExpDate: string; // YYMM (포털 expiryDate 마지막 4자리)
+  physicalCardCVC: string;     // CVC 3자리
+}
+
+export interface KonaPhysicalCardRegisterResponse {
+  response: { code: string; description: string };
+  par?: string;
+  serviceId?: string;
+}
+
+export async function registerKonaPhysicalCard(
+  req: KonaPhysicalCardRegisterRequest,
+): Promise<KonaPhysicalCardRegisterResponse> {
+  return konaPostEncrypted<KonaPhysicalCardRegisterResponse>(
+    "/api/v1/prepay-card/physical/register",
     req,
   );
 }
 
 // ──────────────────────────────────────────
-// 결제 승인  POST /api/v1/payment/approval
-// 선불카드로 가맹점 결제 승인 요청
+// 결제 승인 (No-HCE)  POST /api/v1/payment/no-hce (reqEncrypt: N)
+// 일회용 토큰 + dcvv로 가맹점 결제 승인
 // ──────────────────────────────────────────
 
-export interface KonaPaymentApprovalRequest {
-  cardNo: string;
-  merchantId: string;
+export interface KonaPaymentNoHceRequest {
+  oneTimeToken: string;
+  dcvv: string;
   amount: number;
-  taxAmount?: number;
-  userId: number;
-  sequenceId: string;  // 파트너 고유 거래 ID
-  dcvv?: string;
-  oneTimeToken?: string;
+  merchantId: string;
+  channel: "OPENAPI";
+  transactionId: string;  // 파트너 고유 거래 ID
 }
 
-export interface KonaPaymentApprovalResponse {
+export interface KonaPaymentNoHceResponse {
   nrNumber: string;
   approvalCode: string;
   response: { code: string; description: string };
@@ -265,34 +323,36 @@ export interface KonaPaymentApprovalResponse {
 }
 
 export async function approveKonaPayment(
-  req: KonaPaymentApprovalRequest,
-): Promise<KonaPaymentApprovalResponse> {
-  return konaPost<KonaPaymentApprovalResponse>(
-    "/api/v1/payment/approval",
+  req: KonaPaymentNoHceRequest,
+): Promise<KonaPaymentNoHceResponse> {
+  return konaPost<KonaPaymentNoHceResponse>(
+    "/api/v1/payment/no-hce",
     req,
   );
 }
 
 // ──────────────────────────────────────────
-// 결제 취소  POST /api/v1/payment/cancel
-// 결제 승인 취소
+// 결제 취소 (No-HCE)  POST /api/v1/payment/cancel/no-hce (reqEncrypt: N)
+// No-HCE 결제 취소
 // ──────────────────────────────────────────
 
-export interface KonaPaymentCancelRequest {
-  nrNumber: string;    // 원거래 KONA 참조번호
-  userId: number;
-  sequenceId: string;
+export interface KonaPaymentCancelNoHceRequest {
+  cardNo: string;
+  amount: number;       // 원거래 금액
+  nrNumber: string;     // 원거래 KONA 참조번호
+  merchantId: string;
+  channel: "OPENAPI";
 }
 
-export interface KonaPaymentCancelResponse {
+export interface KonaPaymentCancelNoHceResponse {
   response: { code: string; description: string };
 }
 
 export async function cancelKonaPayment(
-  req: KonaPaymentCancelRequest,
-): Promise<KonaPaymentCancelResponse> {
-  return konaPost<KonaPaymentCancelResponse>(
-    "/api/v1/payment/cancel",
+  req: KonaPaymentCancelNoHceRequest,
+): Promise<KonaPaymentCancelNoHceResponse> {
+  return konaPost<KonaPaymentCancelNoHceResponse>(
+    "/api/v1/payment/cancel/no-hce",
     req,
   );
 }
@@ -314,11 +374,11 @@ export interface KonaOneTimeTokenResponse {
 
 export async function issueKonaOneTimeToken(
   cardNo: string,
-  type: KonaTokenType = "CREDIT",
+  type?: KonaTokenType,
 ): Promise<KonaOneTimeTokenResponse> {
   return konaPostEncrypted<KonaOneTimeTokenResponse>(
     "/api/v2/payment/generate/onetimetoken",
-    { cardNo, type },
+    type ? { cardNo, type } : { cardNo },
   );
 }
 

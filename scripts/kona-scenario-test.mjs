@@ -109,7 +109,7 @@ function buildHeaders(bodyStr, corrId) {
   };
 }
 
-async function post(label, path, body, encrypt = false, corrFn = makeCorr21) {
+async function post(label, path, body, encrypt = false, corrFn = makeCorr20) {
   const ts17 = nowKST17();
   const corrId = corrFn(ts17);
   let bodyStr, headers;
@@ -190,14 +190,13 @@ const ts = Date.now().toString().slice(-8);
 const loginId = `kona${ts}`;
 
 const r1 = await post("1/8 회원가입", "/api/v1/user/registration", {
-  ci: "",
   loginId,
   loginPassword: MEMBER.birthDate.slice(2), // YYMMDD
   birthDate: MEMBER.birthDate,
   userName: MEMBER.userName,
   email: `${loginId}@monari.card`,
-  nationality: "KOR",
-  gender: "M",
+  nationality: "Korean",
+  gender: "Male",
   mobileNumber: "01000000000",
   addressInfo: { address: "서울특별시 강남구 테헤란로 1", zipCode: "06234" },
   joinChannel: "OPENAPI",   // 포털 테스트 데이터 기준
