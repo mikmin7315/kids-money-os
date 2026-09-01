@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireParentSession } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { registerKonaUser, KONA_TC_IDS, changeKonaCardStatus, getKonaCards, issueKonaOneTimeToken, rechargeKonaCard, checkKonaRechargeResult } from "@/lib/konaplate/cards";
@@ -312,7 +313,7 @@ export async function rechargeCardAction(
   }
 
   revalidatePath("/cards");
-  return { ok: true, message: `${amount.toLocaleString("ko-KR")}원 충전 완료!` };
+  redirect("/cards");
 }
 
 export async function getCardBalanceAction(cardId: string): Promise<{ ok: boolean; balance?: number; message?: string }> {

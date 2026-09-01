@@ -10,6 +10,7 @@ import { formatWon } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 const CATEGORY_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
+  recharge:          { label: "모나리 충전",     icon: <CreditCard size={13} />,  color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400" },
   convenience:      { label: "편의점",          icon: <Store size={13} />,       color: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400" },
   convenience_top_up: { label: "편의점 충전",   icon: <Store size={13} />,       color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400" },
   food:             { label: "음식·식당",        icon: <Utensils size={13} />,    color: "bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400" },
@@ -144,7 +145,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
               <SectionTitle>{month.replace("-", "년 ")}월</SectionTitle>
               <div className="mt-2 monari-card divide-y divide-[var(--monari-line)]">
                 {items.map((t) => {
-                  const isTopUp = t.merchant_category === "convenience_top_up";
+                  const isCredit = t.merchant_category === "recharge" || t.merchant_category === "convenience_top_up";
                   const meta = CATEGORY_META[t.merchant_category] ?? DEFAULT_META;
                   const amountNum = Number(t.amount);
 
@@ -158,7 +159,7 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
                       {/* 정보 */}
                       <div className="min-w-0 flex-1">
                         <p className="text-[14px] font-semibold text-[var(--monari-ink)] truncate">
-                          {t.merchant_name || (isTopUp ? "편의점 충전" : "가맹점 미상")}
+                          {t.merchant_name || meta.label}
                         </p>
                         <p className="text-[11px] text-[var(--monari-ink-muted)] mt-0.5">
                           {t.child_name} · {meta.label} · {String(t.approved_at ?? "").slice(0, 10)}
@@ -168,16 +169,16 @@ export default async function CardTransactionsPage({ searchParams }: { searchPar
                       {/* 금액 */}
                       <div className="ml-1 shrink-0 text-right">
                         <p className={`tabular-nums text-[14px] font-bold ${
-                          isTopUp
+                          isCredit
                             ? "text-[var(--monari-done)]"
                             : t.status === "cancelled" || t.status === "reversed"
                             ? "text-[var(--monari-ink-muted)] line-through"
                             : "text-[var(--monari-ink)]"
                         }`}>
-                          {isTopUp ? "+" : t.status === "approved" ? "-" : ""}{formatWon(amountNum)}
+                          {isCredit ? "+" : t.status === "approved" ? "-" : ""}{formatWon(amountNum)}
                         </p>
                         <p className="text-[11px] text-[var(--monari-ink-muted)]">
-                          {isTopUp ? "충전" : (STATUS_LABEL[t.status] ?? t.status)}
+                          {isCredit ? "충전" : (STATUS_LABEL[t.status] ?? t.status)}
                         </p>
                       </div>
                     </div>

@@ -5,6 +5,7 @@ import { MobileShell, PageContainer } from "@/components/ui/primitives";
 import { getChildModeContext } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { formatWon } from "@/lib/format";
+import { getKonaCards } from "@/lib/konaplate/cards";
 
 export const dynamic = "force-dynamic";
 
@@ -20,17 +21,35 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
 
   const { data: cards } = await supabase
     .from("child_cards")
-    .select("id, status, is_enabled, daily_limit, monthly_limit, last4")
+    .select("id, status, is_enabled, daily_limit, monthly_limit, last4, application_id")
     .eq("child_id", id)
     .not("status", "in", '("cancelled")')
     .limit(1);
 
   const card = cards?.[0] ?? null;
 
+  // KONA 카드 잔액 조회
+  let cardBalance: number | null = null;
+  if (card?.application_id) {
+    try {
+      const { data: app } = await supabase
+        .from("card_applications")
+        .select("external_reference")
+        .eq("id", card.application_id)
+        .single();
+      if (app?.external_reference) {
+        const konaResult = await getKonaCards(Number(app.external_reference));
+        cardBalance = konaResult.cardDataInfo?.[0]?.balance ?? null;
+      }
+    } catch {
+      // 잔액 조회 실패해도 페이지는 정상 표시
+    }
+  }
+
   const { data: txs } = card
     ? await supabase
         .from("card_transactions")
-        .select("id, merchant_name, amount, status, approved_at")
+        .select("id, merchant_name, merchant_category, amount, status, approved_at")
         .eq("card_id", card.id)
         .order("approved_at", { ascending: false })
         .limit(10)
@@ -57,6 +76,12 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
             <div className={`mb-5 rounded-[24px] p-5 ${card.is_enabled && card.status === "active" ? "bg-gradient-to-br from-[#7c3aed] to-[#4f46e5]" : "bg-[#6b7280]"}`}>
               <p className="text-[11px] font-bold text-white/70">Monari 체크카드</p>
               {card.last4 && <p className="mt-2 font-mono text-sm text-white">**** **** **** {card.last4}</p>}
+              {cardBalance !== null && (
+                <div className="mt-3">
+                  <p className="text-[10px] text-white/60">잔액</p>
+                  <p className="text-[22px] font-black tabular-nums text-white leading-tight">{formatWon(cardBalance)}</p>
+                </div>
+              )}
               <div className="mt-4 flex items-end justify-between">
                 <div>
                   <p className="text-[10px] text-white/70">일 한도</p>
@@ -84,17 +109,26 @@ export default async function ChildCardPage({ params }: { params: Promise<{ id: 
               </div>
             ) : (
               <div className="rounded-[16px] bg-[var(--monari-surface)] shadow-[var(--monari-shadow-md)] overflow-hidden divide-y divide-[var(--color-border)]">
-                {(txs ?? []).map((t) => (
-                  <div key={t.id} className="flex items-center justify-between px-4 py-3">
-                    <div>
-                      <p className="text-sm font-semibold">{t.merchant_name || "가맹점"}</p>
-                      <p className="text-[11px] text-[var(--color-muted)]">{String(t.approved_at ?? "").slice(0, 10)}</p>
+                {(txs ?? []).map((t) => {
+                  const isRecharge = t.merchant_category === "recharge";
+                  return (
+                    <div key={t.id} className="flex items-center justify-between px-4 py-3">
+                      <div>
+                        <p className="text-sm font-semibold">{isRecharge ? "충전" : (t.merchant_name || "가맹점")}</p>
+                        <p className="text-[11px] text-[var(--color-muted)]">{String(t.approved_at ?? "").slice(0, 10)}</p>
+                      </div>
+                      <p className={`tabular-nums text-sm font-bold ${
+                        isRecharge
+                          ? "text-[var(--monari-done)]"
+                          : t.status === "approved"
+                          ? "text-[var(--monari-minus)]"
+                          : "text-[var(--monari-ink-muted)]"
+                      }`}>
+                        {isRecharge ? "+" : t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
+                      </p>
                     </div>
-                    <p className={`tabular-nums text-sm font-bold ${t.status === "approved" ? "text-[var(--monari-minus)]" : "text-[var(--monari-ink-muted)]"}`}>
-                      {t.status === "approved" ? "-" : ""}{formatWon(Number(t.amount))}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>
