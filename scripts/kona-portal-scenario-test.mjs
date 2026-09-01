@@ -185,30 +185,19 @@ async function apiPost(label, path, bodyObj, encrypted = false) {
 //  포털 테스트 데이터 (2026-09-01 캡처)
 // ═══════════════════════════════════════════════════════════
 
-// 은행코드 → 은행명 매핑 (ARS register bankName 파라미터용)
-const BANK_NAMES = {
-  "002": "KDB산업은행", "003": "IBK기업은행", "004": "KB국민은행",
-  "005": "KEB하나은행", "007": "수협은행",    "010": "NH농협",
-  "020": "우리은행",    "021": "씨티은행",    "023": "SC제일은행",
-  "031": "DGB대구은행", "032": "BNK부산은행", "034": "광주은행",
-  "035": "제주은행",    "037": "전북은행",    "039": "경남은행",
-  "045": "새마을금고",  "048": "신협",        "071": "우체국",
-  "081": "하나은행",    "088": "신한은행",    "090": "카카오뱅크",
-  "092": "토스뱅크",
-};
-
-// 회원 데이터 — joinChannel: OPENAPI
+// 회원 데이터 — KONA 포털 테스트 데이터 2026-09-01 캡처 (joinChannel: OPENAPI)
+// bankName은 포털 표시값을 직접 저장 (BANK_NAMES 추론 사용 안 함)
 const MEMBERS = {
-  김코나: { birthDate: "19751112", bankCode: "003", bankAccount: "333015555557",  balanceY: true  },
-  김코코: { birthDate: "19890530", bankCode: "010", bankAccount: "11112333333",   balanceY: true  },
-  박탐나: { birthDate: "19920315", bankCode: "020", bankAccount: "1006122222222", balanceY: true  },
-  유대코: { birthDate: "19991202", bankCode: "034", bankAccount: "100333888888",  balanceY: false },
-  이모나: { birthDate: "20050628", bankCode: "092", bankAccount: "100666666668",  balanceY: false },
-  정푸루: { birthDate: "19880214", bankCode: "005", bankAccount: "2224444455605", balanceY: true  },
-  조동백: { birthDate: "19950525", bankCode: "021", bankAccount: "10044444445",   balanceY: false },
-  최이음: { birthDate: "19970911", bankCode: "031", bankAccount: "505222222224",  balanceY: false },
-  추비즈: { birthDate: "20020126", bankCode: "045", bankAccount: "9002777777779", balanceY: false },
-  한배코: { birthDate: "19800704", bankCode: "004", bankAccount: "3333015555556", balanceY: true  },
+  김코나: { birthDate: "19751112", bankCode: "003", bankName: "IBK기업은행",      bankAccount: "333015555557",  balanceY: true  },
+  김코코: { birthDate: "19890530", bankCode: "010", bankName: "NH농협은행",        bankAccount: "11112333333",   balanceY: true  },
+  박탐나: { birthDate: "19920315", bankCode: "020", bankName: "우리은행",          bankAccount: "1006122222222", balanceY: true  },
+  유대코: { birthDate: "19991202", bankCode: "034", bankName: "광주은행",          bankAccount: "100333888888",  balanceY: false },
+  이모나: { birthDate: "20050628", bankCode: "092", bankName: "토스뱅크",          bankAccount: "100666666668",  balanceY: false },
+  정푸루: { birthDate: "19880214", bankCode: "005", bankName: "KEB하나은행",       bankAccount: "2224444455605", balanceY: true  },
+  조동백: { birthDate: "19950525", bankCode: "021", bankName: "신한은행",          bankAccount: "10044444445",   balanceY: false },
+  최이음: { birthDate: "19970911", bankCode: "031", bankName: "DGB대구은행",       bankAccount: "505222222224",  balanceY: false },
+  추비즈: { birthDate: "20020126", bankCode: "045", bankName: "새마을금고중앙회",  bankAccount: "9002777777779", balanceY: false },
+  한배코: { birthDate: "19800704", bankCode: "004", bankName: "KB국민은행",        bankAccount: "3333015555556", balanceY: true  },
 };
 
 // 발급 카드 데이터 — 모두 ACTIVE, expiryDate=3108(2031.08), serviceId=000170000002000
@@ -253,7 +242,7 @@ console.log("═".repeat(60));
 console.log("  KONA PLATE 포털 데이터 — 전체 결제 시나리오 테스트");
 console.log("═".repeat(60));
 console.log(`  회원   : ${M_NAME}  birthDate=${M.birthDate}`);
-console.log(`  은행   : ${M.bankCode}(${BANK_NAMES[M.bankCode] ?? "?"})  ****${M.bankAccount.slice(-4)}  balance=${M.balanceY?"Y":"N"}`);
+console.log(`  은행   : ${M.bankCode}(${M.bankName})  ****${M.bankAccount.slice(-4)}  balance=${M.balanceY?"Y":"N"}`);
 console.log(`  카드   : ****${CARD.cardNo.slice(-4)}  expiry=${CARD_EXPIRY}  cvc=${CARD.cvc}`);
 console.log(`  가맹점 : ${MERCHANT.name}  ${MERCHANT.merchantId}`);
 console.log(`  UID    : ${UID}`);
@@ -329,7 +318,7 @@ if (s2a.code === SUCCESS) {
     userId,
     bankCode:    M.bankCode,
     bankAccount: M.bankAccount,
-    bankName:    BANK_NAMES[M.bankCode] ?? "",
+    bankName:    M.bankName,
     userName:    M_NAME,
     birthDate:   M.birthDate,
   }, true);
