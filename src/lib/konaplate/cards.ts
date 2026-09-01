@@ -5,7 +5,7 @@ import { konaPost, konaPostEncrypted } from "./client";
 // ──────────────────────────────────────────
 
 export interface KonaUserRegistrationRequest {
-  ci: string;            // 한국 본인확인 CI값 (88자)
+  ci?: string;           // 한국 본인확인 CI값 (88자) — 샌드박스에서는 생략 가능
   loginId: string;       // 이메일 형식 고유 ID
   loginPassword: string; // 6자리 숫자
   birthDate: string;     // YYYYMMDD
@@ -40,23 +40,21 @@ export const KONA_TC_IDS = ["29184", "29186", "29187", "29188", "601151", "60115
 export async function registerKonaUser(
   req: KonaUserRegistrationRequest,
 ): Promise<KonaUserRegistrationResponse> {
-  return konaPostEncrypted<KonaUserRegistrationResponse>(
-    "/api/v1/user/registration",
-    {
-      ci: req.ci,
-      loginId: req.loginId,
-      loginPassword: req.loginPassword,
-      birthDate: req.birthDate,
-      userName: req.userName,
-      email: req.email,
-      nationality: req.nationality,
-      gender: req.gender,
-      mobileNumber: req.mobileNumber,
-      addressInfo: req.addressInfo,
-      joinChannel: req.joinChannel,
-      tcIdList: req.tcIdList,
-    },
-  );
+  const body: Record<string, unknown> = {
+    loginId: req.loginId,
+    loginPassword: req.loginPassword,
+    birthDate: req.birthDate,
+    userName: req.userName,
+    email: req.email,
+    nationality: req.nationality,
+    gender: req.gender,
+    mobileNumber: req.mobileNumber,
+    addressInfo: req.addressInfo,
+    joinChannel: req.joinChannel,
+    tcIdList: req.tcIdList,
+  };
+  if (req.ci !== undefined) body.ci = req.ci;
+  return konaPostEncrypted<KonaUserRegistrationResponse>("/api/v1/user/registration", body);
 }
 
 // ──────────────────────────────────────────
@@ -217,37 +215,33 @@ export async function validateKonaBankAccount(
   );
 }
 
-export interface KonaBankAccountArsAuthRequest {
-  userId: number;
-  bankCode: string;
-  bankAccount: string;
-  mobileNumber: string;
-}
-
+// ARS 인증 요청: request = { userId } 만 필요
+// response에 authNumber(2자리) 포함
 export interface KonaBankAccountArsAuthResponse {
-  arsAuthKey: string;
+  authNumber: string;  // 2자리 인증번호
   response: { code: string; description: string };
 }
 
 export async function requestKonaBankAccountArs(
-  req: KonaBankAccountArsAuthRequest,
+  userId: number,
 ): Promise<KonaBankAccountArsAuthResponse> {
   return konaPostEncrypted<KonaBankAccountArsAuthResponse>(
     "/api/v1/bankaccounts/ars/auth",
-    req,
+    { userId },
   );
 }
 
+// ARS 등록: userId + bankCode + bankAccount
+// response에 bankAccRegNo 포함
 export interface KonaBankAccountArsRegisterRequest {
   userId: number;
   bankCode: string;
   bankAccount: string;
-  arsAuthKey: string;
 }
 
 export interface KonaBankAccountArsRegisterResponse {
+  bankAccRegNo: string;
   response: { code: string; description: string };
-  registrationKey?: string;
 }
 
 export async function registerKonaBankAccount(
@@ -259,18 +253,18 @@ export async function registerKonaBankAccount(
   );
 }
 
+// 등록 결과 조회: request = { regNo: bankAccRegNo }
 export interface KonaBankAccountInquiryResponse {
   response: { code: string; description: string };
   status: string;
 }
 
 export async function inquireKonaBankAccountRegistration(
-  userId: number,
-  registrationKey: string,
+  bankAccRegNo: string,
 ): Promise<KonaBankAccountInquiryResponse> {
   return konaPost<KonaBankAccountInquiryResponse>(
     "/api/v1/bankaccounts/ars/register/inquiry",
-    { userId, registrationKey },
+    { regNo: bankAccRegNo },
   );
 }
 

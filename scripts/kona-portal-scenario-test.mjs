@@ -268,37 +268,33 @@ const s2a = await apiPost("2a/9  은행계좌 실명검증", "/api/v1/bankaccoun
 }, true);
 await sleep(400);
 
-let arsAuthKey = null;
+// 2b: ARS 인증 — request: { userId } 만 전송, response: authNumber(2자리)
 if (s2a.code === "00" || s2a.status < 500) {
   const s2b = await apiPost("2b/9  ARS 인증 요청", "/api/v1/bankaccounts/ars/auth", {
     userId,
-    bankCode:      M.bankCode,
-    bankAccount:   M.bankAccount,
-    mobileNumber:  "01012341234",
   }, true);
   await sleep(400);
-  arsAuthKey = s2b.data?.arsAuthKey;
+  const authNumber = s2b.data?.authNumber;
 
-  if (arsAuthKey) {
-    const s2c = await apiPost("2c/9  ARS 등록", "/api/v1/bankaccounts/ars/register", {
-      userId,
-      bankCode:    M.bankCode,
-      bankAccount: M.bankAccount,
-      arsAuthKey,
-    }, true);
+  // 2c: ARS 등록 — request: userId + bankCode + bankAccount, response: bankAccRegNo
+  const s2c = await apiPost("2c/9  ARS 등록", "/api/v1/bankaccounts/ars/register", {
+    userId,
+    bankCode:    M.bankCode,
+    bankAccount: M.bankAccount,
+  }, true);
+  await sleep(400);
+  console.log(`  authNumber=${authNumber ?? "(없음)"}`);
+  const bankAccRegNo = s2c.data?.bankAccRegNo;
+
+  // 2d: 등록 결과 조회 — request: { regNo: bankAccRegNo }
+  if (bankAccRegNo) {
+    const s2d = await apiPost("2d/9  ARS 등록 결과조회", "/api/v1/bankaccounts/ars/register/inquiry", {
+      regNo: bankAccRegNo,
+    }, false);
+    if (s2d.code === "00") passed++;
     await sleep(400);
-    const regKey = s2c.data?.registrationKey;
-
-    if (regKey) {
-      const s2d = await apiPost("2d/9  ARS 등록 결과조회", "/api/v1/bankaccounts/ars/register/inquiry", {
-        userId,
-        registrationKey: regKey,
-      }, false);
-      if (s2d.code === "00") passed++;
-      await sleep(400);
-    } else {
-      if (s2c.code === "00") passed++;
-    }
+  } else {
+    if (s2c.code === "00") passed++;
   }
 } else {
   console.log("\n[2/9 은행계좌] 실명검증 실패 — ARS 단계 건너뜀");
