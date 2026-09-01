@@ -11,8 +11,10 @@
 import {
   createHmac,
   publicEncrypt,
+  privateDecrypt,
   randomBytes,
   createCipheriv,
+  createDecipheriv,
   constants,
 } from "crypto";
 
@@ -23,6 +25,8 @@ const ACCESS_KEY = process.env.KONAPLATE_ACCESS_KEY ?? "";
 const SECRET_KEY = process.env.KONAPLATE_SECRET_KEY ?? "";
 const CRYPTO_KEY_ID = process.env.KONAPLATE_CRYPTO_KEY_ID ?? "";
 const SERVER_PUBLIC_KEY = process.env.KONAPLATE_SERVER_PUBLIC_KEY ?? "";
+// 응답 암호화(resEncrypt: Y) 복호화용 클라이언트 개인키 (PEM 형식, \n 포함)
+const CLIENT_PRIVATE_KEY = process.env.KONAPLATE_CLIENT_PRIVATE_KEY ?? "";
 
 // yyyyMMddHHmmssSSS (17자)
 function nowKSTLong(): string {
@@ -120,6 +124,52 @@ function encryptJWE(plaintext: string): string {
   ].join(".");
 }
 
+// base64url → Buffer
+function fromB64url(s: string): Buffer {
+  return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+}
+
+/**
+ * JWE Compact Serialization 복호화 (RSA-OAEP-256 + A128GCM / A256GCM)
+ * resEncrypt: Y 응답에서 encData 필드 값을 복호화할 때 사용
+ */
+function decryptJWE(jwe: string): string {
+  const parts = jwe.split(".");
+  if (parts.length !== 5) throw new Error("Invalid JWE compact format");
+
+  const [encodedHeader, encryptedKeyB64, ivB64, ciphertextB64, tagB64] = parts;
+
+  // JWE 헤더에서 enc 알고리즘 파악 (A128GCM / A256GCM)
+  const header = JSON.parse(
+    Buffer.from(fromB64url(encodedHeader)).toString("utf8"),
+  ) as { enc: string; alg: string };
+  const cipherAlgo = header.enc === "A256GCM" ? "aes-256-gcm" : "aes-128-gcm";
+
+  const encryptedKey = fromB64url(encryptedKeyB64);
+  const iv = fromB64url(ivB64);
+  const ciphertext = fromB64url(ciphertextB64);
+  const tag = fromB64url(tagB64);
+
+  // RSA-OAEP-256로 CEK 복호화
+  const cek = privateDecrypt(
+    {
+      key: CLIENT_PRIVATE_KEY,
+      oaepHash: "sha256",
+      padding: constants.RSA_PKCS1_OAEP_PADDING,
+    },
+    encryptedKey,
+  );
+
+  // AES-GCM으로 페이로드 복호화, AAD = encoded header
+  const decipher = createDecipheriv(cipherAlgo, cek, iv);
+  decipher.setAuthTag(tag);
+  decipher.setAAD(Buffer.from(encodedHeader));
+
+  return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString(
+    "utf8",
+  );
+}
+
 /** 평문 JSON 요청 (암호화 불필요 엔드포인트) */
 export async function konaPost<T>(path: string, body: unknown): Promise<T> {
   const bodyString = JSON.stringify(body);
@@ -133,7 +183,7 @@ export async function konaPost<T>(path: string, body: unknown): Promise<T> {
   return JSON.parse(text) as T;
 }
 
-/** JWE 암호화 요청 (개인정보 포함 엔드포인트) */
+/** JWE 암호화 요청 (개인정보 포함 엔드포인트) + 응답 복호화 */
 export async function konaPostEncrypted<T>(
   path: string,
   body: unknown,
@@ -150,7 +200,14 @@ export async function konaPostEncrypted<T>(
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`KONA PLATE ${res.status}: ${text}`);
-  return JSON.parse(text) as T;
+
+  // resEncrypt: Y 응답인 경우 encData 필드를 클라이언트 개인키로 복호화
+  const parsed = JSON.parse(text) as Record<string, unknown>;
+  if (parsed.encData && typeof parsed.encData === "string" && CLIENT_PRIVATE_KEY) {
+    const plaintext = decryptJWE(parsed.encData);
+    return JSON.parse(plaintext) as T;
+  }
+  return parsed as T;
 }
 
 export async function konaGet<T>(path: string): Promise<T> {
